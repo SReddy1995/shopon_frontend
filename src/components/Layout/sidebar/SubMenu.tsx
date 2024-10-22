@@ -6,7 +6,7 @@ import { updateSidebarState } from "../../../utils/reduxStore/sideBarSlice";
 import { useSelector } from "react-redux";
 
 const SidebarLinkContainer = styled.div`
-  padding-left: 12px;
+  
 `;
 
 const SidebarLink = styled(NavLink)<{ depth: any; depthstep: any }>`
@@ -17,17 +17,20 @@ const SidebarLink = styled(NavLink)<{ depth: any; depthstep: any }>`
   padding: 5px ${(props) => (props.depth * (props.depthstep+8))}px;
   padding-left: 8px;
   list-style: none;
-  height: 30px;
+  height: 35px;
   text-decoration: none;
   font-size: 0.8125rem;
   font-weight: 550;
   margin-top: 1px;
+  color:#303030;
+  font-size:14px;
+  line-height: 40px;
 
   &:hover {
-    background: #F1F1F1;
-    border-radius: 8px;
-    cursor: pointer;
     text-decoration: none;
+    color: #006C50;
+    background: #e4e5e5; ;
+    border-left:  3px solid #006C50;
   }
 `;
 
@@ -37,8 +40,8 @@ const IconContainer = styled.span`
 
 const SidebarLabel = styled.span<{ depth: any}>`
   margin-left: 8px;
-  padding-left: ${(props) => props.depth == 1 ? 0 : 8}px;
-  font-size: 0.8125rem;
+  padding-left: ${(props) => props.depth == 1 ? 0 : 25}px;
+  font-size: 0.9rem;
   font-weight: inherit;
 `;
 
