@@ -321,6 +321,7 @@ const LegalEntityForm = () => {
                                     id="exampleFormControlInput1" 
                                     placeholder="Company Legal Entity Type" 
                                 >
+                                <option value={""}>--select--</option>
                                 {
                                     refValues.cmpLegalEntityData
                                     .map((entity : any, index: any) => {
@@ -384,6 +385,7 @@ const LegalEntityForm = () => {
                                     id="exampleFormControlInput1" 
                                     placeholder="Annual Turnover" 
                                 >
+                                    <option value={""}>--select--</option>
                                     {
                                         refValues.annualTurnoverData
                                         .map((turnover : any, index: any) => {
@@ -405,6 +407,7 @@ const LegalEntityForm = () => {
                                     id="exampleFormControlInput1" 
                                     placeholder="Nature of Organization" 
                                 >
+                                    <option value={""}>--select--</option>
                                     {
                                         refValues.businessNatureData
                                         .map((nature : any, index: any) => {

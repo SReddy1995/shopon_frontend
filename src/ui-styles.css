@@ -1192,7 +1192,7 @@ a.active {
 
 }
 .dropdown-menu {
-  display: block;
+  display: none;
   opacity: 0;
   -webkit-transform: translateY(20px);
   -ms-transform: translateY(20px);
