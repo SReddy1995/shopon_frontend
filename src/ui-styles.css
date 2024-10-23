@@ -1186,9 +1186,10 @@ a.active {
   box-shadow: 0 10px 30px 0 rgba(31, 45, 61, 0.1);
   border-radius: 0.5rem;
   position: absolute;
-  width: 15% !important;
-  left: 83% !important;
+  width: 20% !important;
+  left: 78% !important;
   top: 45px !important;
+  overflow-x:auto;
 
 }
 .dropdown-menu {

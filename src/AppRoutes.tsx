@@ -48,9 +48,7 @@ export const AppRoutes = () => {
     },
     {
       path: "/landing-page/manage-users",
-      element: <StoreActivationGuard>
-                  <UserManagement />
-               </StoreActivationGuard>
+      element: <UserManagement />,
     },
   ];
 

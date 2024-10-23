@@ -119,6 +119,7 @@ const ProfileName = styled.p`
 const TopBar = () => {
 
     const selectedStoreData = useSelector((store: any) => store.stores.selectedStore);
+    const user_details = localStorage.getItem('user_details') ? JSON.parse(localStorage.getItem('user_details') || '{}') : null;
     const [open, setOpen] = useState(false);
 
     const dispatch = useDispatch();
@@ -168,7 +169,7 @@ const TopBar = () => {
             </LogoContainer>
             <ProfileContainer className="profile-container">
                 <ProfileName >
-                    { selectedStoreData ? selectedStoreData : '' } , Annette Black
+                    { selectedStoreData ? selectedStoreData : '' } , {user_details.firstname + ' ' + user_details.lastname}
                 </ProfileName>
                 <ProfileIcon>
                     <ProfileIconInitial >Opt</ProfileIconInitial>
@@ -187,11 +188,13 @@ const TopBar = () => {
                                 stores_list
                                 .map((store : any, index: any) => {
                                     return <li key={index} onClick={() => handleStoreSwitched(store)}>
-                                                <a className="dropdown-item" >
-                                                        {store.store_url}
-                                                    <span className="acc-icons" 
+                                                <a className="dropdown-item ml-0" >
+                                                <span className="acc-icons" 
                                                       style={{color: selectedStoreData && store.buyer_id == selectedStoreData ? 'green' : ''}}>
                                                         <i className={selectedStoreData && store.buyer_id == selectedStoreData ? "fa fa-check-circle" : "fa fa-circle-thin"}></i>
+                                                    </span>
+                                                    <span className='ml-2'>
+                                                        {store.store_url}
                                                     </span>
                                                 </a>
                                             </li>

@@ -58,7 +58,7 @@ const AddUserForm = (props: any) => {
   const setData = () => {
 
     setLoading(false);
-    setFormInitialValues({firstname: props.firstname, lastname: props.lastname, email_address: props.email_address, role: props.role, enabled: props.enabled})
+    setFormInitialValues({firstname: props.selectedUser.firstname, lastname: props.selectedUser.lastname, email_address: props.selectedUser.email_address, role: props.selectedUser.role, enabled: props.selectedUser.enabled})
   }
 
   const submitForm = (values: FormikValues) => {
