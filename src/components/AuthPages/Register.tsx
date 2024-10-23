@@ -27,7 +27,7 @@ interface FormValues {
   email_address: Yup.string().email('Invalid email format').required('Email is required'),
   legal_entity_name: Yup.string()
   .required('Required'),
-  has_existing_store: Yup.string(),
+  has_existing_store: Yup.string().required("Required"),
   store_url: Yup.string()
   .required('Required'),
   additional_info: Yup.string(),
@@ -57,7 +57,7 @@ const Register = () => {
     contact_number: '',
     email_address: '',
     legal_entity_name: '',
-    has_existing_store: '',
+    has_existing_store: 'Y',
     store_url: '',
     additional_info: '',
    };

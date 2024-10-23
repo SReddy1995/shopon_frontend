@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateSidebarState } from '../../utils/reduxStore/sideBarSlice';
 import { useNavigate } from 'react-router-dom';
 import { updateSelectedStore } from '../../utils/reduxStore/storesSlice';
+import { getAccountDetails } from '../../services/AccountService';
 
 const OverlayMenuContainer = styled.div<{ overlaymenu: any }>`
   background-color: #FFFFFF;
@@ -134,11 +135,20 @@ const TopBar = () => {
     }
 
     const handleStoreSwitched = (store: any) => {
-        dispatch(updateSelectedStore(store));
-        localStorage.setItem('last_accessed_store', store)
-        console.log(store)
-            navigateToDashBoard();
-
+        getAccountDetails(store.buyer_id)
+        .then((data: any) => {
+            if(data){
+                dispatch(updateSelectedStore(store.buyer_id));
+                localStorage.setItem('selected_store', store.buyer_id)
+                navigateToDashBoard();
+            }
+            else{
+                // let default initial values load
+            }
+        })
+        .catch((err: any) => {
+            console.log(err)
+        });
     }
 
     const navigateToDashBoard = () => {
@@ -158,7 +168,7 @@ const TopBar = () => {
             </LogoContainer>
             <ProfileContainer className="profile-container">
                 <ProfileName >
-                    { selectedStoreData ? selectedStoreData['buyer_id'] : '' } , Annette Black
+                    { selectedStoreData ? selectedStoreData : '' } , Annette Black
                 </ProfileName>
                 <ProfileIcon>
                     <ProfileIconInitial >Opt</ProfileIconInitial>
@@ -180,8 +190,8 @@ const TopBar = () => {
                                                 <a className="dropdown-item" >
                                                         {store.store_url}
                                                     <span className="acc-icons" 
-                                                      style={{color: selectedStoreData && store.buyer_id == selectedStoreData['buyer_id'] ? 'green' : ''}}>
-                                                        <i className={selectedStoreData && store.buyer_id == selectedStoreData['buyer_id'] ? "fa fa-check-circle" : "fa fa-circle-thin"}></i>
+                                                      style={{color: selectedStoreData && store.buyer_id == selectedStoreData ? 'green' : ''}}>
+                                                        <i className={selectedStoreData && store.buyer_id == selectedStoreData ? "fa fa-check-circle" : "fa fa-circle-thin"}></i>
                                                     </span>
                                                 </a>
                                             </li>

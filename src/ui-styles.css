@@ -1325,3 +1325,43 @@ table{
    border-radius:5px;
    height: auto;
 }
+
+/* modal window css */
+
+
+.Modal {
+  position: fixed;
+  z-index: 500;
+  background-color: white;
+  height:auto;
+  border: 1px solid #ccc;
+  box-shadow: 1px 1px 1px black;
+  padding: 16px;
+  top: 15%;
+  box-sizing: border-box;
+  transition: all 0.3s ease-out;
+  border-radius: 8px;
+  width: 600px;
+  left: calc(50% - 300px);
+}
+
+@media (max-width: 768px) {
+  .Modal {
+    width: 400px;
+    left: calc(50% - 200px);
+  }
+}
+
+.Backdrop {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  z-index: 100;
+  left: 0;
+  top: 0;
+  background-color: rgba(0,0,0,0.5);
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}

@@ -79,8 +79,8 @@ const LegalEntityForm = () => {
 
       const fetchData = () => {
         console.log("selected store = ", selectedStore)
-        let buyer_id = selectedStore.buyer_id;
-        getLegalEntityDetails(buyer_id)
+        let buyer_id = selectedStore;
+        getLegalEntityDetails()
         .then((data: any) => {
             setData(data);
             if(data){
@@ -325,7 +325,7 @@ const LegalEntityForm = () => {
                                 {
                                     refValues.cmpLegalEntityData
                                     .map((entity : any, index: any) => {
-                                        return  <option key={index} value={entity.company_legal_entity_type}>{entity.company_legal_entity_type}</option>
+                                        return  <option key={index} value={entity.sector_of_organization_type}>{entity.description}</option>
                                     })
                                 }
                                 </Field>

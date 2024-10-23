@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 import * as Yup from 'yup';
 import { Formik, Field, ErrorMessage, FormikValues, FormikHelpers } from 'formik';
 import { useSelector } from 'react-redux';
-import { getAccountDetails, saveRegistrationDetails } from '../../services/AccountService';
+import { saveRegistrationDetails } from '../../services/AccountService';
 import { showSuccessMessage } from '../../shared/notificationProvider';
 
 interface FormValues {
     firstname: string;
     lastname: string;
-    contact_number: number;
+    contact_number: string;
     email_address: string;
     legal_entity_name: string;
     has_existing_store: string;
@@ -28,7 +28,7 @@ const registerValidationSchema = Yup.object().shape({
     email_address: Yup.string().email('Invalid email format').required('Email is required'),
     legal_entity_name: Yup.string()
     .required('Required'),
-    has_existing_store: Yup.string(),
+    has_existing_store: Yup.string().required("Required"),
     store_url: Yup.string()
     .required('Required'),
     additional_info: Yup.string(),
@@ -59,32 +59,16 @@ const RegistrationForm = () => {
       }, []);
 
     const fetchData = () => {
-        console.log("selected store = ", selectedStore)
-        let buyer_id = selectedStore.buyer_id;
-        getAccountDetails(buyer_id)
-        .then((data: any) => {
-            setData(data);
-         
-            if(data){
-                console.log("account details = ", data)
-                    initialValues.firstname = user_details ? user_details.firstname : '';
-                    initialValues.lastname = user_details ? user_details.lastname : '';
-                    initialValues.contact_number = data ? data.contact_number : '';
-                    initialValues.email_address = user_details ? user_details.email_address : '';
-                    initialValues.additional_info = data ? data.additional_info : '';
-                    initialValues.store_url = data ? data.store_url : '';
-                    initialValues.legal_entity_name = data ? data.legal_entity_name : '';
-                    initialValues.has_existing_store = data ? data.has_existing_store : '';
-            }
-            else{
-                // let default initial values load
-            }
-            setLoading(false);
-        })
-        .catch((err: any) => {
-            console.log(err)
-            setLoading(false);
-        });
+        console.log("user details = ", user_details)
+        initialValues.firstname = user_details ? user_details.firstname : '';
+        initialValues.lastname = user_details ? user_details.lastname : '';
+        initialValues.contact_number = user_details ? user_details.contact_number : '';
+        initialValues.email_address = user_details ? user_details.email_address : '';
+        initialValues.additional_info = user_details ? user_details.additional_info : '';
+        initialValues.store_url = user_details ? user_details.store_url : '';
+        initialValues.legal_entity_name = user_details ? user_details.legal_entity_name : '';
+        initialValues.has_existing_store = user_details ? user_details.has_existing_store : '';
+        setLoading(false);
       }
 
     const updateBuyerRegistrationDetails = (values: FormikValues) => {
@@ -266,7 +250,7 @@ const RegistrationForm = () => {
                                         <a className="btn-link">
                                             <button type="button"
                                                 className="btn-custom mt-2 btn-right"
-                                                disabled={!(isValid && dirty) || isSubmitting}
+                                                disabled={!(isValid) || isSubmitting}
                                                 onClick={() => {
                                                     handleSubmit();
                                                 }}>

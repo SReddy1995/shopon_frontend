@@ -3,6 +3,7 @@ import * as Yup from 'yup';
 import { Formik, Field, ErrorMessage, FormikValues, FormikHelpers, FieldArray } from 'formik';
 import { showSuccessMessage } from '../../shared/notificationProvider';
 import Multiselect from 'multiselect-react-dropdown';
+import { useSelector } from 'react-redux';
 
 // Custom Multiselect component for Formik
 const CustomMultiselect = ({ field, form, options } : any) => {
@@ -74,6 +75,7 @@ const initialValues = {
 
 
 const OnlineStoreForm = ({ onUpdate }: any) => {
+    const refValues = useSelector((store: any) => store.refValues.referenceList);
 
     const cities =[
         {
@@ -97,75 +99,6 @@ const OnlineStoreForm = ({ onUpdate }: any) => {
     // const filteredOptions = cities.filter(option =>
     //     option.toLowerCase().includes(searchTerm.toLowerCase())
     //   );
-
-    const refValues = {
-        "annualTurnoverData": [
-            {
-                "id": 1,
-                "annual_turnover_type": "fourtyL",
-                "description": "Upto INR 40 lakhs",
-                "createdAt": "2024-10-17T05:24:35.493Z",
-                "updatedAt": "2024-10-17T05:24:35.493Z"
-            },
-            {
-                "id": 2,
-                "annual_turnover_type": "fiveC",
-                "description": "Upto INR 5 Crores",
-                "createdAt": "2024-10-17T05:24:35.493Z",
-                "updatedAt": "2024-10-17T05:24:35.493Z"
-            }
-        ],
-        "cmpLegalEntityData": [
-            {
-                "id": 1,
-                "company_legal_entity_type": "Arts",
-                "description": "Arts",
-                "createdAt": "2024-10-17T05:24:35.493Z",
-                "updatedAt": "2024-10-17T05:24:35.493Z"
-            },
-            {
-                "id": 2,
-                "company_legal_entity_type": "Constr",
-                "description": "Construction",
-                "createdAt": "2024-10-17T05:24:35.493Z",
-                "updatedAt": "2024-10-17T05:24:35.493Z"
-            }
-        ],
-        "businessNatureData": [
-            {
-                "id": 1,
-                "nature_of_business_type": "CMP",
-                "description": "Company",
-                "createdAt": "2024-10-17T05:24:35.493Z",
-                "updatedAt": "2024-10-17T05:24:35.493Z"
-            },
-            {
-                "id": 2,
-                "nature_of_business_type": "PARTNR",
-                "description": "Partnership Firm",
-                "createdAt": "2024-10-17T05:24:35.493Z",
-                "updatedAt": "2024-10-17T05:24:35.493Z"
-            }
-        ],
-        "categoriesData": [
-            {
-                "ondc_categories_id": 1,
-                "ondc_categories_type": "retail",
-                "ondc_categories_code": "ONDC:RET10",
-                "description": "Grocery",
-                "createdAt": "2024-10-17T05:24:35.493Z",
-                "updatedAt": "2024-10-17T05:24:35.493Z"
-            },
-            {
-                "ondc_categories_id": 2,
-                "ondc_categories_type": "retailer",
-                "ondc_categories_code": "ONDC:RET11",
-                "description": "Fashion",
-                "createdAt": "2024-10-17T05:24:35.493Z",
-                "updatedAt": "2024-10-17T05:24:35.493Z"
-            }
-        ]
-    } 
 
     const updateOnlineStoreDetails = (values: FormikValues) => {
         showSuccessMessage("Online Store details updated successfully")
@@ -249,7 +182,7 @@ const OnlineStoreForm = ({ onUpdate }: any) => {
                                                                                 
                                                                                 refValues.categoriesData
                                                                                     .map((entity: any, index: any) => {
-                                                                                        return <option key={index} value={entity.ondc_categories_id}>{entity.description}</option>
+                                                                                        return <option key={index} value={entity.ondc_categories_code}>{entity.description}</option>
                                                                                     })
                                                                             }
 

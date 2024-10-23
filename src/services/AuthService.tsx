@@ -6,8 +6,6 @@ import { jwtDecode } from "jwt-decode";
 
 export const registerBuyer = async (body : any) => {
   try{
-
-      body['contact_number'] = Number(body['contact_number'])
       const response = await axiosInstance.post(AuthUrls.register, body) // Replace with your API endpoint
       return response;
 
@@ -149,7 +147,7 @@ export const requestOtpForLogin = async (body : any) => {
         const response = await axiosInstance.post(AuthUrls.verifyOtpAndLogin, body) // Replace with your API endpoint
         console.log(response)
         setRegiteredStores(response)
-        setLastAccessedStore(response)
+        setSelectedStore(response)
         setAuthTokens(response)
         setUserDetails(response)
         return response;
@@ -165,7 +163,7 @@ export const requestOtpForLogin = async (body : any) => {
 
 const setDataInLocalStorage = (response: any) => {
     setRegiteredStores(response)
-    setLastAccessedStore(response)
+    setSelectedStore(response)
     setAuthTokens(response)
     setUserDetails(response)
 }
@@ -177,9 +175,9 @@ const setRegiteredStores = (response: any) => {
 
 }
 
-const setLastAccessedStore = (response: any) => {
+const setSelectedStore = (response: any) => {
     if(response[0].lastAccessedBuyer){
-        localStorage.setItem('last_accessed_store', JSON.stringify(response[0].lastAccessedBuyer));
+        localStorage.setItem('selected_store', JSON.stringify(response[0].lastAccessedBuyer.buyer_id));
     }
    
 }

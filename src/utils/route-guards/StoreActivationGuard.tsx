@@ -8,7 +8,7 @@ const StoreActivationGuard = ({ children }: any) => {
     let selectedStore = null;
     selectedStore = useSelector((store: any) => store.stores.selectedStore);
     if(selectedStore === null){
-        selectedStore = localStorage.getItem('last_accessed_store') ? JSON.parse(localStorage.getItem('last_accessed_store') || '{}') : null;
+        selectedStore = localStorage.getItem('selected_store') ? JSON.parse(localStorage.getItem('selected_store') || '{}') : null;
     }
     console.log(selectedStore)
 

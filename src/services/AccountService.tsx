@@ -17,10 +17,10 @@ export const getReferenceValues = async () => {
       }
   }
 
-export const getLegalEntityDetails = async (buyer_id : any) => {
+export const getLegalEntityDetails = async () => {
     try{
   
-        const response = await axiosInstance.get(AccountUrls.getLegalEntity + '/' + buyer_id) // Replace with your API endpoint
+        const response = await axiosInstance.get(AccountUrls.getLegalEntity) // Replace with your API endpoint
         return response;
   
     } catch (error) {
@@ -34,6 +34,8 @@ export const getLegalEntityDetails = async (buyer_id : any) => {
     try{
   
         const response = await axiosInstance.get(AccountUrls.getAccountDetails + '/' + buyer_id) // Replace with your API endpoint
+        setAuthTokens(response)
+        setUserDetails(response)
         return response;
   
     } catch (error) {
@@ -42,6 +44,15 @@ export const getLegalEntityDetails = async (buyer_id : any) => {
         throw error;
       }
   }
+
+    const setAuthTokens = (response: any) => {
+        localStorage.setItem('token', response.token);
+    }
+
+    const setUserDetails = (response: any) => {
+        const user_details = jwtDecode(response.token)
+        localStorage.setItem('user_details', JSON.stringify(user_details));
+    }
 
   export const saveRegistrationDetails = async (body : any) => {
     try{

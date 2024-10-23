@@ -18,7 +18,7 @@ axiosInstance.interceptors.request.use(
     if(config.url !== "/generate_auth_otp" && config.url !== "/login" && config.url !== "/register"){
       const token = localStorage.getItem('token'); // Retrieve auth token from localStorage
       if (token) {
-        config.headers.Authorization = `${token}`;
+        config.headers.Authorization = `Bearer ${token}`;
       }
     }
     // Check if the method is POST

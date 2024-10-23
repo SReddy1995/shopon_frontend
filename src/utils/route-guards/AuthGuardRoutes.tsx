@@ -32,7 +32,7 @@ const AuthGuardRoutes = ({ children }: any) => {
     if (localStorage.getItem("token")){
         localStorageToken = localStorage.getItem("token");
         addStoresToRedux(JSON.parse(localStorage.getItem("associated_stores") || '{}'));
-        updateSelectedStoreToRedux(JSON.parse(localStorage.getItem("last_accessed_store") || '{}'));
+        updateSelectedStoreToRedux(JSON.parse(localStorage.getItem("selected_store") || '{}'));
         fetchRef().then((data)=>{
           addReferencesToStore(data)
         })
