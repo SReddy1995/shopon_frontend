@@ -180,7 +180,7 @@ const OnlineStoreForm = ({ onUpdate }: any) => {
                                                                             <option value={""}>--select--</option>
                                                                             {
                                                                                 
-                                                                                refValues.categoriesData
+                                                                                refValues.categoriesType
                                                                                     .map((entity: any, index: any) => {
                                                                                         return <option key={index} value={entity.ondc_categories_code}>{entity.description}</option>
                                                                                     })

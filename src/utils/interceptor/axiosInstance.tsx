@@ -1,13 +1,13 @@
 // src/axiosInstance.js
 import axios from 'axios';
 import { showSuccessMessage, showWarningMessage } from '../../shared/notificationProvider';
-import { baseUrl } from '../constants/UrlConstants';
+import { baseUrl, baseUrlSuffix } from '../constants/UrlConstants';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { updateSelectedStore, updateStoresList } from '../reduxStore/storesSlice';
 
 const axiosInstance = axios.create({
-  baseURL: baseUrl+'/api',
+  baseURL: baseUrl+baseUrlSuffix,
   timeout: 1000,
   headers: { 'Content-Type': 'application/json' }
 });
@@ -44,7 +44,13 @@ axiosInstance.interceptors.response.use(
       return response.data.message.data;
     }
     else{
-      showWarningMessage(response.data.message.data[0])
+      const messages = response.data.error.msg;
+      console.log(messages)
+      messages.forEach((msg: any) => {
+          const errorDetails = msg.split(',')[0];
+          // Show toast notification for each error message
+          showWarningMessage(errorDetails)
+      });
       return Promise.reject(response.data.message.data[0]);
     }
   },

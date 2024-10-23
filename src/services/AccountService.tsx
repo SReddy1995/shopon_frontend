@@ -46,11 +46,11 @@ export const getLegalEntityDetails = async () => {
   }
 
     const setAuthTokens = (response: any) => {
-        localStorage.setItem('token', response.token);
+        localStorage.setItem('token', response[0].token);
     }
 
     const setUserDetails = (response: any) => {
-        const user_details = jwtDecode(response.token)
+        const user_details = jwtDecode(response[0].token)
         localStorage.setItem('user_details', JSON.stringify(user_details));
     }
 
@@ -71,6 +71,32 @@ export const getLegalEntityDetails = async () => {
     try{
   
         const response = await axiosInstance.post(AccountUrls.saveLegalEntity, body) // Replace with your API endpoint
+        return response;
+  
+    } catch (error) {
+        console.error('Error fetching data: ', error);
+        // Handle errors here or throw them to be handled where the function is called
+        throw error;
+      }
+  }
+
+  export const getBankInfo = async () => {
+    try{
+  
+        const response = await axiosInstance.get(AccountUrls.getBankInfo) // Replace with your API endpoint
+        return response;
+  
+    } catch (error) {
+        console.error('Error fetching data: ', error);
+        // Handle errors here or throw them to be handled where the function is called
+        throw error;
+      }
+  }
+
+  export const saveBankInfo = async (body : any) => {
+    try{
+  
+        const response = await axiosInstance.post(AccountUrls.saveBankInfo, body) // Replace with your API endpoint
         return response;
   
     } catch (error) {

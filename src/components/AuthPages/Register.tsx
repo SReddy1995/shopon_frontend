@@ -15,6 +15,8 @@ interface FormValues {
   additional_info: string;
  }
 
+ const emailRegex = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)
+
  const registerValidationSchema = Yup.object().shape({
   firstname: Yup.string()
   .required('Required'),
@@ -24,7 +26,7 @@ interface FormValues {
    .min(10, 'Contact number must be 10 characters')
    .max(10, 'Contact number must be 10 characters')
    .required('Contact number is required'),
-  email_address: Yup.string().email('Invalid email format').required('Email is required'),
+  email_address: Yup.string().email('Invalid email format').matches(emailRegex,'Invalid format').required('Email is required'),
   legal_entity_name: Yup.string()
   .required('Required'),
   has_existing_store: Yup.string().required("Required"),

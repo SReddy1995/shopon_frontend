@@ -846,7 +846,7 @@ h1{
 .otp-section{
   display:none;
 }
-:disabled {
+button:disabled {
   
   cursor: default;
   background-color: grey !important;

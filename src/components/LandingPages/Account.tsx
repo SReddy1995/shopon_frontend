@@ -6,6 +6,7 @@ import RegistrationForm from './RegistrationForm';
 import LegalEntityForm from './LegalEntityForm';
 import OnlineStoreForm from './OnlineStoreForm';
 import BankEscrowForm from './BankEscrowForm';
+import moment from 'moment';
 
 
 const AccountInfoOverviewContainer = styled.div`
@@ -48,6 +49,8 @@ const CircularProgressbarContainer = styled.div`
 `;
 
 const Account = () => {
+
+    const user_details = localStorage.getItem('user_details') ? JSON.parse(localStorage.getItem('user_details') || '{}') : null;
 
     const percentage = 80;
 
@@ -115,13 +118,13 @@ const Account = () => {
                     <div className="card shadow p-3 bg-grey payment-info-card">
                         <div className="d-flex">
                             <div className="flex-grow">
-                                <p className="font-weight-bold"><strong>Subscriber ID : </strong><span>{subscription_details.subscriber_id}</span></p>
+                                <p className="font-weight-bold"><strong>Subscriber ID : </strong><span>{user_details.subscriber_id}</span></p>
                             </div>
                             <div className="flex-grow">
                                 <p className="font-weight-bold"><strong>Subscriber Plan : </strong><span>{subscription_details.subscriber_plan}</span></p>
                             </div>
                             <div className="flex-grow">
-                                <p className="font-weight-bold"><strong>Registration Date :</strong><span>{subscription_details.registration_date}</span></p>
+                                <p className="font-weight-bold"><strong>Registration Date :</strong><span>{moment(user_details.createdAt).format("DD/MM/YYYY")}</span></p>
                         </div>
 
                     </div>

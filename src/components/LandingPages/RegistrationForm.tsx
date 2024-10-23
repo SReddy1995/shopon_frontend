@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import * as Yup from 'yup';
 import { Formik, Field, ErrorMessage, FormikValues, FormikHelpers } from 'formik';
-import { useSelector } from 'react-redux';
-import { saveRegistrationDetails } from '../../services/AccountService';
+import { useDispatch, useSelector } from 'react-redux';
+import { getAccountDetails, saveRegistrationDetails } from '../../services/AccountService';
 import { showSuccessMessage } from '../../shared/notificationProvider';
+import { updateSelectedStore } from '../../utils/reduxStore/storesSlice';
 
 interface FormValues {
     firstname: string;
@@ -53,6 +54,7 @@ const RegistrationForm = () => {
     const selectedStore = useSelector((store: any) => store.stores.selectedStore);
     const storesList = useSelector((store: any) => store.stores.storesList);
     const user_details = localStorage.getItem('user_details') ? JSON.parse(localStorage.getItem('user_details') || '{}') : null;
+    const dispatch = useDispatch();
 
     useEffect(() => {
         fetchData();
@@ -72,11 +74,23 @@ const RegistrationForm = () => {
       }
 
     const updateBuyerRegistrationDetails = (values: FormikValues) => {
+        console.log("reg form details = ", values)
         saveRegistrationDetails(values)
          .then(response => {
+            handleUpdateDetails(values);
             showSuccessMessage("Registration details updated successfully")
          })
       }
+
+      const handleUpdateDetails = (values: any) => {
+        let updatedObject = {
+            ...user_details, // Spread operator to copy all properties
+            ...values // Override with new values
+          };
+        localStorage.setItem("user_details",JSON.stringify(updatedObject))
+      }
+
+
 
     return (
         <>
@@ -156,6 +170,7 @@ const RegistrationForm = () => {
                                         <div className="mb-3 form-field-container-full-width">
                                             <label htmlFor="exampleFormControlInput1" className="form-label required">Email Addess</label>
                                             <Field name="email_address"
+                                                disabled
                                                 type="email"
                                                 id="exampleFormControlInput1"
                                                 placeholder="Email Address"
@@ -195,6 +210,7 @@ const RegistrationForm = () => {
                                                         id="radio2"
                                                         placeholder="Legal Entity Name"
                                                         value="Y"
+                                                        disabled
                                                         className={errors.has_existing_store && touched.has_existing_store ? 'radio-button__input input-field-error' : 'radio-button__input'}
                                                     />
                                                     <label htmlFor="radio2" className="radio-button__label">
@@ -208,6 +224,7 @@ const RegistrationForm = () => {
                                                         name="has_existing_store"
                                                         type="radio"
                                                         id="radio1"
+                                                        disabled
                                                         placeholder="Legal Entity Name"
                                                         value="N"
                                                         className={errors.has_existing_store && touched.has_existing_store ? 'radio-button__input input-field-error' : 'radio-button__input'}
@@ -228,6 +245,7 @@ const RegistrationForm = () => {
                                             <Field
                                                 name="store_url"
                                                 type="text"
+                                                disabled
                                                 className={'form-control dashboard-namefield ' + (errors.store_url && touched.store_url ? 'input-field-error' : '')}
                                             />
                                             <ErrorMessage className='error' name="store_url" component="div" />
