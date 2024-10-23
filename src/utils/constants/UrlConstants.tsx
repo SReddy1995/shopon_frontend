@@ -16,3 +16,9 @@ export const AccountUrls = {
     getBankInfo: '/bank_info',
     saveBankInfo: '/bank_info',
 }
+
+export const UserUrls = {
+    getUsersList: '/get_users',
+    updateUser: '/update_user',
+    createUser: '/save_user',
+}

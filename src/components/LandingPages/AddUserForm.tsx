@@ -1,7 +1,37 @@
 import React, { useEffect, useState } from 'react';
 import * as Yup from 'yup';
 import { Formik, Field, ErrorMessage, FormikValues, FormikHelpers } from 'formik';
+import { createUser, updateUser } from '../../services/UsersService';
+import { showSuccessMessage } from '../../shared/notificationProvider';
+import Multiselect from 'multiselect-react-dropdown';
 
+
+const CustomMultiselect = ({ field, form, options } : any) => {
+  const handleSelect = (selectedList: any) => {
+    form.setFieldValue(field.name, selectedList);
+  };
+
+  const handleRemove = (selectedList :any) => {
+    form.setFieldValue(field.name, selectedList);
+  };
+
+  return (
+    <div>
+      <Multiselect
+        options={options} // Options for the dropdown
+        onSelect={handleSelect} // Handle selection
+        onRemove={handleRemove} // Handle removal
+        isObject={true}
+        displayValue="name"
+        showCheckbox
+        selectedValues={field.value}
+
+      />
+    </div>
+  );
+};
+
+const emailRegex = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)
 
 interface FormValues {
   firstname: string;
@@ -18,8 +48,19 @@ interface FormValues {
 const userValidationSchema = Yup.object().shape({
   firstname: Yup.string().required('Required'),
   lastname: Yup.string().required('Required'),
-  email_address: Yup.string().email('Invalid email format').required('Email is required'),
-  role: Yup.string().required("Required"),
+  email_address: Yup.string().email('Invalid email format').matches(emailRegex,'Invalid format').required('Email is required'),
+  contact_number: Yup.string()
+  .min(10, 'Contact number must be 10 characters')
+  .max(10, 'Contact number must be 10 characters')
+  .required('Contact number is required'),
+  roles: Yup.array()
+  .of(
+    Yup.object().shape({
+      id: Yup.string().required('id is required'),
+      name: Yup.string().required("name is required"),
+    })
+  )
+  .min(1, 'At least one role is required'),
   enabled: Yup.string().required("Required"),
 });
 
@@ -27,7 +68,8 @@ const initialValues = {
   firstname: '',
   lastname: '',
   email_address: '',
-  role: '',
+  contact_number: '',
+  roles: '',
   enabled: '',
 };
 
@@ -49,16 +91,17 @@ const AddUserForm = (props: any) => {
       setData();
     }
     else{
-      setFormInitialValues({firstname: '', lastname: '', email_address: '', role: '', enabled: ''})
+      setFormInitialValues({firstname: '', lastname: '', email_address: '', contact_number: '', roles: '', enabled: ''})
       setLoading(false);
     }
 
   }, []);
 
   const setData = () => {
-
     setLoading(false);
-    setFormInitialValues({firstname: props.selectedUser.firstname, lastname: props.selectedUser.lastname, email_address: props.selectedUser.email_address, role: props.selectedUser.role, enabled: props.selectedUser.enabled})
+    console.log(props.selectedUser)
+    setFormInitialValues({firstname: props.selectedUser.firstname, lastname: props.selectedUser.lastname, email_address: props.selectedUser.email_address,
+      contact_number: props.selectedUser.contact_number, roles: props.selectedUser.roles, enabled: props.selectedUser.enabled})
   }
 
   const submitForm = (values: FormikValues) => {
@@ -71,17 +114,27 @@ const AddUserForm = (props: any) => {
   }
 
   const addUser = (values: FormikValues) => {
-    // addUser(values)
-    //  .then(response => {
-    //     showSuccessMessage("User Added successfully")
-    //  })
+    let payload = formatPayloadForRole(values);
+
+    createUser(payload)
+     .then(response => {
+        showSuccessMessage("User Added successfully")
+        props.closeAndUpdate();
+     })
+  }
+
+  const formatPayloadForRole = (values: any) => {
+    let role = values.roles.map((role: any) => role.id);;
+    values['roles'] = role;
+    return values;
   }
 
   const editUser = (values: FormikValues) => {
-    // editUser(values)
-    //  .then(response => {
-    //     showSuccessMessage("User Added successfully")
-    //  })
+    let payload = formatPayloadForRole(values);
+    updateUser(values, props.selectedUser.user_id)
+     .then(response => {
+        showSuccessMessage("User Updated successfully")
+     })
   }
 
   const closeModal = () =>{
@@ -152,39 +205,47 @@ const AddUserForm = (props: any) => {
                         </div>
                         </div>
                         <div className="row">
-                          <div className="col-12">
+                          <div className="col-md-6 col-12">
                           <div className="mb-3 form-field-container-full-width">
                             <label htmlFor="exampleFormControlInput1" className="form-label required">Email Addess</label>
                             <Field name="email_address"
                               type="email"
                               id="exampleFormControlInput1"
                               placeholder="Email Address"
-                              className={'form-control dashboard-namefield ' + (errors.email_address && touched.email_address ? 'input-field-error' : '')}
+                              className={'form-control' + (errors.email_address && touched.email_address ? 'input-field-error' : '')}
                             />
                             <ErrorMessage className='error' name="email_address" component="div" />
+                          </div>
+                          </div>
+                          <div className="col-md-6 col-12">
+                          <div className="mb-3 form-field-container-full-width">
+                            <label htmlFor="exampleFormControlInput1" className="form-label required">Contact Number</label>
+                            <Field name="contact_number"
+                              type="email"
+                              id="exampleFormControlInput1"
+                              placeholder="Contact Number"
+                              onKeyPress={(e: any) => {
+                                if (!/[0-9]/.test(e.key)) {
+                                    e.preventDefault();
+                                }
+                            }}
+                              className={'form-control' + (errors.contact_number && touched.contact_number ? 'input-field-error' : '')}
+                            />
+                            <ErrorMessage className='error' name="contact_number" component="div" />
                           </div>
                           </div>
                         </div>
                         <div className="row">
                           <div className="col-12">
-                          <div className="mb-3 form-field-container-full-width">
-                            <label htmlFor="exampleFormControlInput1" className="form-label required">Role</label>
-                            <Field
-                              name="role" as="select"
-                              className={'form-control custom-select dashboard-namefield ' + (errors.role && touched.role ? 'input-field-error' : '')}
-                              id="exampleFormControlInput1"
-                              placeholder="Role"
-                            >
-                              <option value={""}>--select--</option>
-                              {
-                                roles
-                                  .map((entity: any, index: any) => {
-                                    return <option key={index} value={entity.id}>{entity.name}</option>
-                                  })
-                              }
-                            </Field>
-                            <ErrorMessage className='error' name="role" component="div" />
-                          </div>
+                        <div className="mb-3 form-field-container-full-width">
+                          <label htmlFor="exampleFormControlInput1" className="form-label required">Role</label>
+                          <Field
+                            name="roles"
+                            component={CustomMultiselect}
+                            options={roles}
+                          />
+                          <ErrorMessage className='error' name="roles" component="div" />
+                        </div>
                           </div>
                         </div>
                         <div className="row">
@@ -236,7 +297,7 @@ const AddUserForm = (props: any) => {
                           <a className="btn-link">
                             <button type="button"
                               className="btn-custom mt-2 btn-right"
-                              disabled={!(isValid && dirty) || isSubmitting}
+                            disabled={!(isValid) || isSubmitting}
                               onClick={() => {
                                 handleSubmit();
                               }}>
