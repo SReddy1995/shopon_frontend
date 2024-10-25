@@ -108,8 +108,8 @@ const UserManagement = () => {
                                                                         <td>
                                                                         {
                                                                             user.roles
-                                                                            .map((role: any) => {
-                                                                                return (role)
+                                                                            .map((role: any, index: any) => {
+                                                                                return index>0 ? ', '+(role) : (role)
                                                                             })
                                                                         }
                                                                         </td>

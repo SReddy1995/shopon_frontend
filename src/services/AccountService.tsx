@@ -105,3 +105,29 @@ export const getLegalEntityDetails = async () => {
         throw error;
       }
   }
+
+  export const getOnlineStore = async () => {
+    try{
+  
+        const response = await axiosInstance.get(AccountUrls.getOnlineStore) // Replace with your API endpoint
+        return response;
+  
+    } catch (error) {
+        console.error('Error fetching data: ', error);
+        // Handle errors here or throw them to be handled where the function is called
+        throw error;
+      }
+  }
+
+  export const saveOnlineStore = async (body : any) => {
+    try{
+  
+        const response = await axiosInstance.post(AccountUrls.saveOnlineStore, body) // Replace with your API endpoint
+        return response;
+  
+    } catch (error) {
+        console.error('Error fetching data: ', error);
+        // Handle errors here or throw them to be handled where the function is called
+        throw error;
+      }
+  }

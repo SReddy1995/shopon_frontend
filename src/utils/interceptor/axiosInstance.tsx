@@ -22,7 +22,7 @@ axiosInstance.interceptors.request.use(
       }
     }
     // Check if the method is POST
-    if (config.method === 'post' && config.data) {
+    if ((config.method === 'post' || config.method === 'put') && config.data) {
       // Modify the request body as needed
       let payload_formatted = [];
       payload_formatted.push(config.data)
@@ -45,13 +45,17 @@ axiosInstance.interceptors.response.use(
     }
     else{
       const messages = response.data.error.msg;
-      console.log(messages)
-      messages.forEach((msg: any) => {
+      if(Array.isArray(messages)){
+        messages.forEach((msg: any) => {
           const errorDetails = msg.split(',')[0];
           // Show toast notification for each error message
           showWarningMessage(errorDetails)
       });
-      return Promise.reject(response.data.message.data[0]);
+      }
+      else{
+        showWarningMessage(messages)
+      }
+      return Promise.reject(response.data.error);
     }
   },
   async function (error) {
@@ -66,11 +70,16 @@ axiosInstance.interceptors.response.use(
     }
     else if (error.response && error.response.data.error) {
       const messages = error.response.data.error.msg;
-      messages.forEach((msg: any) => {
+      if(Array.isArray(messages)){
+        messages.forEach((msg: any) => {
           const errorDetails = msg.split(',')[0];
           // Show toast notification for each error message
           showWarningMessage(errorDetails)
       });
+      }
+      else{
+        showWarningMessage(messages)
+      }
     }
     else{
       showWarningMessage(error.config.message)   

@@ -4,6 +4,7 @@ import { Formik, Field, ErrorMessage, FormikValues, FormikHelpers, FieldArray } 
 import { showSuccessMessage } from '../../shared/notificationProvider';
 import Multiselect from 'multiselect-react-dropdown';
 import { useSelector } from 'react-redux';
+import { getOnlineStore, saveOnlineStore } from '../../services/AccountService';
 
 // Custom Multiselect component for Formik
 const CustomMultiselect = ({ field, form, options } : any) => {
@@ -22,7 +23,7 @@ const CustomMultiselect = ({ field, form, options } : any) => {
           onSelect={handleSelect} // Handle selection
           onRemove={handleRemove} // Handle removal
           isObject={true}
-          displayValue="name"
+          displayValue="description"
           showCheckbox
           selectedValues={field.value}
 
@@ -38,7 +39,7 @@ const onlineStoreDetailsValidationSchema = Yup.object().shape({
     categories: Yup.array()
     .of(
       Yup.object().shape({
-        category: Yup.string().required('category is required'),
+        category_id: Yup.string().required('category is required'),
         city: Yup.array().required("required"),
       })
     )
@@ -48,34 +49,30 @@ const onlineStoreDetailsValidationSchema = Yup.object().shape({
 const initialValues = {
     store_url: 'https://myfashion.com',
     categories: [
-        {
-          category: '1',
-          city:[
-            {
-              id: '1',
-              name: 'Bangalore'
-            },
-          ],
-        },
-        {
-            category: '2',
-            city:[
-              {
-                id: '1',
-                name: 'Bangalore'
-              },
-              {
-                id: '2',
-                name: 'Mumbai'
-            },
-            ],
-          }
+        // {
+        //     category_id: 1,
+        //     city_id: 1,
+        // },
+        // {
+        //     category: '2',
+        //     city:[
+        //       {
+        //         id: '1',
+        //         name: 'Bangalore'
+        //       },
+        //       {
+        //         id: '2',
+        //         name: 'Mumbai'
+        //     },
+        //     ],
+        //   }
       ],
    };
 
 
 const OnlineStoreForm = ({ onUpdate }: any) => {
     const refValues = useSelector((store: any) => store.refValues.referenceList);
+    const [loading, setLoading] = useState(true)
 
     const cities =[
         {
@@ -100,14 +97,135 @@ const OnlineStoreForm = ({ onUpdate }: any) => {
     //     option.toLowerCase().includes(searchTerm.toLowerCase())
     //   );
 
+    useEffect(() => {
+        fetchData();
+        // setLoading(false);
+      }, []);
+
+      const fetchData = () => {
+        getOnlineStore()
+        .then((data: any) => {
+            
+            if(data){
+
+                data[0]['categoryCityMappings'] = [
+                    {
+                        "category_id": 12,
+                        "city_id": 3,
+                        "category": {
+                            "ondc_categories_type": "Retail",
+                            "ondc_categories_code": "ONDC:RET1B",
+                            "description": "Hardware and Industrial"
+                        },
+                        "city": {
+                            "city_ref": "Chennai",
+                            "description": "Detroit of India",
+                            "std_code": "044"
+                        }
+                    },
+                    {
+                        "category_id": 12,
+                        "city_id": 2,
+                        "category": {
+                            "ondc_categories_type": "Retail",
+                            "ondc_categories_code": "ONDC:RET1B",
+                            "description": "Hardware and Industrial"
+                        },
+                        "city": {
+                            "city_ref": "Mumbai",
+                            "description": "Financial capital of India",
+                            "std_code": "022"
+                        }
+                    },
+                    {
+                        "category_id": 13,
+                        "city_id": 1,
+                        "category": {
+                            "ondc_categories_type": "Retail",
+                            "ondc_categories_code": "ONDC:RET1C",
+                            "description": "Building and construction supplies"
+                        },
+                        "city": {
+                            "city_ref": "Bengaluru",
+                            "description": "Silicon Valley of India",
+                            "std_code": "080"
+                        }
+                    }
+                ]
+
+                console.log("online store details = ", data)
+
+                setData(data[0])
+            }
+            else{
+                // let default initial values load
+            }
+            setLoading(false);
+        })
+        .catch(err => {
+            setLoading(false);
+        });
+      }
+
+    const setData = (values: any) => {
+        // let response = 
+        initialValues.store_url = values.store_url;
+        const formattedData = values.categoryCityMappings.reduce((acc: any, entry: any) => {
+            const { category_id, city_id, city } = entry;
+        
+            // Find or create the category object in the accumulator
+            let categoryEntry = acc.find((item: any) => item.category_id === category_id);
+        
+            if (!categoryEntry) {
+                categoryEntry = {
+                    category_id: category_id,
+                    city: [],
+                };
+                acc.push(categoryEntry);
+            }
+        
+            // Add the city_id to the city_ids array
+            categoryEntry.city.push({city_id: city_id, description: city.description});
+        
+            return acc;
+        }, []);
+
+        initialValues.categories = formattedData;
+
+        setLoading(false)
+
+    }
+
     const updateOnlineStoreDetails = (values: FormikValues) => {
-        showSuccessMessage("Online Store details updated successfully")
-        onUpdate();
+        let payload: any = []
+        values.categories.forEach((cat: any, index: any) => {
+            cat.city.forEach((city: any, index: any) => {
+                payload.push(
+                    {
+                        category_id: cat.category_id,
+                        city_id: city.city_id
+                    })
+            })
+        })
+        console.log("payload = ", payload)
+        delete payload['store_url']
+        saveOnlineStore(payload)
+         .then(response => {
+            showSuccessMessage("Online Store details updated successfully")
+         })
+         .catch(err => {
+            // setAllowEnterOtp(false);
+         });
     }
 
     return (
         <>
-            <div className="accordion mt-1" id="accordionExample">
+
+        {
+            !loading 
+            ?
+                <>
+                                <div className="accordion mt-1" id="accordionExample">
                 <div className="accordion-item">
                     <h2 className="accordion-header" id="headingOne">
                         <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
@@ -145,6 +263,7 @@ const OnlineStoreForm = ({ onUpdate }: any) => {
                                 name="store_url"
                                 type="text"
                                 className={'form-control dashboard-namefield ' + (errors.store_url && touched.store_url ? 'input-field-error' : '')}
+                                disabled
                             />
                             <ErrorMessage className='error' name="store_url" component="div" />
                         </div>
@@ -175,26 +294,26 @@ const OnlineStoreForm = ({ onUpdate }: any) => {
                                                                 <tr key={index} id='addr0' data-id="0" className="hidden">
                                                                     <td data-name="name">
                                                                         <Field as="select"
-                                                                            name={`categories.${index}.category`}
+                                                                            name={`categories.${index}.category_id`}
                                                                             className="form-select custom-select dashboard-three-namefield">
                                                                             <option value={""}>--select--</option>
                                                                             {
                                                                                 
                                                                                 refValues.categoriesType
-                                                                                    .map((entity: any, index: any) => {
-                                                                                        return <option key={index} value={entity.ondc_categories_code}>{entity.description}</option>
+                                                                                    .map((cat: any, index: any) => {
+                                                                                        return <option key={index} value={cat.ondc_categories_id}>{cat.description}</option>
                                                                                     })
                                                                             }
 
                                                                         </Field>
-                                                                        <ErrorMessage className='error' name={`categories.${index}.category`} component="div" />
+                                                                        <ErrorMessage className='error' name={`categories.${index}.category_id`} component="div" />
                                                                     </td>
                                                                     <td data-name="name">
                                                                         <div className="input-group">
                                                                         <Field
                                                                             name={`categories.${index}.city`}
                                                                             component={CustomMultiselect}
-                                                                            options={cities}
+                                                                            options={refValues.cities}
                                                                         />
                                                                         <ErrorMessage className='error' name={`categories.${index}.city`} component="div" />
                                                                         </div>
@@ -233,7 +352,13 @@ const OnlineStoreForm = ({ onUpdate }: any) => {
                         </div>
                     </form>
                     )}
-                </Formik>
+            </Formik>
+                </>
+            :
+
+            <></>
+        }
+
         </>
     ) 
 

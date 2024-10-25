@@ -15,6 +15,8 @@ export const AccountUrls = {
     saveLegalEntity: '/save_legal_entity',
     getBankInfo: '/bank_info',
     saveBankInfo: '/bank_info',
+    getOnlineStore: '/get_online_store',
+    saveOnlineStore: '/save_online_store',
 }
 
 export const UserUrls = {

@@ -33,8 +33,8 @@ const AuthGuardRoutes = ({ children }: any) => {
         localStorageToken = localStorage.getItem("token");
         addStoresToRedux(JSON.parse(localStorage.getItem("associated_stores") || '{}'));
         updateSelectedStoreToRedux(JSON.parse(localStorage.getItem("selected_store") || '{}'));
-        fetchRef().then((data)=>{
-          addReferencesToStore(data)
+        fetchRef().then((data: any)=>{
+          addReferencesToStore(data[0])
         })
     }
 	return localStorageToken ? children : <Navigate to="/login"  replace/>;

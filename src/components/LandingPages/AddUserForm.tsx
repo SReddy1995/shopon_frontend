@@ -61,7 +61,7 @@ const userValidationSchema = Yup.object().shape({
     })
   )
   .min(1, 'At least one role is required'),
-  enabled: Yup.string().required("Required"),
+  isActive: Yup.string().required("Required"),
 });
 
 const initialValues = {
@@ -70,7 +70,7 @@ const initialValues = {
   email_address: '',
   contact_number: '',
   roles: '',
-  enabled: '',
+  isActive: '',
 };
 
 
@@ -91,7 +91,7 @@ const AddUserForm = (props: any) => {
       setData();
     }
     else{
-      setFormInitialValues({firstname: '', lastname: '', email_address: '', contact_number: '', roles: '', enabled: ''})
+      setFormInitialValues({firstname: '', lastname: '', email_address: '', contact_number: '', roles: '', isActive: ''})
       setLoading(false);
     }
 
@@ -101,7 +101,7 @@ const AddUserForm = (props: any) => {
     setLoading(false);
     console.log(props.selectedUser)
     setFormInitialValues({firstname: props.selectedUser.firstname, lastname: props.selectedUser.lastname, email_address: props.selectedUser.email_address,
-      contact_number: props.selectedUser.contact_number, roles: props.selectedUser.roles, enabled: props.selectedUser.enabled})
+      contact_number: props.selectedUser.contact_number, roles: props.selectedUser.roles, isActive: props.selectedUser.enabled})
   }
 
   const submitForm = (values: FormikValues) => {
@@ -131,9 +131,10 @@ const AddUserForm = (props: any) => {
 
   const editUser = (values: FormikValues) => {
     let payload = formatPayloadForRole(values);
-    updateUser(values, props.selectedUser.user_id)
+    updateUser(payload, props.selectedUser.user_id)
      .then(response => {
-        showSuccessMessage("User Updated successfully")
+        showSuccessMessage("User Details Updated successfully")
+        props.closeAndUpdate();
      })
   }
 
@@ -258,12 +259,12 @@ const AddUserForm = (props: any) => {
 
                               <div className="radio-button">
                                 <Field
-                                  name="enabled"
+                                  name="isActive"
                                   type="radio"
                                   id="radio2"
                                   placeholder="Legal Entity Name"
                                   value="Y"
-                                  className={errors.enabled && touched.enabled ? 'radio-button__input input-field-error' : 'radio-button__input'}
+                                  className={errors.isActive && touched.isActive ? 'radio-button__input input-field-error' : 'radio-button__input'}
                                 />
                                 <label htmlFor="radio2" className="radio-button__label">
                                   <span className="radio-button__custom"></span>
@@ -273,12 +274,12 @@ const AddUserForm = (props: any) => {
                               </div>
                               <div className="radio-button">
                                 <Field
-                                  name="enabled"
+                                  name="isActive"
                                   type="radio"
                                   id="radio1"
                                   placeholder="Legal Entity Name"
                                   value="N"
-                                  className={errors.enabled && touched.enabled ? 'radio-button__input input-field-error' : 'radio-button__input'}
+                                  className={errors.isActive && touched.isActive ? 'radio-button__input input-field-error' : 'radio-button__input'}
                                 />
                                 <label htmlFor="radio1" className="radio-button__label">
                                   <span className="radio-button__custom"></span>
