@@ -47,7 +47,7 @@ const onlineStoreDetailsValidationSchema = Yup.object().shape({
 });
 
 const initialValues = {
-    store_url: 'https://myfashion.com',
+    store_url: '',
     categories: [],
    };
 

@@ -8,19 +8,20 @@ const ifscRegex = new RegExp("^[A-Z]{4}[0]{1}[A-Z0-9]{6}$")
 const bankEscrowValidationSchema = Yup.object().shape({
     has_escrow_account: Yup.string().required('Required'),   
     escrow_account_number: Yup.string(),
-    ifsc: Yup.string().matches(ifscRegex, "Invalid format"),
+    ifsc: Yup.string(),
     bank_name: Yup.string()
 });
 
-const initialValues = {
-    has_escrow_account: 'Y',   
-    escrow_account_number: '65421378996',
-    ifsc: 'SBIN400134',
-    bank_name: 'SBI'
-   };
 const BankEscrowForm = ({ onUpdate }: any) => {
 
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [initialValues, setInitialValues] = useState({
+        has_escrow_account: '',   
+        escrow_account_number: '',
+        ifsc: '',
+        bank_name: ''
+       }); 
+
 
     useEffect(() => {
         fetchData();
@@ -30,10 +31,8 @@ const BankEscrowForm = ({ onUpdate }: any) => {
         getBankInfo()
         .then((data: any) => {
             if(data){
-                console.log("legal entity details = ", data)
-            }
-            else{
-                // let default initial values load
+                console.log("bank info details = ", data)
+                setInitialValues(data)
             }
             setLoading(false);
         })
@@ -50,7 +49,6 @@ const BankEscrowForm = ({ onUpdate }: any) => {
          .catch(err => {
             // setAllowEnterOtp(false);
          });
-        onUpdate();
       }
 
     return (
@@ -82,7 +80,6 @@ const BankEscrowForm = ({ onUpdate }: any) => {
                         initialValues={initialValues}
                         validationSchema={bankEscrowValidationSchema}
                         onSubmit={(values, actions) => {
-                            console.log("legal entity form submitted = ", values)
                             actions.setSubmitting(false);
                             updateBankEscrowDetails(values);
                         }}
@@ -135,7 +132,6 @@ const BankEscrowForm = ({ onUpdate }: any) => {
                                                 placeholder="Escrow Account Number"
                                                 name="escrow_account_number"
                                                 type="text"
-                                                id="exampleFormControlInput1"
                                                 className={'form-control dashboard-namefield ' + (errors.escrow_account_number && touched.escrow_account_number ? 'input-field-error' : '')}
                                                 onKeyPress={(e: any) => {
                                                     if (!/[0-9]/.test(e.key)) {
@@ -154,7 +150,6 @@ const BankEscrowForm = ({ onUpdate }: any) => {
                                         <Field 
                                             name="ifsc" type="email" 
                                             className={'form-control dashboard-namefield ' + (errors.ifsc && touched.ifsc ? 'input-field-error' : '')}
-                                            id="exampleFormControlInput1" 
                                             onKeyPress={(e: any) => {
                                                 if (!/[a-zA-Z0-9]/.test(e.key)) {
                                                 e.preventDefault();
@@ -169,9 +164,8 @@ const BankEscrowForm = ({ onUpdate }: any) => {
                                     <div className="mb-3 form-field-container-full-width">
                                         <label htmlFor="exampleFormControlInput1" className="form-label">Bank Name</label>
                                         <Field 
-                                            name="bank_name" type="email" 
+                                            name="bank_name" type="text" 
                                             className={'form-control dashboard-namefield ' + (errors.bank_name && touched.bank_name ? 'input-field-error' : '')}
-                                            id="exampleFormControlInput1" 
                                             placeholder="Bank Name" 
                                         />
                                         <ErrorMessage className='error' name="bank_name" component="div" />
