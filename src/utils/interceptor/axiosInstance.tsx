@@ -40,15 +40,13 @@ axiosInstance.interceptors.response.use(
     // Do formatting of response and return
     console.log(response)
     if(response.data.error === null){
-      // showSuccessMessage(response.data.message.data[0])
-      return response.data.message.data;
+      return response.data.message.data[0];
     }
     else{
       const messages = response.data.error.msg;
       if(Array.isArray(messages)){
         messages.forEach((msg: any) => {
           const errorDetails = msg.split(',')[0];
-          // Show toast notification for each error message
           showWarningMessage(errorDetails)
       });
       }

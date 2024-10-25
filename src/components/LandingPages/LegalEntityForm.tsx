@@ -22,7 +22,6 @@ const legalEntityValidationSchema = Yup.object().shape({
     authorised_signatory_pan: Yup.string()
     .when('pan_or_aadhar', 
         ([pan_or_aadhar], schema) => {
-            console.log("schema getting updated")
             if(pan_or_aadhar == "pan"){
                return Yup.string().matches(panRegex,'Invalid format').required("Pan required");
             }
@@ -30,10 +29,9 @@ const legalEntityValidationSchema = Yup.object().shape({
                 return Yup.string();
             }
     }),
-    authorised_signatory_adhaar: Yup.string()
+    authorised_signatory_aadhaar: Yup.string()
     .when('pan_or_aadhar', 
         ([pan_or_aadhar], schema) => {
-            console.log("schema getting updated")
             if(pan_or_aadhar == "aadhar"){
                return Yup.string().matches(aadharRegex,'Invalid format').required("Aadhar required");
             }
@@ -54,13 +52,31 @@ const legalEntityValidationSchema = Yup.object().shape({
     nature_of_organization_type: Yup.string().required('Required'),
     company_gstn: Yup.string().required('Required'),
     company_pan: Yup.string().required('Required'),
-    company_cin: Yup.string().required('Required'),
-    company_llpin: Yup.string().required('Required'),
+    company_cin: Yup.string()
+    .when('nature_of_organization_type', 
+        ([nature_of_organization_type], schema) => {
+            if(nature_of_organization_type == "COMP"){
+               return Yup.string().required("CIN is required");
+            }
+            else{
+                return Yup.string()
+            }
+    }),
+    company_llpin: Yup.string()
+    .when('nature_of_organization_type', 
+        ([nature_of_organization_type], schema) => {
+            if(nature_of_organization_type == "LLP"){
+               return Yup.string().required("LLPIN is required");
+            }
+            else{
+                return Yup.string()
+            }
+    }),
     building_street_area: Yup.string().required('Required'),
     locality_town: Yup.string().required('Required'),
     city_id: Yup.string().required('Required'),
-    // state: Yup.string().required('Required'),
-    // country: Yup.string().required('Required'),
+    state: Yup.string().required('Required'),
+    country: Yup.string().required('Required'),
     pincode: Yup.string().min(6, 'Pincode must be 6 characters')
     .max(6, 'Pincode must be 6 characters')
     .required('Pincode is required')
@@ -71,9 +87,9 @@ const initialValues = {
     authorised_signatory_designation: '',
     authorised_signatory_phone_number: '',
     authorised_signatory_email_address: '',
-    pan_or_aadhar: 'aadhar',
+    pan_or_aadhar: '',
     authorised_signatory_pan: '',
-    authorised_signatory_adhaar: '',
+    authorised_signatory_aadhaar: '',
     company_name: '',
     sector_of_organization_type: '',
     date_of_incorporation: '',
@@ -88,13 +104,12 @@ const initialValues = {
     building_street_area: '',
     locality_town: '',
     city_id: '',
-    // state: '',
-    // country: '',
+    state: '',
+    country: '',
     pincode: ''
    };
 const LegalEntityForm = () => {
 
-    const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const selectedStore = useSelector((store: any) => store.stores.selectedStore);
@@ -107,12 +122,8 @@ const LegalEntityForm = () => {
       const fetchData = () => {
         getLegalEntityDetails()
         .then((data: any) => {
-            setData(data);
-            if(data){
-                console.log("legal entity details = ", data)
-            }
-            else{
-                // let default initial values load
+            if(data.length>0){
+                setData(data);
             }
             setLoading(false);
         })
@@ -121,17 +132,48 @@ const LegalEntityForm = () => {
         });
       }
 
+      const setData = (data: any) => {
+        console.log("inside set data")
+      }
+
       const updateLegalEntityDetails = (values: FormikValues) => {
-        let payload = values
-        delete payload['pan_or_aadhar'];
-        delete payload['authorised_signatory_pan'];
-        saveLegalEntityDetails(values)
+        let payload = getFormattedPayload(values)
+        saveLegalEntityDetails(payload)
          .then(response => {
             showSuccessMessage("Legal entity details updated successfully")
          })
          .catch(err => {
             // setAllowEnterOtp(false);
          });
+      }
+
+      const getFormattedPayload = (values: any) => {
+        let payload = values;
+        let filteredValuestemp = values;
+        const{ state, country, ...filteredValues } = filteredValuestemp;
+        filteredValuestemp = filteredValues
+        if(payload['pan_or_aadhar'] === 'aadhar'){
+            const{ authorised_signatory_pan, pan_or_aadhar, ...filteredValues } = filteredValuestemp;
+            filteredValuestemp = filteredValues
+        }
+        else{
+            const{ authorised_signatory_aadhaar, pan_or_aadhar, ...filteredValues } = filteredValuestemp;
+            filteredValuestemp = filteredValues
+        }
+        if(payload['nature_of_organization_type'] === 'COMP'){
+            const{ company_llpin, ...filteredValues } = filteredValuestemp;
+            filteredValuestemp = filteredValues
+        }
+        else if(payload['nature_of_organization_type'] === 'LLP'){
+            const{ company_cin, ...filteredValues } = filteredValuestemp;
+            filteredValuestemp = filteredValues
+        }
+        else{
+            const{ company_llpin, company_cin, ...filteredValues } = filteredValuestemp;
+            filteredValuestemp = filteredValues
+        }
+        return filteredValuestemp
+
       }
 
     return (
@@ -162,7 +204,6 @@ const LegalEntityForm = () => {
                 initialValues={initialValues}
                 validationSchema={legalEntityValidationSchema}
                 onSubmit={(values, actions) => {
-                    console.log("legal entity form submitted = ", values)
                     actions.setSubmitting(false);
                     updateLegalEntityDetails(values);
                 }}
@@ -276,8 +317,8 @@ const LegalEntityForm = () => {
                                             <div className="mb-3 form-field-container-full-width">
                                                 <label htmlFor="exampleFormControlInput1" className="form-label required">Authorised Signatory Aadhaar</label>
                                                 <Field
-                                                    name="authorised_signatory_adhaar" type="text"
-                                                    className={'form-control dashboard-namefield ' + (errors.authorised_signatory_adhaar && touched.authorised_signatory_adhaar ? 'input-field-error' : '')}
+                                                    name="authorised_signatory_aadhaar" type="text"
+                                                    className={'form-control dashboard-namefield ' + (errors.authorised_signatory_aadhaar && touched.authorised_signatory_aadhaar ? 'input-field-error' : '')}
                                                     id="exampleFormControlInput1"
                                                     onKeyPress={(e: any) => {
                                                         if (!/[a-zA-Z0-9]/.test(e.key)) {
@@ -286,7 +327,7 @@ const LegalEntityForm = () => {
                                                     }}
                                                     placeholder="Authorised Signatory Aadhar"
                                                 />
-                                                <ErrorMessage className='error' name="authorised_signatory_adhaar" component="div" />
+                                                <ErrorMessage className='error' name="authorised_signatory_aadhaar" component="div" />
                                             </div>
 
                                         :
@@ -408,23 +449,21 @@ const LegalEntityForm = () => {
                         </div>
                         <div className="name-field">
                         <div className="mb-3 form-field-container-full-width">
-                                <label htmlFor="exampleFormControlInput1" className="form-label required">Nature of Organization</label>
+                                <label htmlFor="exampleFormControlInput1" className="form-label required">Company PAN</label>
                                 <Field 
-                                    name="nature_of_organization_type" as="select" 
-                                    className={'form-control custom-select dashboard-namefield ' + (errors.nature_of_organization_type && touched.nature_of_organization_type ? 'input-field-error' : '')}
-                                    id="exampleFormControlInput1" 
-                                    placeholder="Nature of Organization" 
-                                >
-                                    <option value={""}>--select--</option>
-                                    {
-                                        refValues.organizationNatureType
-                                        .map((nature : any, index: any) => {
-                                            return  <option key={index} value={nature.nature_of_organization_type}>{nature.description}</option>
-                                        })
-                                    }
-                                </Field>
-                                <ErrorMessage className='error' name="nature_of_organization_type" component="div" />
+                                    name="company_pan" type="text" 
+                                    className={'form-control dashboard-namefield ' + (errors.company_pan && touched.company_pan ? 'input-field-error' : '')}
+                                    id="exampleFormControlInput1"
+                                    onKeyPress={(e: any) => {
+                                        if (!/[a-zA-Z0-9]/.test(e.key)) {
+                                          e.preventDefault();
+                                        }
+                                      }} 
+                                    placeholder="Company PAN" 
+                                />
+                                <ErrorMessage className='error' name="company_pan" component="div" />
                             </div>
+
                         <div className="mb-3 form-field-container-full-width">
                                 <label htmlFor="exampleFormControlInput1" className="form-label required">Company GSTN</label>
                                 <Field 
@@ -444,55 +483,77 @@ const LegalEntityForm = () => {
                         </div>
 
                         <div className="name-field">
+
                         <div className="mb-3 form-field-container-full-width">
-                                <label htmlFor="exampleFormControlInput1" className="form-label required">Company PAN</label>
+                                <label htmlFor="exampleFormControlInput1" className="form-label required">Nature of Organization</label>
                                 <Field 
-                                    name="company_pan" type="text" 
-                                    className={'form-control dashboard-namefield ' + (errors.company_pan && touched.company_pan ? 'input-field-error' : '')}
-                                    id="exampleFormControlInput1"
-                                    onKeyPress={(e: any) => {
-                                        if (!/[a-zA-Z0-9]/.test(e.key)) {
-                                          e.preventDefault();
-                                        }
-                                      }} 
-                                    placeholder="Company PAN" 
-                                />
-                                <ErrorMessage className='error' name="company_pan" component="div" />
+                                    name="nature_of_organization_type" as="select" 
+                                    className={'form-control custom-select dashboard-namefield ' + (errors.nature_of_organization_type && touched.nature_of_organization_type ? 'input-field-error' : '')}
+                                    id="exampleFormControlInput1" 
+                                    placeholder="Nature of Organization" 
+                                >
+                                    <option value={""}>--select--</option>
+                                    {
+                                        refValues.organizationNatureType
+                                        .map((nature : any, index: any) => {
+                                            return  <option key={index} value={nature.nature_of_organization_type}>{nature.description}</option>
+                                        })
+                                    }
+                                </Field>
+                                <ErrorMessage className='error' name="nature_of_organization_type" component="div" />
                             </div>
 
-                            <div className="mb-3 form-field-container-full-width">
-                                <label htmlFor="exampleFormControlInput1" className="form-label required">Company CIN</label>
-                                <Field 
-                                    name="company_cin" type="text" 
-                                    className={'form-control dashboard-namefield ' + (errors.company_cin && touched.company_cin ? 'input-field-error' : '')}
-                                    id="exampleFormControlInput1" 
-                                    onKeyPress={(e: any) => {
-                                        if (!/[a-zA-Z0-9]/.test(e.key)) {
-                                          e.preventDefault();
-                                        }
-                                      }}
-                                    placeholder="Company CIN" 
-                                />
-                                <ErrorMessage className='error' name="company_cin" component="div" />
-                            </div>
-                        </div>
+                            {
+                                        values.nature_of_organization_type == "LLP"
+                                            ?
+                                            <div className="mb-3 form-field-container-full-width">
+                                                <label htmlFor="exampleFormControlInput1" className="form-label required">Company LLPIN</label>
+                                                <Field
+                                                    name="company_llpin" type="text"
+                                                    className={'form-control dashboard-namefield ' + (errors.company_llpin && touched.company_llpin ? 'input-field-error' : '')}
+                                                    id="exampleFormControlInput1"
+                                                    onKeyPress={(e: any) => {
+                                                        if (!/[a-zA-Z0-9]/.test(e.key)) {
+                                                            e.preventDefault();
+                                                        }
+                                                    }}
+                                                    placeholder="Company LLPIN"
+                                                />
+                                                <ErrorMessage className='error' name="company_llpin" component="div" />
+                                            </div>
 
-                        <div className="name-field">
-                            <div className="mb-3 form-field-container-full-width">
-                                <label htmlFor="exampleFormControlInput1" className="form-label required">Company LLPIN</label>
-                                <Field 
-                                    name="company_llpin" type="text" 
-                                    className={'form-control dashboard-namefield ' + (errors.company_llpin && touched.company_llpin ? 'input-field-error' : '')}
-                                    id="exampleFormControlInput1" 
-                                    onKeyPress={(e: any) => {
-                                        if (!/[a-zA-Z0-9]/.test(e.key)) {
-                                          e.preventDefault();
-                                        }
-                                      }}
-                                    placeholder="Company LLPIN" 
-                                />
-                                <ErrorMessage className='error' name="company_llpin" component="div" />
-                            </div>
+                                            :
+
+                                            <></>
+
+                                    }
+
+                                    {
+                                        values.nature_of_organization_type == "COMP"
+                                            ?
+
+                                            <div className="mb-3 form-field-container-full-width">
+                                                <label htmlFor="exampleFormControlInput1" className="form-label required">Company CIN</label>
+                                                <Field
+                                                    name="company_cin" type="text"
+                                                    className={'form-control dashboard-namefield ' + (errors.company_cin && touched.company_cin ? 'input-field-error' : '')}
+                                                    id="exampleFormControlInput1"
+                                                    onKeyPress={(e: any) => {
+                                                        if (!/[a-zA-Z0-9]/.test(e.key)) {
+                                                            e.preventDefault();
+                                                        }
+                                                    }}
+                                                    placeholder="Company CIN"
+                                                />
+                                                <ErrorMessage className='error' name="company_cin" component="div" />
+                                            </div>
+
+                                            :
+
+                                            <></>
+                                    }
+
+
                         </div>
                                 <div className='text-left'>
                                     <label htmlFor="exampleFormControlInput1" className="form-label required">Registered Store Address</label>
@@ -526,39 +587,55 @@ const LegalEntityForm = () => {
                                     <div className="mb-3 form-field-container-full-width">
                                         <label htmlFor="exampleFormControlInput1" className="form-label required">City</label>
                                         <Field 
-                                            name="city_id" type="text" 
-                                            className={'form-control dashboard-namefield ' + (errors.city_id && touched.city_id ? 'input-field-error' : '')}
+                                            name="city_id" as="select" 
+                                            className={'form-control custom-select dashboard-namefield ' + (errors.city_id && touched.city_id ? 'input-field-error' : '')}
                                             id="exampleFormControlInput1" 
-                                            placeholder="City/District" 
-                                        />
+                                            placeholder="City/District"
+                                            onChange={(e: any) => {
+                                                const { value } = e.target;
+                                                setFieldValue("city_id", value);
+                                                setFieldValue("state", refValues.cities.filter((x: any) => x.city_id == value)[0].state.description);
+                                                setFieldValue("country", refValues.cities.filter((x: any) => x.city_id == value)[0].state.country.description);
+                                            }} 
+                                        >
+                                            <option value={""}>--select--</option>
+                                            {
+                                                refValues.cities
+                                                .map((city : any, index: any) => {
+                                                    return  <option key={index} value={city.city_id}>{city.description}</option>
+                                                })
+                                            }
+                                        </Field>
                                         <ErrorMessage className='error' name="city_id" component="div" />
                                     </div>
 
 
-                                    {/* <div className="mb-3 form-field-container-full-width">
+                                    <div className="mb-3 form-field-container-full-width">
                                         <label htmlFor="exampleFormControlInput1" className="form-label required">State</label>
                                         <Field 
                                             name="state" type="text" 
                                             className={'form-control dashboard-namefield ' + (errors.state && touched.state ? 'input-field-error' : '')}
                                             id="exampleFormControlInput1" 
-                                            placeholder="State" 
+                                            placeholder="State"
+                                            disabled 
                                         />
                                         <ErrorMessage className='error' name="state" component="div" />
-                                    </div> */}
+                                    </div>
 
 
                                 </div>
                                 <div className="name-field">
-                                    {/* <div className="mb-3 form-field-container-full-width">
+                                    <div className="mb-3 form-field-container-full-width">
                                         <label htmlFor="exampleFormControlInput1" className="form-label required">Country</label>
                                         <Field 
                                             name="country" type="text" 
                                             className={'form-control dashboard-namefield ' + (errors.country && touched.country ? 'input-field-error' : '')}
                                             id="exampleFormControlInput1" 
                                             placeholder="Country" 
+                                            disabled
                                         />
                                         <ErrorMessage className='error' name="country" component="div" />
-                                    </div> */}
+                                    </div>
                                     <div className="mb-3 form-field-container-full-width">
                                         <label htmlFor="exampleFormControlInput1" className="form-label required">Pincode</label>
                                         <Field 

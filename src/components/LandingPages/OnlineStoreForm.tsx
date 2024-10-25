@@ -70,7 +70,7 @@ const OnlineStoreForm = ({ onUpdate }: any) => {
         .then((data: any) => {
             
             if(data){
-                setData(data[0])
+                setData(data)
             }
             else{
                 // let default initial values load

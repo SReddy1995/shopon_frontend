@@ -169,24 +169,24 @@ const setDataInLocalStorage = (response: any) => {
 }
 
 const setRegiteredStores = (response: any) => {
-    if(response[0].buyersDetails){
-        localStorage.setItem('associated_stores', JSON.stringify(response[0].buyersDetails));
+    if(response.buyersDetails){
+        localStorage.setItem('associated_stores', JSON.stringify(response.buyersDetails));
     }
 
 }
 
 const setSelectedStore = (response: any) => {
-    if(response[0].lastAccessedBuyer){
-        localStorage.setItem('selected_store', JSON.stringify(response[0].lastAccessedBuyer.buyer_id));
+    if(response.lastAccessedBuyer){
+        localStorage.setItem('selected_store', JSON.stringify(response.lastAccessedBuyer.buyer_id));
     }
    
 }
 
 const setAuthTokens = (response: any) => {
-    localStorage.setItem('token', response[0].token);
+    localStorage.setItem('token', response.token);
 }
 
 const setUserDetails = (response: any) => {
-    const user_details = jwtDecode(response[0].token)
+    const user_details = jwtDecode(response.token)
     localStorage.setItem('user_details', JSON.stringify(user_details));
 }
