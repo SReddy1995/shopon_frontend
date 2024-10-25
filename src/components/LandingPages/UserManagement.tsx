@@ -18,8 +18,7 @@ const UserManagement = () => {
     const fetchData = () => {
         getUsersList()
         .then((data: any) => {
-            if(data.length>0){
-                console.log("users list = ", data)
+            if(data){
                 setUsersList(data)
             }
             else{

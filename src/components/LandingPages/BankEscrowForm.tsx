@@ -31,8 +31,10 @@ const BankEscrowForm = ({ onUpdate }: any) => {
         getBankInfo()
         .then((data: any) => {
             if(data){
-                console.log("bank info details = ", data)
-                setInitialValues(data)
+                initialValues.has_escrow_account = data.has_escrow_account
+                initialValues.escrow_account_number = data.escrow_account_number
+                initialValues.ifsc = data.ifsc
+                initialValues.bank_name = data.bank_name
             }
             setLoading(false);
         })

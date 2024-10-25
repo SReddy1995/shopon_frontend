@@ -55,6 +55,7 @@ const initialValues = {
 const OnlineStoreForm = ({ onUpdate }: any) => {
     const refValues = useSelector((store: any) => store.refValues.referenceList);
     const [loading, setLoading] = useState(true)
+    const user_details = localStorage.getItem('user_details') ? JSON.parse(localStorage.getItem('user_details') || '{}') : null;
 
     // const filteredOptions = cities.filter(option =>
     //     option.toLowerCase().includes(searchTerm.toLowerCase())
@@ -68,9 +69,9 @@ const OnlineStoreForm = ({ onUpdate }: any) => {
       const fetchData = () => {
         getOnlineStore()
         .then((data: any) => {
-            
+            initialValues.store_url = user_details.store_url;
             if(data){
-                setData(data)
+                setData(data[0])
             }
             else{
                 // let default initial values load
@@ -83,8 +84,6 @@ const OnlineStoreForm = ({ onUpdate }: any) => {
       }
 
     const setData = (values: any) => {
-        // let response = 
-        initialValues.store_url = values.store_url;
         if(values.categoryCityMappings.length> 0){
             const formattedData = values.categoryCityMappings.reduce((acc: any, entry: any) => {
                 const { category_id, city_id, city } = entry;

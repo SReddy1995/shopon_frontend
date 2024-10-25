@@ -169,7 +169,7 @@ const TopBar = () => {
             </LogoContainer>
             <ProfileContainer className="profile-container">
                 <ProfileName >
-                    { selectedStoreData ? selectedStoreData : '' } , {user_details.firstname + ' ' + user_details.lastname}
+                    { user_details ? user_details.legal_entity_name : '' } , {user_details.firstname + ' ' + user_details.lastname}
                 </ProfileName>
                 <ProfileIcon>
                     <ProfileIconInitial >Opt</ProfileIconInitial>

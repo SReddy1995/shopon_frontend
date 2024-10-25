@@ -46,11 +46,11 @@ export const getLegalEntityDetails = async () => {
   }
 
     const setAuthTokens = (response: any) => {
-        localStorage.setItem('token', response.token);
+        localStorage.setItem('token', response[0].token);
     }
 
     const setUserDetails = (response: any) => {
-        const user_details = jwtDecode(response.token)
+        const user_details = jwtDecode(response[0].token)
         localStorage.setItem('user_details', JSON.stringify(user_details));
     }
 

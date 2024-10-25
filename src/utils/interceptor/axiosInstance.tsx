@@ -40,7 +40,7 @@ axiosInstance.interceptors.response.use(
     // Do formatting of response and return
     console.log(response)
     if(response.data.error === null){
-      return response.data.message.data[0];
+      return response.data.message.data;
     }
     else{
       const messages = response.data.error.msg;
