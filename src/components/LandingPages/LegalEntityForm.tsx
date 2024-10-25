@@ -122,7 +122,7 @@ const LegalEntityForm = () => {
       const fetchData = () => {
         getLegalEntityDetails()
         .then((data: any) => {
-            if(data.length>0){
+            if(data){
                 setData(data);
             }
             setLoading(false);
@@ -133,7 +133,30 @@ const LegalEntityForm = () => {
       }
 
       const setData = (data: any) => {
-        console.log("inside set data")
+        initialValues.authorised_signatory_name = data.authorised_signatory_name
+        initialValues.authorised_signatory_designation = data.authorised_signatory_designation
+        initialValues.authorised_signatory_phone_number = data.authorised_signatory_phone_number
+        initialValues.authorised_signatory_email_address = data.authorised_signatory_email_address
+        initialValues.pan_or_aadhar = data.authorised_signatory_pan === null ? 'aadhar' : 'pan';
+        initialValues.authorised_signatory_pan = data.authorised_signatory_pan ? data.authorised_signatory_pan : ''
+        initialValues.authorised_signatory_aadhaar = data.authorised_signatory_aadhaar ? data.authorised_signatory_aadhaar : ''
+        initialValues.company_name = data.company_name
+        initialValues.sector_of_organization_type = data.sector_of_organization_type
+        initialValues.date_of_incorporation = new Date(data.date_of_incorporation).toISOString().split('T')[0]
+        initialValues.company_phone_number = data.company_phone_number
+        initialValues.company_email_address = data.company_email_address
+        initialValues.annual_turnover_type = data.annual_turnover_type
+        initialValues.nature_of_organization_type = data.nature_of_organization_type
+        initialValues.company_gstn = data.company_gstn
+        initialValues.company_pan = data.company_pan
+        initialValues.company_cin = data.company_cin ? data.company_cin : ''
+        initialValues.company_llpin = data.company_llpin ? data.company_llpin : ''
+        initialValues.building_street_area = data.addressDetails.building_street_area
+        initialValues.locality_town = data.addressDetails.locality_town
+        initialValues.city_id = data.addressDetails.city_id
+        initialValues.state = refValues.cities.filter((x: any) => x.city_id == data.addressDetails.city_id)[0].state.description
+        initialValues.country = refValues.cities.filter((x: any) => x.city_id == data.addressDetails.city_id)[0].state.country.description
+        initialValues.pincode = data.addressDetails.pincode
       }
 
       const updateLegalEntityDetails = (values: FormikValues) => {
@@ -172,6 +195,8 @@ const LegalEntityForm = () => {
             const{ company_llpin, company_cin, ...filteredValues } = filteredValuestemp;
             filteredValuestemp = filteredValues
         }
+        filteredValuestemp['city_id'] = Number(filteredValuestemp['city_id'])
+        filteredValuestemp['pincode'] = Number(filteredValuestemp['pincode'])
         return filteredValuestemp
 
       }
@@ -656,7 +681,7 @@ const LegalEntityForm = () => {
                         <div className="text-center">
                             <a className="btn-link"><button type="button"
                                 className="btn-custom  mt-2 btn-right" 
-                                disabled={!(isValid && dirty) || isSubmitting}
+                                disabled={!(isValid) || isSubmitting}
                                 onClick={() => {
                                   handleSubmit();
                                 }}>
