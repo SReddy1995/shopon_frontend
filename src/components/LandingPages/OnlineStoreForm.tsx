@@ -48,50 +48,13 @@ const onlineStoreDetailsValidationSchema = Yup.object().shape({
 
 const initialValues = {
     store_url: 'https://myfashion.com',
-    categories: [
-        // {
-        //     category_id: 1,
-        //     city_id: 1,
-        // },
-        // {
-        //     category: '2',
-        //     city:[
-        //       {
-        //         id: '1',
-        //         name: 'Bangalore'
-        //       },
-        //       {
-        //         id: '2',
-        //         name: 'Mumbai'
-        //     },
-        //     ],
-        //   }
-      ],
+    categories: [],
    };
 
 
 const OnlineStoreForm = ({ onUpdate }: any) => {
     const refValues = useSelector((store: any) => store.refValues.referenceList);
     const [loading, setLoading] = useState(true)
-
-    const cities =[
-        {
-          id: '1',
-          name: 'Bangalore'
-        },
-        {
-          id: '2',
-          name: 'Mumbai'
-        },
-        {
-          id: '3',
-          name: 'Mangalore'
-        },
-        {
-          id: '4',
-          name: 'Delhi'
-        },
-      ]
 
     // const filteredOptions = cities.filter(option =>
     //     option.toLowerCase().includes(searchTerm.toLowerCase())
@@ -107,54 +70,6 @@ const OnlineStoreForm = ({ onUpdate }: any) => {
         .then((data: any) => {
             
             if(data){
-
-                data[0]['categoryCityMappings'] = [
-                    {
-                        "category_id": 12,
-                        "city_id": 3,
-                        "category": {
-                            "ondc_categories_type": "Retail",
-                            "ondc_categories_code": "ONDC:RET1B",
-                            "description": "Hardware and Industrial"
-                        },
-                        "city": {
-                            "city_ref": "Chennai",
-                            "description": "Detroit of India",
-                            "std_code": "044"
-                        }
-                    },
-                    {
-                        "category_id": 12,
-                        "city_id": 2,
-                        "category": {
-                            "ondc_categories_type": "Retail",
-                            "ondc_categories_code": "ONDC:RET1B",
-                            "description": "Hardware and Industrial"
-                        },
-                        "city": {
-                            "city_ref": "Mumbai",
-                            "description": "Financial capital of India",
-                            "std_code": "022"
-                        }
-                    },
-                    {
-                        "category_id": 13,
-                        "city_id": 1,
-                        "category": {
-                            "ondc_categories_type": "Retail",
-                            "ondc_categories_code": "ONDC:RET1C",
-                            "description": "Building and construction supplies"
-                        },
-                        "city": {
-                            "city_ref": "Bengaluru",
-                            "description": "Silicon Valley of India",
-                            "std_code": "080"
-                        }
-                    }
-                ]
-
-                console.log("online store details = ", data)
-
                 setData(data[0])
             }
             else{
@@ -170,27 +85,32 @@ const OnlineStoreForm = ({ onUpdate }: any) => {
     const setData = (values: any) => {
         // let response = 
         initialValues.store_url = values.store_url;
-        const formattedData = values.categoryCityMappings.reduce((acc: any, entry: any) => {
-            const { category_id, city_id, city } = entry;
-        
-            // Find or create the category object in the accumulator
-            let categoryEntry = acc.find((item: any) => item.category_id === category_id);
-        
-            if (!categoryEntry) {
-                categoryEntry = {
-                    category_id: category_id,
-                    city: [],
-                };
-                acc.push(categoryEntry);
-            }
-        
-            // Add the city_id to the city_ids array
-            categoryEntry.city.push({city_id: city_id, description: city.description});
-        
-            return acc;
-        }, []);
+        if(values.categoryCityMappings.length> 0){
+            const formattedData = values.categoryCityMappings.reduce((acc: any, entry: any) => {
+                const { category_id, city_id, city } = entry;
+            
+                // Find or create the category object in the accumulator
+                let categoryEntry = acc.find((item: any) => item.category_id === category_id);
+            
+                if (!categoryEntry) {
+                    categoryEntry = {
+                        category_id: category_id,
+                        city: [],
+                    };
+                    acc.push(categoryEntry);
+                }
+            
+                // Add the city_id to the city_ids array
+                categoryEntry.city.push({city_id: city_id, description: city.description});
+            
+                return acc;
+            }, []);
 
+            
         initialValues.categories = formattedData;
+        }
+
+
 
         setLoading(false)
 
@@ -207,9 +127,11 @@ const OnlineStoreForm = ({ onUpdate }: any) => {
                     })
             })
         })
-        console.log("payload = ", payload)
-        delete payload['store_url']
-        saveOnlineStore(payload)
+        let res = {
+            categories : null
+        }
+        res.categories = payload
+        saveOnlineStore(res)
          .then(response => {
             showSuccessMessage("Online Store details updated successfully")
          })
