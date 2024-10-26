@@ -192,7 +192,7 @@ const OnlineStoreForm = ({ onUpdate }: any) => {
                             {({ insert, remove, push }) => (
                                 <>
                                     <div className="row clearfix">
-                                        <div className="col-md-12 table-responsive">
+                                        <div className="col-md-12">
                                             <table className="table table-bordered rounded-3" id="tab_logic">
                                                 <thead className="border-white">
                                                     <tr >
