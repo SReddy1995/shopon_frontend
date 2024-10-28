@@ -33,6 +33,12 @@ export const SidebarData = [
 
     subNav: [
       {
+        title: 'Products List',
+        id: 'products-list',
+        path: '/landing-page/products/products-list',
+        icon: <></>
+      },
+      {
         title: 'Collections',
         id: 'collections',
         path: '/landing-page/products/collections',

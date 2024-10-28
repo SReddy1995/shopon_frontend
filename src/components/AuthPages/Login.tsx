@@ -6,7 +6,6 @@ import { ActionLink, CustomForm, FormContainer, FormFieldContainer, Input, Login
 import { useNavigate } from 'react-router-dom';
 import { requestOtpForLogin, verifyLoginOTP } from '../../services/AuthService';
 import { showSuccessMessage } from '../../shared/notificationProvider';
-import { baseUrl } from '../../utils/constants/UrlConstants';
 import { useDispatch } from 'react-redux';
 import { updateSelectedStore, updateStoresList } from '../../utils/reduxStore/storesSlice';
 

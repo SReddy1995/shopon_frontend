@@ -15,6 +15,7 @@ import UserManagement from "./components/LandingPages/UserManagement";
 import AuthGuardRoutes from "./utils/route-guards/AuthGuardRoutes";
 import StoreActivationGuard from "./utils/route-guards/StoreActivationGuard";
 import Logout from "./components/LandingPages/Logout";
+import ProductsList from "./components/LandingPages/ProductsList";
 
 export const AppRoutes = () => {
   const childRoutes = [
@@ -39,6 +40,10 @@ export const AppRoutes = () => {
       element: <StoreActivationGuard>
                   <Collections />,
                </StoreActivationGuard>
+    },
+    {
+      path: "/landing-page/products/products-list",
+      element: <ProductsList />,
     },
     {
       path: "/landing-page/products/inventory",
