@@ -36,6 +36,8 @@ const CustomMultiselect = ({ field, form, options } : any) => {
 const onlineStoreDetailsValidationSchema = Yup.object().shape({
     store_url: Yup.string()
     .required('Required'),
+    subscriber_id: Yup.string()
+    .required('Required'),
     categories: Yup.array()
     .of(
       Yup.object().shape({
@@ -48,6 +50,7 @@ const onlineStoreDetailsValidationSchema = Yup.object().shape({
 
 const initialValues = {
     store_url: '',
+    subscriber_id: '',
     categories: [],
    };
 
@@ -70,6 +73,7 @@ const OnlineStoreForm = ({ onUpdate }: any) => {
         getOnlineStore()
         .then((data: any) => {
             initialValues.store_url = user_details.store_url;
+            initialValues.subscriber_id = user_details.subscriber_id;
             if(data){
                 setData(data[0])
             }
@@ -176,7 +180,7 @@ const OnlineStoreForm = ({ onUpdate }: any) => {
                 {({ isSubmitting, errors, touched, values, setFieldValue, handleSubmit, isValid, dirty, resetForm, initialValues }) => (
 
                     <form name="signin" className="form" style={{ marginLeft: 'auto' }}>
-
+                        <div className="name-field">
 
                         <div className="mb-3 form-field-container-full-width">
                             <label htmlFor="exampleFormControlInput1" className="form-label required">Store URL</label>
@@ -187,6 +191,19 @@ const OnlineStoreForm = ({ onUpdate }: any) => {
                                 disabled
                             />
                             <ErrorMessage className='error' name="store_url" component="div" />
+                        </div>
+
+                        <div className="mb-3 form-field-container-full-width">
+                            <label htmlFor="exampleFormControlInput1" className="form-label required">Subscriber ID</label>
+                            <Field
+                                name="subscriber_id"
+                                type="text"
+                                className={'form-control dashboard-namefield ' + (errors.subscriber_id && touched.subscriber_id ? 'input-field-error' : '')}
+                                disabled
+                            />
+                            <ErrorMessage className='error' name="subscriber_id" component="div" />
+                        </div>
+
                         </div>
                         <FieldArray name="categories">
                             {({ insert, remove, push }) => (
@@ -230,7 +247,7 @@ const OnlineStoreForm = ({ onUpdate }: any) => {
                                                                         <ErrorMessage className='error' name={`categories.${index}.category_id`} component="div" />
                                                                     </td>
                                                                     <td data-name="name">
-                                                                        <div className="input-group">
+                                                                        <div className="input-group online-store-form">
                                                                         <Field
                                                                             name={`categories.${index}.city`}
                                                                             component={CustomMultiselect}
