@@ -1,8 +1,11 @@
 import React, { useRef, useState } from 'react';
+import { uploadDocument } from '../../services/AccountService';
+import { showSuccessMessage, showWarningMessage } from '../../shared/notificationProvider';
 
 const UploadFileForm = (props: any) => {
     const [loading, setLoading] = useState(false);
     const [filename, setFileName] = useState('');
+    const [file, setFile] = useState('');
     const fileInputRef = useRef<HTMLInputElement | null>(null);
 
     const closeModal = () =>{
@@ -14,16 +17,36 @@ const UploadFileForm = (props: any) => {
         if (files && files.length > 0) {
           console.log('Selected file:', files[0].name);
           setFileName(files[0].name); 
+          setFile(files[0]);
           // Additional handling can go here
         }
       };
 
-      const handleUploadButtonClick = () => {
+
+
+      const handleChooseButtonClick = () => {
         // Programmatically trigger the file input click
         if (fileInputRef.current) {
             fileInputRef.current.click();
           }
       };
+
+      const handleUploadButtonClick = () => {
+        const formData = new FormData();
+        formData.append('document', file); // 'file' is the key
+        formData.append('description', props.uploadFileDetails.description);
+        formData.append('document_type', props.uploadFileDetails.document_type);
+        uploadDocument(formData)
+        .then((data: any) => {
+            showSuccessMessage("Document uploaded successfully")
+            props.refreshData();
+            closeModal();
+        })
+        .catch(err => {
+            // setAllowEnterOtp(false);
+            showWarningMessage("error uploading file")
+        });
+      }
 
     return (
     <>
@@ -59,12 +82,12 @@ const UploadFileForm = (props: any) => {
                                             filename
                                             ?
                                             <>
-                                                <button className="btn btn-success btn-sm mt-2" type="button" >Upload Now</button>
+                                                <button className="btn btn-success btn-sm mt-2" type="button" onClick={handleUploadButtonClick}>Upload Now</button>
                                                 <p className='mt-2'>Selected file:<b> {filename}</b></p>
-                                                <p className='mt-2 text-link' onClick={handleUploadButtonClick}>Cancel and choose another file</p>
+                                                <p className='mt-2 text-link' onClick={handleChooseButtonClick}>Cancel and choose another file</p>
                                             </>
                                             :
-                                            <button className="btn btn-primary btn-sm" type="button" onClick={handleUploadButtonClick}>Choose File</button>
+                                            <button className="btn btn-primary btn-sm" type="button" onClick={handleChooseButtonClick}>Choose File</button>
                                         }
                                     </div>
                                 </div>

@@ -4,7 +4,7 @@ import { Formik, Field, ErrorMessage, FormikValues, FormikHelpers, FieldArray } 
 import { showSuccessMessage } from '../../shared/notificationProvider';
 import Multiselect from 'multiselect-react-dropdown';
 import { useSelector } from 'react-redux';
-import { getOnlineStore, saveOnlineStore } from '../../services/AccountService';
+import { deleteDocument, downloadDocuments, getDocumentDetailsList, getLegalEntityDetails, getOnlineStore, saveOnlineStore } from '../../services/AccountService';
 import ModalWindow from './ModalWindow';
 import UploadFileForm from './UploadFileForm';
 import ConfirmDelete from './ConfirmDelete';
@@ -15,99 +15,96 @@ const DocumentsUpload = ({ onUpdate }: any) => {
     const [loading, setLoading] = useState(true)
     const user_details = localStorage.getItem('user_details') ? JSON.parse(localStorage.getItem('user_details') || '{}') : null;
     const [open, setModalOpen] = useState(false);
-    const [uploadFileDetails, setUploadFileDetails] = useState({
-        document_type: '',
-        title: '',
-        key: '',
-        uploadedFile: ''
-    });
+    const [uploadFileDetails, setUploadFileDetails] = useState<any>();
     const [openDeleteConfirm, setConfirmDeleteModalOpen] = useState(false);
 
     const documents_list = [
         {
-            document_type: "Authorized Signatory PAN",
-            title: "Authorized Signatory PAN",
+            document_type: "ASPAN",
+            description:"",
+            title: "Authorized Signatory PAN ",
             key: "authorized_signatory_pan",
-            uploadedFile: "ELAPS1472G.pdf",
+            uploadedFile: '',
+            details: "Authorized signatory's PAN  to comply with legal and regulatory requirements, ensure identity verification, and facilitate the KYC for ONDC.",
+            applicable: true
         },
         {
-            document_type: "Authorized Signatory AADHAAR",
-            title: "Authorized Signatory AADHAAR",
+            document_type: "ASUIDAI",
+            description:"",
+            title: "Authorized Signatory AADHAAR ",
             key: "authorized_signatory_aadhaar",
-            uploadedFile: "64061276438.pdf",
+            uploadedFile: '',
+            details: "Authorized signatory's AADHAR for identity validation identity verification, enabling smoother processing of  KYC with ONDC.",
+            applicable: true
         },
         {
-            document_type: "Company PAN",
+            document_type: "GSTN",
+            description:"",
+            title: "Goods and Services Tax Identification Number ",
+            key: "gstn",
+            uploadedFile: '',
+            details: "GSTIN to ensure compliance with tax regulations for transparency in  business transactions and for KYC with ONDC",
+            applicable: true
+        },
+        {
+            document_type: "BANK",
+            description:"",
+            title: "Cancelled Check Leaf OR Pass Book Front Page ",
+            key: "bank_cancelled_cheque_leaf",
+            uploadedFile: '',
+            details: "To verify bank account details to ensure accuracy in any transactions for payments, refunds, and prevent errors or frauds.",
+            applicable: true
+        },
+        {
+            document_type: "CPAN",
+            description:"",
             title: "Company PAN",
             key: "company_pan",
-            uploadedFile: "GHTDF1472I.pdf",
+            uploadedFile: '',
+            details: "Official document to verify the company identity, for compliance and tax regulations , and facilitate accurate financial reporting and transactions.",
+            applicable: false
         },
         {
-            document_type: "Date of Incorporation",
+            document_type: "COI",
+            description:"",
             title: "Certificate of Incorporation",
-            key: "date_of_incorporation",
+            key: "certificate_of_incorporation",
             uploadedFile: '',
+            details: "Official document to verify company's legal status, ensure regulatory compliance, and facilitate secure business dealings.",
+            applicable: false
         },
-        {
-            document_type: "Bank cancelled cheque leaf",
-            title: "Bank cancelled cheque leaf",
-            key: "bank_cancelled_cheque_leaf",
-            uploadedFile: "chequeleaf.pdf",
-        },
-        {
-            document_type: "Bank Passbook frontpage",
-            title: "Bank Passbook Frontpage",
-            key: "bank_passbook_frontpage",
-            uploadedFile: '',
-        },
+
 
     ]
 
-    const openModal = () => {
-        setModalOpen(true);
-      };
-
-      const closeModal = () => {
-        setModalOpen(false);
-      };
-
-      const openUploadFileModal = (key: any) => {
-        setUploadFileDetails(documents_list.filter((x: any)=> x.key === key)[0])
-        openModal();
-    }
-
-    const openConfirmDeleteModal = () => {
-        setConfirmDeleteModalOpen(true);
-    }
-
-    const closeConfirmDeleteModal = () => {
-        setConfirmDeleteModalOpen(false);
-      }
-
-    const deleteFile = (file: any) => {
-        // perform delete
-    }
-
-    const downloadFiles = () => {
-        // perform download file
-    }
-
+    const [documentsList, setDocumentsList] = useState(documents_list);
 
     useEffect(() => {
-        // fetchData();
-        setLoading(false);
+        
+        fetchOrgTypeData();
       }, []);
 
-      const fetchData = () => {
-        getOnlineStore()
+      const fetchOrgTypeData = () => {
+        setLoading(true);
+        getLegalEntityDetails()
         .then((data: any) => {
             if(data){
-                setData(data[0])
+                setData(data[0]);
+                fetchDocumentsDetails();
             }
-            else{
-                // let default initial values load
-            }
+        })
+        .catch(err => {
             setLoading(false);
+        });
+      }
+
+      const fetchDocumentsDetails = () => {
+        getDocumentDetailsList()
+        .then((data: any) => {
+            if(data){
+                setDocumentData(data);
+            }
+            setLoading(false)
         })
         .catch(err => {
             setLoading(false);
@@ -115,8 +112,81 @@ const DocumentsUpload = ({ onUpdate }: any) => {
       }
 
     const setData = (values: any) => {
-        setLoading(false)
+        console.log(values)
+        let docs = documentsList;
+        let org_type = values.nature_of_organization_type;
+        if(org_type === "SOLE_PROP" || org_type === "COMP" || org_type === "AOP" || org_type === "PART_FIRM" || org_type === "LLP"){
+            docs.filter((x: any) => x.document_type === "CPAN")[0].applicable = true
+            docs.filter((x: any) => x.document_type === "COI")[0].applicable = true
+        }
+        setDocumentsList(docs)
 
+    }
+
+    
+    const setDocumentData = (values: any) => {
+        
+        let docs = documentsList;
+        values.forEach((element: any , index: any) => {
+            docs.filter((x: any) => x.document_type === element.document_type)[0].description = element.document_description;
+            docs.filter((x: any) => x.document_type === element.document_type)[0].uploadedFile = element.document ? element.document : null;
+        })
+        setDocumentsList(docs)
+    }
+
+    const openModal = () => {
+            setModalOpen(true);
+
+      };
+
+      const closeModal = () => {
+        setUploadFileDetails(null)
+        setModalOpen(false);
+      };
+
+      const openUploadFileModal = (key: any) => {
+        let data = documentsList.filter((x: any)=> x.document_type == key)[0];
+        setUploadFileDetails(data)
+        openModal();
+    }
+
+    const openConfirmDeleteModal = (key: any) => {
+        let data = documentsList.filter((x: any)=> x.document_type == key)[0];
+        setUploadFileDetails(data)
+        setConfirmDeleteModalOpen(true);
+    }
+
+    const closeConfirmDeleteModal = () => {
+        setConfirmDeleteModalOpen(false);
+      }
+
+    const deleteRecord = () => {
+        deleteDocument(uploadFileDetails.uploadedFile.doc_reference_id)
+        .then((data: any) => {
+                setUploadFileDetails(null)
+                closeConfirmDeleteModal();
+                fetchOrgTypeData();
+        })
+        .catch(err => {
+            
+        });
+    }
+
+    const downloadFiles = () => {
+        downloadDocuments()
+        .then((res: any) => {
+            
+                const url = window.URL.createObjectURL(res); // Create a URL for the Blob
+                const a = document.createElement('a'); // Create an anchor element
+                a.href = url;
+                a.download = 'documents.zip'; // Set the file name for download
+                document.body.appendChild(a);
+                a.click(); // Programmatically click the anchor to trigger the download
+                a.remove(); // Clean up
+        })
+        .catch(err => {
+            
+        });
     }
     
 
@@ -127,26 +197,8 @@ const DocumentsUpload = ({ onUpdate }: any) => {
                 !loading
                     ?
                     <>
-                        <div className="accordion mt-1" id="accordionExample">
-                            <div className="accordion-item">
-                                <h2 className="accordion-header" id="headingOne">
-                                    <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
-                                        aria-expanded="true" aria-controls="collapseOne">
-                                        Upload Documents
-                                    </button>
-                                </h2>
-                                <div id="collapseOne" className="accordion-collapse collapse show" aria-labelledby="headingOne"
-                                    data-bs-parent="#accordionExample">
-                                    <div className="accordion-body">
-                                        <p>This section collects the documents.</p>
-                                    </div>
-                                </div>
-                            </div>
 
-
-                        </div>
-
-                        <div className="container-fluid mt-4">
+                        <div className="container-fluid">
                             <div className="row justify-content-center">
                                 <div className="col-12 text-right px-0">
                                     <button type="button"
@@ -156,87 +208,81 @@ const DocumentsUpload = ({ onUpdate }: any) => {
                                     </button>
                                 </div>
                             </div>
-                            <div className="row justify-content-center mt-2">
-                                <div className="col-12 px-0">
-                                    <table className="table table-bordered rounded-3" id="tab_logic">
-                                        <thead className="border-white">
-                                            <tr >
-                                                <th className='text-left'>
-                                                    Document Type
-                                                </th>
-                                                <th className='text-left'>
-                                                    Document name
-                                                </th>
-
-                                                <th className='text-left'>
-                                                    Action
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {
-                                                    documents_list
-                                                        .map((doc: any, index: any) => {
-                                                            return <tr key={index} id='addr0' data-id="0" className="hidden">
-
-                                                            <td className='text-left'>
-                                                                {doc.title}
-                                                            </td>
-                                                            <td className='text-left'>
-                                                                {doc.uploadedFile}
-                                                            </td>
-            
-                                                            <td className="d-flex flex-start">
-
-                                                                <a className="btn-link">
-                                                                  
-                                                                {
-                                                                    doc.uploadedFile ?
-                                                                    <>
-                                                                        {/* <button type="button"
-                                                                                className="btn-custom download-button mr-2" 
-                                                                                onClick={() => downloadFile(doc.key)}>
-                                                                                    <i className="fa fa-cloud-download"></i>
-                                                                        </button> */}
-                                                                        <button type="button"
-                                                                                className="btn-custom btn-danger" 
-                                                                                onClick={() => openConfirmDeleteModal()}>
-                                                                                    <i className="fa fa-trash"></i>
-                                                                        </button>
-                                                                    </>
-                                                                    :
-                                                                            <button type="button"
-                                                                                className="btn-custom btn-success" 
-                                                                                onClick={() => openUploadFileModal(doc.key)}>
-                                                                                <i className="fa fa-plus"></i>
-                                                                            </button>
-                                                                    
-                                                                }
-                                                                </a>                        
-                                                            </td>
-                                                        </tr>
-                                                        })
-                                                }
-                                            
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
                         </div>
 
+                        {
+                             documentsList
+                             .map((doc: any, index: any) => {
+                                    return <div key={index} className={"accordion mt-1 " +( doc.applicable ? 'd-block': 'd-none')} id="accordionExample">
+                                    <div className="accordion-item mt-4">
+                                        <h2 className="accordion-header documents-tab-accordian" id="headingOne">
+                                            <button className="accordion-button" type="button"  
+                                                aria-expanded="true" aria-controls="collapseOne">
+                                                {doc.title}
+                                                {
+                                                    doc.uploadedFile !== '' && doc.uploadedFile !== null
+                                                    ?
+                                                    <span className='ml-2 text-success'>
+                                                    <i className='fa fa-check-circle'></i>
+                                                    </span>
+                                                    :
+                                                    <></>
+                                                }
 
 
+                                            </button>
+                                            {
+                                                        doc.uploadedFile !== '' && doc.uploadedFile !== null
+                                                            ?
+                                                            <></>
+
+                                                            :
+                                                            <div className='add-document-button-Container'>
+                                                            <button type="button"
+                                                                className="btn btn-sm btn-success m-2"
+                                                                onClick={() => openUploadFileModal(doc.document_type)}>
+                                                                <i className="fa fa-plus"></i>
+                                                            </button>
+                                                            </div>
+
+
+                                            }
+                                        </h2>
+                                        <div className="accordion-collapse collapse show" aria-labelledby="headingOne"
+                                            data-bs-parent="#accordionExample">
+                                            <div className="accordion-body">
+                                                <p>{doc.details}</p>
+                                                {
+                                                doc.uploadedFile !== '' && doc.uploadedFile !== null 
+                                                ?
+
+                                                            <p className='uploaded-file-info mt-2'>Uploaded file: <b>{doc.uploadedFile.document_name}</b>&nbsp;&nbsp;
+                                                                <span>
+                                                                    <i className='fa fa-close fa-md text-danger ml-4 mt-2 cursor-pointer' onClick={() => openConfirmDeleteModal(doc.document_type)}></i>
+                                                                </span>
+                                                            </p>
+                                                :
+                                                <></>
+                                            }
+                                            </div>
+                                        </div>
+                                    </div>
+    
+    
+                                </div>
+                             })
+                        }
                     </>
             :
 
             <></>
         }
             <ModalWindow show={open} modalClosed={closeModal}>
-                <UploadFileForm uploadFileDetails={uploadFileDetails} modalClosed={closeModal} />
+                <UploadFileForm uploadFileDetails={uploadFileDetails} modalClosed={closeModal} refreshData={fetchOrgTypeData}/>
             </ModalWindow>
 
             <ModalWindow show={openDeleteConfirm} modalClosed={closeConfirmDeleteModal}>
-                <ConfirmDelete confirmModalClosed={closeConfirmDeleteModal} />
+                <ConfirmDelete confirmModalClosed={closeConfirmDeleteModal}  deleteRecord={deleteRecord}/>
             </ModalWindow>
 
         </>

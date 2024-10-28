@@ -1410,6 +1410,18 @@ table{
   border-color: #608EDD!important;
   box-shadow: none!important;
 }
+.documents-tab-accordian{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.documents-tab-accordian .accordion-button::after{
+  content: none;
+}
+
+.add-document-button-Container{
+  border-bottom: 0.8px solid #dee2e6;
+}
 
 
 

@@ -21,8 +21,11 @@ axiosInstance.interceptors.request.use(
         config.headers.Authorization = `Bearer ${token}`;
       }
     }
+    if(config.url == "/document" && config.method == 'post'){
+      config.headers['Content-Type'] = 'multipart/form-data'
+    }
     // Check if the method is POST
-    if ((config.method === 'post' || config.method === 'put') && config.data) {
+    else if ((config.method === 'post' || config.method === 'put') && config.data) {
       // Modify the request body as needed
       let payload_formatted = [];
       payload_formatted.push(config.data)
@@ -39,7 +42,10 @@ axiosInstance.interceptors.response.use(
   function (response: any) {
     // Do formatting of response and return
     console.log(response)
-    if(response.data.error === null){
+    if(response.config.url == 'documents/download'){
+      return response.data
+    }
+    else if(response.data.error === null){
       return response.data.message.data;
     }
     else{

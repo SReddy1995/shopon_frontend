@@ -5,6 +5,10 @@ const ConfirmDelete = (props : any) => {
     const closeModal = () =>{
         props.confirmModalClosed();
     }
+
+    const deleteRecord = () => {
+        props.deleteRecord();
+    }
   
     return (
         <section className="wrapper">
@@ -31,7 +35,7 @@ const ConfirmDelete = (props : any) => {
                             </div>
                             <div className="col-12 mt-4 text-right">
                                 <button className="btn btn-success btn-sm mt-2" type="button" onClick={closeModal}>Cancel</button>
-                                <button className="btn btn-danger btn-sm mt-2 ml-2" type="button" >Delete</button>
+                                <button className="btn btn-danger btn-sm mt-2 ml-2" type="button" onClick={deleteRecord}>Delete</button>
                             </div>
                         </div>
 

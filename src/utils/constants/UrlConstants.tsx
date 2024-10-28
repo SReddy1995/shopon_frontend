@@ -17,6 +17,10 @@ export const AccountUrls = {
     saveBankInfo: '/bank_info',
     getOnlineStore: '/get_online_store',
     saveOnlineStore: '/save_online_store',
+    getDocumentsDetailsList: '/documents',
+    uploadDocument: '/document',
+    deleteDocument: '/document',
+    downloadDocumentsZip: 'documents/download'
 }
 
 export const UserUrls = {

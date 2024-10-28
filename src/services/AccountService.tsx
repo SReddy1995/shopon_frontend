@@ -131,3 +131,57 @@ export const getLegalEntityDetails = async () => {
         throw error;
       }
   }
+
+  export const getDocumentDetailsList = async () => {
+    try{
+  
+        const response = await axiosInstance.get(AccountUrls.getDocumentsDetailsList) // Replace with your API endpoint
+        return response;
+  
+    } catch (error) {
+        console.error('Error fetching data: ', error);
+        // Handle errors here or throw them to be handled where the function is called
+        throw error;
+      }
+  }
+
+  export const uploadDocument = async (body : any) => {
+    try{
+  
+        const response = await axiosInstance.post(AccountUrls.uploadDocument, body) // Replace with your API endpoint
+        return response;
+  
+    } catch (error) {
+        console.error('Error fetching data: ', error);
+        // Handle errors here or throw them to be handled where the function is called
+        throw error;
+      }
+  }
+
+  export const deleteDocument = async (document_type : any) => {
+    try{
+  
+        const response = await axiosInstance.delete(AccountUrls.deleteDocument+ '/' + document_type) // Replace with your API endpoint
+        return response;
+  
+    } catch (error) {
+        console.error('Error fetching data: ', error);
+        // Handle errors here or throw them to be handled where the function is called
+        throw error;
+      }
+  }
+
+  export const downloadDocuments = async () => {
+    try{
+  
+        const response = await axiosInstance.get(AccountUrls.downloadDocumentsZip,{
+            responseType: 'blob', // Important: Set response type to 'blob'
+          })
+        return response;
+  
+    } catch (error) {
+        console.error('Error fetching data: ', error);
+        // Handle errors here or throw them to be handled where the function is called
+        throw error;
+      }
+  }
