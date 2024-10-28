@@ -1,6 +1,3 @@
-export const baseUrl = 'https://ondc.opteamix.com/staging'; // replace with window.location.origin
-export const baseUrlSuffix = '/api/syssvc'
-
 export const AuthUrls = {
     register : '/register',
     requestGenerateOtp : '/generate_auth_otp',

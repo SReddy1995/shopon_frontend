@@ -1,13 +1,12 @@
 // src/axiosInstance.js
 import axios from 'axios';
-import { showSuccessMessage, showWarningMessage } from '../../shared/notificationProvider';
-import { baseUrl, baseUrlSuffix } from '../constants/UrlConstants';
-import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { updateSelectedStore, updateStoresList } from '../reduxStore/storesSlice';
+import { showWarningMessage } from '../../shared/notificationProvider';
 
+
+const baseURL = process.env.REACT_APP_BASEURL!;
+const baseUrlSuffix = process.env.REACT_APP_BASEURLSUFFIX!;
 const axiosInstance = axios.create({
-  baseURL: baseUrl+baseUrlSuffix,
+  baseURL: baseURL+baseUrlSuffix,
   timeout: 1000,
   headers: { 'Content-Type': 'application/json' }
 });
