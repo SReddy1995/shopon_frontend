@@ -123,7 +123,7 @@ const LegalEntityForm = () => {
         getLegalEntityDetails()
         .then((data: any) => {
             if(data){
-                setData(data);
+                setData(data[0]);
             }
             setLoading(false);
         })
@@ -239,23 +239,23 @@ const LegalEntityForm = () => {
 
                         <div className="name-field">
                             <div className="mb-3  form-field-container-full-width">
-                                <label htmlFor="exampleFormControlInput1" className="form-label required">Authorised Signatory Name</label>
+                                <label htmlFor="exampleFormControlInput1" className="form-label required">Authorized Signatory Name</label>
                                 <Field 
                                     name="authorised_signatory_name" type="text" 
                                     className={'form-control dashboard-namefield ' + (errors.authorised_signatory_name && touched.authorised_signatory_name ? 'input-field-error' : '')}
                                     id="exampleFormControlInput1" 
-                                    placeholder="Authorised Signatory Name" 
+                                    placeholder="Authorized Signatory Name" 
                                 />
                                 <ErrorMessage className='error' name="authorised_signatory_name" component="div" />
                             </div>
 
                             <div className="mb-3  form-field-container-full-width">
-                                <label htmlFor="exampleFormControlInput1" className="form-label required">Authorised Signatory Designation</label>
+                                <label htmlFor="exampleFormControlInput1" className="form-label required">Authorized Signatory Designation</label>
                                 <Field 
                                     name="authorised_signatory_designation" type="text" 
                                     className={'form-control dashboard-namefield ' + (errors.authorised_signatory_designation && touched.authorised_signatory_designation ? 'input-field-error' : '')}
                                     id="exampleFormControlInput1" 
-                                    placeholder="Authorised Signatory Designation" 
+                                    placeholder="Authorized Signatory Designation" 
                                 />
                                 <ErrorMessage className='error' name="authorised_signatory_designation" component="div" />
                             </div>
@@ -265,7 +265,7 @@ const LegalEntityForm = () => {
                         <div className="name-field">
 
                         <div className="mb-3 form-field-container-full-width">
-                                <label htmlFor="exampleFormControlInput1" className="form-label required">Authorised Signatory Phone Number</label>
+                                <label htmlFor="exampleFormControlInput1" className="form-label required">Authorized Signatory Phone Number</label>
                                 <Field 
                                     name="authorised_signatory_phone_number" type="text" 
                                     className={'form-control dashboard-namefield ' + (errors.authorised_signatory_phone_number && touched.authorised_signatory_phone_number ? 'input-field-error' : '')}
@@ -275,17 +275,17 @@ const LegalEntityForm = () => {
                                             e.preventDefault();
                                         }
                                     }}
-                                    placeholder="Authorised Signatory Phone No." 
+                                    placeholder="Authorized Signatory Phone No." 
                                 />
                                 <ErrorMessage className='error' name="authorised_signatory_phone_number" component="div" />
                             </div>
                             <div className="mb-3 form-field-container-full-width">
-                                <label htmlFor="exampleFormControlInput1" className="form-label required">Authorised Signatory Email Address</label>
+                                <label htmlFor="exampleFormControlInput1" className="form-label required">Authorized Signatory Email Address</label>
                                 <Field 
                                     name="authorised_signatory_email_address" type="email" 
                                     className={'form-control dashboard-namefield ' + (errors.authorised_signatory_email_address && touched.authorised_signatory_email_address ? 'input-field-error' : '')}
                                     id="exampleFormControlInput1" 
-                                    placeholder="Authorised Signatory Email Address" 
+                                    placeholder="Authorized Signatory Email Address" 
                                 />
                                 <ErrorMessage className='error' name="authorised_signatory_email_address" component="div" />
                             </div>
@@ -296,7 +296,7 @@ const LegalEntityForm = () => {
                                 <div className="name-field">
                                     <div className="custom-radio-box">
                                         <div className="input-control custom-radio-label">
-                                            <label htmlFor="email" className="input-label  required">Authorised Signatory PAN/Aadhaar</label>
+                                            <label htmlFor="pan_or_aadhar" className="input-label  required">Authorized Signatory PAN/Aadhaar</label>
                                         </div>
                                         <div className="radio-buttons-container-dashboard dashboard-namefield">
 
@@ -340,7 +340,7 @@ const LegalEntityForm = () => {
                                         values.pan_or_aadhar == "aadhar"
                                         ?
                                             <div className="mb-3 form-field-container-full-width">
-                                                <label htmlFor="exampleFormControlInput1" className="form-label required">Authorised Signatory Aadhaar</label>
+                                                <label htmlFor="exampleFormControlInput1" className="form-label required">Authorized Signatory Aadhaar</label>
                                                 <Field
                                                     name="authorised_signatory_aadhaar" type="text"
                                                     className={'form-control dashboard-namefield ' + (errors.authorised_signatory_aadhaar && touched.authorised_signatory_aadhaar ? 'input-field-error' : '')}
@@ -350,14 +350,14 @@ const LegalEntityForm = () => {
                                                             e.preventDefault();
                                                         }
                                                     }}
-                                                    placeholder="Authorised Signatory Aadhar"
+                                                    placeholder="Authorized Signatory Aadhar"
                                                 />
                                                 <ErrorMessage className='error' name="authorised_signatory_aadhaar" component="div" />
                                             </div>
 
                                         :
                                             <div className="mb-3 form-field-container-full-width">
-                                                <label htmlFor="exampleFormControlInput1" className="form-label required">Authorised Signatory PAN</label>
+                                                <label htmlFor="exampleFormControlInput1" className="form-label required">Authorized Signatory PAN</label>
                                                 <Field
                                                     name="authorised_signatory_pan" type="text"
                                                     className={'form-control dashboard-namefield ' + (errors.authorised_signatory_pan && touched.authorised_signatory_pan ? 'input-field-error' : '')}
@@ -367,7 +367,7 @@ const LegalEntityForm = () => {
                                                             e.preventDefault();
                                                         }
                                                     }}
-                                                    placeholder="Authorised Signatory PAN"
+                                                    placeholder="Authorized Signatory PAN"
                                                 />
                                                 <ErrorMessage className='error' name="authorised_signatory_pan" component="div" />
                                             </div>
@@ -580,7 +580,7 @@ const LegalEntityForm = () => {
 
 
                         </div>
-                                <div className='text-left'>
+                                <div className='text-left mt-2'>
                                     <label htmlFor="exampleFormControlInput1" className="form-label required">Registered Store Address</label>
                                 </div>
                                 <div className="name-field">

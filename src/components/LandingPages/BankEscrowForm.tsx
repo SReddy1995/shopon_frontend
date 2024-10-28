@@ -6,7 +6,7 @@ import { getBankInfo, saveBankInfo } from '../../services/AccountService';
 
 const ifscRegex = new RegExp("^[A-Z]{4}[0]{1}[A-Z0-9]{6}$")
 const bankEscrowValidationSchema = Yup.object().shape({
-    has_escrow_account: Yup.string().required('Required'),   
+    has_escrow_account: Yup.string().required('Select whether you have Escrow Account'),   
     escrow_account_number: Yup.string(),
     ifsc: Yup.string(),
     bank_name: Yup.string()
@@ -31,10 +31,10 @@ const BankEscrowForm = ({ onUpdate }: any) => {
         getBankInfo()
         .then((data: any) => {
             if(data){
-                initialValues.has_escrow_account = data.has_escrow_account
-                initialValues.escrow_account_number = data.escrow_account_number
-                initialValues.ifsc = data.ifsc
-                initialValues.bank_name = data.bank_name
+                initialValues.has_escrow_account = data[0].has_escrow_account
+                initialValues.escrow_account_number = data[0].escrow_account_number
+                initialValues.ifsc = data[0].ifsc
+                initialValues.bank_name = data[0].bank_name
             }
             setLoading(false);
         })
@@ -91,7 +91,7 @@ const BankEscrowForm = ({ onUpdate }: any) => {
                                 <div className="name-field">
                                     <div className="custom-radio-box">
                                         <div className="input-control custom-radio-label">
-                                            <label htmlFor="email" className="input-label ">Do you have Escrow Account?</label>
+                                            <label htmlFor="has_escrow_account" className="input-label required">Do you have Escrow Account?</label>
                                         </div>
                                         <div className="radio-buttons-container-dashboard dashboard-namefield">
 

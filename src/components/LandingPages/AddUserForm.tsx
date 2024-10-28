@@ -157,10 +157,10 @@ const AddUserForm = (props: any) => {
           <section className="wrapper">
             <div className="container">
               <div className="row">
-                <div className="col-6 text-left">
+                <div className="col-8 text-left">
                 <h3>{props.mode} User</h3>
                 </div>
-                <div className="col-6 text-right">
+                <div className="col-4 text-right">
                 <i className="fa fa-close cursor-pointer" onClick={closeModal}></i>
                 </div>
               </div>
@@ -242,6 +242,7 @@ const AddUserForm = (props: any) => {
                           <label htmlFor="exampleFormControlInput1" className="form-label required">Role</label>
                           <Field
                             name="roles"
+                            className={'form-control' + (errors.roles && touched.roles ? 'input-field-error' : '')}
                             component={CustomMultiselect}
                             options={roles}
                           />

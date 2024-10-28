@@ -196,14 +196,14 @@ const OnlineStoreForm = ({ onUpdate }: any) => {
                                             <table className="table table-bordered rounded-3" id="tab_logic">
                                                 <thead className="border-white">
                                                     <tr >
-                                                        <th className="form-field ">
+                                                        <th className="form-field store-category-column">
                                                             ONDC Categories You Wish To Signup For
                                                         </th>
-                                                        <th className="form-field">
+                                                        <th className="form-field ">
                                                             Select the city
                                                         </th>
 
-                                                        <th className="text-center" >
+                                                        <th className="text-center store-action-column" >
                                                         </th>
                                                     </tr>
                                                 </thead>

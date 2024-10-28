@@ -7,6 +7,7 @@ import LegalEntityForm from './LegalEntityForm';
 import OnlineStoreForm from './OnlineStoreForm';
 import BankEscrowForm from './BankEscrowForm';
 import moment from 'moment';
+import DocumentsUpload from './DocumentsUpload';
 
 
 const AccountInfoOverviewContainer = styled.div`
@@ -95,6 +96,10 @@ const Account = () => {
             title: "Bank Escrow",
             status: "pending",
         },
+        {
+            title: "Documents",
+            status: "pending",
+        },
       ];
 
     const renderTabComponent = () => {
@@ -107,6 +112,8 @@ const Account = () => {
                 return <OnlineStoreForm></OnlineStoreForm>;
             case 3 :
                 return <BankEscrowForm></BankEscrowForm>;
+            case 4 :
+                return <DocumentsUpload></DocumentsUpload>;
         }
     }
       
