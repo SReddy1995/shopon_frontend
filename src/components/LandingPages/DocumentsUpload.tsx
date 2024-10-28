@@ -88,7 +88,7 @@ const DocumentsUpload = ({ onUpdate }: any) => {
         // perform delete
     }
 
-    const downloadFile = (file: any) => {
+    const downloadFiles = () => {
         // perform download file
     }
 
@@ -148,12 +148,21 @@ const DocumentsUpload = ({ onUpdate }: any) => {
 
                         <div className="container-fluid mt-4">
                             <div className="row justify-content-center">
+                                <div className="col-12 text-right px-0">
+                                    <button type="button"
+                                        className="btn-custom download-button"
+                                        onClick={() => downloadFiles()}>
+                                        Download
+                                    </button>
+                                </div>
+                            </div>
+                            <div className="row justify-content-center mt-2">
                                 <div className="col-12 px-0">
                                     <table className="table table-bordered rounded-3" id="tab_logic">
                                         <thead className="border-white">
                                             <tr >
                                                 <th className='text-left'>
-                                                    Type of document
+                                                    Document Type
                                                 </th>
                                                 <th className='text-left'>
                                                     Document name
@@ -184,11 +193,11 @@ const DocumentsUpload = ({ onUpdate }: any) => {
                                                                 {
                                                                     doc.uploadedFile ?
                                                                     <>
-                                                                        <button type="button"
+                                                                        {/* <button type="button"
                                                                                 className="btn-custom download-button mr-2" 
                                                                                 onClick={() => downloadFile(doc.key)}>
                                                                                     <i className="fa fa-cloud-download"></i>
-                                                                        </button>
+                                                                        </button> */}
                                                                         <button type="button"
                                                                                 className="btn-custom btn-danger" 
                                                                                 onClick={() => openConfirmDeleteModal()}>
