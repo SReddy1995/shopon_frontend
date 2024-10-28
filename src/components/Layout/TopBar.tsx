@@ -172,7 +172,7 @@ const TopBar = () => {
                     { user_details ? user_details.legal_entity_name : '' } , {user_details.firstname + ' ' + user_details.lastname}
                 </ProfileName>
                 <ProfileIcon>
-                    <ProfileIconInitial >Opt</ProfileIconInitial>
+                    <ProfileIconInitial >{user_details.firstname.charAt(0).toUpperCase()+user_details.lastname.charAt(0).toUpperCase()}</ProfileIconInitial>
                 </ProfileIcon>
                 <div className="dropdown-menu pb-2" aria-labelledby="dropdownUser">
                     <div className="dropdown-item">
