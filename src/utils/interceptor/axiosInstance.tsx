@@ -4,9 +4,10 @@ import { showWarningMessage } from '../../shared/notificationProvider';
 
 
 const baseURL = process.env.REACT_APP_BASEURL!;
+const baseEnv = process.env.REACT_APP_ENV!;
 const baseUrlSuffix = process.env.REACT_APP_BASEURLSUFFIX!;
 const axiosInstance = axios.create({
-  baseURL: baseURL+baseUrlSuffix,
+  baseURL: baseURL+baseEnv+baseUrlSuffix,
   timeout: 1000,
   headers: { 'Content-Type': 'application/json' }
 });
