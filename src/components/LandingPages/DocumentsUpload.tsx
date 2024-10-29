@@ -8,9 +8,10 @@ import { deleteDocument, downloadDocuments, getDocumentDetailsList, getLegalEnti
 import ModalWindow from './ModalWindow';
 import UploadFileForm from './UploadFileForm';
 import ConfirmDelete from './ConfirmDelete';
+import { DOC_DELETE_SUCCESS } from '../../utils/constants/NotificationConstants';
 
 
-const DocumentsUpload = ({ onUpdate }: any) => {
+const DocumentsUpload = (props: any) => {
     const refValues = useSelector((store: any) => store.refValues.referenceList);
     const [loading, setLoading] = useState(true)
     const user_details = localStorage.getItem('user_details') ? JSON.parse(localStorage.getItem('user_details') || '{}') : null;
@@ -164,12 +165,18 @@ const DocumentsUpload = ({ onUpdate }: any) => {
         deleteDocument(uploadFileDetails.uploadedFile.doc_reference_id)
         .then((data: any) => {
                 setUploadFileDetails(null)
+                showSuccessMessage(DOC_DELETE_SUCCESS)
                 closeConfirmDeleteModal();
-                fetchOrgTypeData();
+                refreshData();
         })
         .catch(err => {
             
         });
+    }
+
+    const refreshData = () => {
+        fetchOrgTypeData();
+        props.reloadStatus();
     }
 
     const downloadFiles = () => {
@@ -278,7 +285,7 @@ const DocumentsUpload = ({ onUpdate }: any) => {
             <></>
         }
             <ModalWindow show={open} modalClosed={closeModal}>
-                <UploadFileForm uploadFileDetails={uploadFileDetails} modalClosed={closeModal} refreshData={fetchOrgTypeData}/>
+                <UploadFileForm uploadFileDetails={uploadFileDetails} modalClosed={closeModal} refreshData={refreshData}/>
             </ModalWindow>
 
             <ModalWindow show={openDeleteConfirm} modalClosed={closeConfirmDeleteModal}>

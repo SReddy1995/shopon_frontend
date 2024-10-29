@@ -5,6 +5,7 @@ import { showSuccessMessage } from '../../shared/notificationProvider';
 import Multiselect from 'multiselect-react-dropdown';
 import { useSelector } from 'react-redux';
 import { getOnlineStore, saveOnlineStore } from '../../services/AccountService';
+import { ONLINE_UPDATE_SUCCESS } from '../../utils/constants/NotificationConstants';
 
 // Custom Multiselect component for Formik
 const CustomMultiselect = ({ field, form, options } : any) => {
@@ -55,7 +56,7 @@ const initialValues = {
    };
 
 
-const OnlineStoreForm = ({ onUpdate }: any) => {
+const OnlineStoreForm = (props: any) => {
     const refValues = useSelector((store: any) => store.refValues.referenceList);
     const [loading, setLoading] = useState(true)
     const user_details = localStorage.getItem('user_details') ? JSON.parse(localStorage.getItem('user_details') || '{}') : null;
@@ -136,7 +137,8 @@ const OnlineStoreForm = ({ onUpdate }: any) => {
         res.categories = payload
         saveOnlineStore(res)
          .then(response => {
-            showSuccessMessage("Online Store details updated successfully")
+            showSuccessMessage(ONLINE_UPDATE_SUCCESS)
+            props.reloadStatus();
          })
          .catch(err => {
             // setAllowEnterOtp(false);

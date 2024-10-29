@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { getLegalEntityDetails, saveLegalEntityDetails } from '../../services/AccountService';
 import { useSelector } from 'react-redux';
 import { showSuccessMessage } from '../../shared/notificationProvider';
+import { LEGAL_ENTITY_UPDATE_SUCCESS } from '../../utils/constants/NotificationConstants';
 
 const emailRegex = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)
 const panRegex = new RegExp("[A-Z]{5}[0-9]{4}[A-Z]{1}")
@@ -108,7 +109,7 @@ const initialValues = {
     country: '',
     pincode: ''
    };
-const LegalEntityForm = () => {
+const LegalEntityForm = (props:any) => {
 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -163,7 +164,8 @@ const LegalEntityForm = () => {
         let payload = getFormattedPayload(values)
         saveLegalEntityDetails(payload)
          .then(response => {
-            showSuccessMessage("Legal entity details updated successfully")
+            showSuccessMessage(LEGAL_ENTITY_UPDATE_SUCCESS)
+            props.reloadStatus();
          })
          .catch(err => {
             // setAllowEnterOtp(false);

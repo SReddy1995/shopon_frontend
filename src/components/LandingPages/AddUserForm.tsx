@@ -4,6 +4,7 @@ import { Formik, Field, ErrorMessage, FormikValues, FormikHelpers } from 'formik
 import { createUser, updateUser } from '../../services/UsersService';
 import { showSuccessMessage } from '../../shared/notificationProvider';
 import Multiselect from 'multiselect-react-dropdown';
+import { USER_ADDED_SUCCESS, USER_UPDATE_SUCCESS } from '../../utils/constants/NotificationConstants';
 
 
 const CustomMultiselect = ({ field, form, options } : any) => {
@@ -118,7 +119,7 @@ const AddUserForm = (props: any) => {
 
     createUser(payload)
      .then(response => {
-        showSuccessMessage("User Added successfully")
+        showSuccessMessage(USER_ADDED_SUCCESS)
         props.closeAndUpdate();
      })
   }
@@ -133,7 +134,7 @@ const AddUserForm = (props: any) => {
     let payload = formatPayloadForRole(values);
     updateUser(payload, props.selectedUser.user_id)
      .then(response => {
-        showSuccessMessage("User Details Updated successfully")
+        showSuccessMessage(USER_UPDATE_SUCCESS)
         props.closeAndUpdate();
      })
   }

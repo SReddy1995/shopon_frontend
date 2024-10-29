@@ -3,6 +3,7 @@ import * as Yup from 'yup';
 import { Formik, Field, ErrorMessage, FormikValues, FormikHelpers } from 'formik';
 import { showSuccessMessage } from '../../shared/notificationProvider';
 import { getBankInfo, saveBankInfo } from '../../services/AccountService';
+import { BANK_INFO_UPDATE_SUCCESS } from '../../utils/constants/NotificationConstants';
 
 const ifscRegex = new RegExp("^[A-Z]{4}[0]{1}[A-Z0-9]{6}$")
 const bankEscrowValidationSchema = Yup.object().shape({
@@ -12,7 +13,7 @@ const bankEscrowValidationSchema = Yup.object().shape({
     bank_name: Yup.string()
 });
 
-const BankEscrowForm = ({ onUpdate }: any) => {
+const BankEscrowForm = (props: any) => {
 
     const [loading, setLoading] = useState(true);
     const [initialValues, setInitialValues] = useState({
@@ -46,7 +47,8 @@ const BankEscrowForm = ({ onUpdate }: any) => {
     const updateBankEscrowDetails = (values: FormikValues) => {
         saveBankInfo(values)
          .then(response => {
-            showSuccessMessage("Bank Info details updated successfully")
+            showSuccessMessage(BANK_INFO_UPDATE_SUCCESS)
+            props.reloadStatus();
          })
          .catch(err => {
             // setAllowEnterOtp(false);

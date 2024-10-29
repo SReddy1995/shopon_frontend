@@ -8,6 +8,7 @@ import { requestOtpForLogin, verifyLoginOTP } from '../../services/AuthService';
 import { showSuccessMessage } from '../../shared/notificationProvider';
 import { useDispatch } from 'react-redux';
 import { updateSelectedStore, updateStoresList } from '../../utils/reduxStore/storesSlice';
+import { LOGIN_SUCCESSFULL, OTP_SENT } from '../../utils/constants/NotificationConstants';
 
 interface FormValues {
  email_address: string;
@@ -57,6 +58,7 @@ const Login = () => {
     }
     requestOtpForLogin(body)
       .then((data: any) => {
+        showSuccessMessage(OTP_SENT);
           setAllowEnterOtp(true);
       })
       .catch(err => {
@@ -84,6 +86,7 @@ const Login = () => {
      verifyLoginOTP(payload)
      .then((response: any) => {
       setSubmitting(false);
+      showSuccessMessage(LOGIN_SUCCESSFULL)
       navigateToDashboard();
      })
      .catch(err => {

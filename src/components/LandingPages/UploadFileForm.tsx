@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { uploadDocument } from '../../services/AccountService';
 import { showSuccessMessage, showWarningMessage } from '../../shared/notificationProvider';
+import { DOC_UPLOAD_ERROR, DOC_UPLOAD_SUCCESS } from '../../utils/constants/NotificationConstants';
 
 const UploadFileForm = (props: any) => {
     const [loading, setLoading] = useState(false);
@@ -38,13 +39,13 @@ const UploadFileForm = (props: any) => {
         formData.append('document_type', props.uploadFileDetails.document_type);
         uploadDocument(formData)
         .then((data: any) => {
-            showSuccessMessage("Document uploaded successfully")
+            showSuccessMessage(DOC_UPLOAD_SUCCESS)
             props.refreshData();
             closeModal();
         })
         .catch(err => {
             // setAllowEnterOtp(false);
-            showWarningMessage("error uploading file")
+            showWarningMessage(DOC_UPLOAD_ERROR)
         });
       }
 

@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getAccountDetails, saveRegistrationDetails } from '../../services/AccountService';
 import { showSuccessMessage } from '../../shared/notificationProvider';
 import { updateSelectedStore } from '../../utils/reduxStore/storesSlice';
+import { REGISTRATION_UPDATE_SUCCESS } from '../../utils/constants/NotificationConstants';
 
 interface FormValues {
     firstname: string;
@@ -46,7 +47,7 @@ const initialValues = {
     additional_info: '',
    };
 
-const RegistrationForm = () => {
+const RegistrationForm = (props:any) => {
 
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -78,7 +79,8 @@ const RegistrationForm = () => {
         saveRegistrationDetails(values)
          .then(response => {
             handleUpdateDetails(values);
-            showSuccessMessage("Registration details updated successfully")
+            showSuccessMessage(REGISTRATION_UPDATE_SUCCESS)
+            props.reloadStatus();
          })
       }
 
