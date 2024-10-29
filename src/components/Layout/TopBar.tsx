@@ -188,15 +188,15 @@ const TopBar = () => {
                                 stores_list
                                 .map((store : any, index: any) => {
                                     return <li key={index} onClick={() => handleStoreSwitched(store)}>
-                                                <a className="dropdown-item ml-0" >
-                                                <span className="acc-icons" 
-                                                      style={{color: selectedStoreData && store.buyer_id == selectedStoreData ? 'green' : ''}}>
-                                                        <i className={selectedStoreData && store.buyer_id == selectedStoreData ? "fa fa-check-circle" : "fa fa-circle-thin"}></i>
-                                                    </span>
-                                                    <span className='ml-2'>
-                                                        {store.store_url}
-                                                    </span>
-                                                </a>
+                                        <a className="dropdown-item ml-0 pl-0 ellipsis" >
+                                            <span className="acc-icons"
+                                                style={{ color: selectedStoreData && store.buyer_id == selectedStoreData ? 'green' : '' }}>
+                                                <i className={selectedStoreData && store.buyer_id == selectedStoreData ? "fa fa-check-circle" : "fa fa-circle-thin"}></i>
+                                            </span>
+                                            <span className='ml-2'>
+                                                {store.store_url}
+                                            </span>
+                                        </a>
                                             </li>
                                 })
                             
@@ -214,6 +214,13 @@ const TopBar = () => {
                     <ul className="list-unstyled">
                         <li>
                             <a className="dropdown-item" onClick={handleLogOut}>
+                            <span className="me-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                className="feather feather-power">
+                                <path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path>
+                                <line x1="12" y1="2" x2="12" y2="12"></line>
+                            </svg></span>
                                 Log Out
                             </a>
                         </li>

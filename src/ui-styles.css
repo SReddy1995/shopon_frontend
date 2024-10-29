@@ -1652,6 +1652,11 @@ border-radius: 8px !important;
 font-size: 12px !important;
 }
 
+.ellipsis {
+  white-space: nowrap;          /* Prevents text from wrapping */
+  overflow: hidden;             /* Hides the overflowed text */
+  text-overflow: ellipsis;     /* Displays an ellipsis when text overflows */
+}
 
 
 
