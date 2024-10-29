@@ -17,7 +17,8 @@ export const AccountUrls = {
     getDocumentsDetailsList: '/documents',
     uploadDocument: '/document',
     deleteDocument: '/document',
-    downloadDocumentsZip: 'documents/download'
+    downloadDocumentsZip: 'documents/download',
+    storeStatusDetails: '/buyer/status'
 }
 
 export const UserUrls = {

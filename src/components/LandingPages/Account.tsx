@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { buildStyles, CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
@@ -8,6 +8,7 @@ import OnlineStoreForm from './OnlineStoreForm';
 import BankEscrowForm from './BankEscrowForm';
 import moment from 'moment';
 import DocumentsUpload from './DocumentsUpload';
+import { getStoreStatusDetails } from '../../services/AccountService';
 
 
 const AccountInfoOverviewContainer = styled.div`
@@ -52,23 +53,51 @@ const CircularProgressbarContainer = styled.div`
 const Account = () => {
 
     const user_details = localStorage.getItem('user_details') ? JSON.parse(localStorage.getItem('user_details') || '{}') : null;
+    const [loading, setLoading] = useState(false);
 
-    const percentage = 80;
-
-    const subscription_details = {
-        subscriber_id : "maxfashion.opteamix.com",
-        subscriber_plan: "Gold",
-        registration_date: "30th Sep 2024",
-        store_subscription: false,
-        account_status: [
-            { title: "Registration", status: "completed"},
-            { title: "Entity Setup", status: "pending"},
-            { title: "Store Setup", status: "pending"},
-            { title: "Bank Escrow", status: "pending"},
-            { title: "KYC", status: "pending"},
-            { title: "Whitelisting", status: "pending"}
+    const account_status= [
+            { title: "Registration", tabTitle:"Registration", status: "", status_desc:"pending", stepref: "REG", showInTabs: true},
+            { title: "Entity Setup", tabTitle:"Legal Entity",status: "", status_desc:"pending",stepref: "LED", showInTabs: true},
+            { title: "Store Setup", tabTitle:"Online Store",status: "", status_desc:"pending",stepref: "OSI", showInTabs: true},
+            { title: "Bank Escrow", tabTitle:"Bank Escrow",status: "", status_desc:"pending",stepref: "BEA", showInTabs: true},
+            { title: "Documents", tabTitle:"Documents",status: "", status_desc:"pending",stepref: "DOC", showInTabs: true},
+            { title: "KYC", tabTitle:"KYC",status: "", status_desc:"pending",stepref: "LED", showInTabs: false},
+            { title: "Whitelisting", tabTitle:"Whitelisting",status: "", status_desc:"pending",stepref: "WHL", showInTabs: false}
         ]
+    const [storeStatus, setStoreStatus] = useState<any[]>(account_status);
+
+    const [percentage,setPercentage] = useState(0);
+
+    useEffect(()=>{
+        fetchStoreStatusDetails()
+    },[])
+
+    const fetchStoreStatusDetails = () => {
+        setLoading(true)
+        getStoreStatusDetails()
+        .then((response: any)=>{
+            setData(response)
+        })
+        .catch(err=>{
+            setLoading(false)
+        })
     }
+
+    const setData = (res: any) => {
+        let details = storeStatus;
+        res.forEach((element: any, index: any)=> {
+            details.filter((x:any)=> x.stepref == element.step.stepref)[0].status = element.status.status;
+            details.filter((x:any)=> x.stepref == element.step.stepref)[0].status_desc = element.status.description;
+            if(element.step.stepref == "LED"){
+                details.filter((x:any)=> x.stepref == element.step.stepref)[1].status = element.status.status;
+                details.filter((x:any)=> x.stepref == element.step.stepref)[1].status_desc = element.status.description;
+            }
+        })
+        setProgressBar(res);
+        setStoreStatus(details)
+        setLoading(false)
+    }
+    const [subscriber_plan, setSubscriber_plan]= useState("Gold");
 
     const [activeTab, setActiveTab] = useState(0);
 
@@ -76,50 +105,50 @@ const Account = () => {
         activeTab === index ? className : "";
 
     const getCompletedClass = (status: any) => {
-        return status ==="completed" ? "fa fa-check-circle" :  "fa fa-times-circle"
+        return status ==="COMPLETED" ? "fa fa-check-circle" :  "fa fa-times-circle"
     }
 
-    const account_setup_tabs = [
-        {
-          title: "Registration",
-          status: "completed",
-        },
-        {
-            title: "Legal Entity",
-            status: "pending",
-        },
-        {
-            title: "Online Store",
-            status: "pending",
-        },
-        {
-            title: "Bank Escrow",
-            status: "pending",
-        },
-        {
-            title: "Documents",
-            status: "pending",
-        },
-      ];
+    const setProgressBar = (res: any) => {
+        if(res.length == 6){
+            setPercentage(100);
+        }
+        else if(res.length < 6){
+            let perPercentage = 100/7;
+            let totalPercent = 0;
+            if(res.filter((x: any)=> x.step.stepref == "LED")[0]){
+                console.log("here")
+                totalPercent = perPercentage * (res.length+1);
+            }
+            else{
+                totalPercent = perPercentage * res.length;
+            }
+            console.log(totalPercent)
+            setPercentage(Math.ceil(totalPercent))
+        }
+        
+    }
 
     const renderTabComponent = () => {
         switch (activeTab) {
             case 0 :
-                return <RegistrationForm></RegistrationForm>;
+                return <RegistrationForm reloadStatus={fetchStoreStatusDetails}></RegistrationForm>;
             case 1 :
-                return <LegalEntityForm></LegalEntityForm>;
+                return <LegalEntityForm reloadStatus={fetchStoreStatusDetails}></LegalEntityForm>;
             case 2 :
-                return <OnlineStoreForm></OnlineStoreForm>;
+                return <OnlineStoreForm reloadStatus={fetchStoreStatusDetails}></OnlineStoreForm>;
             case 3 :
-                return <BankEscrowForm></BankEscrowForm>;
+                return <BankEscrowForm reloadStatus={fetchStoreStatusDetails}></BankEscrowForm>;
             case 4 :
-                return <DocumentsUpload></DocumentsUpload>;
+                return <DocumentsUpload reloadStatus={fetchStoreStatusDetails}></DocumentsUpload>;
         }
     }
       
 
     return (
         <>
+        {
+            !loading?
+            <>
             <AccountInfoOverviewContainer>
                 <SubscriptionInfoContainer>
                     <div className="card shadow p-3 bg-grey payment-info-card">
@@ -128,7 +157,7 @@ const Account = () => {
                                 <p className="font-weight-bold"><strong>Subscriber ID : </strong><span>{user_details.subscriber_id}</span></p>
                             </div>
                             <div className="flex-grow">
-                                <p className="font-weight-bold"><strong>Subscriber Plan : </strong><span>{subscription_details.subscriber_plan}</span></p>
+                                <p className="font-weight-bold"><strong>Subscriber Plan : </strong><span>{subscriber_plan}</span></p>
                             </div>
                             <div className="flex-grow">
                                 <p className="font-weight-bold"><strong>Registration Date :</strong><span>{moment(user_details.createdAt).format("DD/MM/YYYY")}</span></p>
@@ -140,13 +169,13 @@ const Account = () => {
 
                         <div className="d-flex mt-1">
                             {
-                                subscription_details.account_status.map((details_type: any, index: number) => (
+                                storeStatus.map((details_type: any, index: number) => (
                                     <div key={index} className="flex-grow">
                                         <div style={{ textAlign: 'center' }}>
                                             <h5 className="icon-title">{details_type.title}</h5>
-                                            <span className={"payment-icons " + (details_type.status === "completed" ? "text-success" : "text-warning")}
-                                            ><i className={(details_type.status === "completed" ? "fa fa-check-circle" : "fa fa-exclamation-circle")}></i></span>
-                                            <p className="icon-text">{details_type.status === "completed" ? ("Done") : ("Pending")}</p>
+                                            <span className={"payment-icons " + (details_type.status === "COMPLETED" ? "text-success" : "text-warning")}
+                                            ><i className={(details_type.status === "COMPLETED" ? "fa fa-check-circle" : "fa fa-exclamation-circle")}></i></span>
+                                            <p className="icon-text">{details_type.status_desc}</p>
                                         </div>
                                     </div>
                                 ))
@@ -185,13 +214,15 @@ const Account = () => {
                     <div className="card mt-3 mb-3 shadow p-3">
                         <ul className="nav nav-pills mb-3 border-bottom border-2" id="pills-tab" role="tablist">
                             {
-                                account_setup_tabs.map((tab: any, index: number) => (
+                                storeStatus.map((tab: any, index: number) => {
+                                    return tab.showInTabs &&  
+                                    
                                     <li key={index} className="nav-item " role="presentation">
                                     <button className={`nav-link text-primary fw-semibold position-relative ${getActiveClass(index, "active")}`}  type="button" role="tab"
                                         onClick={() => setActiveTab(index)}
-                                        aria-selected={(activeTab === index ? true: false)}>{tab.title} <span className="acc-icons"><i className={getCompletedClass(tab.status)}></i></span></button>    
+                                        aria-selected={(activeTab === index ? true: false)}>{tab.tabTitle}<span className="acc-icons"><i className={getCompletedClass(tab.status)}></i></span></button>    
                                     </li>
-                                ))
+                                    })
                             }
                         </ul>
                         <div className="tab-content border rounded-3 border-primary p-3 " id="pills-tabContent">
@@ -204,6 +235,12 @@ const Account = () => {
                     </div>
                 </AccountDetailsInfoCardContainer>
             </AccountInfoDetailsContainer>
+
+            </>
+
+            : <></>
+        }
+
         </>
     ) 
 

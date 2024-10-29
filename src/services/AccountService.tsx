@@ -185,3 +185,16 @@ export const getLegalEntityDetails = async () => {
         throw error;
       }
   }
+
+  export const getStoreStatusDetails = async () => {
+    try{
+  
+        const response = await axiosInstance.get(AccountUrls.storeStatusDetails)
+        return response;
+  
+    } catch (error) {
+        console.error('Error fetching data: ', error);
+        // Handle errors here or throw them to be handled where the function is called
+        throw error;
+      }
+  }
