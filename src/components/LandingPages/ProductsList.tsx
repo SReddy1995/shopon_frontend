@@ -550,13 +550,19 @@ const ProductsList = () => {
                                 </div>
 
                             </div>
-                            <div className="mb-2 mt-2 me-2" style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                <div className="px-3" style={{ marginTop: 'auto' }}>
-                                    <span><strong><i className="fa fa-minus-square"></i><span className="px-3">{selectedProducts.length} products selected </span></strong></span>
-                                </div>
-                            </div>
+
+                                {
+                                    selectedProducts.length>0 && (
+                                    <div className="mb-2 mt-2 me-2" style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                        <div className="px-3" style={{ marginTop: 'auto' }}>
+                                            <span><strong><i className="fa fa-minus-square"></i><span className="px-3">{selectedProducts.length} products selected </span></strong></span>
+                                        </div>
+                                    </div>  
+                                    )
+                                }
+
                             <div className='table-responsive'>
-                            <table className="table table-hover  product-table mt-2 text-left" style={{ marginBottom: '0px', cursor: 'pointer' }}>
+                            <table className="table table-hover  product-table text-left" style={{ marginBottom: '0px', cursor: 'pointer' }}>
 
                                 <thead className="table-light">
                                     <tr>
