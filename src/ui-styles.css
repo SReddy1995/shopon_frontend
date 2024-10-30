@@ -1859,6 +1859,44 @@ font-size: 12px !important;
   font-size: 13px;
 }
 
+input[type=checkbox] {
+  position: relative;
+	border: 2px solid #000;
+	border-radius: 2px;
+	background: none;
+	cursor: pointer;
+	line-height: 0;
+	margin: 0.3em 0em 0 0;
+	outline: 0;
+	padding: 0 !important;
+	vertical-align: text-top;
+	height: 15px;
+	width: 15px;
+	-webkit-appearance: none;
+  opacity: .5;
+}
+
+input[type=checkbox]:checked {
+  background-color: #000;
+  opacity: 1;
+}
+
+input[type=checkbox]:before {
+  content: '';
+  position: absolute;
+  right: 50%;
+  top: 50%;
+  width: 4px;
+  height: 8px;
+  font-weight: 800;
+  font-size: 15px;
+  border: solid #FFF;
+  border-width: 0 2px 2px 0;
+  margin: 0px -1px 0 -1px;
+  transform: rotate(45deg) translate(-50%, -50%);
+  z-index: 2;
+}
+
 
 
 
