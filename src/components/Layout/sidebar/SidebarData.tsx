@@ -23,6 +23,13 @@ export const SidebarData = [
     icon: <span className="fa-stack fa-md"><i className="fa fa fa-users fa-stack-1x "></i></span>
   },
   {
+    title: 'Maps',
+    id: 'maps',
+    path: '/landing-page/maps',
+    scopes: ['Admin'],
+    icon: <span className="fa-stack fa-md"></span>
+  },
+  {
     title: 'Products',
     id: 'product',
     path: '/landing-page/products',
@@ -33,13 +40,13 @@ export const SidebarData = [
 
     subNav: [
       {
-        title: 'Products List',
+        title: 'ONDC Products',
         id: 'products-list',
         path: '/landing-page/products/products-list',
         icon: <></>
       },
       {
-        title: 'Collections',
+        title: 'Shopify Collections',
         id: 'collections',
         path: '/landing-page/products/collections',
         icon: <></>
