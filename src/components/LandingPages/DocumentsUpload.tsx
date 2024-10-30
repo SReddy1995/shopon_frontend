@@ -116,7 +116,7 @@ const DocumentsUpload = (props: any) => {
         console.log(values)
         let docs = documentsList;
         let org_type = values.nature_of_organization_type;
-        if(org_type === "SOLE_PROP" || org_type === "COMP" || org_type === "AOP" || org_type === "PART_FIRM" || org_type === "LLP"){
+        if(org_type === "TRUST" || org_type === "COMP" || org_type === "AOP" || org_type === "PART_FIRM" || org_type === "LLP"){
             docs.filter((x: any) => x.document_type === "CPAN")[0].applicable = true
             docs.filter((x: any) => x.document_type === "COI")[0].applicable = true
         }

@@ -86,14 +86,16 @@ const Account = () => {
     const setData = (res: any) => {
         let details = storeStatus;
         res.forEach((element: any, index: any)=> {
+            if(details.filter((x:any)=> x.stepref == element.step.stepref)[0]){
             details.filter((x:any)=> x.stepref == element.step.stepref)[0].status = element.status.status;
             details.filter((x:any)=> x.stepref == element.step.stepref)[0].status_desc = element.status.description;
             if(element.step.stepref == "LED"){
                 details.filter((x:any)=> x.stepref == element.step.stepref)[1].status = element.status.status;
                 details.filter((x:any)=> x.stepref == element.step.stepref)[1].status_desc = element.status.description;
             }
+            }
         })
-        setProgressBar(res);
+        setProgressBar(details);
         setStoreStatus(details)
         setLoading(false)
     }
@@ -109,22 +111,12 @@ const Account = () => {
     }
 
     const setProgressBar = (res: any) => {
-        if (res.length > 0){
-            let length = res.filter((x: any)=> x.statusref === 'COMPLETED').length;
-            if(length == 6){
-                setPercentage(100);
-            }
-            else if(length < 6){
-                let perPercentage = 100/7;
-                let totalPercent = 0;
-                if(res.filter((x: any)=> x.step.stepref == "LED")[0]){
-                    totalPercent = perPercentage * (length+1);
-                }
-                else{
-                    totalPercent = perPercentage * length;
-                }
-                setPercentage(Math.ceil(totalPercent))
-            }
+
+        if(res.filter((x: any)=> x.status === "COMPLETED").length>0){
+            let length = res.filter((x: any)=> x.status === 'COMPLETED').length;
+            let perPercentage = 100/7;
+            let totalPercent = perPercentage * length;
+            setPercentage(Math.ceil(totalPercent))
         }
 
 
@@ -177,7 +169,7 @@ const Account = () => {
                                         <div style={{ textAlign: 'center' }}>
                                             <h5 className="icon-title">{details_type.title}</h5>
                                             <span className={"payment-icons " + (details_type.status === "COMPLETED" ? "text-success" : "text-warning")}
-                                            ><i className={(details_type.status === "COMPLETED" ? "fa fa-check-circle" : "fa fa-exclamation-circle")}></i></span>
+                                            ><i className={(details_type.status === "COMPLETED" ? "fa fa-check-circle" : (details_type.status === "FAILED" ? "fa fa-times-circle" : "fa fa-exclamation-circle"))}></i></span>
                                             <p className="icon-text">{details_type.status_desc}</p>
                                         </div>
                                     </div>
