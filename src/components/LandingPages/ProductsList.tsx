@@ -580,7 +580,7 @@ const ProductsList = () => {
                                         productsList
                                             .map((product: any, index: any) => {
                                                 return <tr key={index}>
-                                                    <td><input type="checkbox" 
+                                                    <td className='products-list'><input type="checkbox" 
                                                     checked={selectedProducts.some((obj: any) => obj.product_id === product.product_id)}
                                                     onChange={() => toggleProductSelection(product)} /></td>
                                                     {

@@ -1859,7 +1859,7 @@ font-size: 12px !important;
   font-size: 13px;
 }
 
-input[type=checkbox] {
+.products-list input[type=checkbox] {
   position: relative;
 	border: 2px solid #000;
 	border-radius: 2px;
@@ -1876,12 +1876,12 @@ input[type=checkbox] {
   opacity: .5;
 }
 
-input[type=checkbox]:checked {
+.products-list input[type=checkbox]:checked {
   background-color: #000;
   opacity: 1;
 }
 
-input[type=checkbox]:before {
+.products-list input[type=checkbox]:before {
   content: '';
   position: absolute;
   right: 50%;
