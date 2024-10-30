@@ -109,22 +109,25 @@ const Account = () => {
     }
 
     const setProgressBar = (res: any) => {
-        if(res.length == 6){
-            setPercentage(100);
-        }
-        else if(res.length < 6){
-            let perPercentage = 100/7;
-            let totalPercent = 0;
-            if(res.filter((x: any)=> x.step.stepref == "LED")[0]){
-                console.log("here")
-                totalPercent = perPercentage * (res.length+1);
+        if (res.length > 0){
+            let length = res.filter((x: any)=> x.statusref === 'COMPLETED').length;
+            if(length == 6){
+                setPercentage(100);
             }
-            else{
-                totalPercent = perPercentage * res.length;
+            else if(length < 6){
+                let perPercentage = 100/7;
+                let totalPercent = 0;
+                if(res.filter((x: any)=> x.step.stepref == "LED")[0]){
+                    totalPercent = perPercentage * (length+1);
+                }
+                else{
+                    totalPercent = perPercentage * length;
+                }
+                setPercentage(Math.ceil(totalPercent))
             }
-            console.log(totalPercent)
-            setPercentage(Math.ceil(totalPercent))
         }
+
+
         
     }
 
