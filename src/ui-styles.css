@@ -1791,6 +1791,12 @@ font-size: 12px !important;
   text-align: left;
 }
 
+.column-visibility-sortby-container{
+  display: flex;
+  flex-direction: row;
+  justify-content: right;
+}
+
 .sort-container{
 
   
@@ -1816,6 +1822,41 @@ font-size: 12px !important;
 
 .category-selector-search-input{
   width: 90%;
+}
+
+.column-visibility-selection-container{
+
+  height:2rem;
+  border: 1px solid #dddd;
+  border-radius: 1.5rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: left;
+  position: relative;
+}
+
+.column-visibility-container{
+
+  
+  position: relative;
+}
+
+.column-visibility-selection-dropdown{
+  display: block;
+  position: absolute;
+  background-color: white;
+  min-width: 140px;
+  max-width: 220px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 2;
+  border-radius: 8px;
+  top: 2.8rem;
+  right: 0px;
+  text-align: left;
+  font-weight: 400;
+  color: #212529;
+  font-size: 13px;
 }
 
 
