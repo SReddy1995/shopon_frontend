@@ -16,6 +16,8 @@ import AuthGuardRoutes from "./utils/route-guards/AuthGuardRoutes";
 import StoreActivationGuard from "./utils/route-guards/StoreActivationGuard";
 import Logout from "./components/LandingPages/Logout";
 import ProductsList from "./components/LandingPages/ProductsList";
+import MapComponent from "./components/LandingPages/MapComponent";
+import PreviewProducts from "./components/LandingPages/PreviewProducts";
 
 export const AppRoutes = () => {
   const childRoutes = [
@@ -28,6 +30,10 @@ export const AppRoutes = () => {
     {
       path: "/landing-page/account",
       element: <Account />,
+    },
+    {
+      path: "/landing-page/maps",
+      element: <MapComponent />,
     },
     {
       path: "/landing-page/profile",
@@ -44,6 +50,10 @@ export const AppRoutes = () => {
     {
       path: "/landing-page/products/products-list",
       element: <ProductsList />,
+    },
+    {
+      path: "/landing-page/products/products-preview",
+      element: <PreviewProducts />,
     },
     {
       path: "/landing-page/products/inventory",

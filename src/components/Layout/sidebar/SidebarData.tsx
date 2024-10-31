@@ -16,6 +16,13 @@ export const SidebarData = [
     icon: <span className="fa-stack fa-md "><i className="fa fa-bar-chart fa-stack-1x "></i></span>
   },
   {
+    title: 'Maps',
+    id: 'maps',
+    path: '/landing-page/maps',
+    scopes: ['Admin', 'Operator'],
+    icon: <span className="fa-stack fa-md "><i className="fa fa-bars fa-stack-1x "></i></span>
+  },
+  {
     title: 'User Management',
     id: 'user-management',
     path: '/landing-page/manage-users',
@@ -44,12 +51,12 @@ export const SidebarData = [
         path: '/landing-page/products/collections',
         icon: <></>
       },
-      {
-        title: 'Inventory',
-        id: 'inventory',
-        path: '/landing-page/products/inventory',
-        icon: <></>
-      },
+      // {
+      //   title: 'Inventory',
+      //   id: 'inventory',
+      //   path: '/landing-page/products/inventory',
+      //   icon: <></>
+      // },
     ]
   }
 ];

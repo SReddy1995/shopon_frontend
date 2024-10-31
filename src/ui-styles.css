@@ -1667,7 +1667,8 @@ font-size: 12px !important;
   display: flex;
   flex-direction: row;
   align-items: center;
-
+  justify-content: space-between;
+  gap: 0.2rem;
   i{
     padding-left: 26px;
     font-size:18px
@@ -1895,6 +1896,86 @@ font-size: 12px !important;
   margin: 0px -1px 0 -1px;
   transform: rotate(45deg) translate(-50%, -50%);
   z-index: 2;
+}
+
+.product-details-window{
+  dislay: block;
+  position: absolute;
+  width: 35%;
+  height: calc(100vh - 15px);
+  right: 0px;
+  top:5px;
+}
+
+.product-details-listing{
+  height: calc(100vh - 70px);
+  overflow-y: auto;
+}
+
+.price-container{
+  display:flex;
+  flex-direction: row;
+  justify-content: start;
+
+}
+
+.price-red{
+  color:#f44336;
+  font-size:24px;
+}
+.price-black{
+  color: inherit;
+  font-size:24px;
+}
+.price-tag{
+  color:grey;
+}
+
+.seller-info-accessibility-container{
+  display: flex;
+  flex-direction: column;
+  gap:0.2rem;
+}
+
+
+.product-accessibility-container{
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+  gap:1rem;
+}
+
+.product-info-box{
+  font-size: 0.7rem;
+}
+
+.product-accordian{
+  margin:initial !important;
+  margin-top:20px !important;
+
+  ul li{
+    font-size: 13px;
+    text-decoration: none;
+    list-style: none;
+    }
+}
+.accordion-button:focus{
+box-shadow: none !important;
+border-bottom: 1px solid #ddd;
+}
+
+.category-text{
+  font-size: 0.8rem;
+  white-space: nowrap; /* Prevent line breaks */
+  overflow: hidden;    /* Hide overflow */
+  text-overflow: ellipsis; /* Optional: add ellipsis for overflow */
+}
+
+.back-button-container{
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+  align-items: center;
 }
 
 

@@ -1,8 +1,18 @@
 import Multiselect from 'multiselect-react-dropdown';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import '@splidejs/splide/dist/css/splide.min.css';
+import { v4 as uuidv4 } from 'uuid';
+
+import { Options, Splide, SplideSlide, SplideTrack } from '@splidejs/react-splide';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateProductsColumnsList, updateSelectedProductsList, updateSourcePage } from '../../utils/reduxStore/productsSlice';
+import { showWarningMessage } from '../../shared/notificationProvider';
+import { NO_PRODUCTS_SELECTED } from '../../utils/constants/NotificationConstants';
+import { useNavigate } from 'react-router-dom';
 
 const ProductsList = () => {
 
+    const MessageID = "MSG"+uuidv4();
     const [columns_from_api, setColumnsFromApi] = useState<any[]>([
         {
             coltitle: "",
@@ -89,6 +99,9 @@ const ProductsList = () => {
 
     const [selectedProducts, setSelectedProducts] = useState([])
     const [columns, setColumns] = useState<any[]>([])
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const productsFromStore = useSelector((store: any) => store.products.selectedProductsList);
 
     const productsList = [
         {
@@ -172,6 +185,57 @@ const ProductsList = () => {
     const [isSortByOpen, setSortByOpen] = useState(false);
     const [selectedSortBy, setSelectedSortBy] = useState('')
     const [isColumnVisibilityOpen, setIsColumnVisibilityOpen] = useState(false);
+    const [isProductDetailsOpen, setIsProductDetailsOpen] = useState(false);
+    const [selectedCategory, setSelectedCategory] = useState({id:'All', name: "All"});
+    const [selectedLocation, setSelectedLocation] = useState('')
+
+    const categories = [
+        {id: "All", name: "ALL"},
+        {id: "Food and beverages", name: "Food and beverages"},
+        {id: "Fashion", name: "Fashion"},
+        {id: "Grocery", name: "Grocery"},
+        {id: "Agriculture", name: "Agriculture"},
+        {id: "Electronics", name: "Electronics"},
+
+    ]
+
+    const mainOptions: Options = {
+        type: 'fade',
+        height: '300px',
+        pagination: false,
+        arrows: false,
+        cover: true,
+        };
+  
+      const thumbsOptions: Options = {
+        fixedWidth: 100,
+        fixedHeight: 64,
+        isNavigation: true,
+        gap: 15,
+        focus: 'center',
+        pagination: false,
+        cover: true,
+        breakpoints: {
+            600: {
+                fixedWidth: 66,
+                fixedHeight: 40,
+            },
+        },
+    };
+
+      const slides = [
+        { src: 'https://images.pexels.com/photos/4275890/pexels-photo-4275890.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1=1260', alt: 'Image 1' },
+        { src: 'https://images.pexels.com/photos/3511104/pexels-photo-3511104.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1=1260', alt: 'Image 2' },
+        { src: 'https://images.pexels.com/photos/276484/pexels-photo-276484.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1=1260', alt: 'Image 3' },
+        { src: "https://images.pexels.com/photos/1539225/pexels-photo-1539225.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1=1260", alt: "Image4"},
+        { src: "https://images.pexels.com/photos/858115/pexels-photo-858115.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1=1260", alt: "Image4"},
+        // Add more images as needed
+      ];
+
+      const mainRef = useRef<Splide | null>(null);
+
+      const thumbsRef = useRef<Splide | null>(null);
+    
 
     const toggleDropdown = () => {
       setIsOpen(!isOpen);
@@ -184,6 +248,17 @@ const ProductsList = () => {
     const clearVendorList = () => {
         setSlectedVendors([])
         setIsVendorDropdownOpen(false)
+    }
+
+    const openProductDetails = () => {
+        if(!isProductDetailsOpen){
+            setIsProductDetailsOpen(true)
+        }
+        
+    }
+
+    const closeProductDetails = () => {
+        setIsProductDetailsOpen(false)
     }
 
     const handleSpecialitySelectionClick = (values: any) => {
@@ -224,13 +299,15 @@ const ProductsList = () => {
       };
 
       const toggleProductSelection = (product: any) => {
-        setSelectedProducts((prevSelected: any) => {
-            if (prevSelected.some((obj: any) => obj.product_id === product.product_id)) {
-              return prevSelected.filter((item: any) => item.product_id !== product.product_id);
-            } else {
-              return [...prevSelected, product];
-            }
-          });
+        if(!isProductDetailsOpen){
+            setSelectedProducts((prevSelected: any) => {
+                if (prevSelected.some((obj: any) => obj.product_id === product.product_id)) {
+                  return prevSelected.filter((item: any) => item.product_id !== product.product_id);
+                } else {
+                  return [...prevSelected, product];
+                }
+              });
+        }
       }
 
       const toggleColumnVisibility = (col: any) => {
@@ -251,9 +328,42 @@ const ProductsList = () => {
         setSortByOpen(false);
       };
 
+      const setSelectedCategoryValue = (cat : any) => {
+        console.log(cat)
+        setSelectedCategory(cat)
+        setIsOpen(false)
+      }
+
+
+      const previewSelected = () => {
+        if(selectedProducts.length>0){
+            dispatch(updateSelectedProductsList(selectedProducts));
+            dispatch(updateProductsColumnsList(columns));
+            navigate("/landing-page/products/products-preview")
+
+        }
+        else{
+            showWarningMessage(NO_PRODUCTS_SELECTED)
+        }
+
+      }
+
+      const sourcePage = useSelector((store: any) => store.products.sourcePage);
+
     useEffect(() => {
+        console.log("Message ID = ", MessageID)
+        if(sourcePage && sourcePage === 'preview'){
+            dispatch(updateSourcePage(''));
+            setSelectedProducts(productsFromStore)
+        }
         setData(JSON.parse(JSON.stringify(columns_from_api)))
       },[]);
+
+      useEffect(() => {
+        if (mainRef.current && thumbsRef.current) {
+            mainRef.current.sync(thumbsRef.current.splide as any);
+          }
+      },[isProductDetailsOpen]);
 
       const setData = (data: any) => {
         setColumns(data);
@@ -268,7 +378,7 @@ const ProductsList = () => {
                     </div>
                     <div className="col-6 text-right">
                         <a className="btn-link"><button type="button"
-                            className="btn-custom" >Preview Selected</button></a>
+                            className="btn-custom" onClick={previewSelected}>Preview Selected</button></a>
                     </div>
                 </div>
                 <div className="row mt-4">
@@ -276,45 +386,35 @@ const ProductsList = () => {
                         <div className="card shadow bg-white table-padding mb-3 p-3">
                             <div className="row">
                                 <div className="col-3">
-                                    <div className="select-location-container">
+                                    <div className="select-location-container text-left">
+                                        <div className='d-flex'>
                                         <i className="fa fa-map-marker"> </i>
-                                        <input className="search_input" type="text" name="" placeholder="Select by location" />
-                                        <i className="fa fa-close  fa-sm pl-0 cursor-pointer"> </i>
+                                        <p className='mb-0 pl-3'>{selectedLocation !== '' ? selectedLocation : ('Select location')}</p>
+                                        </div>
+
+                                        <i className="fa fa-close fa-sm pr-3 cursor-pointer"> </i>
                                     </div>
                                 </div>
                                 <div className="col-9">
                                     <div className="category-search-container">
-                                        <div className="category-dropdown-toggler" onClick={toggleDropdown} >
-                                            <span className="d-block lh-sm fw-semibold ms-fs-14 text-capitalize text-dark">All </span>
+                                        <div className="category-dropdown-toggler w-auto" onClick={toggleDropdown} >
+                                            <p className="category-text w-auto mb-0">{selectedCategory.name} </p>
                                             <i className="fa fa-caret-down cursor-pointer" ></i>
                                         </div>
                                         {isOpen && (
                                             <div className="category-dropdown-menu w-100 p-0 pt-0 fs-6">
                                                 <div className="megamenu_search rounded-3 overflow-hidden p-0 ">
-                                                    <div className="row g-0 flex-row flex-nowrap h-100">
+                                                    <div className="row g-0 flex-row h-100">
                                                         <div className="col-12 col-sm-12 d-flex flex-column flex-nowrap">
                                                             <div className="megamenu_search-nav flex-fill overflow-auto px-3 pt-1 pb-3">
                                                                 <ul className="list-unstyled m-0">
-                                                                    <li><a className="dropdown-item small  fw-semibold oneline_ellipsis pl-1"
-                                                                        role="button" title="All">-- select category -- </a></li>
-                                                                    <li><a className="dropdown-item small  fw-semibold oneline_ellipsis pl-1"
-                                                                        title="Food &amp; Beverages" role="button">Food &amp; Beverages</a></li>
-                                                                    <li><a className="dropdown-item small  fw-semibold oneline_ellipsis pl-1"
-                                                                        title="Fashion" role="button">Fashion</a></li>
-                                                                    <li><a className="dropdown-item small  fw-semibold oneline_ellipsis pl-1"
-                                                                        title="Grocery" role="button">Grocery</a></li>
-                                                                    <li><a className="dropdown-item small  fw-semibold oneline_ellipsis pl-1"
-                                                                        title="Beauty &amp; Personal Care" role="button">Beauty &amp; Personal Care</a></li>
-                                                                    <li><a className="dropdown-item small  fw-semibold oneline_ellipsis pl-1"
-                                                                        title="Agriculture" role="button">Agriculture</a></li>
-                                                                    <li><a className="dropdown-item small  fw-semibold oneline_ellipsis pl-1"
-                                                                        title="Home &amp; Kitchen" role="button">Home &amp; Kitchen</a></li>
-                                                                    <li><a className="dropdown-item small  fw-semibold oneline_ellipsis pl-1"
-                                                                        title="Electronics" role="button">Electronics</a></li>
-                                                                    <li><a className="dropdown-item small  fw-semibold oneline_ellipsis pl-1"
-                                                                        title="Automotive" role="button">Automotive</a></li>
-                                                                    <li><a className="dropdown-item small  fw-semibold oneline_ellipsis pl-1"
-                                                                        title="Health &amp; Wellness" role="button">Health &amp; Wellness</a></li>
+                                                                    {
+                                                                        categories
+                                                                        .map((cat: any,index:any)=>{
+                                                                            return  <li key={index}><a className="dropdown-item small fw-semibold oneline_ellipsis pl-1"
+                                                                            role="button" title="All" onClick={()=>setSelectedCategoryValue(cat)}>{cat.name} </a></li>
+                                                                        })
+                                                                    }
                                                                 </ul>
                                                             </div>
                                                         </div>
@@ -589,16 +689,16 @@ const ProductsList = () => {
                                                                 return col.isVisible &&
                                                                     (
                                                                         col.type == "image" ?
-                                                                            <td key={i} className="product-small-image px-0" style={{ paddingLeft: '0px !important' }}><a href="#" className="pop">
+                                                                            <td onClick={openProductDetails} key={i} className="product-small-image px-0" style={{ paddingLeft: '0px !important' }}><a href="#" className="pop">
                                                                                 <img src={product[col.column]} alt="" />
                                                                             </a></td>
                                                                             :
 
                                                                             (
                                                                                 col.type == "active-draft-button" ?
-                                                                                    <td key={i}><span className={product[col.column] == 'Active' ? "product-active" : "product-draft"}>{product[col.column]}</span></td>
+                                                                                    <td onClick={openProductDetails} key={i}><span className={product[col.column] == 'Active' ? "product-active" : "product-draft"}>{product[col.column]}</span></td>
                                                                                     :
-                                                                                    <td key={i}>{product[col.column]}</td>
+                                                                                    <td onClick={openProductDetails} key={i}>{product[col.column]}</td>
                                                                             )
 
                                                                     )
@@ -616,6 +716,174 @@ const ProductsList = () => {
                     </div>
 
                 </div>
+                {
+                    isProductDetailsOpen && (
+                        <div className='card product-details-window'>
+                            <div className="container-fluid">
+                                <div className="row">
+                                    <div className="col-12 d-flex justify-content-between mt-2">
+                                        <h4>Wireless bluetooth Airpods</h4>
+                                        <i className='fa fa-close fa-lg cursor-pointer mt-1' onClick={closeProductDetails}></i>
+                                    </div>
+
+                                    <div className="col-12 product-details-listing">
+                                        <div className="row">
+                                            <div className="col-12 mt-2">
+                                                <Splide
+                                                    key="main"
+                                                    ref={mainRef}
+                                                    options={mainOptions}
+
+                                                >
+                                                    {slides.map((slide, index) => (
+                                                        <SplideSlide key={index}>
+                                                            <img src={slide.src} alt={slide.alt} style={{ width: '100%', height: 'auto' }} />
+                                                        </SplideSlide>
+                                                    ))}
+                                                </Splide>
+                                            </div>
+                                            <div className="col-12 mt-2">
+                                                <Splide
+                                                    key="thumbs"
+                                                    ref={thumbsRef}
+                                                    options={thumbsOptions}
+
+                                                >
+                                                    {slides.map((slide, index) => (
+                                                        <SplideSlide key={index}>
+                                                            <img src={slide.src} alt={slide.alt} style={{ width: '100%', height: 'auto' }} />
+                                                        </SplideSlide>
+                                                    ))}
+                                                </Splide>
+                                            </div>
+                                        </div>
+                                        <div className="row">
+                                            <div className="col-12">
+                                                <hr className="mt-2"/>
+                                            </div>
+                                        </div>
+                                        <div className="row">
+                                            <div className="col-md-6 col-12 d-flex flex-column">
+                                                <div className='price-container'>
+                                                    <span className="price-red">
+                                                        -33%
+
+                                                    </span>
+                                                    <span className="price-black ms-2">
+                                                        ₹201
+                                                    </span>
+                                                </div>
+                                                <div className='price-container'>
+                                                    <p className="price-tag">M.R.P : <del>₹299</del></p>
+                                                </div>
+                                                <div className='price-container'>
+                                                    <p><span className="price-tag">Category : </span><span>Retail</span></p>
+                                                </div>
+                                            </div>
+                                            <div className="col-md-6 col-12 seller-info-accessibility-container text-right">
+                                                <span className="vendor-name"><span className="price-tag">Seller : </span>Opteamix</span>
+                                                <div className="product-accessibility-container mt-1">
+                                                        <div className="border-0 rounded-0 shadow-none text-center mb-0" style={{maxWidth: '160px',cursor: 'pointer'}}>
+                                                         
+                                                                <div className="bg-light d-flex align-items-center justify-content-center rounded-circle mx-auto mb-2"
+                                                                    style={{height: '35px', width: '35px'}}><i className="fa fa-ban" style={{paddingLeft: '10px'}}></i></div>
+                                                                <div className="product-info-box text-muted "><span>Cancellable</span></div>
+                                                              
+                                                        </div>
+                                                        <div className="border-0 rounded-0 shadow-none text-center mb-0" style={{maxWidth: '160px',cursor: 'pointer'}}>
+                                                          
+                                                                <div className="bg-light d-flex align-items-center justify-content-center rounded-circle mx-auto mb-2"
+                                                                    style={{height: '35px', width: '35px'}}><i className="fa fa-truck" style={{paddingLeft: '10px'}}></i></div>
+                                                                <div className="product-info-box text-muted"><span>Returnable</span></div>
+                                                              
+                                                        </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="row">
+                                            <div className="col-12">
+                                                <div className="accordion product-accordian mt-1" id="accordionExample">
+                                                    <div className="accordion-item">
+                                                        <h2 className="accordion-header" id="headingOne">
+                                                            <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
+                                                                aria-expanded="true" aria-controls="collapseOne">
+                                                                Product Description
+                                                            </button>
+                                                        </h2>
+                                                        <div id="collapseOne" className="accordion-collapse collapse show" aria-labelledby="headingOne"
+                                                            data-bs-parent="#accordionExample">
+                                                            <div className="accordion-body">
+                                                                <p>About this product</p>
+                                                                <ul className="mt-0">
+                                                                    <li>Consumes :  <b>600 W</b></li>
+                                                                    <li> Capacity : <b>1.2 L</b></li>
+                                                                    <li> Power Indicator : <b>Yes</b></li>
+                                                                    <li> Lockable Lid : <b> No</b></li>
+                                                                    <li> Auto Switch : <b>Off</b></li>
+                                                                </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+                                            </div>
+                                        </div>
+                                        <div className="row">
+                                            <div className="col-12">
+                                                <div className="accordion product-accordian mt-2" id="accordionExample">
+                                                    <div className="accordion-item">
+                                                        <h2 className="accordion-header" id="headingOne">
+                                                            <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne1"
+                                                                aria-expanded="true" aria-controls="collapseOne1">
+                                                                Seller Details
+                                                            </button>
+                                                        </h2>
+                                                        <div id="collapseOne1" className="accordion-collapse collapse " aria-labelledby="headingOne"
+                                                            data-bs-parent="#accordionExample">
+                                                            <div className="accordion-body">
+                                                                <p>This is the essential information that is collected to create a personal account in our platform.
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+                                                </div>
+
+
+                                            </div>
+                                        </div>
+                                        <div className="row">
+                                            <div className="col-12 mb-3">
+                                                <div className="accordion product-accordian mt-1" id="accordionExample3">
+                                                    <div className="accordion-item">
+                                                        <h2 className="accordion-header" id="headingOne">
+                                                            <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne2"
+                                                                aria-expanded="true" aria-controls="collapseOne2">
+                                                                Manufacturing Description
+                                                            </button>
+                                                        </h2>
+                                                        <div id="collapseOne2" className="accordion-collapse collapse " aria-labelledby="headingOne"
+                                                            data-bs-parent="#accordionExample">
+                                                            <div className="accordion-body">
+                                                                <p>This is the essential information that is collected to create a personal account in our platform.
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )
+                }
+               
             </div>
         </>
     ) 
