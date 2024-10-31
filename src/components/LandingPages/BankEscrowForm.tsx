@@ -9,6 +9,17 @@ const ifscRegex = new RegExp("^[A-Z]{4}[0]{1}[A-Z0-9]{6}$")
 const bankEscrowValidationSchema = Yup.object().shape({
     has_escrow_account: Yup.string().required('Select whether you have Escrow Account'),   
     escrow_account_number: Yup.string(),
+    confirm_escrow_account_number: Yup.string()
+    .when('escrow_account_number', 
+        ([escrow_account_number], schema) => {
+            if(escrow_account_number && escrow_account_number.split('').length>0){
+               return Yup.string().required("Confirm Account Number")
+               .oneOf([Yup.ref('escrow_account_number'), ''], 'Account number must match');
+            }
+            else{
+                return Yup.string();
+            }
+    }),
     ifsc: Yup.string(),
     bank_name: Yup.string()
 });
@@ -19,6 +30,7 @@ const BankEscrowForm = (props: any) => {
     const [initialValues, setInitialValues] = useState({
         has_escrow_account: '',   
         escrow_account_number: '',
+        confirm_escrow_account_number: '',
         ifsc: '',
         bank_name: ''
        }); 
@@ -34,6 +46,7 @@ const BankEscrowForm = (props: any) => {
             if(data){
                 initialValues.has_escrow_account = data[0].has_escrow_account
                 initialValues.escrow_account_number = data[0].escrow_account_number
+                initialValues.confirm_escrow_account_number = ''
                 initialValues.ifsc = data[0].ifsc
                 initialValues.bank_name = data[0].bank_name
             }
@@ -45,7 +58,10 @@ const BankEscrowForm = (props: any) => {
       }
 
     const updateBankEscrowDetails = (values: FormikValues) => {
-        saveBankInfo(values)
+        let filteredValuesPayload = values;
+        const{ confirm_escrow_account_number, ...filteredValues } = filteredValuesPayload;
+        filteredValuesPayload = filteredValues
+        saveBankInfo(filteredValuesPayload)
          .then(response => {
             showSuccessMessage(BANK_INFO_UPDATE_SUCCESS)
             props.reloadStatus();
@@ -88,7 +104,7 @@ const BankEscrowForm = (props: any) => {
                             updateBankEscrowDetails(values);
                         }}
                     >
-                        {({ isSubmitting, errors, touched, values, setFieldValue, handleSubmit, isValid, dirty, resetForm, initialValues }) => (
+                        {({ isSubmitting, errors, touched, values, handleChange,setFieldValue, handleSubmit, isValid, dirty, resetForm, initialValues }) => (
                             <form name="signin" className="form" >
                                 <div className="name-field">
                                     <div className="custom-radio-box">
@@ -131,10 +147,24 @@ const BankEscrowForm = (props: any) => {
                                     </div>
 
                                     <div className="mb-3 form-field-container-full-width">
+                                        <label htmlFor="exampleFormControlInput1" className="form-label">Bank Name</label>
+                                        <Field 
+                                            name="bank_name" type="text" 
+                                            className={'form-control dashboard-namefield ' + (errors.bank_name && touched.bank_name ? 'input-field-error' : '')}
+                                            placeholder="Bank Name" 
+                                        />
+                                        <ErrorMessage className='error' name="bank_name" component="div" />
+                                    </div>
+
+                                </div>
+
+                                <div className="name-field">
+                                    <div className="mb-3 form-field-container-full-width">
                                         <label htmlFor="exampleFormControlInput1" className="form-label">Escrow Account Number</label>
                                         <Field
                                                 placeholder="Escrow Account Number"
                                                 name="escrow_account_number"
+                                                onChange={handleChange}
                                                 type="text"
                                                 className={'form-control dashboard-namefield ' + (errors.escrow_account_number && touched.escrow_account_number ? 'input-field-error' : '')}
                                                 onKeyPress={(e: any) => {
@@ -145,7 +175,21 @@ const BankEscrowForm = (props: any) => {
                                             />
                                         <ErrorMessage className='error' name="escrow_account_number" component="div" />
                                     </div>
-
+                                    <div className="mb-3 form-field-container-full-width">
+                                        <label htmlFor="exampleFormControlInput1" className="form-label">Confirm Escrow Account Number</label>
+                                        <Field
+                                                placeholder="Escrow Account Number"
+                                                name="confirm_escrow_account_number"
+                                                type="password"
+                                                className={'form-control dashboard-namefield ' + (errors.confirm_escrow_account_number && touched.confirm_escrow_account_number ? 'input-field-error' : '')}
+                                                onKeyPress={(e: any) => {
+                                                    if (!/[0-9]/.test(e.key)) {
+                                                        e.preventDefault();
+                                                    }
+                                                }}
+                                            />
+                                        <ErrorMessage className='error' name="confirm_escrow_account_number" component="div" />
+                                    </div>
                                 </div>
 
                                 <div className="name-field">
@@ -165,15 +209,7 @@ const BankEscrowForm = (props: any) => {
 
                                     </div>
 
-                                    <div className="mb-3 form-field-container-full-width">
-                                        <label htmlFor="exampleFormControlInput1" className="form-label">Bank Name</label>
-                                        <Field 
-                                            name="bank_name" type="text" 
-                                            className={'form-control dashboard-namefield ' + (errors.bank_name && touched.bank_name ? 'input-field-error' : '')}
-                                            placeholder="Bank Name" 
-                                        />
-                                        <ErrorMessage className='error' name="bank_name" component="div" />
-                                    </div>
+
 
 
                                 </div>

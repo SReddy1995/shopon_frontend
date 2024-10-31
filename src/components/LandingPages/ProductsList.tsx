@@ -156,6 +156,16 @@ const ProductsList = () => {
         { value: 'banana2', label: 'Banana' },
       ];
 
+      const [vendorSearchTerm, setVendorSearchTerm] = useState('');
+      const filteredVendorItems = vendors_list.filter(item =>
+        item.label.toLowerCase().includes(vendorSearchTerm.toLowerCase())
+      );
+
+      const handleVendorSearchChange = (event: any) => {
+        setVendorSearchTerm(event.target.value);
+      };
+
+
       const sort_list = [
         { value: 'product_ame', label: 'Product Name'},
         { value: 'seller', label: 'Seller'},
@@ -176,6 +186,15 @@ const ProductsList = () => {
         { value: 'cherry11', label: 'Cherry' },
         { value: 'date11', label: 'Date' },
       ];
+
+      const [specialitySearchTerm, setSpecialitySearchTerm] = useState('');
+      const filteredSpecialityItems = speciality_list.filter(item =>
+        item.label.toLowerCase().includes(specialitySearchTerm.toLowerCase())
+      );
+
+      const handleSpecialitySearchChange = (event: any) => {
+        setSpecialitySearchTerm(event.target.value);
+      };
 
     const [isOpen, setIsOpen] = useState(false);
     const [isVendorDropdownOpen, setIsVendorDropdownOpen] = useState(false);
@@ -476,10 +495,20 @@ const ProductsList = () => {
                                         {
                                             isVendorDropdownOpen && (
                                                 <div className="vendor-selection-dropdown">
+                                                    <div className='mt-2'>
+                                                    <input
+                                                        type="text"
+                                                        className='mx-2'
+                                                        placeholder="Search vendor"
+                                                        value={vendorSearchTerm}
+                                                        onChange={handleVendorSearchChange}
+                                                    />
+                                                    </div>
+
                                                     <ul className="list-unstyled mt-2">
 
                                                         {
-                                                            vendors_list
+                                                            filteredVendorItems
                                                                 .map((vendor: any, index: any) => {
                                                                     return <li key={index} className='d-flex flex-row px-2'>
                                                                         <input type="checkbox"
@@ -538,10 +567,19 @@ const ProductsList = () => {
                                         {
                                             isSpecialityDropdownOpen && (
                                                 <div className="speciality-selection-dropdown">
+                                                    <div className='mt-2'>
+                                                        <input
+                                                            type="text"
+                                                            className='mx-2'
+                                                            placeholder="Search speciality"
+                                                            value={specialitySearchTerm}
+                                                            onChange={handleSpecialitySearchChange}
+                                                        />
+                                                    </div>
                                                     <ul className="list-unstyled mt-2">
 
                                                         {
-                                                            speciality_list
+                                                            filteredSpecialityItems
                                                                 .map((vendor: any, index: any) => {
                                                                     return <li key={index} className='d-flex flex-row px-2'>
                                                                         <input type="checkbox"
