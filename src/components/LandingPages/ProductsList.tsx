@@ -261,6 +261,7 @@ const ProductsList = () => {
     };
 
     const handleVendorSelectionClick = (values: any) => {
+        setVendorSearchTerm('')
         setIsVendorDropdownOpen(!isVendorDropdownOpen)
     }
 
@@ -281,6 +282,7 @@ const ProductsList = () => {
     }
 
     const handleSpecialitySelectionClick = (values: any) => {
+        setSpecialitySearchTerm('')
         setIsSpecialityDropdownOpen(!isSpecialityDropdownOpen)
     }
 
