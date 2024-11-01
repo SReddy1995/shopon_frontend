@@ -43,9 +43,7 @@ export const AppRoutes = () => {
     },
     {
       path: "/landing-page/products/collections",
-      element: <StoreActivationGuard>
-                  <Collections />,
-               </StoreActivationGuard>
+      element: <Collections />,
     },
     {
       path: "/landing-page/products/products-list",

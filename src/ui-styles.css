@@ -1983,6 +1983,42 @@ border-bottom: 1px solid #ddd;
   overflow-y: auto;
 }
 
+.checkbox-with-label{
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+}
+
+.collections-vendor-filter-container{
+  position: relative;
+}
+
+.collections-search-by-vendor-container {
+  border: 1px solid #ccc; /* Visual border for the container */
+  padding: 10px; /* Padding inside the container */
+  width: 250px;
+  border: 1px solid #dddd;
+  border-radius: 8px;
+
+}
+
+.collections-search-by-vendor-dropdown{
+  display: block;
+  position: absolute;
+  background-color: white;
+  min-width: 160px;
+  max-width: 220px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 2;
+  border-radius: 8px;
+  text-align: left;
+
+}
+
+.dynamic-text {
+  margin: 0; /* Reset margin if needed */
+}
+
 
 
 

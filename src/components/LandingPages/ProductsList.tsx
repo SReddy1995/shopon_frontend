@@ -215,6 +215,7 @@ const ProductsList = () => {
         // Add more images as needed
       ];
 
+    const [showBackButton,setShowBackButton] = useState('hide')
     const [selectedProducts, setSelectedProducts] = useState([])
     const [columns, setColumns] = useState<any[]>([])
     const dispatch = useDispatch();
@@ -362,13 +363,26 @@ const ProductsList = () => {
 
       }
 
-      const sourcePage = useSelector((store: any) => store.products.sourcePage);
+    const sourcePage = useSelector((store: any) => store.products.sourcePage);
 
+    const loadSimilarProductsOfACategory = () => {
+
+    }
+
+    const navigateToCollectionsList = () => {
+        navigate('landing-page/products/collections')
+    }
+ 
     useEffect(() => {
         console.log("Message ID = ", MessageID)
         if(sourcePage && sourcePage === 'preview'){
             dispatch(updateSourcePage(''));
             setSelectedProducts(productsFromStore)
+        }
+        else if(sourcePage && sourcePage === 'collections'){
+            dispatch(updateSourcePage(''));
+            setShowBackButton('show')
+            loadSimilarProductsOfACategory()
         }
         setData(JSON.parse(JSON.stringify(columns_from_api)))
       },[]);
@@ -386,7 +400,22 @@ const ProductsList = () => {
     return (
         <>
             <div className="container-fluid h-auto mt-4 px-5">
-                <div className="row">
+                {
+                    showBackButton ==='show' && (
+                        <div className="row d-flex">
+                        <div className="col text-left">
+                            <div onClick={navigateToCollectionsList} className='back-button-container cursor-pointer'>
+                                <i className='fa fa-arrow-left'></i>
+                                <h6 className='pl-2 mb-0'>Back</h6>
+                            </div>
+    
+                        </div>
+    
+                    </div>
+                    )
+                }
+
+                <div className="row mt-2">
                     <div className="col-6 text-left">
                         <h3>Products</h3>
                     </div>
