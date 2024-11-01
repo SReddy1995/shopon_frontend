@@ -11,7 +11,7 @@ const bankEscrowValidationSchema = Yup.object().shape({
     escrow_account_number: Yup.string()
     .when('has_escrow_account', 
         ([has_escrow_account], schema) => {
-            if(has_escrow_account == 'Y' || has_escrow_account == 'N' ){ // remove "N" condition later
+            if(has_escrow_account == 'Y' ){ 
                return Yup.string().required("Enter Escrow Account Number");
             }
             else{
@@ -21,7 +21,7 @@ const bankEscrowValidationSchema = Yup.object().shape({
     confirm_escrow_account_number: Yup.string()
     .when(['escrow_account_number', 'has_escrow_account'],
         ([escrow_account_number, has_escrow_account], schema) => {
-            if(escrow_account_number && escrow_account_number.split('').length>0 && (has_escrow_account == 'Y' || has_escrow_account == 'N')){ // remove "N" condition later
+            if(escrow_account_number && escrow_account_number.split('').length>0 && has_escrow_account == 'Y'){ 
                return Yup.string().required("Confirm Account Number")
                .oneOf([Yup.ref('escrow_account_number'), ''], 'Account number must match');
             }
@@ -32,7 +32,7 @@ const bankEscrowValidationSchema = Yup.object().shape({
     ifsc: Yup.string()
     .when('has_escrow_account', 
         ([has_escrow_account], schema) => {
-            if(has_escrow_account == 'Y' || has_escrow_account == 'N' ){ // remove "N" condition later
+            if(has_escrow_account == 'Y'){ 
                return Yup.string().required("Enter Bank Name");
             }
             else{
@@ -42,7 +42,7 @@ const bankEscrowValidationSchema = Yup.object().shape({
     bank_name: Yup.string()
     .when('has_escrow_account', 
         ([has_escrow_account], schema) => {
-            if(has_escrow_account == 'Y' || has_escrow_account == 'N' ){ // remove "N" condition later
+            if(has_escrow_account == 'Y'){ 
                return Yup.string().required("Enter Bank Name");
             }
             else{
@@ -86,8 +86,14 @@ const BankEscrowForm = (props: any) => {
 
     const updateBankEscrowDetails = (values: FormikValues) => {
         let filteredValuesPayload = values;
-        const{ confirm_escrow_account_number, ...filteredValues } = filteredValuesPayload;
-        filteredValuesPayload = filteredValues
+        if(values.has_escrow_account == 'N'){
+            const{ confirm_escrow_account_number,escrow_account_number, ifsc,bank_name, ...filteredValues } = filteredValuesPayload;
+            filteredValuesPayload = filteredValues 
+        }
+        else{
+            const{ confirm_escrow_account_number, ...filteredValues } = filteredValuesPayload;
+            filteredValuesPayload = filteredValues
+        }
         saveBankInfo(filteredValuesPayload)
          .then(response => {
             showSuccessMessage(BANK_INFO_UPDATE_SUCCESS)
@@ -131,7 +137,7 @@ const BankEscrowForm = (props: any) => {
                             updateBankEscrowDetails(values);
                         }}
                     >
-                        {({ isSubmitting, errors, touched, values, handleChange,setFieldValue, handleSubmit, isValid, dirty, resetForm, initialValues }) => (
+                        {({ isSubmitting, errors,setErrors, touched, values, handleChange,setFieldValue, handleSubmit, isValid, dirty, resetForm, validateForm }) => (
                             <form name="signin" className="form" >
                                 <div className="name-field">
                                     <div className="custom-radio-box">
@@ -146,6 +152,20 @@ const BankEscrowForm = (props: any) => {
                                                         type="radio"
                                                         id="radio2"
                                                         value="Y"
+                                                        onChange={async(e: any) => {
+                                                            const { value } = e.target;
+                                                            setFieldValue('has_escrow_account', value);
+                                                            // Reset other fields when field changes
+                                                            const formErrors = await validateForm();
+                                                            // Set errors if there are any
+                                                            setErrors(formErrors);
+                                                            if(value=='N'){
+                                                                setFieldValue('bank_name', '');
+                                                                setFieldValue('escrow_account_number', '');
+                                                                setFieldValue('confirm_escrow_account_number', '');
+                                                                setFieldValue('ifsc', '');
+                                                                }
+                                                          }}
                                                         className={errors.has_escrow_account && touched.has_escrow_account ? 'radio-button__input input-field-error' : 'radio-button__input'}
                                                     />
                                                     <label htmlFor="radio2" className="radio-button__label">
@@ -160,6 +180,20 @@ const BankEscrowForm = (props: any) => {
                                                         type="radio"
                                                         id="radio1"
                                                         value="N"
+                                                        onChange={async(e: any) => {
+                                                            const { value } = e.target;
+                                                            setFieldValue('has_escrow_account', value);
+                                                            // Reset other fields when field changes
+                                                            const formErrors = await validateForm();
+                                                            // Set errors if there are any
+                                                            setErrors(formErrors);
+                                                            if(value=='N'){
+                                                            setFieldValue('bank_name', '');
+                                                            setFieldValue('escrow_account_number', '');
+                                                            setFieldValue('confirm_escrow_account_number', '');
+                                                            setFieldValue('ifsc', '');
+                                                            }
+                                                          }}
                                                         className={errors.has_escrow_account && touched.has_escrow_account ? 'radio-button__input input-field-error' : 'radio-button__input'}
                                                     />
                                                     <label htmlFor="radio1" className="radio-button__label">
