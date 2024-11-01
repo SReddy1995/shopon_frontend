@@ -15,13 +15,13 @@ export const SidebarData = [
     scopes: ['Admin', 'Operator'],
     icon: <span className="fa-stack fa-md "><i className="fa fa-bar-chart fa-stack-1x "></i></span>
   },
-  {
-    title: 'Maps',
-    id: 'maps',
-    path: '/landing-page/maps',
-    scopes: ['Admin', 'Operator'],
-    icon: <span className="fa-stack fa-md "><i className="fa fa-bars fa-stack-1x "></i></span>
-  },
+  // {
+  //   title: 'Maps',
+  //   id: 'maps',
+  //   path: '/landing-page/maps',
+  //   scopes: ['Admin', 'Operator'],
+  //   icon: <span className="fa-stack fa-md "><i className="fa fa-bars fa-stack-1x "></i></span>
+  // },
   {
     title: 'User Management',
     id: 'user-management',

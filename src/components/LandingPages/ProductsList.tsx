@@ -101,7 +101,7 @@ const ProductsList = () => {
     const productsList = [
         {
             product_id: 1,
-            thumbnail: "https://cdn.shopify.com/s/files/1/0567/3084/5242/files/logo41_b107e4e7-e866-401e-a025-d3ab4bcd7efd_40x40@3x.png?v=1728297340",
+            thumbnail: "https://images.pexels.com/photos/4275890/pexels-photo-4275890.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1=1260",
             product: "Fingertips Bluetooth Remote Control Wireless",
             status: "Active",
             inventory: "150,000 in stock",
@@ -127,7 +127,7 @@ const ProductsList = () => {
         },
         {
             product_id: 3,
-            thumbnail: "https://cdn.shopify.com/s/files/1/0567/3084/5242/files/logo41_b107e4e7-e866-401e-a025-d3ab4bcd7efd_40x40@3x.png?v=1728297340",
+            thumbnail: "https://images.pexels.com/photos/276484/pexels-photo-276484.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1=1260",
             product: "Max fashion dress set",
             status: "Active",
             inventory: "150,000 in stock",
