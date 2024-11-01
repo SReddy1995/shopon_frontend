@@ -6,7 +6,8 @@ const productsSlice = createSlice({
     initialState: {
         selectedProductsList : [],
         selectedColumnsList: [],
-        sourcePage: ''
+        sourcePage: '',
+        selectedCategoryForProductList: ''
     },
     reducers: {
         updateSelectedProductsList: (state, action) => {
@@ -17,10 +18,13 @@ const productsSlice = createSlice({
         },
         updateSourcePage: (state, action) => {
             state.sourcePage = action.payload
-        }
+        },
+        updateSelectedCategoryForProductsList: (state, action) => {
+            state.selectedCategoryForProductList = action.payload
+        },
     }
 })
 
-export const { updateSelectedProductsList, updateProductsColumnsList, updateSourcePage } = productsSlice.actions;
+export const { updateSelectedProductsList, updateProductsColumnsList, updateSourcePage, updateSelectedCategoryForProductsList } = productsSlice.actions;
 
 export default productsSlice.reducer;

@@ -67,26 +67,13 @@ axiosInstance.interceptors.response.use(
     const originalRequest = error.config;
     // showWarningMessage(error.error.msg)
     console.log(error)
-    if(error.response.status == 401 && error.response.data.error == "Token expired"){
+    if(error.status == 401 && error.response.data.error.msg == "Token expired"){
       showWarningMessage(error.error)
       localStorage.clear();
       window.location.href = '/login';
     }
-    else if (error.response && error.response.data.error) {
-      const messages = error.response.data.error.msg;
-      if(Array.isArray(messages)){
-        messages.forEach((msg: any) => {
-          const errorDetails = msg.split(',')[0];
-          // Show toast notification for each error message
-          showWarningMessage(errorDetails)
-      });
-      }
-      else{
-        showWarningMessage(messages)
-      }
-    }
     else{
-      showWarningMessage(error.config.message)   
+      showWarningMessage(error.response.data.error.msg)
     }
     // if (error.response.status === 401 && error.response.message == "Token Expired") {
     //   try {

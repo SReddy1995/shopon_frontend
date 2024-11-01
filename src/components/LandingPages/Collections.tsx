@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
 import SearchableMultiselectList from './SearchableMultiselectList';
+import SimilarProductsImage from "../../assets/images/product-similar-2.png";
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { updateSelectedCategoryForProductsList, updateSourcePage } from '../../utils/reduxStore/productsSlice';
 
 const Collections = () => {
 
@@ -33,6 +37,8 @@ const Collections = () => {
     const [selectedVendors, setSelectedVendors] = useState([])
     const [isSpecialityDropdownOpen, setIsSpecialityDropdownOpen] = useState(false);
     const [selectedSpecialities, setSelectedSpecialities] = useState([])
+    const navigate = useNavigate()
+    const dispatch = useDispatch();
 
 
         // vendor selection
@@ -80,6 +86,14 @@ const Collections = () => {
 
     const applyFilterOfSpecialityList = () => {
        
+    }
+
+    // navigate to productsList
+
+    const loadSimilarProducts = (category: any) => {
+        dispatch(updateSelectedCategoryForProductsList(category));
+        dispatch(updateSourcePage('collections'));
+        navigate('/landing-page/products/products-list')
     }
 
     return (
@@ -244,7 +258,7 @@ const Collections = () => {
                                             </thead>
                                             <tbody>
                                                 <tr>
-                                                        <td className="product-small-image" ><a href="#" className="pop">
+                                                        <td className="product-small-image" ><a className="pop">
                                                         <img src="https://cdn.shopify.com/s/files/1/0567/3084/5242/files/navyblue4_40x40@3x.jpg?v=1727243854"/>
                                                         </a></td>
                                                         <td style={{paddingLeft: '0px !important',width:'20%'}}> <a data-bs-toggle="modal" data-bs-target="#myModal" id="myBtn2">Fingertips Bluetooth Remote Control Wireless</a></td>
@@ -257,14 +271,14 @@ const Collections = () => {
                                                         <td>Retail</td>
                                                         <td><a><button type="button"
                                                             className="btn-custom-light" ><i className="fa fa-trash text-danger" style={{ fontSize: '14px' }}></i></button></a>
-                                                            <a href="./products.html"> <button type="button"
-                                                                className="btn-custom-light" ><img src="./assets/img/product-similar-2.png" style={{ width: '18px', height: '24px !important', padding: '0px 0px', display: 'inline' }} />
+                                                            <a > <button type="button" onClick={()=>loadSimilarProducts("Electronics")}
+                                                                className="btn-custom-light" ><img src={SimilarProductsImage} style={{ width: '18px', height: '24px !important', padding: '0px 0px', display: 'inline' }} />
                                                             </button>
                                                             </a>
                                                         </td>
                                                 </tr>
                                                 <tr>
-                                                        <td className="product-small-image" ><a href="#" className="pop">
+                                                        <td className="product-small-image" ><a  className="pop">
                                                             <img src="https://cdn.shopify.com/s/files/1/0567/3084/5242/files/navyblue4_40x40@3x.jpg?v=1727243854"/>
                                                         </a></td>
                                                         <td style={{paddingLeft: '0px !important',width:'20%'}}>Fingertips Fashion</td>
@@ -277,12 +291,12 @@ const Collections = () => {
                                                         <td>Retail</td>
                                                         <td><a><button type="button"
                                                             className="btn-custom-light" ><i className="fa fa-trash text-danger" style={{fontSize:'14px'}}></i></button></a>
-                                                            <a href="./products.html"> <button type="button"
-                                                                className="btn-custom-light" ><img src="./assets/img/product-similar-2.png" style={{width: '18px',height: '24px !important',padding: '0px 0px',display: 'inline'}}/></button></a></td>
+                                                            <a > <button type="button" onClick={()=>loadSimilarProducts("Fashion")}
+                                                                className="btn-custom-light" ><img src={SimilarProductsImage} style={{width: '18px',height: '24px !important',padding: '0px 0px',display: 'inline'}}/></button></a></td>
                                                     </tr>
                                                 <tr>
 
-                                                        <td className="product-small-image" ><a href="#" className="pop" style={{background: '#dddd !important'}}>
+                                                        <td className="product-small-image" ><a className="pop" style={{background: '#dddd !important'}}>
                                                             <img src="https://cdn.shopify.com/s/files/1/0567/3084/5242/files/navyblue4_40x40@3x.jpg?v=1727243854"/>
                                                         </a></td>
                                                         <td style={{paddingLeft: '0px !important',width: '20%'}}>Max fashion dress set</td>
@@ -295,17 +309,17 @@ const Collections = () => {
                                                         <td>Retail</td>
                                                         <td><a><button type="button"
                                                             className="btn-custom-light" ><i className="fa fa-trash text-danger" style={{fontSize:'14px'}}></i></button></a>
-                                                            <a href="./products.html"> <button type="button"
-                                                                className="btn-custom-light" ><img src="./assets/img/product-similar-2.png" style={{width: '18px',height: '24px !important',padding: '0px 0px',display: 'inline'}}/></button></a></td>
+                                                            <a > <button type="button" onClick={()=>loadSimilarProducts("Fashion")}
+                                                                className="btn-custom-light" ><img src={SimilarProductsImage} style={{width: '18px',height: '24px !important',padding: '0px 0px',display: 'inline'}}/></button></a></td>
                                                 </tr>
 
                                     </tbody>
                                 </table>
 
                                 <div className="pagination float-right" style={{marginRight:'45px',marginBottom:'10px'}}>
-                                    <a href="#">&laquo;</a>
+                                    <a >&laquo;</a>
 
-                                    <a href="#">&raquo;</a>
+                                    <a >&raquo;</a>
                                 </div>
                             </div>
                                 </div>

@@ -16,15 +16,18 @@ const UserManagement = () => {
       }, []);
 
     const fetchData = () => {
-        getUsersList()
+        setLoading(true);
+       getUsersList()
         .then((data: any) => {
             if(data){
                 setUsersList(data)
+                console.log(data)
+            setLoading(false);
+
             }
             else{
                 // let default initial values load
             }
-            setLoading(false);
         })
         .catch(err => {
             setLoading(false);
@@ -58,7 +61,7 @@ const UserManagement = () => {
       const openEditUser = (user: any) => {
         setMode('Edit')
         setSelectedUser({user_id: user.user_id,firstname : user.firstname, lastname: user.lastname, email_address: user.email_address,
-            contact_number:user.contact_number, roles: user.roles.map((role: any)=> {return {id: role, name: role}}), enabled: user.status})
+            contact_number:user.contact_number, roles: user?.userBuyerMapping[0]?.user_buyer_mapping.roles.map((role: any)=> {return {id: role, name: role}}), enabled: user?.userBuyerMapping[0]?.user_buyer_mapping.status})
         openModal();
       }
 
@@ -101,19 +104,20 @@ const UserManagement = () => {
                                                     users_list
                                                         .map((user: any, index: any) => {
                                                             return  <tr key={index}>
-                                                                        <td><a data-bs-toggle="modal" data-bs-target="#myModal">{user.firstname + user.lastname}</a></td>
+                                                                        <td><a data-bs-toggle="modal" data-bs-target="#myModal">{user.firstname} &nbsp;{user.lastname}</a></td>
                                                                         <td>{user.email_address}</td>
                                                                         <td>{user.contact_number}</td>
                                                                         <td>
                                                                         {
-                                                                            user.roles
+                                                                            
+                                                                            user?.userBuyerMapping[0]?.user_buyer_mapping.roles
                                                                             .map((role: any, index: any) => {
                                                                                 return index>0 ? ', '+(role) : (role)
                                                                             })
                                                                         }
                                                                         </td>
                                                                         {
-                                                                            user.status === 'Y'
+                                                                            user?.userBuyerMapping[0]?.user_buyer_mapping.status === 'Y'
                                                                             ?
                                                                             <td className='text-success'> Enabled</td>
 

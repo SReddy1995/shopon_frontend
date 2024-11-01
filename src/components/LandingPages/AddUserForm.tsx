@@ -122,6 +122,9 @@ const AddUserForm = (props: any) => {
         showSuccessMessage(USER_ADDED_SUCCESS)
         props.closeAndUpdate();
      })
+     .catch((err: any) => {
+      console.log(err)
+  });
   }
 
   const formatPayloadForRole = (values: any) => {
@@ -137,6 +140,9 @@ const AddUserForm = (props: any) => {
         showSuccessMessage(USER_UPDATE_SUCCESS)
         props.closeAndUpdate();
      })
+     .catch((err: any) => {
+      console.log(err)
+  });
   }
 
   const closeModal = () =>{

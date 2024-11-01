@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { Options, Splide, SplideSlide, SplideTrack } from '@splidejs/react-splide';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateProductsColumnsList, updateSelectedProductsList, updateSourcePage } from '../../utils/reduxStore/productsSlice';
+import { updateProductsColumnsList, updateSelectedCategoryForProductsList, updateSelectedProductsList, updateSourcePage } from '../../utils/reduxStore/productsSlice';
 import { showWarningMessage } from '../../shared/notificationProvider';
 import { NO_PRODUCTS_SELECTED } from '../../utils/constants/NotificationConstants';
 import { useNavigate } from 'react-router-dom';
@@ -416,13 +416,14 @@ const ProductsList = () => {
       }
 
     const sourcePage = useSelector((store: any) => store.products.sourcePage);
+    const selectedCategoryToLoad = useSelector((store: any) => store.products.selectedCategoryForProductList);
 
     const loadSimilarProductsOfACategory = () => {
-
+        setSelectedCategory(categories.filter((x:any)=> x.id === selectedCategoryToLoad)[0])
     }
 
     const navigateToCollectionsList = () => {
-        navigate('landing-page/products/collections')
+        navigate('/landing-page/products/collections')
     }
  
     useEffect(() => {
@@ -433,10 +434,12 @@ const ProductsList = () => {
         }
         else if(sourcePage && sourcePage === 'collections'){
             dispatch(updateSourcePage(''));
+            dispatch(updateSelectedCategoryForProductsList(''));
             setShowBackButton('show')
             loadSimilarProductsOfACategory()
         }
-        setSelectedCategory({id: "Food and beverages", name: "Food and beverages"})
+
+        
         setData(JSON.parse(JSON.stringify(columns_from_api)))
       },[]);
 
