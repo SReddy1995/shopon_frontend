@@ -1978,6 +1978,11 @@ border-bottom: 1px solid #ddd;
   align-items: center;
 }
 
+.searchable-multiselction-list{
+  max-height: 200px;
+  overflow-y: auto;
+}
+
 
 
 

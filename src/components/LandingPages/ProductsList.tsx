@@ -9,10 +9,11 @@ import { updateProductsColumnsList, updateSelectedProductsList, updateSourcePage
 import { showWarningMessage } from '../../shared/notificationProvider';
 import { NO_PRODUCTS_SELECTED } from '../../utils/constants/NotificationConstants';
 import { useNavigate } from 'react-router-dom';
+import SearchableMultiselectList from './SearchableMultiselectList';
 
 const ProductsList = () => {
 
-    const MessageID = "MSG"+uuidv4();
+
     const [columns_from_api, setColumnsFromApi] = useState<any[]>([
         {
             coltitle: "",
@@ -97,12 +98,6 @@ const ProductsList = () => {
         
     ])
 
-    const [selectedProducts, setSelectedProducts] = useState([])
-    const [columns, setColumns] = useState<any[]>([])
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
-    const productsFromStore = useSelector((store: any) => store.products.selectedProductsList);
-
     const productsList = [
         {
             product_id: 1,
@@ -155,17 +150,7 @@ const ProductsList = () => {
         { value: 'apple2', label: 'Apple' },
         { value: 'banana2', label: 'Banana' },
       ];
-
-      const [vendorSearchTerm, setVendorSearchTerm] = useState('');
-      const filteredVendorItems = vendors_list.filter(item =>
-        item.label.toLowerCase().includes(vendorSearchTerm.toLowerCase())
-      );
-
-      const handleVendorSearchChange = (event: any) => {
-        setVendorSearchTerm(event.target.value);
-      };
-
-
+      
       const sort_list = [
         { value: 'product_ame', label: 'Product Name'},
         { value: 'seller', label: 'Seller'},
@@ -181,34 +166,13 @@ const ProductsList = () => {
         { value: 'date1', label: 'Date' },
         { value: 'apple1', label: 'Apple' },
         { value: 'banana1', label: 'Banana' },
-        { value: 'cherry1', label: 'Cherry' },
-        { value: 'date1', label: 'Date' },
         { value: 'cherry11', label: 'Cherry' },
         { value: 'date11', label: 'Date' },
+        { value: 'cherry111', label: 'Cherry' },
+        { value: 'date111', label: 'Date' },
       ];
 
-      const [specialitySearchTerm, setSpecialitySearchTerm] = useState('');
-      const filteredSpecialityItems = speciality_list.filter(item =>
-        item.label.toLowerCase().includes(specialitySearchTerm.toLowerCase())
-      );
-
-      const handleSpecialitySearchChange = (event: any) => {
-        setSpecialitySearchTerm(event.target.value);
-      };
-
-    const [isOpen, setIsOpen] = useState(false);
-    const [isVendorDropdownOpen, setIsVendorDropdownOpen] = useState(false);
-    const [selectedVendors, setSlectedVendors] = useState([])
-    const [isSpecialityDropdownOpen, setIsSpecialityDropdownOpen] = useState(false);
-    const [selectedSpecialities, setSelectedSpecialities] = useState([])
-    const [isSortByOpen, setSortByOpen] = useState(false);
-    const [selectedSortBy, setSelectedSortBy] = useState('')
-    const [isColumnVisibilityOpen, setIsColumnVisibilityOpen] = useState(false);
-    const [isProductDetailsOpen, setIsProductDetailsOpen] = useState(false);
-    const [selectedCategory, setSelectedCategory] = useState({id:'All', name: "All"});
-    const [selectedLocation, setSelectedLocation] = useState('')
-
-    const categories = [
+      const categories = [
         {id: "All", name: "ALL"},
         {id: "Food and beverages", name: "Food and beverages"},
         {id: "Fashion", name: "Fashion"},
@@ -251,24 +215,92 @@ const ProductsList = () => {
         // Add more images as needed
       ];
 
-      const mainRef = useRef<Splide | null>(null);
+    const [selectedProducts, setSelectedProducts] = useState([])
+    const [columns, setColumns] = useState<any[]>([])
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const productsFromStore = useSelector((store: any) => store.products.selectedProductsList);
+    const [isOpen, setIsOpen] = useState(false);
+    const [isVendorDropdownOpen, setIsVendorDropdownOpen] = useState(false);
+    const [selectedVendors, setSelectedVendors] = useState([])
+    const [isSpecialityDropdownOpen, setIsSpecialityDropdownOpen] = useState(false);
+    const [selectedSpecialities, setSelectedSpecialities] = useState([])
+    const [isSortByOpen, setSortByOpen] = useState(false);
+    const [selectedSortBy, setSelectedSortBy] = useState('')
+    const [isColumnVisibilityOpen, setIsColumnVisibilityOpen] = useState(false);
+    const [isProductDetailsOpen, setIsProductDetailsOpen] = useState(false);
+    const [selectedCategory, setSelectedCategory] = useState({id:'All', name: "All"});
+    const [selectedLocation, setSelectedLocation] = useState('')
 
-      const thumbsRef = useRef<Splide | null>(null);
+    const mainRef = useRef<Splide | null>(null);
+
+    const thumbsRef = useRef<Splide | null>(null);
+
+    const MessageID = "MSG"+uuidv4();
     
 
     const toggleDropdown = () => {
       setIsOpen(!isOpen);
     };
 
+    // vendor selection
+
     const handleVendorSelectionClick = (values: any) => {
-        setVendorSearchTerm('')
         setIsVendorDropdownOpen(!isVendorDropdownOpen)
     }
 
     const clearVendorList = () => {
-        setSlectedVendors([])
+        setSelectedVendors([])
         setIsVendorDropdownOpen(false)
     }
+
+    const updateSelectedVendorList = (list: any) => {
+        setSelectedVendors(list)
+    }
+
+    const clearSelectedVendorList = () => {
+        setSelectedVendors([])
+    }
+
+    const applyFilterOfVendorList  = () => {
+        console.log("applied filter for = ", selectedVendors)
+    }
+
+    // speciality selection
+
+    const handleSpecialitySelectionClick = (values: any) => {
+        setIsSpecialityDropdownOpen(!isSpecialityDropdownOpen)
+    }
+
+    const updateSelectedSpecialityList = (list: any) => {
+        setSelectedSpecialities(list)
+    }
+
+    const clearSpecialityList = () => {
+        setSelectedSpecialities([])
+        setIsSpecialityDropdownOpen(false)
+    }
+
+    const clearSelectedSpecialityList = () => {
+        setSelectedSpecialities([])
+    }
+
+    const applyFilterOfSpecialityList = () => {
+       
+    }
+
+    // sort by
+
+    const handleSortByClick = (values: any) => {
+        setSortByOpen(!isSortByOpen)
+    }
+
+    const toggleSortByOption = (option: any) => {
+        setSelectedSortBy(option);
+        setSortByOpen(false);
+      };
+
+    // products
 
     const openProductDetails = () => {
         if(!isProductDetailsOpen){
@@ -281,43 +313,23 @@ const ProductsList = () => {
         setIsProductDetailsOpen(false)
     }
 
-    const handleSpecialitySelectionClick = (values: any) => {
-        setSpecialitySearchTerm('')
-        setIsSpecialityDropdownOpen(!isSpecialityDropdownOpen)
-    }
-
-    const handleSortByClick = (values: any) => {
-        setSortByOpen(!isSortByOpen)
-    }
-
+    // column visibility
     const handleColumnVisiblityClick = (values: any) => {
         setIsColumnVisibilityOpen(!isColumnVisibilityOpen)
     }
 
-    const clearSpecialityList = () => {
-        setSelectedSpecialities([])
-        setIsSpecialityDropdownOpen(false)
-    }
+    const toggleColumnVisibility = (col: any) => {
+        setColumns((prevSelected: any) => {
+            prevSelected.filter((x: any)=>x.column === col.column)[0].isVisible = !col.isVisible
+              return [...prevSelected];
+            }
+          );
+      }
 
-    const toggleVendorOption = (option: any) => {
-        setSlectedVendors((prevSelected: any) => {
-          if (prevSelected.some((obj: any) => obj.value === option.value)) {
-            return prevSelected.filter((item: any) => item.value !== option.value);
-          } else {
-            return [...prevSelected, option];
-          }
-        });
-      };
-
-      const toggleSpecialityOption = (option: any) => {
-        setSelectedSpecialities((prevSelected: any) => {
-          if (prevSelected.some((obj: any) => obj.value === option.value)) {
-            return prevSelected.filter((item: any) => item.value !== option.value);
-          } else {
-            return [...prevSelected, option];
-          }
-        });
-      };
+      const resetColumnVisibility = () => {
+        let data = JSON.parse(JSON.stringify(columns_from_api));
+        setColumns(data)
+      }
 
       const toggleProductSelection = (product: any) => {
         if(!isProductDetailsOpen){
@@ -331,26 +343,7 @@ const ProductsList = () => {
         }
       }
 
-      const toggleColumnVisibility = (col: any) => {
-        setColumns((prevSelected: any) => {
-            prevSelected.filter((x: any)=>x.column === col.column)[0].isVisible = !col.isVisible
-              return [...prevSelected];
-            }
-          );
-      }
-
-      const resetColumnVisibility = () => {
-        let data = JSON.parse(JSON.stringify(columns_from_api));
-        setColumns(data)
-      }
-
-      const toggleSortByOption = (option: any) => {
-        setSelectedSortBy(option);
-        setSortByOpen(false);
-      };
-
       const setSelectedCategoryValue = (cat : any) => {
-        console.log(cat)
         setSelectedCategory(cat)
         setIsOpen(false)
       }
@@ -397,10 +390,15 @@ const ProductsList = () => {
                     <div className="col-6 text-left">
                         <h3>Products</h3>
                     </div>
-                    <div className="col-6 text-right">
-                        <a className="btn-link"><button type="button"
-                            className="btn-custom" onClick={previewSelected}>Preview Selected</button></a>
-                    </div>
+                    {
+                        selectedProducts.length>0 && (
+                            <div className="col-6 text-right">
+                                <a className="btn-link"><button type="button"
+                                    className="btn-custom" onClick={previewSelected}>Preview Selected</button></a>
+                            </div>
+                        )
+                    }
+
                 </div>
                 <div className="row mt-4">
                     <div className="col-12 ">
@@ -473,10 +471,10 @@ const ProductsList = () => {
                                                             selectedVendors
                                                                 .map((vendor: any, index: any) => {
                                                                     return index > 0 ?
-                                                                        <span>,&nbsp;{vendor.label}
+                                                                        <span key={vendor.value}>,&nbsp;{vendor.label}
                                                                         </span>
                                                                         :
-                                                                        <span>&nbsp;{vendor.label}
+                                                                        <span key={vendor.value}>&nbsp;{vendor.label}
                                                                         </span>
                                                                 })
                                                         }
@@ -497,37 +495,15 @@ const ProductsList = () => {
                                         {
                                             isVendorDropdownOpen && (
                                                 <div className="vendor-selection-dropdown">
-                                                    <div className='mt-2'>
-                                                    <input
-                                                        type="text"
-                                                        className='mx-2'
-                                                        placeholder="Search vendor"
-                                                        value={vendorSearchTerm}
-                                                        onChange={handleVendorSearchChange}
-                                                    />
-                                                    </div>
 
-                                                    <ul className="list-unstyled mt-2">
+                                                    <SearchableMultiselectList
+                                                        list={vendors_list}
+                                                        selectedItems={selectedVendors}
+                                                        selectedItemsChanged={updateSelectedVendorList}
+                                                        clearSelectedItemsList={clearSelectedVendorList}
+                                                        applySelectedList={applyFilterOfVendorList}>
 
-                                                        {
-                                                            filteredVendorItems
-                                                                .map((vendor: any, index: any) => {
-                                                                    return <li key={index} className='d-flex flex-row px-2'>
-                                                                        <input type="checkbox"
-                                                                            checked={selectedVendors.some((obj: any) => obj.value === vendor.value)}
-                                                                            onChange={() => toggleVendorOption(vendor)}
-                                                                        />
-                                                                        <a className="dropdown-item ml-0 pl-2 small fw-semibold oneline_ellipsis"
-                                                                            role="button" title="All">{vendor.label}</a></li>
-                                                                })
-                                                        }
-                                                        <li className='d-flex flex-row px-2'>
-                                                            <p className='clear-text mb-0 cursor-pointer' onClick={clearVendorList}>
-                                                                Clear
-                                                            </p>
-                                                        </li>
-
-                                                    </ul>
+                                                    </SearchableMultiselectList>
                                                 </div>
                                             )
                                         }
@@ -543,12 +519,12 @@ const ProductsList = () => {
                                                         {
 
                                                             selectedSpecialities
-                                                                .map((vendor: any, index: any) => {
+                                                                .map((speciality: any, index: any) => {
                                                                     return index > 0 ?
-                                                                        <span>,&nbsp;{vendor.label}
+                                                                        <span key={speciality.value}>,&nbsp;{speciality.label}
                                                                         </span>
                                                                         :
-                                                                        <span>&nbsp;{vendor.label}
+                                                                        <span key={speciality.value}>&nbsp;{speciality.label}
                                                                         </span>
                                                                 })
                                                         }
@@ -568,37 +544,16 @@ const ProductsList = () => {
                                         </p>
                                         {
                                             isSpecialityDropdownOpen && (
+
                                                 <div className="speciality-selection-dropdown">
-                                                    <div className='mt-2'>
-                                                        <input
-                                                            type="text"
-                                                            className='mx-2'
-                                                            placeholder="Search speciality"
-                                                            value={specialitySearchTerm}
-                                                            onChange={handleSpecialitySearchChange}
-                                                        />
-                                                    </div>
-                                                    <ul className="list-unstyled mt-2">
+                                                    <SearchableMultiselectList
+                                                        list={speciality_list}
+                                                        selectedItems={selectedSpecialities}
+                                                        selectedItemsChanged={updateSelectedSpecialityList}
+                                                        clearSelectedItemsList={clearSelectedSpecialityList}
+                                                        applySelectedList={applyFilterOfSpecialityList}>
 
-                                                        {
-                                                            filteredSpecialityItems
-                                                                .map((vendor: any, index: any) => {
-                                                                    return <li key={index} className='d-flex flex-row px-2'>
-                                                                        <input type="checkbox"
-                                                                            checked={selectedSpecialities.some((obj: any) => obj.value === vendor.value)}
-                                                                            onChange={() => toggleSpecialityOption(vendor)}
-                                                                        />
-                                                                        <a className="dropdown-item ml-0 pl-2 small fw-semibold oneline_ellipsis"
-                                                                            role="button" title="All">{vendor.label}</a></li>
-                                                                })
-                                                        }
-                                                        <li className='d-flex flex-row px-2'>
-                                                            <p className='clear-text mb-0 cursor-pointer' onClick={clearSpecialityList}>
-                                                                Clear
-                                                            </p>
-                                                        </li>
-
-                                                    </ul>
+                                                    </SearchableMultiselectList>
                                                 </div>
                                             )
                                         }
