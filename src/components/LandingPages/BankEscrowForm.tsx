@@ -8,11 +8,20 @@ import { BANK_INFO_UPDATE_SUCCESS } from '../../utils/constants/NotificationCons
 const ifscRegex = new RegExp("^[A-Z]{4}[0]{1}[A-Z0-9]{6}$")
 const bankEscrowValidationSchema = Yup.object().shape({
     has_escrow_account: Yup.string().required('Select whether you have Escrow Account'),   
-    escrow_account_number: Yup.string(),
+    escrow_account_number: Yup.string()
+    .when('has_escrow_account', 
+        ([has_escrow_account], schema) => {
+            if(has_escrow_account == 'Y' || has_escrow_account == 'N' ){ // remove "N" condition later
+               return Yup.string().required("Enter Escrow Account Number");
+            }
+            else{
+                return Yup.string();
+            }
+    }),
     confirm_escrow_account_number: Yup.string()
-    .when('escrow_account_number', 
-        ([escrow_account_number], schema) => {
-            if(escrow_account_number && escrow_account_number.split('').length>0){
+    .when(['escrow_account_number', 'has_escrow_account'],
+        ([escrow_account_number, has_escrow_account], schema) => {
+            if(escrow_account_number && escrow_account_number.split('').length>0 && (has_escrow_account == 'Y' || has_escrow_account == 'N')){ // remove "N" condition later
                return Yup.string().required("Confirm Account Number")
                .oneOf([Yup.ref('escrow_account_number'), ''], 'Account number must match');
             }
@@ -20,8 +29,26 @@ const bankEscrowValidationSchema = Yup.object().shape({
                 return Yup.string();
             }
     }),
-    ifsc: Yup.string(),
+    ifsc: Yup.string()
+    .when('has_escrow_account', 
+        ([has_escrow_account], schema) => {
+            if(has_escrow_account == 'Y' || has_escrow_account == 'N' ){ // remove "N" condition later
+               return Yup.string().required("Enter Bank Name");
+            }
+            else{
+                return Yup.string();
+            }
+    }),
     bank_name: Yup.string()
+    .when('has_escrow_account', 
+        ([has_escrow_account], schema) => {
+            if(has_escrow_account == 'Y' || has_escrow_account == 'N' ){ // remove "N" condition later
+               return Yup.string().required("Enter Bank Name");
+            }
+            else{
+                return Yup.string();
+            }
+    }),
 });
 
 const BankEscrowForm = (props: any) => {
@@ -147,7 +174,7 @@ const BankEscrowForm = (props: any) => {
                                     </div>
 
                                     <div className="mb-3 form-field-container-full-width">
-                                        <label htmlFor="exampleFormControlInput1" className="form-label">Bank Name</label>
+                                        <label htmlFor="exampleFormControlInput1" className={'form-label '+ (values.has_escrow_account === 'Y' ? ' required' : '')}>Bank Name</label>
                                         <Field 
                                             name="bank_name" type="text" 
                                             className={'form-control dashboard-namefield ' + (errors.bank_name && touched.bank_name ? 'input-field-error' : '')}
@@ -160,7 +187,7 @@ const BankEscrowForm = (props: any) => {
 
                                 <div className="name-field">
                                     <div className="mb-3 form-field-container-full-width">
-                                        <label htmlFor="exampleFormControlInput1" className="form-label">Escrow Account Number</label>
+                                        <label htmlFor="exampleFormControlInput1" className={'form-label '+ (values.has_escrow_account === 'Y' ? ' required' : '')}>Escrow Account Number</label>
                                         <Field
                                                 placeholder="Escrow Account Number"
                                                 name="escrow_account_number"
@@ -176,7 +203,7 @@ const BankEscrowForm = (props: any) => {
                                         <ErrorMessage className='error' name="escrow_account_number" component="div" />
                                     </div>
                                     <div className="mb-3 form-field-container-full-width">
-                                        <label htmlFor="exampleFormControlInput1" className="form-label">Confirm Escrow Account Number</label>
+                                        <label htmlFor="exampleFormControlInput1" className={'form-label '+ (values.has_escrow_account === 'Y' ? ' required' : '')}>Confirm Escrow Account Number</label>
                                         <Field
                                                 placeholder="Escrow Account Number"
                                                 name="confirm_escrow_account_number"
@@ -194,7 +221,7 @@ const BankEscrowForm = (props: any) => {
 
                                 <div className="name-field">
                                     <div className="mb-3 form-field-container-full-width">
-                                        <label htmlFor="exampleFormControlInput1" className="form-label">IFSC</label>
+                                        <label htmlFor="exampleFormControlInput1" className={'form-label '+ (values.has_escrow_account === 'Y' ? ' required' : '')}>IFSC</label>
                                         <Field 
                                             name="ifsc" type="email" 
                                             className={'form-control dashboard-namefield ' + (errors.ifsc && touched.ifsc ? 'input-field-error' : '')}
