@@ -58,7 +58,7 @@ const UserManagement = () => {
       const openEditUser = (user: any) => {
         setMode('Edit')
         setSelectedUser({user_id: user.user_id,firstname : user.firstname, lastname: user.lastname, email_address: user.email_address,
-            contact_number:user.contact_number, roles: user.roles.map((role: any)=> {return {id: role, name: role}}), enabled: user.isActive})
+            contact_number:user.contact_number, roles: user.roles.map((role: any)=> {return {id: role, name: role}}), enabled: user.status})
         openModal();
       }
 
@@ -113,7 +113,7 @@ const UserManagement = () => {
                                                                         }
                                                                         </td>
                                                                         {
-                                                                            user.isActive === 'Y'
+                                                                            user.status === 'Y'
                                                                             ?
                                                                             <td className='text-success'> Enabled</td>
 
