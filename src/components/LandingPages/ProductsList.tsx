@@ -137,7 +137,59 @@ const ProductsList = () => {
             category: "Fashion",
             type: "retail",
             vendor: "Max Fashion"
-        }
+        },
+        // {
+        //     product_id: 4,
+        //     thumbnail: "https://images.pexels.com/photos/4275890/pexels-photo-4275890.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1=1260",
+        //     product: "Fingertips Bluetooth Remote Control Wireless",
+        //     status: "Active",
+        //     inventory: "150,000 in stock",
+        //     sales: "56",
+        //     market: "3",
+        //     b2b_catalogs: "7",
+        //     category: "Electronics",
+        //     type: "retail",
+        //     vendor: "Fingertips"
+        // },
+        // {
+        //     product_id: 5,
+        //     thumbnail: "https://cdn.shopify.com/s/files/1/0567/3084/5242/files/logo41_b107e4e7-e866-401e-a025-d3ab4bcd7efd_40x40@3x.png?v=1728297340",
+        //     product: "Fingertips Fashion",
+        //     status: "Draft",
+        //     inventory: "150,000 in stock",
+        //     sales: "56",
+        //     market: "3",
+        //     b2b_catalogs: "7",
+        //     category: "Fashion",
+        //     type: "retail",
+        //     vendor: "Fingertips"
+        // },
+        // {
+        //     product_id: 6,
+        //     thumbnail: "https://images.pexels.com/photos/276484/pexels-photo-276484.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1=1260",
+        //     product: "Max fashion dress set",
+        //     status: "Active",
+        //     inventory: "150,000 in stock",
+        //     sales: "56",
+        //     market: "3",
+        //     b2b_catalogs: "7",
+        //     category: "Fashion",
+        //     type: "retail",
+        //     vendor: "Max Fashion"
+        // },
+        // {
+        //     product_id: 7,
+        //     thumbnail: "https://images.pexels.com/photos/4275890/pexels-photo-4275890.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1=1260",
+        //     product: "Fingertips Bluetooth Remote Control Wireless",
+        //     status: "Active",
+        //     inventory: "150,000 in stock",
+        //     sales: "56",
+        //     market: "3",
+        //     b2b_catalogs: "7",
+        //     category: "Electronics",
+        //     type: "retail",
+        //     vendor: "Fingertips"
+        // }
     ]
 
     const vendors_list = [
@@ -173,7 +225,6 @@ const ProductsList = () => {
       ];
 
       const categories = [
-        {id: "All", name: "ALL"},
         {id: "Food and beverages", name: "Food and beverages"},
         {id: "Fashion", name: "Fashion"},
         {id: "Grocery", name: "Grocery"},
@@ -303,11 +354,12 @@ const ProductsList = () => {
 
     // products
 
-    const openProductDetails = () => {
-        if(!isProductDetailsOpen){
-            setIsProductDetailsOpen(true)
+    const openProductDetails = (product: any, col: any) => {
+        if (col.column == "product") {
+            if (!isProductDetailsOpen) {
+                setIsProductDetailsOpen(true)
+            }
         }
-        
     }
 
     const closeProductDetails = () => {
@@ -384,6 +436,7 @@ const ProductsList = () => {
             setShowBackButton('show')
             loadSimilarProductsOfACategory()
         }
+        setSelectedCategory({id: "Food and beverages", name: "Food and beverages"})
         setData(JSON.parse(JSON.stringify(columns_from_api)))
       },[]);
 
@@ -445,9 +498,9 @@ const ProductsList = () => {
                                 </div>
                                 <div className="col-9">
                                     <div className="category-search-container">
-                                        <div className="category-dropdown-toggler w-auto" onClick={toggleDropdown} >
+                                        <div className="category-dropdown-toggler w-auto cursor-pointer" onClick={toggleDropdown} >
                                             <p className="category-text w-auto mb-0">{selectedCategory.name} </p>
-                                            <i className="fa fa-caret-down cursor-pointer" ></i>
+                                            <i className="fa fa-caret-down " ></i>
                                         </div>
                                         {isOpen && (
                                             <div className="category-dropdown-menu w-100 p-0 pt-0 fs-6">
@@ -456,6 +509,8 @@ const ProductsList = () => {
                                                         <div className="col-12 col-sm-12 d-flex flex-column flex-nowrap">
                                                             <div className="megamenu_search-nav flex-fill overflow-auto px-3 pt-1 pb-3">
                                                                 <ul className="list-unstyled m-0">
+                                                                    <li><a className="dropdown-item small oneline_ellipsis pl-1 mt-2"
+                                                                            role="button" title="All">-- select a category -- </a></li>
                                                                     {
                                                                         categories
                                                                         .map((cat: any,index:any)=>{
@@ -489,6 +544,7 @@ const ProductsList = () => {
                                 <div className="col"> */}
                             <div className='filter-sort-container pb-2 px-3'>
                                 <div className='filters-container'>
+                                    <div className='products-vendor-filter-container'>
                                     <div className="vendor-selection-container mr-2 px-2" >
                                         <p className='mb-0 pl-2 cursor-pointer' onClick={handleVendorSelectionClick}>Product vendor
                                             {
@@ -521,7 +577,9 @@ const ProductsList = () => {
                                                         <></>
                                             }
                                         </p>
-                                        {
+
+                                    </div>
+                                    {
                                             isVendorDropdownOpen && (
                                                 <div className="vendor-selection-dropdown">
 
@@ -538,7 +596,7 @@ const ProductsList = () => {
                                         }
                                     </div>
 
-
+                                    <div className='products-speciality-filter-container'>
                                     <div className='speciality-selection-container px-2'>
                                         <p className='mb-0 pl-2 cursor-pointer' onClick={handleSpecialitySelectionClick}>Speciality
                                             {
@@ -571,6 +629,7 @@ const ProductsList = () => {
                                                         <></>
                                             }
                                         </p>
+                                        </div>
                                         {
                                             isSpecialityDropdownOpen && (
 
@@ -713,16 +772,16 @@ const ProductsList = () => {
                                                                 return col.isVisible &&
                                                                     (
                                                                         col.type == "image" ?
-                                                                            <td onClick={openProductDetails} key={i} className="product-small-image px-0" style={{ paddingLeft: '0px !important' }}><a href="#" className="pop">
+                                                                            <td onClick={()=>openProductDetails(product, col)} key={i} className="product-small-image px-0" style={{ paddingLeft: '0px !important' }}><a href="#" className="pop">
                                                                                 <img src={product[col.column]} alt="" />
                                                                             </a></td>
                                                                             :
 
                                                                             (
                                                                                 col.type == "active-draft-button" ?
-                                                                                    <td onClick={openProductDetails} key={i}><span className={product[col.column] == 'Active' ? "product-active" : "product-draft"}>{product[col.column]}</span></td>
+                                                                                    <td onClick={()=>openProductDetails(product, col)} key={i}><span className={product[col.column] == 'Active' ? "product-active" : "product-draft"}>{product[col.column]}</span></td>
                                                                                     :
-                                                                                    <td onClick={openProductDetails} key={i}>{product[col.column]}</td>
+                                                                                    <td onClick={()=>openProductDetails(product, col)} key={i}>{product[col.column]}</td>
                                                                             )
 
                                                                     )

@@ -1734,17 +1734,16 @@ font-size: 12px !important;
   justify-content: flex-start;
 }
 
+.products-vendor-filter-container{
+  position: relative;
+}
+
 .vendor-selection-container{
 
-  min-width: 145px;
-  height: 1.75rem;
+ border-radius: 1.5rem;
+  padding: 10px; /* Padding inside the container */
+  width: 250px;
   border: 1px solid #dddd;
-  border-radius: 1.5rem;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: left;
-  position: relative;
 }
 
 .vendor-selection-dropdown{
@@ -1756,8 +1755,6 @@ font-size: 12px !important;
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
   z-index: 2;
   border-radius: 8px;
-  top: 1.75rem;
-  left: 0px;
   text-align: left;
 }
 
@@ -1765,17 +1762,16 @@ font-size: 12px !important;
   color: blue;
 }
 
+.products-speciality-filter-container{
+  position: relative;
+}
+
 .speciality-selection-container{
 
-  min-width: 100px;
-  height: 1.75rem;
-  border: 1px solid #dddd;
   border-radius: 1.5rem;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: left;
-  position: relative;
+  padding: 10px; /* Padding inside the container */
+  width: 250px;
+  border: 1px solid #dddd;
 }
 
 .speciality-selection-dropdown{
@@ -1787,8 +1783,6 @@ font-size: 12px !important;
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
   z-index: 2;
   border-radius: 8px;
-  top: 1.75rem;
-  left: 0px;
   text-align: left;
 }
 
@@ -1996,7 +1990,7 @@ border-bottom: 1px solid #ddd;
 .collections-search-by-vendor-container {
   border: 1px solid #ccc; /* Visual border for the container */
   padding: 10px; /* Padding inside the container */
-  width: 250px;
+  width: 280px;
   border: 1px solid #dddd;
   border-radius: 8px;
 
@@ -2017,6 +2011,49 @@ border-bottom: 1px solid #ddd;
 
 .dynamic-text {
   margin: 0; /* Reset margin if needed */
+}
+
+.collections-speciality-filter-container{
+  position: relative;
+}
+
+.collections-speciality-selection-container {
+  border: 1px solid #ccc; /* Visual border for the container */
+  padding: 10px; /* Padding inside the container */
+  width: 280px;
+  border: 1px solid #dddd;
+  border-radius: 8px;
+
+}
+
+.collections-speciality-selection-dropdown{
+  display: block;
+  position: absolute;
+  background-color: white;
+  min-width: 160px;
+  max-width: 220px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 2;
+  border-radius: 8px;
+  text-align: left;
+
+}
+
+.collections-search-by-product-container{
+  width: 400px;
+  height: 2.5rem;
+  background-color: #f1f1f1;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.collections-filters{
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+  gap:0.5rem;
 }
 
 
