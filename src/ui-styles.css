@@ -2060,6 +2060,14 @@ border-bottom: 1px solid #ddd;
 
 /* pagination for collections table */
 
+.pagination{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: right;
+  gap: 0.2rem;
+}
+
 .pagination a {
   color: black;
   float: left;

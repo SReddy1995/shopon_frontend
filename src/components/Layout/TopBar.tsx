@@ -116,7 +116,7 @@ const ProfileName = styled.p`
     margin-right: 10px;
 `;
 
-const TopBar = () => {
+const TopBar = (props:any) => {
 
     const selectedStoreData = useSelector((store: any) => store.stores.selectedStore);
     const user_details = localStorage.getItem('user_details') ? JSON.parse(localStorage.getItem('user_details') || '{}') : null;
@@ -141,6 +141,7 @@ const TopBar = () => {
             if(data){
                 dispatch(updateSelectedStore(store.buyer_id));
                 localStorage.setItem('selected_store', store.buyer_id)
+                props.handleStoreSwitched();
                 navigateToDashBoard();
             }
             else{

@@ -22,15 +22,14 @@ const SidebarWrap = styled.div`
 `;
 
 
-const SideBar = () => {
-    const roles = localStorage.getItem('user_details') ? (JSON.parse(localStorage.getItem('user_details') || '{}').roles) : null;
+const SideBar = (props: any) => {
 
     return (
       <SidebarNav>
         <SidebarWrap>
           {SidebarData
           .filter(menu => 
-            menu.scopes.filter(scope => roles.indexOf(scope) !== -1).length > 0)
+            menu.scopes.filter(scope => props.roles.indexOf(scope) !== -1).length > 0)
           .map((item, index) => {
             return <SubMenu item={item} key={index} depth={1} depthstep={10}/>
           })}
