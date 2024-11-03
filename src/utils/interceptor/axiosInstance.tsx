@@ -67,7 +67,7 @@ axiosInstance.interceptors.response.use(
     const originalRequest = error.config;
     // showWarningMessage(error.error.msg)
     console.log(error)
-    if(error.status == 401 && error.response.data.error.msg == "Token expired"){
+    if(error.status == 401 && error.response.data.error == "Token expired"){
       showWarningMessage(error.error)
       localStorage.clear();
       window.location.href = '/login';
