@@ -98,7 +98,7 @@ const ProductsList = () => {
         
     ])
 
-    const productsList = [
+    const list_of_products = [
         {
             product_id: 1,
             thumbnail: "https://images.pexels.com/photos/4275890/pexels-photo-4275890.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1=1260",
@@ -138,59 +138,48 @@ const ProductsList = () => {
             type: "retail",
             vendor: "Max Fashion"
         },
-        // {
-        //     product_id: 4,
-        //     thumbnail: "https://images.pexels.com/photos/4275890/pexels-photo-4275890.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1=1260",
-        //     product: "Fingertips Bluetooth Remote Control Wireless",
-        //     status: "Active",
-        //     inventory: "150,000 in stock",
-        //     sales: "56",
-        //     market: "3",
-        //     b2b_catalogs: "7",
-        //     category: "Electronics",
-        //     type: "retail",
-        //     vendor: "Fingertips"
-        // },
-        // {
-        //     product_id: 5,
-        //     thumbnail: "https://cdn.shopify.com/s/files/1/0567/3084/5242/files/logo41_b107e4e7-e866-401e-a025-d3ab4bcd7efd_40x40@3x.png?v=1728297340",
-        //     product: "Fingertips Fashion",
-        //     status: "Draft",
-        //     inventory: "150,000 in stock",
-        //     sales: "56",
-        //     market: "3",
-        //     b2b_catalogs: "7",
-        //     category: "Fashion",
-        //     type: "retail",
-        //     vendor: "Fingertips"
-        // },
-        // {
-        //     product_id: 6,
-        //     thumbnail: "https://images.pexels.com/photos/276484/pexels-photo-276484.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1=1260",
-        //     product: "Max fashion dress set",
-        //     status: "Active",
-        //     inventory: "150,000 in stock",
-        //     sales: "56",
-        //     market: "3",
-        //     b2b_catalogs: "7",
-        //     category: "Fashion",
-        //     type: "retail",
-        //     vendor: "Max Fashion"
-        // },
-        // {
-        //     product_id: 7,
-        //     thumbnail: "https://images.pexels.com/photos/4275890/pexels-photo-4275890.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1=1260",
-        //     product: "Fingertips Bluetooth Remote Control Wireless",
-        //     status: "Active",
-        //     inventory: "150,000 in stock",
-        //     sales: "56",
-        //     market: "3",
-        //     b2b_catalogs: "7",
-        //     category: "Electronics",
-        //     type: "retail",
-        //     vendor: "Fingertips"
-        // }
+        {
+            product_id: 4,
+            thumbnail: "https://images.pexels.com/photos/4275890/pexels-photo-4275890.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1=1260",
+            product: "Fingertips Bluetooth Remote Control Wireless",
+            status: "Active",
+            inventory: "150,000 in stock",
+            sales: "56",
+            market: "3",
+            b2b_catalogs: "7",
+            category: "Electronics",
+            type: "retail",
+            vendor: "Fingertips"
+        },
+        {
+            product_id: 5,
+            thumbnail: "https://cdn.shopify.com/s/files/1/0567/3084/5242/files/logo41_b107e4e7-e866-401e-a025-d3ab4bcd7efd_40x40@3x.png?v=1728297340",
+            product: "Fingertips Fashion",
+            status: "Draft",
+            inventory: "150,000 in stock",
+            sales: "56",
+            market: "3",
+            b2b_catalogs: "7",
+            category: "Fashion",
+            type: "retail",
+            vendor: "Fingertips"
+        },
+        {
+            product_id: 6,
+            thumbnail: "https://images.pexels.com/photos/276484/pexels-photo-276484.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1=1260",
+            product: "Max fashion dress set",
+            status: "Active",
+            inventory: "150,000 in stock",
+            sales: "56",
+            market: "3",
+            b2b_catalogs: "7",
+            category: "Fashion",
+            type: "retail",
+            vendor: "Max Fashion"
+        },
     ]
+
+    const [productsList, setProductList] = useState<any[]>([])
 
     const vendors_list = [
         { value: 'apple', label: 'Apple' },
@@ -452,6 +441,52 @@ const ProductsList = () => {
       const setData = (data: any) => {
         setColumns(data);
       }
+
+      const [page, setPage] = useState(1);
+      const [loading, setLoading] = useState(false);
+      const [hasMore, setHasMore] = useState(true);
+
+      const fetchData = async (page: any) => {
+        setLoading(true);
+        const response = await fetch(`https://jsonplaceholder.typicode.com/posts?_page=${page}&_limit=12`);
+        const newDataResponse = await response.json();
+        const newData = list_of_products.map((item: any)=> ({
+            ...item, // Spread the existing properties
+            product_id: item.product_id+(6*(page-1)), // Modify the id property
+          }));
+        console.log(newData)
+    
+        if (newDataResponse.length === 0) {
+          setHasMore(false); // No more data to load
+          setLoading(false);
+        } else {
+          // let prevData =
+          setTimeout(()=>{
+            setProductList((prevData: any) => [...prevData, ...newData]);
+              setLoading(false);
+            }, 1500)
+          
+        }       
+      };
+    
+      const loadMore = () => {
+        if (hasMore && !loading) {
+          setPage((prevPage) => prevPage + 1);
+        }
+      };
+    
+      useEffect(() => {
+        fetchData(page);
+      }, [page]);
+    
+      const handleScroll = (event: any) => {
+          console.log(event.target)
+        const { scrollTop, scrollHeight, clientHeight } = event.target;
+        // Check if user has scrolled to the bottom of the table
+        if (scrollHeight - scrollTop <= clientHeight + 10) {
+          loadMore();
+        }
+      };
 
     return (
         <>
@@ -747,7 +782,9 @@ const ProductsList = () => {
                                     )
                                 }
 
-                            <div className='table-responsive'>
+                            <div className='table-responsive'                            
+                            onScroll={handleScroll}
+                            style={{  maxHeight:'340px', overflowY: 'scroll' }}>                            
                             <table className="table table-hover  product-table text-left" style={{ marginBottom: '0px', cursor: 'pointer' }}>
 
                                 <thead className="table-light">
@@ -798,6 +835,19 @@ const ProductsList = () => {
                                 </tbody>
                             </table>
                             </div>
+                            {
+                                        loading &&
+                                        <div className="loader-container mt-2">
+                                            <div className="loader">
+
+                                            </div>
+                                            <div>
+                                                <p className='mt-2 ml-2'>Loading</p>
+                                            </div>
+
+                                        </div>
+                                    }
+                                    {!hasMore && <p className='mt-2' style={{ textAlign: 'center',color: 'darkgray' }}>No more data to load.</p>}
                         </div>
                     </div>
 
