@@ -2132,7 +2132,76 @@ border-bottom: 1px solid #ddd;
   100% {transform: rotate(1turn)}
 }
 
+.location-search-container{
+  border: 1px solid gray;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+  align-items: center;
+}
 
+
+.location-search_input {
+  padding: 0 10px;
+    color: #000;
+    border: 0;
+    outline: 0;
+    background: none;
+    line-height: 40px;
+    transition: width 0.4s linear;
+}
+
+.location-selection-option-container{
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+}
+
+.location-text{
+  font-size: 1rem;
+}
+
+.gray-indicator{
+  color: gray;
+}
+
+.rounded-or-box{
+  border: 0.5px solid lightgray;
+  background-color: lightgray;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: black;
+}
+
+.recent-locations-title-tab-active{
+  border-bottom: 3px solid #fb65a1;
+}
+
+.recent-locations-title-tab-inactive{
+  border-bottom: 2px solid lightgray;
+}
+
+.recent-locations-list{
+  height: 300px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.recent-locations-list-pill{
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+  gap:1rem;
+  border-bottom: 1px solid lightgray;
+
+  &p{
+    font-size: medium;
+  }
+}
 
 
 

@@ -10,6 +10,8 @@ import { showWarningMessage } from '../../shared/notificationProvider';
 import { NO_PRODUCTS_SELECTED } from '../../utils/constants/NotificationConstants';
 import { useNavigate } from 'react-router-dom';
 import SearchableMultiselectList from './SearchableMultiselectList';
+import ModalWindow from './ModalWindow';
+import MapComponent from './MapComponent';
 
 const ProductsList = () => {
 
@@ -445,6 +447,7 @@ const ProductsList = () => {
       const [page, setPage] = useState(1);
       const [loading, setLoading] = useState(false);
       const [hasMore, setHasMore] = useState(true);
+      const [open, setModalOpen] = useState(false);
 
       const fetchData = async (page: any) => {
         setLoading(true);
@@ -488,6 +491,18 @@ const ProductsList = () => {
         }
       };
 
+      const clearLocation = (event: any) => {
+        setSelectedLocation('')
+      }
+
+      const openSelectLocationWindow = () => {
+        setModalOpen(true);
+      }
+
+      const closeSelectLocationWindow = () => {
+        setModalOpen(false);
+      };
+
     return (
         <>
             <div className="container-fluid h-auto mt-4 px-5">
@@ -526,12 +541,12 @@ const ProductsList = () => {
                             <div className="row">
                                 <div className="col-3">
                                     <div className="select-location-container text-left">
-                                        <div className='d-flex'>
+                                        <div className='d-flex' onClick={openSelectLocationWindow}>
                                         <i className="fa fa-map-marker"> </i>
                                         <p className='mb-0 pl-3'>{selectedLocation !== '' ? selectedLocation : ('Select location')}</p>
                                         </div>
 
-                                        <i className="fa fa-close fa-sm pr-3 cursor-pointer"> </i>
+                                        <i className="fa fa-close fa-sm pr-3 cursor-pointer" onClick={clearLocation}> </i>
                                     </div>
                                 </div>
                                 <div className="col-9">
@@ -1019,6 +1034,10 @@ const ProductsList = () => {
                         </div>
                     )
                 }
+                
+                <ModalWindow show={open} modalClosed={closeSelectLocationWindow}>
+                    <MapComponent  closeModal={closeSelectLocationWindow}/>
+                </ModalWindow>
                
             </div>
         </>
