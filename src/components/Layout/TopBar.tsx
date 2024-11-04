@@ -144,8 +144,8 @@ const TopBar = (props:any) => {
                 dispatch(updateSelectedStore(store.buyer_id));
                 localStorage.setItem('selected_store', store.buyer_id)
                 props.handleStoreSwitched();
-                // navigateToDashBoard();
-                navigate(location.pathname)
+                navigateToDashBoard();
+                // navigate(location.pathname)
             }
             else{
                 // let default initial values load
