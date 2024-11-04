@@ -297,7 +297,7 @@ const Collections = () => {
                                                     :
 
                                                     !isVendorDropdownOpen && selectedVendors.length == 0 ?
-                                                        <span>&nbsp; <i className='fa fa-caret-down pl-2 cursor-pointer ' onClick={handleVendorSelectionClick}></i> </span>
+                                                        <span>&nbsp; <i className='fa fa-caret-down pr-2 cursor-pointer float-right' onClick={handleVendorSelectionClick}></i> </span>
 
                                                         :
 
@@ -349,7 +349,7 @@ const Collections = () => {
                                                     :
 
                                                     !isSpecialityDropdownOpen && selectedSpecialities.length == 0 ?
-                                                        <span>&nbsp; <i className='fa fa-caret-down pl-2 cursor-pointer' onClick={handleSpecialitySelectionClick}></i> </span>
+                                                        <span>&nbsp; <i className='fa fa-caret-down pr-2 cursor-pointer float-right' onClick={handleSpecialitySelectionClick}></i> </span>
 
                                                         :
 
