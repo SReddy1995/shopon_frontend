@@ -8,7 +8,7 @@ import { deleteDocument, downloadDocuments, getDocumentDetailsList, getLegalEnti
 import ModalWindow from './ModalWindow';
 import UploadFileForm from './UploadFileForm';
 import ConfirmDelete from './ConfirmDelete';
-import { DOC_DELETE_SUCCESS, NO_DOCS_UPLOADED } from '../../utils/constants/NotificationConstants';
+import { DOC_DELETE_SUCCESS, DOCUMENTS_DOWNLOADED, NO_DOCS_UPLOADED } from '../../utils/constants/NotificationConstants';
 
 
 const DocumentsUpload = (props: any) => {
@@ -191,6 +191,7 @@ const DocumentsUpload = (props: any) => {
                     document.body.appendChild(a);
                     a.click(); // Programmatically click the anchor to trigger the download
                     a.remove(); // Clean up
+                    showSuccessMessage(DOCUMENTS_DOWNLOADED)
             })
             .catch(err => {
                 
