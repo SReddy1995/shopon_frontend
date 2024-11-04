@@ -11,3 +11,4 @@ export const REGISTRATION_UPDATE_SUCCESS = "Registration details updated success
 export const DOC_UPLOAD_SUCCESS = "Document uploaded successfully"
 export const DOC_UPLOAD_ERROR = "Error in uploading document"
 export const NO_PRODUCTS_SELECTED = "No Products are selected."
+export const NO_DOCS_UPLOADED = "No documents available to download"

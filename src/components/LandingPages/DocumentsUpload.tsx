@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import * as Yup from 'yup';
 import { Formik, Field, ErrorMessage, FormikValues, FormikHelpers, FieldArray } from 'formik';
-import { showSuccessMessage } from '../../shared/notificationProvider';
+import { showSuccessMessage, showWarningMessage } from '../../shared/notificationProvider';
 import Multiselect from 'multiselect-react-dropdown';
 import { useSelector } from 'react-redux';
 import { deleteDocument, downloadDocuments, getDocumentDetailsList, getLegalEntityDetails, getOnlineStore, saveOnlineStore } from '../../services/AccountService';
 import ModalWindow from './ModalWindow';
 import UploadFileForm from './UploadFileForm';
 import ConfirmDelete from './ConfirmDelete';
-import { DOC_DELETE_SUCCESS } from '../../utils/constants/NotificationConstants';
+import { DOC_DELETE_SUCCESS, NO_DOCS_UPLOADED } from '../../utils/constants/NotificationConstants';
 
 
 const DocumentsUpload = (props: any) => {
@@ -180,20 +180,26 @@ const DocumentsUpload = (props: any) => {
     }
 
     const downloadFiles = () => {
-        downloadDocuments()
-        .then((res: any) => {
-            
-                const url = window.URL.createObjectURL(res); // Create a URL for the Blob
-                const a = document.createElement('a'); // Create an anchor element
-                a.href = url;
-                a.download = 'documents.zip'; // Set the file name for download
-                document.body.appendChild(a);
-                a.click(); // Programmatically click the anchor to trigger the download
-                a.remove(); // Clean up
-        })
-        .catch(err => {
-            
-        });
+        if(documentsList.filter((x: any)=> x.uploadedFile !== '' && x.uploadedFile !== null).length>0){
+            downloadDocuments(user_details.buyer_id)
+            .then((res: any) => {
+                
+                    const url = window.URL.createObjectURL(res); // Create a URL for the Blob
+                    const a = document.createElement('a'); // Create an anchor element
+                    a.href = url;
+                    a.download = 'documents.zip'; // Set the file name for download
+                    document.body.appendChild(a);
+                    a.click(); // Programmatically click the anchor to trigger the download
+                    a.remove(); // Clean up
+            })
+            .catch(err => {
+                
+            });
+        }
+        else{
+            showWarningMessage(NO_DOCS_UPLOADED)
+        }
+
     }
     
 

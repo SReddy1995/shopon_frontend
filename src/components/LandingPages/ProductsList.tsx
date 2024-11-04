@@ -426,6 +426,7 @@ const ProductsList = () => {
  
     useEffect(() => {
         console.log("Message ID = ", MessageID)
+        setSelectedCategory(categories.filter((x:any)=> x.id === "Food and beverages")[0])
         if(sourcePage && sourcePage === 'preview'){
             dispatch(updateSourcePage(''));
             setSelectedProducts(productsFromStore)

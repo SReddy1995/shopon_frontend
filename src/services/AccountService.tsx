@@ -171,10 +171,10 @@ export const getLegalEntityDetails = async () => {
       }
   }
 
-  export const downloadDocuments = async () => {
+  export const downloadDocuments = async (buyer_id : string) => {
     try{
   
-        const response = await axiosInstance.get(AccountUrls.downloadDocumentsZip,{
+        const response = await axiosInstance.get(AccountUrls.downloadDocumentsZip+"/"+buyer_id,{
             responseType: 'blob', // Important: Set response type to 'blob'
           })
         return response;

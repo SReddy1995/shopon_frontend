@@ -6,6 +6,7 @@ import { updateSidebarState } from '../../utils/reduxStore/sideBarSlice';
 import { useNavigate } from 'react-router-dom';
 import { updateSelectedStore } from '../../utils/reduxStore/storesSlice';
 import { getAccountDetails } from '../../services/AccountService';
+import { useLocation } from 'react-router-dom';
 
 const OverlayMenuContainer = styled.div<{ overlaymenu: any }>`
   background-color: #FFFFFF;
@@ -121,6 +122,7 @@ const TopBar = (props:any) => {
     const selectedStoreData = useSelector((store: any) => store.stores.selectedStore);
     const user_details = localStorage.getItem('user_details') ? JSON.parse(localStorage.getItem('user_details') || '{}') : null;
     const [open, setOpen] = useState(false);
+    const location = useLocation();
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -142,7 +144,8 @@ const TopBar = (props:any) => {
                 dispatch(updateSelectedStore(store.buyer_id));
                 localStorage.setItem('selected_store', store.buyer_id)
                 props.handleStoreSwitched();
-                navigateToDashBoard();
+                // navigateToDashBoard();
+                navigate(location.pathname)
             }
             else{
                 // let default initial values load
@@ -188,7 +191,7 @@ const TopBar = (props:any) => {
                                 selectedStoreData && stores_list ?
                                 stores_list
                                 .map((store : any, index: any) => {
-                                    return <li key={index} onClick={() => handleStoreSwitched(store)}>
+                                    return store.is_active === 'Y' && <li key={index} onClick={() => handleStoreSwitched(store)}>
                                         <a className="dropdown-item ml-0 pl-0 ellipsis" >
                                             <span className="acc-icons"
                                                 style={{ color: selectedStoreData && store.buyer_id == selectedStoreData ? 'green' : '' }}>

@@ -54,7 +54,7 @@ const RegistrationForm = (props:any) => {
     const [error, setError] = useState(null);
     const selectedStore = useSelector((store: any) => store.stores.selectedStore);
     const storesList = useSelector((store: any) => store.stores.storesList);
-    const user_details = localStorage.getItem('user_details') ? JSON.parse(localStorage.getItem('user_details') || '{}') : null;
+    const [user_details, setUserDetails] = useState(localStorage.getItem('user_details') ? JSON.parse(localStorage.getItem('user_details') || '{}') : null);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -62,34 +62,47 @@ const RegistrationForm = (props:any) => {
       }, []);
 
     const fetchData = () => {
-        console.log("user details = ", user_details)
-        initialValues.firstname = user_details ? user_details.firstname : '';
-        initialValues.lastname = user_details ? user_details.lastname : '';
-        initialValues.contact_number = user_details ? user_details.contact_number : '';
-        initialValues.email_address = user_details ? user_details.email_address : '';
-        initialValues.additional_info = user_details ? user_details.additional_info : '';
-        initialValues.store_url = user_details ? user_details.store_url : '';
-        initialValues.legal_entity_name = user_details ? user_details.legal_entity_name : '';
-        initialValues.has_existing_store = user_details ? user_details.has_existing_store : '';
-        setLoading(false);
+        getAccountDetails(user_details.buyer_id)
+        .then((data: any) => {
+            if(data){
+                console.log(data[0])
+                dispatch(updateSelectedStore(user_details.buyer_id));
+                localStorage.setItem('selected_store', user_details.buyer_id)
+                setUserDetails(localStorage.getItem('user_details') ? JSON.parse(localStorage.getItem('user_details') || '{}') : null)
+                initialValues.firstname = user_details ? user_details.firstname : '';
+                initialValues.lastname = user_details ? user_details.lastname : '';
+                initialValues.contact_number = user_details ? user_details.contact_number : '';
+                initialValues.email_address = user_details ? user_details.email_address : '';
+                initialValues.additional_info = data[0] ? data[0].buyersDetails.additional_info : '';
+                initialValues.store_url = data[0] ? data[0].buyersDetails.store_url : '';
+                initialValues.legal_entity_name = data[0] ? data[0].buyersDetails.legal_entity_name : '';
+                initialValues.has_existing_store = data[0] ? data[0].buyersDetails.has_existing_store : '';
+                setLoading(false)
+            }
+            else{
+                // let default initial values load
+            }
+        })
+        .catch((err: any) => {
+            console.log(err)
+        });
       }
 
     const updateBuyerRegistrationDetails = (values: FormikValues) => {
         console.log("reg form details = ", values)
         saveRegistrationDetails(values)
          .then(response => {
-            handleUpdateDetails(values);
+            handleUpdateDetails();
             showSuccessMessage(REGISTRATION_UPDATE_SUCCESS)
             props.reloadStatus();
          })
+         .catch(error=>{
+            console.log(error)
+         })
       }
 
-      const handleUpdateDetails = (values: any) => {
-        let updatedObject = {
-            ...user_details, // Spread operator to copy all properties
-            ...values // Override with new values
-          };
-        localStorage.setItem("user_details",JSON.stringify(updatedObject))
+      const handleUpdateDetails = () => {
+        fetchData();
       }
 
 

@@ -8,7 +8,7 @@ const baseEnv = process.env.REACT_APP_ENV!;
 const baseUrlSuffix = process.env.REACT_APP_BASEURLSUFFIX!;
 const axiosInstance = axios.create({
   baseURL: baseURL+baseEnv+baseUrlSuffix,
-  timeout: 1000,
+  timeout: 5000,
   headers: { 'Content-Type': 'application/json' }
 });
 
@@ -42,7 +42,7 @@ axiosInstance.interceptors.response.use(
   function (response: any) {
     // Do formatting of response and return
     console.log(response)
-    if(response.config.url == 'documents/download'){
+    if(response.config.url.split('/').slice(0, 2).join('/') === 'documents/download'){
       return response.data
     }
     else if(response.data.error === null){
