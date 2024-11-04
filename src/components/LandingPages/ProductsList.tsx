@@ -281,6 +281,13 @@ const ProductsList = () => {
 
     const MessageID = "MSG"+uuidv4();
     
+    const tablescrollstyles = {
+        loadonscroll:{
+          maxHeight: showBackButton ==='show' ? "300px" : "340px",
+          overflowY: 'scroll' as 'scroll',
+        }
+      };
+    
 
     const toggleDropdown = () => {
       setIsOpen(!isOpen);
@@ -541,8 +548,8 @@ const ProductsList = () => {
                             <div className="row">
                                 <div className="col-3">
                                     <div className="select-location-container text-left">
-                                        <div className='d-flex' onClick={openSelectLocationWindow}>
-                                        <i className="fa fa-map-marker"> </i>
+                                        <div className='d-flex cursor-pointer' onClick={openSelectLocationWindow}>
+                                        <i className="fas fa-location-dot" ></i>
                                         <p className='mb-0 pl-3'>{selectedLocation !== '' ? selectedLocation : ('Select location')}</p>
                                         </div>
 
@@ -799,7 +806,7 @@ const ProductsList = () => {
 
                             <div className='table-responsive'                            
                             onScroll={handleScroll}
-                            style={{  maxHeight:'340px', overflowY: 'scroll' }}>                            
+                            style={tablescrollstyles.loadonscroll}>                            
                             <table className="table table-hover  product-table text-left" style={{ marginBottom: '0px', cursor: 'pointer' }}>
 
                                 <thead className="table-light">
