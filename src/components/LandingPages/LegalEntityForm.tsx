@@ -123,14 +123,44 @@ const LegalEntityForm = (props:any) => {
       const fetchData = () => {
         getLegalEntityDetails()
         .then((data: any) => {
-            if(data){
+            if(data && data.length>0){
                 setData(data[0]);
+            }
+            else{
+                resetData()
             }
             setLoading(false);
         })
         .catch(err => {
             setLoading(false);
         });
+      }
+
+      const resetData = () => {
+        initialValues.authorised_signatory_name= '';
+        initialValues.authorised_signatory_designation= ''
+        initialValues.authorised_signatory_phone_number= ''
+        initialValues.authorised_signatory_email_address= ''
+        initialValues.pan_or_aadhar= ''
+        initialValues.authorised_signatory_pan= ''
+        initialValues.authorised_signatory_aadhaar= ''
+        initialValues.company_name= ''
+        initialValues.sector_of_organization_type= ''
+        initialValues.date_of_incorporation= ''
+        initialValues.company_phone_number= ''
+        initialValues.company_email_address= ''
+        initialValues.annual_turnover_type= ''
+        initialValues.nature_of_organization_type= ''
+        initialValues.company_gstn= ''
+        initialValues.company_pan= ''
+        initialValues.company_cin= ''
+        initialValues.company_llpin= ''
+        initialValues.building_street_area= ''
+        initialValues.locality_town= ''
+        initialValues.city_id= ''
+        initialValues.state= ''
+        initialValues.country= ''
+        initialValues.pincode= ''
       }
 
       const setData = (data: any) => {

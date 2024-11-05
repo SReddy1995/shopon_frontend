@@ -54,6 +54,7 @@ const bankEscrowValidationSchema = Yup.object().shape({
 const BankEscrowForm = (props: any) => {
 
     const [loading, setLoading] = useState(true);
+    const [showBankAccountDetails, setShowBankAccountDetails] = useState(false)
     const [initialValues, setInitialValues] = useState({
         has_escrow_account: '',   
         escrow_account_number: '',
@@ -73,9 +74,15 @@ const BankEscrowForm = (props: any) => {
             if(data){
                 initialValues.has_escrow_account = data[0].has_escrow_account
                 initialValues.escrow_account_number = data[0].escrow_account_number
-                initialValues.confirm_escrow_account_number = ''
+                initialValues.confirm_escrow_account_number = data[0].escrow_account_number
                 initialValues.ifsc = data[0].ifsc
                 initialValues.bank_name = data[0].bank_name
+                if(data[0].has_escrow_account === "N"){
+                    setShowBankAccountDetails(false)
+                }
+                else{
+                    setShowBankAccountDetails(true)
+                }
             }
             setLoading(false);
         })
@@ -164,7 +171,11 @@ const BankEscrowForm = (props: any) => {
                                                                 setFieldValue('escrow_account_number', '');
                                                                 setFieldValue('confirm_escrow_account_number', '');
                                                                 setFieldValue('ifsc', '');
-                                                                }
+                                                                setShowBankAccountDetails(false)
+                                                            }
+                                                            else{
+                                                                setShowBankAccountDetails(true)   
+                                                            }
                                                           }}
                                                         className={errors.has_escrow_account && touched.has_escrow_account ? 'radio-button__input input-field-error' : 'radio-button__input'}
                                                     />
@@ -192,6 +203,10 @@ const BankEscrowForm = (props: any) => {
                                                             setFieldValue('escrow_account_number', '');
                                                             setFieldValue('confirm_escrow_account_number', '');
                                                             setFieldValue('ifsc', '');
+                                                            setShowBankAccountDetails(false)
+                                                            }
+                                                            else{
+                                                                setShowBankAccountDetails(true)   
                                                             }
                                                           }}
                                                         className={errors.has_escrow_account && touched.has_escrow_account ? 'radio-button__input input-field-error' : 'radio-button__input'}
@@ -213,6 +228,7 @@ const BankEscrowForm = (props: any) => {
                                             name="bank_name" type="text" 
                                             className={'form-control dashboard-namefield ' + (errors.bank_name && touched.bank_name ? 'input-field-error' : '')}
                                             placeholder="Bank Name" 
+                                            disabled={!showBankAccountDetails}
                                         />
                                         <ErrorMessage className='error' name="bank_name" component="div" />
                                     </div>
@@ -233,6 +249,7 @@ const BankEscrowForm = (props: any) => {
                                                         e.preventDefault();
                                                     }
                                                 }}
+                                                disabled={!showBankAccountDetails}
                                             />
                                         <ErrorMessage className='error' name="escrow_account_number" component="div" />
                                     </div>
@@ -248,6 +265,7 @@ const BankEscrowForm = (props: any) => {
                                                         e.preventDefault();
                                                     }
                                                 }}
+                                                disabled={!showBankAccountDetails}
                                             />
                                         <ErrorMessage className='error' name="confirm_escrow_account_number" component="div" />
                                     </div>
@@ -265,6 +283,7 @@ const BankEscrowForm = (props: any) => {
                                                 }
                                             }}
                                             placeholder="IFSC code" 
+                                            disabled={!showBankAccountDetails}
                                         />
                                         <ErrorMessage className='error' name="ifsc" component="div" />
 

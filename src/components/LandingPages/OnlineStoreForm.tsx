@@ -75,11 +75,11 @@ const OnlineStoreForm = (props: any) => {
         .then((data: any) => {
             initialValues.store_url = user_details.store_url;
             initialValues.subscriber_id = user_details.subscriber_id;
-            if(data){
+            if(data && data.length>0){
                 setData(data[0])
             }
             else{
-                // let default initial values load
+                initialValues.categories = [];
             }
             setLoading(false);
         })

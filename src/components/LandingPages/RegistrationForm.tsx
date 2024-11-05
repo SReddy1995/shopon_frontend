@@ -56,6 +56,7 @@ const RegistrationForm = (props:any) => {
     const storesList = useSelector((store: any) => store.stores.storesList);
     const [user_details, setUserDetails] = useState(localStorage.getItem('user_details') ? JSON.parse(localStorage.getItem('user_details') || '{}') : null);
     const dispatch = useDispatch();
+    const [allowUserToEditStoreContactDetails, setAllowUserToEditStoreContactDetails] = useState(true)
 
     useEffect(() => {
         fetchData();
@@ -69,14 +70,20 @@ const RegistrationForm = (props:any) => {
                 dispatch(updateSelectedStore(user_details.buyer_id));
                 localStorage.setItem('selected_store', user_details.buyer_id)
                 setUserDetails(localStorage.getItem('user_details') ? JSON.parse(localStorage.getItem('user_details') || '{}') : null)
-                initialValues.firstname = user_details ? user_details.firstname : '';
-                initialValues.lastname = user_details ? user_details.lastname : '';
-                initialValues.contact_number = user_details ? user_details.contact_number : '';
-                initialValues.email_address = user_details ? user_details.email_address : '';
+                initialValues.firstname = data[0] ? data[0].buyersDetails.registered_by.firstname : '';
+                initialValues.lastname = data[0] ? data[0].buyersDetails.registered_by.lastname : '';
+                initialValues.contact_number = data[0] ? data[0].buyersDetails.registered_by.contact_number : '';
+                initialValues.email_address = data[0] ? data[0].buyersDetails.registered_by.email_address : '';
                 initialValues.additional_info = data[0] ? data[0].buyersDetails.additional_info : '';
                 initialValues.store_url = data[0] ? data[0].buyersDetails.store_url : '';
                 initialValues.legal_entity_name = data[0] ? data[0].buyersDetails.legal_entity_name : '';
                 initialValues.has_existing_store = data[0] ? data[0].buyersDetails.has_existing_store : '';
+                if(user_details.email_address === data[0].buyersDetails.registered_by.email_address){
+                    setAllowUserToEditStoreContactDetails(true)
+                }
+                else{
+                    setAllowUserToEditStoreContactDetails(false)
+                }
                 setLoading(false)
             }
             else{
@@ -148,6 +155,7 @@ const RegistrationForm = (props:any) => {
                                                 className={'form-control dashboard-namefield ' + (errors.firstname && touched.firstname ? 'input-field-error' : '')}
                                                 id="exampleFormControlInput1"
                                                 placeholder="First Name"
+                                                disabled={!allowUserToEditStoreContactDetails}
                                             />
                                             <ErrorMessage className='error' name="firstname" component="div" />
                                         </div>
@@ -159,6 +167,7 @@ const RegistrationForm = (props:any) => {
                                                 className={'form-control dashboard-namefield ' + (errors.lastname && touched.lastname ? 'input-field-error' : '')}
                                                 id="exampleFormControlInput1"
                                                 placeholder="Last Name"
+                                                disabled={!allowUserToEditStoreContactDetails}
                                             />
                                             <ErrorMessage className='error' name="lastname" component="div" />
                                         </div>
@@ -178,6 +187,7 @@ const RegistrationForm = (props:any) => {
                                                         e.preventDefault();
                                                     }
                                                 }}
+                                                disabled={!allowUserToEditStoreContactDetails}
                                             />
                                             <ErrorMessage className='error' name="contact_number" component="div" />
                                         </div>
