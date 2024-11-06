@@ -88,24 +88,30 @@ const ProductDetails = (props: any) => {
                 <div className="row">
                     <div className="col-md-6 col-12 d-flex flex-column">
                         <div className='price-container'>
-                            <span className="price-red">
-                                -33%
-
-                            </span>
-                            <span className="price-black ms-2">
+                           
+                            <span className="price-black">
                                 {product_details.price}
                             </span>
+                            <span className="price-red text-sm">
+                            &nbsp;{product_details.measure}
+
+                            </span>
                         </div>
                         <div className='price-container'>
-                            <p className="price-tag">M.R.P : <del>₹299</del></p>
+                            <p className="mb-0">Available Quantity : {product_details.availability}</p>
                         </div>
                         <div className='price-container'>
-                            <p><span className="price-tag">Category : </span><span>Retail</span></p>
+                            <p className="mb-0">Maximum Quantity : {product_details.maximumQuantity}</p>
+                        </div>
+                        <div className='price-container mt-2'>
+                            <p><span className="price-tag">Category : </span><span>{product_details.category}</span></p>
                         </div>
                     </div>
                     <div className="col-md-6 col-12 seller-info-accessibility-container text-right">
                         <span className="vendor-name"><span className="price-tag">Seller : </span>{product_details.seller}</span>
                         <div className="product-accessibility-container mt-1">
+                            {
+                                product_details.cancellable === 'Yes' &&
                                 <div className="border-0 rounded-0 shadow-none text-center mb-0" style={{maxWidth: '160px',cursor: 'pointer'}}>
                                  
                                         <div className="bg-light d-flex align-items-center justify-content-center rounded-circle mx-auto mb-2"
@@ -113,6 +119,9 @@ const ProductDetails = (props: any) => {
                                         <div className="product-info-box text-muted "><span>Cancellable</span></div>
                                       
                                 </div>
+                            }
+                            {
+                                product_details.returnable === 'Yes' &&
                                 <div className="border-0 rounded-0 shadow-none text-center mb-0" style={{maxWidth: '160px',cursor: 'pointer'}}>
                                   
                                         <div className="bg-light d-flex align-items-center justify-content-center rounded-circle mx-auto mb-2"
@@ -120,6 +129,9 @@ const ProductDetails = (props: any) => {
                                         <div className="product-info-box text-muted"><span>Returnable</span></div>
                                       
                                 </div>
+                            }
+                                
+
                         </div>
                     </div>
                 </div>

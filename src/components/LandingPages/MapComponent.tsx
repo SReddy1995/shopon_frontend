@@ -3,7 +3,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { GoogleMap, LoadScript, Marker, Autocomplete, InfoWindow  } from '@react-google-maps/api';
-import { showWarningMessage } from '../../shared/notificationProvider';
 
 const mapContainerStyle = {
   height: "300px",
@@ -30,7 +29,16 @@ const MapComponent = (props: any) => {
   const [selectedAddress, setSelectedAddress] = useState<any>(null)
   
   const mapRef = useRef(null);
-  const [map, setMap] = React.useState(null)
+  const [showLocateLocationOnMap, setShowLocateLocationOnMap] = useState(false)
+  const autocompleteRef = useRef<HTMLInputElement | null>(null);
+  const [inputValue, setInputValue] = useState('');
+
+  const handleReset = () => {
+    setInputValue('');
+    if (autocompleteRef.current) {
+        autocompleteRef.current.value = ''; // Manually reset the value in the input
+    }
+};
 
   const getCurrentLocation = async () => {
     if (navigator.geolocation) {
@@ -44,24 +52,18 @@ const MapComponent = (props: any) => {
           geocoder.geocode({ location: { lat: latitude, lng: longitude } }, (results, status) => {
             console.log(results)
             if (status === 'OK' && results && results[0]) {
-              setSelectedAddress(results[0].formatted_address);
+              if(results[0].address_components){
+                let res = getAddressFormatted(results[0].address_components)
+                console.log(res)
+                setTimeout(()=>{
+                  props.setLocation(res)
+                },0)
+               
             } else {
               console.log('Address not found');
             }
+          }
           });
-
-          // const latLng = new window.google.maps.LatLng(latitude, longitude);
-          // try {
-          //   const results = await geocoder.geocode({ location: latLng });
-          //   console.log(results)
-          //   if (results && results.results.length > 0) {
-          //     setSelectedAddress(results.results[0].formatted_address);
-          //   } else {
-          //     console.log('No address found');
-          //   }
-          // } catch (error: any) {
-          //   console.log('Geocoder failed: ' + error.message);
-          // }
         },
         (err) => {
           console.log('Geolocation error: ' + err.message);
@@ -71,18 +73,29 @@ const MapComponent = (props: any) => {
       console.log('Geolocation is not supported by this browser.');
     }
   };
+
+  const getAddressFormatted = (values: any) => {
+    let addr : any;
+    if(Array.isArray(values) && values.filter((x:any)=>x.types.includes('locality')).length>0 &&  values.filter((x:any)=>x.types.includes('locality'))[0].long_name){
+      addr = values.filter((x:any)=>x.types.includes('locality'))[0].long_name;
+    }
+    if(Array.isArray(values) && values.filter((x:any)=>x.types.includes('postal_code')).length>0 && values.filter((x:any)=>x.types.includes('postal_code'))[0].long_name){
+      addr = addr + ', '+values.filter((x:any)=>x.types.includes('postal_code'))[0].long_name;
+    }
+    return addr
+    
+  }
   
   useEffect(() => {
-    // navigator.geolocation.getCurrentPosition(
-    //   (position) => {
-    //     const { latitude, longitude } = position.coords;
-    //     setCurrentLocation({ lat: latitude, lng: longitude });
-    //     setMarkerLocation({ lat: latitude, lng: longitude });
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        setCurrentLocation({ lat: latitude, lng: longitude });
+        setMarkerLocation({ lat: latitude, lng: longitude });
 
-    //   },
-    //   () => null
-    // );
-    // getCurrentLocation()
+      },
+      () => null
+    );
   }, []);
 
   const reverseGeocode = (latLng: any) => {
@@ -101,18 +114,6 @@ const MapComponent = (props: any) => {
       console.error('Google Maps API is not available');
     }
   };
-
-  const setUseCurrentLocation = () => {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
-        setCurrentLocation({ lat: latitude, lng: longitude });
-        setMarkerLocation({ lat: latitude, lng: longitude });
-        reverseGeocode({ lat: latitude, lng: longitude })
-      },
-      () => null
-    );
-  }
   
   const onLoad = (map: any) => {
     mapRef.current = map; // Store the map reference
@@ -122,15 +123,35 @@ const MapComponent = (props: any) => {
   const onPlaceChanged = () => {
     if (autocomplete) {
       const place = autocomplete.getPlace();
-      setSelectedAddress(place.formatted_address)
-      if (place.geometry && place.geometry.location) {
-        const location = {
-          lat: place.geometry.location.lat(),
-          lng: place.geometry.location.lng()
-        };
-        setMarkerLocation(location)
-        setCurrentLocation(location);
-      }
+      console.log(place)
+      if(place.address_components){
+        
+        
+        if(showLocateLocationOnMap){
+          if (place.geometry && place.geometry.location) {
+            const location = {
+              lat: place.geometry.location.lat(),
+              lng: place.geometry.location.lng()
+            };
+            setMarkerLocation(location)
+            setCurrentLocation(location);
+          }
+          let res = getAddressFormatted(place.address_components)
+          setTimeout(()=>{
+            
+            setSelectedAddress(res)
+          },0)
+          
+        }
+        else{
+          setSelectedAddress(null)
+          let res = getAddressFormatted(place.address_components)
+          setTimeout(()=>{
+            props.setLocation(res)
+          },0)
+          props.setLocation(res)
+        }
+    }
 
     }
   };
@@ -160,6 +181,20 @@ const MapComponent = (props: any) => {
     reverseGeocode({ lat: lat, lng: lng })
   };
 
+  const handleLocateLocationOnMap = () => {
+    setSelectedAddress(null)
+    setShowLocateLocationOnMap(true)
+  }
+
+  const confirmSelectedLocation = () => {
+    props.setLocation(selectedAddress)
+  }
+
+  const navigateTopreviousList = () => {
+    setSelectedAddress(null)
+    setShowLocateLocationOnMap(false)
+  }
+
 
 
   return (
@@ -168,8 +203,17 @@ const MapComponent = (props: any) => {
     <div className="container-fluid">
         <div className="row">
           <div className="col-12 text-left d-flex flex-row">
-            <h4>Select a location</h4>
-            
+            {
+              showLocateLocationOnMap ?
+              <>
+                              <div  className='back-button-container cursor-pointer mt-2'>
+                                <i className='fa fa-arrow-left' onClick={navigateTopreviousList}></i>
+                                <h6 className='pl-2 mb-0'>Back</h6>
+                            </div>
+              </>
+              :
+              <h4>Select a location</h4>
+            }
             <i className='fa fa-close fa-lg cursor-pointer mt-2' onClick={closeModal}></i>
           </div>
           <div className="col-12 mt-2">
@@ -180,23 +224,21 @@ const MapComponent = (props: any) => {
                     d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z" />
                 </svg>
               </button>
-              <Autocomplete className='w-100' onLoad={onAutocompleteLoad} onPlaceChanged={onPlaceChanged}
+              <Autocomplete className='w-100 mt-2' onLoad={onAutocompleteLoad} onPlaceChanged={onPlaceChanged}
                       options={{
                         componentRestrictions: { country: 'IN' }, // Restrict to India
                       }}>
-              <input className="location-search_input" type="text" name="" placeholder="Search by city name or pincode" />
+              <input ref={autocompleteRef} className="location-search_input" type="text" name="" 
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}  placeholder="Search by city name or pincode" />
               </Autocomplete>
               
             </div>
-            <div className="col-12">
-            {
-              selectedAddress &&
-
-              <p>Selected address -- {selectedAddress}</p>
-            }
-            </div>
           </div>
-          <div className="col-12 mt-2">
+          {
+            !showLocateLocationOnMap && 
+              <>
+            <div className="col-12 mt-2">
             <div className="location-selection-option-container">
               <div className='d-flex flex-row gap-3 align-items-center cursor-pointer'>
                 <div className='d-flex gap-1'>
@@ -213,12 +255,65 @@ const MapComponent = (props: any) => {
 
                 <div className='d-flex gap-1 cursor-pointer'>
                 <i className="fas fa-location-dot" style={{color: '#fb65a1', fontSize:'1.2rem'}}></i>
-                <p className='location-text mb-0'>Locate on map </p>
+                <p className='location-text mb-0' onClick={handleLocateLocationOnMap}>Locate on map </p>
                 </div>
               </div>
             </div>
           </div>
-          {/* <div className="col-12 mt-2">
+                    <div className="col-12 mt-3">
+                    <div className="row">
+                      <div className="col-4 recent-locations-title-tab-active">
+                          <h6>Recent locations</h6>
+                      </div>
+                      <div className="col-8 recent-locations-title-tab-inactive">
+        
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-12 recent-locations-list px-0">
+                    <div className='recent-locations-list-pill p-3'>
+                          <i className="fas fa-location-dot" style={{color: '#fb65a1', fontSize:'1.2rem'}}></i>
+                          <div className='d-flex flex-column text-left'>
+                            <p className='font-weight-bold mb-0'>560064 </p>
+                            <p className='mb-0'>560064, BANGALORE, Karnataka </p>
+                          </div>
+                    </div>
+        
+                    <div className='recent-locations-list-pill p-3'>
+                          <i className="fas fa-location-dot" style={{color: '#fb65a1', fontSize:'1.2rem'}}></i>
+                          <div className='d-flex flex-column text-left'>
+                            <p className='font-weight-bold mb-0'>560064 </p>
+                            <p className='mb-0'>560064, BANGALORE, Karnataka </p>
+                          </div>
+                    </div>
+                    <div className='recent-locations-list-pill p-3'>
+                          <i className="fas fa-location-dot" style={{color: '#fb65a1', fontSize:'1.2rem'}}></i>
+                          <div className='d-flex flex-column text-left'>
+                            <p className='font-weight-bold mb-0'>560064 </p>
+                            <p className='mb-0'>560064, BANGALORE, Karnataka </p>
+                          </div>
+                    </div>
+                    <div className='recent-locations-list-pill p-3'>
+                          <i className="fas fa-location-dot" style={{color: '#fb65a1', fontSize:'1.2rem'}}></i>
+                          <div className='d-flex flex-column text-left'>
+                            <p className='font-weight-bold mb-0'>560064 </p>
+                            <p className='mb-0'>560064, BANGALORE, Karnataka </p>
+                          </div>
+                    </div>
+                    <div className='recent-locations-list-pill p-3'>
+                          <i className="fas fa-location-dot" style={{color: '#fb65a1', fontSize:'1.2rem'}}></i>
+                          <div className='d-flex flex-column text-left'>
+                            <p className='font-weight-bold mb-0'>560064 </p>
+                            <p className='mb-0'>560064, BANGALORE, Karnataka </p>
+                          </div>
+                    </div>
+                    
+                  </div>
+                  </>
+          }
+          {
+            showLocateLocationOnMap &&
+            <div className="col-12 mt-4">
             <GoogleMap
                   mapContainerStyle={mapContainerStyle}
                   center={currentLocation}
@@ -243,94 +338,25 @@ const MapComponent = (props: any) => {
                   </div>
 
             </GoogleMap>
-          </div> */}
-          <div className="col-12 mt-3">
-            <div className="row">
-              <div className="col-4 recent-locations-title-tab-active">
-                  <h6>Recent locations</h6>
+            {
+              selectedAddress && 
+              <div className="container mt-2">
+              <div className="row">
+                <div className="col-12">
+                  <button className='btn btn-success' onClick={confirmSelectedLocation}>Confirm selected location</button>
+                </div>
               </div>
-              <div className="col-8 recent-locations-title-tab-inactive">
+            </div>
+            }
 
-              </div>
-            </div>
           </div>
-          <div className="col-12 recent-locations-list px-0">
-            <div className='recent-locations-list-pill p-3'>
-                  <i className="fas fa-location-dot" style={{color: '#fb65a1', fontSize:'1.2rem'}}></i>
-                  <div className='d-flex flex-column text-left'>
-                    <p className='font-weight-bold mb-0'>560064 </p>
-                    <p className='mb-0'>560064, BANGALORE, Karnataka </p>
-                  </div>
-            </div>
+          }
 
-            <div className='recent-locations-list-pill p-3'>
-                  <i className="fas fa-location-dot" style={{color: '#fb65a1', fontSize:'1.2rem'}}></i>
-                  <div className='d-flex flex-column text-left'>
-                    <p className='font-weight-bold mb-0'>560064 </p>
-                    <p className='mb-0'>560064, BANGALORE, Karnataka </p>
-                  </div>
-            </div>
-            <div className='recent-locations-list-pill p-3'>
-                  <i className="fas fa-location-dot" style={{color: '#fb65a1', fontSize:'1.2rem'}}></i>
-                  <div className='d-flex flex-column text-left'>
-                    <p className='font-weight-bold mb-0'>560064 </p>
-                    <p className='mb-0'>560064, BANGALORE, Karnataka </p>
-                  </div>
-            </div>
-            <div className='recent-locations-list-pill p-3'>
-                  <i className="fas fa-location-dot" style={{color: '#fb65a1', fontSize:'1.2rem'}}></i>
-                  <div className='d-flex flex-column text-left'>
-                    <p className='font-weight-bold mb-0'>560064 </p>
-                    <p className='mb-0'>560064, BANGALORE, Karnataka </p>
-                  </div>
-            </div>
-            <div className='recent-locations-list-pill p-3'>
-                  <i className="fas fa-location-dot" style={{color: '#fb65a1', fontSize:'1.2rem'}}></i>
-                  <div className='d-flex flex-column text-left'>
-                    <p className='font-weight-bold mb-0'>560064 </p>
-                    <p className='mb-0'>560064, BANGALORE, Karnataka </p>
-                  </div>
-            </div>
-            
-          </div>
+
+
         </div>
     </div>
     </LoadScript>
-     {/* <div className="container mt-4">
-        <div className="row">
-            <div className="col-10">
-            <LoadScript googleMapsApiKey={"AIzaSyBRJcUmvzO1o9xd4h6Vw2u0In6HBHPOBd0"} libraries={["places"]}>
-              <GoogleMap
-                mapContainerStyle={mapContainerStyle}
-                center={currentLocation}
-                zoom={10}
-                options={options}
-                onLoad={onLoad}
-              >
-                <Marker position={markerLocation} />
-                <div style={{ position: 'absolute', top: '10px', left: '10px', zIndex: 1 }}>
-                <Autocomplete onLoad={onAutocompleteLoad} onPlaceChanged={onPlaceChanged}>
-                  <input
-                    type="text"
-                    placeholder="Search by city name or pincode"
-                    style={{
-                      boxSizing: `border-box`,
-                      border: `1px solid transparent`,
-                      width: `240px`,
-                      height: `32px`,
-                      paddingLeft: `12px`,
-                      marginTop: `10px`,
-                      outline: `none`,
-                      fontSize: `14px`,
-                    }}
-                  />
-                </Autocomplete>
-                </div>
-              </GoogleMap>
-            </LoadScript>
-            </div>
-        </div>
-    </div>  */}
     </>
   );
 };

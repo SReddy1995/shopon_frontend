@@ -1925,11 +1925,11 @@ font-size: 12px !important;
 
 .price-red{
   color:#f44336;
-  font-size:24px;
+  font-size:1rem;
 }
 .price-black{
   color: inherit;
-  font-size:24px;
+  font-size:1rem;
 }
 .price-tag{
   color:grey;

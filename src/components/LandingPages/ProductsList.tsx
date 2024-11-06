@@ -850,6 +850,12 @@ const ProductsList = () => {
     const navigateToCollectionsList = () => {
         navigate('/landing-page/products/collections')
     }
+
+    const setLocation = (e:any)=>{
+        setSelectedLocation(e)
+        closeSelectLocationWindow();
+
+    }
     
 
     return (
@@ -1264,7 +1270,7 @@ const ProductsList = () => {
                 }
                 
                 <ModalWindow show={open} modalClosed={closeSelectLocationWindow}>
-                    <MapComponent  closeModal={closeSelectLocationWindow}/>
+                    <MapComponent  closeModal={closeSelectLocationWindow} setLocation={setLocation}/>
                 </ModalWindow>
                
             </div>
