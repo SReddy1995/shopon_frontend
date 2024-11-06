@@ -18,50 +18,52 @@ import Logout from "./components/LandingPages/Logout";
 import ProductsList from "./components/LandingPages/ProductsList";
 import MapComponent from "./components/LandingPages/MapComponent";
 import PreviewProducts from "./components/LandingPages/PreviewProducts";
+import RoleGuard from "./utils/route-guards/RoleGuard";
+import Finance from "./components/LandingPages/Finance";
 
 export const AppRoutes = () => {
   const childRoutes = [
     {
       path: "/landing-page/dashboard",
-      element: <StoreActivationGuard>
-                  <Dashboard />,
-              </StoreActivationGuard>
+      element:<RoleGuard requiredRole={['Admin']}>
+                  <Dashboard />
+                  </RoleGuard>
     },
     {
       path: "/landing-page/account",
-      element: <Account />,
-    },
-    {
-      path: "/landing-page/maps",
-      element: <MapComponent />,
-    },
-    {
-      path: "/landing-page/profile",
-      element: <StoreActivationGuard>
-                  <Profile />,
-               </StoreActivationGuard>
+      element: <RoleGuard requiredRole={['Admin','Operator']}>
+                  <Account />
+                </RoleGuard>,
     },
     {
       path: "/landing-page/products/collections",
-      element: <Collections />,
+      element: <RoleGuard requiredRole={['Admin','Inventory']}>
+                  <Collections />
+                </RoleGuard>
     },
     {
       path: "/landing-page/products/products-list",
-      element: <ProductsList />,
+      element: <RoleGuard requiredRole={['Admin','Inventory']}>
+                  <ProductsList />
+                  </RoleGuard>
     },
     {
       path: "/landing-page/products/products-preview",
-      element: <PreviewProducts />,
-    },
-    {
-      path: "/landing-page/products/inventory",
-      element: <StoreActivationGuard>
-                <Inventory />
-               </StoreActivationGuard>,
+      element: <RoleGuard requiredRole={['Admin','Inventory']}>
+                  <PreviewProducts />
+                  </RoleGuard>
     },
     {
       path: "/landing-page/manage-users",
-      element: <UserManagement />,
+      element: <RoleGuard requiredRole={['Admin']}>
+                  <UserManagement />
+                  </RoleGuard>
+    },
+    {
+      path: "/landing-page/finance",
+      element: <RoleGuard requiredRole={['Admin','Finance']}>
+                  <Finance />
+                  </RoleGuard>
     },
   ];
 

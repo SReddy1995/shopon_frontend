@@ -26,3 +26,10 @@ export const UserUrls = {
     updateUser: '/update_user',
     createUser: '/save_user',
 }
+
+export const ProductSearchUrls = {
+    initiateSearch: '/search',
+    getSearchResults: '/get_search_results',
+    getSellersList: '/get_seller_data',
+    getSpecialityList: '/get_speciality_data'
+}

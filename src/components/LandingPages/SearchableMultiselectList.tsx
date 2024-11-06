@@ -49,7 +49,7 @@ const SearchableMultiselectList = (props : any) => {
             <div className='mt-2'>
                 <input
                     type="text"
-                    className='mx-2'
+                    className='mx-2 filter-search-input-box'
                     placeholder="Search ..."
                     value={searchTerm}
                     onChange={handleSearchTermChange}
@@ -60,12 +60,12 @@ const SearchableMultiselectList = (props : any) => {
                 {
                     filteredItems
                         .map((item: any, index: any) => {
-                            return <li key={item.value} className='d-flex flex-row px-2'>
+                            return <li key={item.value+index} className='d-flex flex-row px-2'>
                                 <input type="checkbox"
                                     checked={selectedList.some((obj: any) => obj.value === item.value)}
                                     onChange={() => toggleSelectedOption(item)}
                                 />
-                                <a className="dropdown-item ml-0 pl-2 small fw-semibold oneline_ellipsis"
+                                <a className="dropdown-item ml-0 pl-2 small fw-semibold ellipsis"
                                     role="button" title="All">{item.label}</a></li>
                         })
                 }

@@ -6,15 +6,15 @@ import { NOT_FOUND_ERROR } from '../constants/NotificationConstants';
 
 const baseURL = process.env.REACT_APP_BASEURL!;
 const baseEnv = process.env.REACT_APP_ENV!;
-const baseUrlSuffix = process.env.REACT_APP_BASEURLSUFFIX!;
-const axiosInstance = axios.create({
-  baseURL: baseURL+baseEnv+baseUrlSuffix,
+const discoveryServiceUrlSuffix = process.env.REACT_APP_DISCOVER_SERVICE_URLSUFFIX!;
+const productSearchAxiosInstance = axios.create({
+  baseURL: baseURL+baseEnv+discoveryServiceUrlSuffix,
   timeout: 5000,
   headers: { 'Content-Type': 'application/json' }
 });
 
 // Request interceptor
-axiosInstance.interceptors.request.use(
+productSearchAxiosInstance.interceptors.request.use(
   function (config) {
     if(config.url !== "/generate_auth_otp" && config.url !== "/login" && config.url !== "/register"){
       const token = localStorage.getItem('token'); // Retrieve auth token from localStorage
@@ -39,7 +39,7 @@ axiosInstance.interceptors.request.use(
 );
 
 // Response interceptor
-axiosInstance.interceptors.response.use(
+productSearchAxiosInstance.interceptors.response.use(
   function (response: any) {
     // Do formatting of response and return
     console.log(response)
@@ -105,4 +105,4 @@ axiosInstance.interceptors.response.use(
   }
 );
 
-export default axiosInstance;
+export default productSearchAxiosInstance;

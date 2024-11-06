@@ -7,7 +7,15 @@ const productsSlice = createSlice({
         selectedProductsList : [],
         selectedColumnsList: [],
         sourcePage: '',
-        selectedCategoryForProductList: ''
+        selectedCategoryForProductList: '',
+        productListFilters: {
+            location: null,
+            category: null,
+            searchString: null,
+            seller: null,
+            speciality: null,
+            messageID: null
+        }
     },
     reducers: {
         updateSelectedProductsList: (state, action) => {
@@ -19,12 +27,15 @@ const productsSlice = createSlice({
         updateSourcePage: (state, action) => {
             state.sourcePage = action.payload
         },
+        updateProductsListFilters: (state, action) => {
+            state.productListFilters = action.payload
+        },
         updateSelectedCategoryForProductsList: (state, action) => {
             state.selectedCategoryForProductList = action.payload
-        },
+        }
     }
 })
 
-export const { updateSelectedProductsList, updateProductsColumnsList, updateSourcePage, updateSelectedCategoryForProductsList } = productsSlice.actions;
+export const { updateSelectedProductsList, updateProductsColumnsList, updateSourcePage, updateSelectedCategoryForProductsList, updateProductsListFilters } = productsSlice.actions;
 
 export default productsSlice.reducer;

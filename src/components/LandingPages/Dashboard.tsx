@@ -7,7 +7,7 @@ const Dashboard = () => {
     return (
         <>
         <h1>
-            Dashboard for { selectedStore ? selectedStore : '' }
+            Dashboard
         </h1>
         </>
     ) 
