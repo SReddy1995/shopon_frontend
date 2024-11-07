@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { updateSelectedStore } from '../../utils/reduxStore/storesSlice';
 import { getAccountDetails } from '../../services/AccountService';
 import { useLocation } from 'react-router-dom';
+import { updateLOcationToReload, updateSource } from '../../utils/reduxStore/storeSwitchSlice';
 
 const OverlayMenuContainer = styled.div<{ overlaymenu: any }>`
   background-color: #FFFFFF;
@@ -144,7 +145,7 @@ const TopBar = (props:any) => {
                 dispatch(updateSelectedStore(store.buyer_id));
                 localStorage.setItem('selected_store', store.buyer_id)
                 props.handleStoreSwitched();
-                navigateToDashBoard();
+                navigateToSwitchStore();
                 // navigate(location.pathname)
             }
             else{
@@ -158,6 +159,11 @@ const TopBar = (props:any) => {
 
     const navigateToDashBoard = () => {
         navigate("/landing-page/dashboard");
+    };
+
+    const navigateToSwitchStore = () => {
+        dispatch(updateLOcationToReload(location.pathname))
+        navigate("/landing-page/switch-store");
     };
 
     const stores_list = useSelector((store: any) => store.stores.storesList);

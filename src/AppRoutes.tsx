@@ -20,6 +20,8 @@ import MapComponent from "./components/LandingPages/MapComponent";
 import PreviewProducts from "./components/LandingPages/PreviewProducts";
 import RoleGuard from "./utils/route-guards/RoleGuard";
 import Finance from "./components/LandingPages/Finance";
+import StoreSwitchRouteGuard from "./utils/route-guards/StoreSwitchRouteGuard";
+import RouteSwitch from "./components/LandingPages/RouteSwitch";
 
 export const AppRoutes = () => {
   const childRoutes = [
@@ -27,7 +29,13 @@ export const AppRoutes = () => {
       path: "/landing-page/dashboard",
       element:<RoleGuard requiredRole={['Admin']}>
                   <Dashboard />
-                  </RoleGuard>
+                </RoleGuard>
+    },
+    {
+      path: "/landing-page/switch-store",
+      element:<StoreSwitchRouteGuard>
+                  <RouteSwitch />
+                  </StoreSwitchRouteGuard>
     },
     {
       path: "/landing-page/account",
