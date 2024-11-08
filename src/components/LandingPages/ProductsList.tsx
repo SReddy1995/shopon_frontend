@@ -646,7 +646,6 @@ const ProductsList = () => {
 
     const loadMore = () => {
         setHasMore(true)
-        console.log(messageID)
         fetchSearchResults(messageID);
       };
     
@@ -963,7 +962,7 @@ const ProductsList = () => {
 
                 <div className="row mt-2">
                     <div className="col-6 text-left">
-                        <h3>Products - {messageID}</h3>
+                        <h3>Products</h3>
                     </div>
                     {
                         selectedProducts.length>0 && (
@@ -1324,7 +1323,15 @@ const ProductsList = () => {
     
                                             </div>
                                         }
-                                        {!hasMore && <p className='mt-2' style={{ textAlign: 'center',color: 'darkgray' }}>No more data to load.</p>}
+                                        {
+                                        !hasMore && 
+                                        <>
+                                        <p className='mt-2 mb-0' style={{ textAlign: 'center',color: 'darkgray' }}>No more data.  &nbsp;&nbsp;
+                                            <span className='mt-2 cursor-pointer check-more-text' onClick={loadMore}>Check for more data</span>
+                                        </p>
+
+                                        </>
+                                        }
                             </div>
                         </div>
                         )
