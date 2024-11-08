@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { updateProductsColumnsList, updateSelectedProductsList, updateSourcePage } from '../../utils/reduxStore/productsSlice';
+import { syncProductsWithShopify } from '../../services/ProductsService';
+import { showSuccessMessage } from '../../shared/notificationProvider';
+import { SYNC_PRODUCTS_WITH_SUCCESS } from '../../utils/constants/NotificationConstants';
 
 const PreviewProducts = () => {
 
@@ -10,8 +13,10 @@ const PreviewProducts = () => {
     const cols = useSelector((store: any) => store.products.selectedColumnsList);
     const [selectedProductsList, setSelectedProductsList] = useState(products);
     const [columns, setColumns] = useState(cols);
+    const [messageID, setMessageID] = useState(useSelector((store: any) => store.products.productListFilters).messageID)
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const user_details = localStorage.getItem('user_details') ? JSON.parse(localStorage.getItem('user_details') || '{}') : null;
 
     const navigateToProductsList = () => {
         dispatch(updateSelectedProductsList(selectedProductsList));
@@ -19,8 +24,34 @@ const PreviewProducts = () => {
         navigate("/landing-page/products/products-list")
     }
 
-    const syncWithShopify = () => {
+    const getPayloadForSyncingProductsWithShopify = () => {
+        let result = 
+        {
+            message_id: messageID,
+            subscriber_id: "ondc.opteamix.com",
+            buyer_id: user_details.buyer_id,
+            stream_details: selectedProductsList.map((product:any) => {
+                return {
+                    stream_id: product.stream_id,
+                    item_id: product.product_id,
+                    bpp_provider_id: product.bpp_provider_id
+                }
+            })
+        }
 
+        return result;
+    }
+
+    const syncWithShopify = () => {
+        let payload = getPayloadForSyncingProductsWithShopify();
+        console.log("payload for sync with shopify = ", payload)
+        syncProductsWithShopify(payload)
+        .then((response: any) => {
+           showSuccessMessage(SYNC_PRODUCTS_WITH_SUCCESS)
+        })
+        .catch(err => {
+            console.log(err)
+        });
     }
 
     const deleteProduct = (product: any) => {
