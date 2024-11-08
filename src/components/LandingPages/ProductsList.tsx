@@ -206,7 +206,7 @@ const ProductsList = () => {
     const [isColumnVisibilityOpen, setIsColumnVisibilityOpen] = useState(false);
     const [isProductDetailsOpen, setIsProductDetailsOpen] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState<any>(null);
-    const [selectedLocation, setSelectedLocation] = useState('')
+    const [selectedLocation, setSelectedLocation] = useState<any>(null)
     const [showTable, setShowTable] = useState(false)
     const [searchString, setSearchString] = useState('')
     const user_details = localStorage.getItem('user_details') ? JSON.parse(localStorage.getItem('user_details') || '{}') : null;
@@ -930,6 +930,7 @@ const ProductsList = () => {
     }
 
     const setLocation = (e:any)=>{
+        console.log("selected location = ",e)
         setSelectedLocation(e)
         closeSelectLocationWindow();
 
@@ -963,6 +964,16 @@ const ProductsList = () => {
                 <div className="row mt-2">
                     <div className="col-6 text-left">
                         <h3>Products</h3>
+                        {/* {
+                            selectedLocation  &&
+                            selectedLocation.map((location: any) => (
+                                <div key={location.location.latitude}>
+                                  <p>latitude: {location.location.latitude}</p>
+                                  <p>longitude: {location.location.longitude}</p>
+                                  <p>Formatted address: {location.formatted_address}</p>
+                                </div>
+                              ))
+                        } */}
                     </div>
                     {
                         selectedProducts.length>0 && (
@@ -982,10 +993,15 @@ const ProductsList = () => {
                                     <div className="select-location-container text-left">
                                         <div className='d-flex cursor-pointer' onClick={openSelectLocationWindow}>
                                         <i className="fas fa-location-dot" ></i>
-                                        <p className='mb-0 pl-3'>{selectedLocation !== '' ? selectedLocation : ('Select location')}</p>
+                                        <p className='mb-0 pl-3 selected-location-text ellipsis'>{selectedLocation ? 
+                                        selectedLocation.map((location: any) => (
+                                              <span key={location.location.latitude}>{location.address}</span>
+                                          ))
+                                        
+                                        : ('Select location')}</p>
                                         </div>
 
-                                        <i className="fa fa-close fa-sm pr-3 cursor-pointer" onClick={clearLocation}> </i>
+                                        <i className="fa fa-close fa-sm pl-0 pr-3 cursor-pointer" onClick={clearLocation}> </i>
                                     </div>
                                 </div>
                                 <div className="col-9">

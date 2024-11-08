@@ -3,6 +3,8 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { GoogleMap, LoadScript, Marker, Autocomplete, InfoWindow  } from '@react-google-maps/api';
+import { showWarningMessage } from '../../shared/notificationProvider';
+import { NO_POSTAL_CODE_LOCATION } from '../../utils/constants/NotificationConstants';
 
 const mapContainerStyle = {
   height: "300px",
@@ -47,23 +49,8 @@ const MapComponent = (props: any) => {
           const { latitude, longitude } = position.coords;
           setCurrentLocation({ lat: latitude, lng: longitude });
           setMarkerLocation({ lat: latitude, lng: longitude });
-          // Initialize Google Maps Geocoder service
-          const geocoder = new window.google.maps.Geocoder();
-          geocoder.geocode({ location: { lat: latitude, lng: longitude } }, (results, status) => {
-            console.log(results)
-            if (status === 'OK' && results && results[0]) {
-              if(results[0].address_components){
-                let res = getAddressFormatted(results[0].address_components)
-                console.log(res)
-                setTimeout(()=>{
-                  props.setLocation(res)
-                },0)
-               
-            } else {
-              console.log('Address not found');
-            }
-          }
-          });
+          getGeoCoder(latitude, longitude)
+          
         },
         (err) => {
           console.log('Geolocation error: ' + err.message);
@@ -74,15 +61,52 @@ const MapComponent = (props: any) => {
     }
   };
 
-  const getAddressFormatted = (values: any) => {
+  const getGeoCoder = (latitude: any, longitude: any) =>{
+              // Initialize Google Maps Geocoder service
+              const geocoder = new window.google.maps.Geocoder();
+              geocoder.geocode({ location: { lat: latitude, lng: longitude } }, (results, status) => {
+                if (status === 'OK' && results && results[0]) {
+                  if(results[0].address_components){
+                    if(results[0].address_components.filter((x: any)=> x.types.includes("postal_code")).length>0){
+                      let res = getAddressFormatted(results[0].address_components, latitude, longitude, results[0].formatted_address )
+                      if(showLocateLocationOnMap){
+                        setTimeout(()=>{
+                          setSelectedAddress(res)
+                        },0)
+                      }
+                      else{
+                        setSelectedAddress(null)
+                          setTimeout(()=>{
+                            props.setLocation(res)
+                          },0)
+                      }
+                    }
+                    else{
+                      showWarningMessage(NO_POSTAL_CODE_LOCATION)
+                    }
+    
+                   
+                } else {
+                  console.log('Address not found');
+                }
+              }
+              }
+            );
+  }
+
+  const getAddressFormatted = (values: any, lat: any, lng: any, formatted_address: any) => {
     let addr : any;
+    let arr: any= []
     if(Array.isArray(values) && values.filter((x:any)=>x.types.includes('locality')).length>0 &&  values.filter((x:any)=>x.types.includes('locality'))[0].long_name){
       addr = values.filter((x:any)=>x.types.includes('locality'))[0].long_name;
     }
     if(Array.isArray(values) && values.filter((x:any)=>x.types.includes('postal_code')).length>0 && values.filter((x:any)=>x.types.includes('postal_code'))[0].long_name){
       addr = addr + ', '+values.filter((x:any)=>x.types.includes('postal_code'))[0].long_name;
     }
-    return addr
+
+    let gps_coordinates = {latitude: lat, longitude: lng}
+    arr.push({address: addr, location: gps_coordinates, formatted_address:formatted_address })
+    return arr
     
   }
   
@@ -103,9 +127,9 @@ const MapComponent = (props: any) => {
     if (window.google && window.google.maps) {
       const geocoder = new window.google.maps.Geocoder();
       geocoder.geocode({ location: latLng }, (results, status) => {
-        console.log(results)
         if (status === 'OK' && results && results[0]) {
-          setSelectedAddress(results[0].formatted_address);
+          let res = getAddressFormatted(results[0].address_components, latLng.lat, latLng.lng, results[0].formatted_address)
+          setSelectedAddress(res);
         } else {
           console.log('Address not found');
         }
@@ -123,33 +147,36 @@ const MapComponent = (props: any) => {
   const onPlaceChanged = () => {
     if (autocomplete) {
       const place = autocomplete.getPlace();
-      console.log(place)
       if(place.address_components){
-        
-        
-        if(showLocateLocationOnMap){
+
+        if(place.address_components.filter((x: any)=> x.types.includes("postal_code")).length>0){
+          let lat: any,lng: any;
           if (place.geometry && place.geometry.location) {
-            const location = {
-              lat: place.geometry.location.lat(),
-              lng: place.geometry.location.lng()
-            };
-            setMarkerLocation(location)
-            setCurrentLocation(location);
+              lat= place.geometry.location.lat();
+              lng= place.geometry.location.lng()
           }
-          let res = getAddressFormatted(place.address_components)
-          setTimeout(()=>{
-            
-            setSelectedAddress(res)
-          },0)
+          else{
+            lat= null;
+            lng= null
+          }
+          setMarkerLocation({lat:lat,lng:lng})
+          setCurrentLocation({lat:lat,lng:lng});
+          let res = getAddressFormatted(place.address_components, lat, lng, place.formatted_address)
           
+          if(showLocateLocationOnMap){
+              setTimeout(()=>{
+                setSelectedAddress(res)
+              },0)
+          }
+          else{
+            setSelectedAddress(null)
+              setTimeout(()=>{
+                props.setLocation(res)
+              },0)
+          }
         }
         else{
-          setSelectedAddress(null)
-          let res = getAddressFormatted(place.address_components)
-          setTimeout(()=>{
-            props.setLocation(res)
-          },0)
-          props.setLocation(res)
+          showWarningMessage(NO_POSTAL_CODE_LOCATION)
         }
     }
 
@@ -178,7 +205,7 @@ const MapComponent = (props: any) => {
 
     setCurrentLocation({ lat: lat, lng: lng });
     setMarkerLocation({ lat: lat, lng: lng });
-    reverseGeocode({ lat: lat, lng: lng })
+    getGeoCoder(lat, lng)
   };
 
   const handleLocateLocationOnMap = () => {
@@ -260,60 +287,15 @@ const MapComponent = (props: any) => {
               </div>
             </div>
           </div>
-                    <div className="col-12 mt-3">
-                    <div className="row">
-                      <div className="col-4 recent-locations-title-tab-active">
-                          <h6>Recent locations</h6>
-                      </div>
-                      <div className="col-8 recent-locations-title-tab-inactive">
-        
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-12 recent-locations-list px-0">
-                    <div className='recent-locations-list-pill p-3'>
-                          <i className="fas fa-location-dot" style={{color: '#fb65a1', fontSize:'1.2rem'}}></i>
-                          <div className='d-flex flex-column text-left'>
-                            <p className='font-weight-bold mb-0'>560064 </p>
-                            <p className='mb-0'>560064, BANGALORE, Karnataka </p>
-                          </div>
-                    </div>
-        
-                    <div className='recent-locations-list-pill p-3'>
-                          <i className="fas fa-location-dot" style={{color: '#fb65a1', fontSize:'1.2rem'}}></i>
-                          <div className='d-flex flex-column text-left'>
-                            <p className='font-weight-bold mb-0'>560064 </p>
-                            <p className='mb-0'>560064, BANGALORE, Karnataka </p>
-                          </div>
-                    </div>
-                    <div className='recent-locations-list-pill p-3'>
-                          <i className="fas fa-location-dot" style={{color: '#fb65a1', fontSize:'1.2rem'}}></i>
-                          <div className='d-flex flex-column text-left'>
-                            <p className='font-weight-bold mb-0'>560064 </p>
-                            <p className='mb-0'>560064, BANGALORE, Karnataka </p>
-                          </div>
-                    </div>
-                    <div className='recent-locations-list-pill p-3'>
-                          <i className="fas fa-location-dot" style={{color: '#fb65a1', fontSize:'1.2rem'}}></i>
-                          <div className='d-flex flex-column text-left'>
-                            <p className='font-weight-bold mb-0'>560064 </p>
-                            <p className='mb-0'>560064, BANGALORE, Karnataka </p>
-                          </div>
-                    </div>
-                    <div className='recent-locations-list-pill p-3'>
-                          <i className="fas fa-location-dot" style={{color: '#fb65a1', fontSize:'1.2rem'}}></i>
-                          <div className='d-flex flex-column text-left'>
-                            <p className='font-weight-bold mb-0'>560064 </p>
-                            <p className='mb-0'>560064, BANGALORE, Karnataka </p>
-                          </div>
-                    </div>
-                    
-                  </div>
                   </>
           }
+          
           {
             showLocateLocationOnMap &&
-            <div className="col-12 mt-4">
+            <>
+             <div className="dropdown-divider"></div>
+            <div className="col-12 mt-2">
+                         
             <GoogleMap
                   mapContainerStyle={mapContainerStyle}
                   center={currentLocation}
@@ -327,8 +309,8 @@ const MapComponent = (props: any) => {
                   {selectedAddress && (
                     <InfoWindow position={markerLocation}>
                       <div>
-                        <h3>Selected Location</h3>
-                        <p>{selectedAddress}</p>
+                        <h6>Selected Location</h6>
+                        <p>{selectedAddress[0].formatted_address}</p>
                       </div>
                     </InfoWindow>
                   )}
@@ -338,18 +320,24 @@ const MapComponent = (props: any) => {
                   </div>
 
             </GoogleMap>
+            <div className="dropdown-divider"></div>
             {
               selectedAddress && 
               <div className="container mt-2">
-              <div className="row">
-                <div className="col-12">
-                  <button className='btn btn-success' onClick={confirmSelectedLocation}>Confirm selected location</button>
+              <div className="row mt-2">
+                <div className="col-7 text-left">
+                  <h6>Selected location:</h6>
+                  <p>{selectedAddress[0].formatted_address}</p>
+                </div>
+                <div className="col-5">
+                  <button className='btn btn-success btn-sm' onClick={confirmSelectedLocation}>Confirm selected location</button>
                 </div>
               </div>
             </div>
             }
 
           </div>
+          </>
           }
 
 

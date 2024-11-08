@@ -2271,6 +2271,11 @@ border-bottom: 1px solid #ddd;
   text-decoration: underline;
 }
 
+.selected-location-text{
+  width:180px;
+  font-size: 0.8rem;
+}
+
 
 
 
