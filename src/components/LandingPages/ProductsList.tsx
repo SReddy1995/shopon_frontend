@@ -387,10 +387,10 @@ const ProductsList = () => {
             let payload = {
                 message_id: messageIDForPayload,
                 criteria: {
-                    category_id: selectedCategory? selectedCategory.ondc_categories_code : '',
+                    
                     search_string: searchString
                 },
-                categories: [selectedCategory?.category_id]
+                domain: [selectedCategory?.category_id]
             }
             initiateSearch(payload)
             .then((data: any) => {
@@ -406,6 +406,7 @@ const ProductsList = () => {
                 setLoading(false);
                 showWarningMessage("error initiating")
                 setSearchResultsLoading(false)
+                setOnSearchStatus('finished')
             });
         }
 
@@ -450,12 +451,22 @@ const ProductsList = () => {
                   }
             }
             else{
+                if (intervalIdRef.current !== null) {
+                    console.log("here")
+                    clearInterval(intervalIdRef.current); // Clear the interval when stopping
+                    intervalIdRef.current = null;  
+                }
                 setHasMore(false)
                 setLoading(false);
             }
             setOnSearchStatus('finished')
         })
         .catch(err => {
+            if (intervalIdRef.current !== null) {
+                console.log("here")
+                clearInterval(intervalIdRef.current); // Clear the interval when stopping
+                intervalIdRef.current = null;  
+            }
             console.log(err)
             setLoading(false);
             setOnSearchStatus('finished')

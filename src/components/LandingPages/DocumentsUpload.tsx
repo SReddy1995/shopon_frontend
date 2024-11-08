@@ -89,10 +89,11 @@ const DocumentsUpload = (props: any) => {
         setLoading(true);
         getLegalEntityDetails()
         .then((data: any) => {
-            if(data){
-                setData(data[0]);
-                fetchDocumentsDetails();
+            if(Array.isArray(data) && data.length>0){
+                setData(data[0]);  
             }
+            console.log("calling fetxh documents")
+            fetchDocumentsDetails();
         })
         .catch(err => {
             setLoading(false);
