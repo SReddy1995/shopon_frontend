@@ -1685,7 +1685,7 @@ font-size: 12px !important;
   display: flex;
   flex-direction: row;
   align-items: center;
-
+  position: relative;
 
 }
 
@@ -1728,25 +1728,33 @@ font-size: 12px !important;
   flex-direction: row;
   justify-content: space-between;
   border-bottom: 1px solid #d4d4d4;
+  width:100%;
 }
 
 .filters-container{
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
+  width:80%;
 }
 
 .products-vendor-filter-container{
   position: relative;
+  width:auto;
+  max-width: 50%;
 }
 
 .vendor-selection-container{
 
  border-radius: 1.5rem;
   padding: 10px; /* Padding inside the container */
-  width: 250px;
+  width: auto;
+  min-width: 180px;
   border: 1px solid #dddd;
   text-align: left;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
 .vendor-selection-dropdown{
@@ -1761,21 +1769,35 @@ font-size: 12px !important;
   text-align: left;
 }
 
+.seller-text{
+  white-space: nowrap; /* Prevent line breaks */
+  overflow: hidden;    /* Hide overflow */
+  text-overflow: ellipsis; /* Optional: add ellipsis for overflow */
+  width: auto;
+  max-width: 95%;
+}
+
 .clear-text{
   color: blue;
 }
 
 .products-speciality-filter-container{
   position: relative;
+  width:auto;
+  max-width: 50%;
 }
 
 .speciality-selection-container{
 
   border-radius: 1.5rem;
   padding: 10px; /* Padding inside the container */
-  width: 250px;
+  width: auto;
+  min-width: 180px;
   border: 1px solid #dddd;
   text-align: left;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
 .speciality-selection-dropdown{
@@ -1788,6 +1810,14 @@ font-size: 12px !important;
   z-index: 2;
   border-radius: 8px;
   text-align: left;
+}
+
+.speciality-text{
+  white-space: nowrap; /* Prevent line breaks */
+  overflow: hidden;    /* Hide overflow */
+  text-overflow: ellipsis; /* Optional: add ellipsis for overflow */
+  width: auto;
+  max-width: 95%;
 }
 
 .column-visibility-sortby-container{
@@ -1973,6 +2003,7 @@ border-bottom: 1px solid #ddd;
   white-space: nowrap; /* Prevent line breaks */
   overflow: hidden;    /* Hide overflow */
   text-overflow: ellipsis; /* Optional: add ellipsis for overflow */
+  max-width: 250px;
 }
 
 .back-button-container{
@@ -2224,6 +2255,17 @@ border-bottom: 1px solid #ddd;
   width: 90%;
 }
 
+.category-selection-dropdown{
+  display: block;
+  position: absolute;
+  background-color: white;
+  min-width: 250px;
+  max-width: 250px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 2;
+  border-radius: 8px;
+  text-align: left;
+}
 
 
 

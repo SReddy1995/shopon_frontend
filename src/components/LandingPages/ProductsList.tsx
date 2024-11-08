@@ -198,6 +198,7 @@ const ProductsList = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [isVendorDropdownOpen, setIsVendorDropdownOpen] = useState(false);
     const [selectedVendors, setSelectedVendors] = useState([])
+    const [selectedCategories, setSelectedCategories] = useState([])
     const [isSpecialityDropdownOpen, setIsSpecialityDropdownOpen] = useState(false);
     const [selectedSpecialities, setSelectedSpecialities] = useState([])
     const [isSortByOpen, setSortByOpen] = useState(false);
@@ -225,6 +226,8 @@ const ProductsList = () => {
 
 
     const [messageID, setMessageID] = useState<any>(null);
+    const [sellerFiltersForProducts, setSellerFiltersForProducts] = useState<any>([])
+    const [specialityFiltersForProducts, setSpecialityFiltersForProducts] = useState<any>([])
 
     const sourcePage = useSelector((store: any) => store.products.sourcePage);
     const selectedCategoryToLoad = useSelector((store: any) => store.products.selectedCategoryForProductList);
@@ -239,8 +242,10 @@ const ProductsList = () => {
         }
       };
 
+      const [filteredProducts, setFilteredProducts] = useState<any>(null)
+
     const setFiltersObject = (filters: any)=>{
-        setSelectedCategory(filters.category)
+        setSelectedCategories(filters.category)
         setSelectedLocation(filters.location)
         setSearchString(filters.searchString)
         // setMessageID(filters.messageID)   
@@ -320,23 +325,20 @@ const ProductsList = () => {
 
     const setCategiesData = (values: any) => {
         if(values.categoryCityMappings.length> 0){
-            const result = values.categoryCityMappings.reduce((acc: any, item: any) => {
-                // Check if the category_id already exists in the accumulator
-                const existingCategory = acc.find((c: any) => c.category_id === item.category_id);
-                
-                if (!existingCategory) {
-                    // Add the category with additional fields
-                    acc.push({
-                        category_id: item.category_id,
-                        ondc_categories_code: item.category.ondc_categories_code,
-                        description: item.category.description
-                    });
+            const uniqueCategories = values.categoryCityMappings.reduce((acc: any, item: any) => {
+                // Check if the category_id is already in the accumulator
+                if (!acc.some((cat: any) => cat.value === item.category_id)) {
+                  acc.push({
+                    value: item.category_id,
+                    label: item.category.description
+                  });
                 }
-                
                 return acc;
-            }, []);
+              }, []);
+
+              console.log(uniqueCategories)
             
-            setCategories(result)
+            setCategories(uniqueCategories)
             
         }
 
@@ -367,17 +369,22 @@ const ProductsList = () => {
 
       const resetData =() =>{
         setTimeout(()=>{
+            setIsOpen(false);
+            setSelectedVendors([])
+            setSelectedSpecialities([])
+            applySellersAndSpecialityFilters();
             setProductList([]);
             setSelectedProducts([])
         },0)
       }
 
     const initiateSearchForProducts = () => {
-        resetData();
-        if(selectedCategory === null){
+
+        if(selectedCategories.length === 0){
             showWarningMessage("No Category selected")
         }
         else{
+            resetData();
             let messageIDForPayload: any;
             messageIDForPayload = getNewMessageId();
             setSearchResultsLoading(true)
@@ -390,7 +397,7 @@ const ProductsList = () => {
                     
                     search_string: searchString
                 },
-                domain: [selectedCategory?.category_id]
+                domain: getSelectedCategories()
             }
             initiateSearch(payload)
             .then((data: any) => {
@@ -412,6 +419,10 @@ const ProductsList = () => {
 
       }
 
+      const getSelectedCategories = () => {
+        return selectedCategories.map((item: any) => item.value);
+      }
+
     const fetchSearchResults = (msgId: any) => {
         setLoading(true)
         let payload : any = {
@@ -426,8 +437,6 @@ const ProductsList = () => {
         .then((response: any) => {
            if (Array.isArray(response) && response.length> 0){
                 let res = response[0];
-                // showSuccessMessage("fetched search results")
-                setLastId(res.lastId)
                 if (intervalIdRef.current !== null) {
                     console.log("here")
                     clearInterval(intervalIdRef.current); // Clear the interval when stopping
@@ -435,6 +444,7 @@ const ProductsList = () => {
                 }
 
                   if(res.searched_products && res.searched_products.length>0 && res.searched_products.filter((x: any)=>x.data.prodSearchResponse).length>0){
+                    setLastId(res.lastId)
                     let results = formatSearchResults(res.searched_products.filter((x: any)=>x.data.prodSearchResponse))
                     setTimeout(()=>{
                           setProductList((prevData: any) => [...prevData, ...results]);
@@ -483,26 +493,28 @@ const ProductsList = () => {
                 element.data.prodSearchResponse.message.catalog['bpp/descriptor'])
                 {
                     let catelog = element.data.prodSearchResponse.message.catalog;
-                    arr.push(...formatEachBppProviderResult(catelog['bpp/providers'], catelog['bpp/descriptor']))
+                    arr.push(...formatEachBppProviderResult(catelog['bpp/providers'], catelog['bpp/descriptor'],element.id))
                 }
         })
         return arr
         
       }
 
-      const formatEachBppProviderResult = (bppproviders: any, bppdescriptors: any) => {
+      const formatEachBppProviderResult = (bppproviders: any, bppdescriptors: any, stream_id: any) => {
         let arr : any[] = []
         bppproviders.forEach((element: any, index: any)=>{
-            arr.push(...formatEachItem(element, bppdescriptors))
+            arr.push(...formatEachItem(element, bppdescriptors,stream_id))
         })
         return arr
       }
 
-      const formatEachItem = (provider: any, bppdescriptors: any) => {
+      const formatEachItem = (provider: any, bppdescriptors: any, stream_id: any) => {
         let arr: any[] = []
             provider.items.forEach((item: any, index: any)=>{
                 arr.push({
+                    stream_id: stream_id,
                     product_id: item.id,
+                    bpp_provider_id: provider.id,
                     thumbnail: item.descriptor.images && item.descriptor.images.length>0? item.descriptor.images[0] : '',
                     product: item.descriptor.name? item.descriptor.name: '',
                     source: bppdescriptors.name? bppdescriptors.name : '',
@@ -693,6 +705,16 @@ const ProductsList = () => {
         return result;
     }
 
+    useEffect(()=>{
+        setSellerFiltersForProducts(selectedVendors.map((item: any)=> item.label))
+    },[selectedVendors])
+
+    useEffect(()=>{
+        if(sellerFiltersForProducts.length==0){
+            applySellersAndSpecialityFilters();
+        }
+    },[sellerFiltersForProducts])
+
     const clearVendorList = () => {
         setSelectedVendors([])
         setIsVendorDropdownOpen(false)
@@ -708,6 +730,22 @@ const ProductsList = () => {
 
     const applyFilterOfVendorList  = () => {
         console.log("applied filter for = ", selectedVendors)
+        applySellersAndSpecialityFilters();
+        setIsVendorDropdownOpen(false)
+    }
+
+    // category selection
+
+    const updateSelectedCategoriesList = (list: any) => {
+        setSelectedCategories(list)
+    }
+
+    const clearSelectedCategoriesList = () => {
+        setSelectedCategories([])
+    }
+
+    const applyFilterOfCategoriesList  = () => {
+        
     }
 
     // speciality selection
@@ -759,9 +797,23 @@ const ProductsList = () => {
 
         return result;
     }
+
+    useEffect(()=>{
+        setSpecialityFiltersForProducts(selectedSpecialities.map((item: any)=> item.label))
+    },[selectedSpecialities])
+
+    useEffect(()=>{
+        if(specialityFiltersForProducts.length==0){
+            applySellersAndSpecialityFilters();
+        }
+    },[specialityFiltersForProducts])
+
     const updateSelectedSpecialityList = (list: any) => {
         setSelectedSpecialities(list)
+        setSpecialityFiltersForProducts(list.map((item: any)=> item.label))
     }
+
+
 
     const clearSpecialityList = () => {
         setSelectedSpecialities([])
@@ -773,7 +825,23 @@ const ProductsList = () => {
     }
 
     const applyFilterOfSpecialityList = () => {
-       
+        applySellersAndSpecialityFilters();
+        setIsSpecialityDropdownOpen(false)
+    }
+
+    useEffect(()=>{
+        applySellersAndSpecialityFilters();
+    },[productsList])
+
+    const applySellersAndSpecialityFilters = () => {
+        console.log("before applying filter = ",productsList)
+        setFilteredProducts(productsList.filter(product => 
+            {
+            const categoryFilter = specialityFiltersForProducts.length > 0 ? specialityFiltersForProducts.includes(product.category) : true;
+            const sellerFilter = sellerFiltersForProducts.length > 0 ? sellerFiltersForProducts.includes(product.seller) : true;
+
+            return categoryFilter && sellerFilter;
+            }));
     }
 
     // sort by
@@ -839,7 +907,7 @@ const ProductsList = () => {
             dispatch(updateProductsColumnsList(columns));
             dispatch(updateProductsListFilters({
                 location: selectedLocation,
-                category: selectedCategory,
+                category: selectedCategories,
                 searchString: searchString,
                 seller: null,
                 speciality: null,
@@ -867,6 +935,10 @@ const ProductsList = () => {
         closeSelectLocationWindow();
 
     }
+
+    const handleCheckboxNoAction = () => {
+
+    }
     
 
     return (
@@ -891,7 +963,7 @@ const ProductsList = () => {
 
                 <div className="row mt-2">
                     <div className="col-6 text-left">
-                        <h3>Products</h3>
+                        <h3>Products - {messageID}</h3>
                     </div>
                     {
                         selectedProducts.length>0 && (
@@ -920,38 +992,38 @@ const ProductsList = () => {
                                 <div className="col-9">
                                     <div className="category-search-container">
                                         <div className="category-dropdown-toggler w-auto cursor-pointer" onClick={toggleDropdown} >
-                                            <p className="category-text w-auto mb-0">
+                                            <p className="category-text w-auto mb-0 ellipsis">
                                             {
-                                             selectedCategory ?
-                                              selectedCategory.description
-                                              :
-                                              ('Select category')
-                                            } </p>
-                                            <i className="fa fa-caret-down " ></i>
+                                                    selectedCategories.length > 0 ?
+                                                        <>
+                                                            {
+    
+                                                                selectedCategories
+                                                                    .map((category: any, index: any) => {
+                                                                        return index > 0 ?
+                                                                            <span key={category.value}>,&nbsp;{category.label}
+                                                                            </span>
+                                                                            :
+                                                                            <span key={category.value}>&nbsp;{category.label}
+                                                                            </span>
+                                                                    })
+                                                            }
+                                                            {/* <span>&nbsp; <i className='fa fa-close pl-2 cursor-pointer' onClick={clearSelectedCategoriesList}></i> </span> */}
+    
+                                                        </>
+    
+                                                        :
+    
+                                                        <>Select Category</>
+                                                } </p>
+                                                {
+                                                    isOpen?
+                                                    <i className="fa fa-caret-up " ></i>
+                                                    :
+                                                    <i className="fa fa-caret-down " ></i>
+                                                }
                                         </div>
-                                        {isOpen && (
-                                            <div className="category-dropdown-menu w-100 p-0 pt-0 fs-6">
-                                                <div className="megamenu_search rounded-3 overflow-hidden p-0 ">
-                                                    <div className="row g-0 flex-row h-100">
-                                                        <div className="col-12 col-sm-12 d-flex flex-column flex-nowrap">
-                                                            <div className="megamenu_search-nav flex-fill overflow-auto px-3 pt-1 pb-3">
-                                                                <ul className="list-unstyled m-0">
-                                                                    <li><a className="dropdown-item small oneline_ellipsis pl-1 mt-2"
-                                                                            role="button" title="All">-- select a category -- </a></li>
-                                                                    {
-                                                                        categories
-                                                                        .map((cat: any,index:any)=>{
-                                                                            return  <li key={index}><a className="dropdown-item small fw-semibold ellipsis pl-1"
-                                                                            role="button" title="All" onClick={()=>setSelectedCategoryValue(cat)}>{cat.description} </a></li>
-                                                                        })
-                                                                    }
-                                                                </ul>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        )}
+
                                         <input className="search_input category-selector-search-input" type="text" name="" value={searchString} placeholder="search here" 
                                         onChange={handleSearchStringChange}/>
                                         <button id="searchQuerySubmit" type="submit" name="searchQuerySubmit" onClick={initiateSearchForProducts}>
@@ -962,6 +1034,20 @@ const ProductsList = () => {
                                         </button>
 
                                     </div>
+                                    {isOpen && (
+                                                <div className="vendor-selection-dropdown">
+                                                    
+                                                <SearchableMultiselectList
+                                                    list={categories}
+                                                    selectedItems={selectedCategories}
+                                                    selectedItemsChanged={updateSelectedCategoriesList}
+                                                    clearSelectedItemsList={clearSelectedCategoriesList}
+                                                    applySelectedList={applyFilterOfCategoriesList}
+                                                    showApply={false}>
+
+                                                </SearchableMultiselectList>
+                                                </div>
+                                        )}
                                 </div>
                             </div>
                         </div>
@@ -977,9 +1063,9 @@ const ProductsList = () => {
                                     <div className='filters-container'>
                                         <div className='products-vendor-filter-container'>
                                         <div className="vendor-selection-container mr-2 px-2" >
-                                            <p className='mb-0 pl-2 cursor-pointer' onClick={handleVendorSelectionClick}>Product vendor
+                                            <p className='mb-0 pl-2 cursor-pointer seller-text' onClick={handleVendorSelectionClick}>Product vendor
                                                 {
-                                                    selectedVendors.length > 0 ?
+                                                    selectedVendors.length > 0 &&
                                                         <>
                                                             <span>&nbsp; is </span>
                                                             {
@@ -994,20 +1080,19 @@ const ProductsList = () => {
                                                                             </span>
                                                                     })
                                                             }
-                                                            <span>&nbsp; <i className='fa fa-close pl-2 cursor-pointer' onClick={clearVendorList}></i> </span>
+                                                            
     
                                                         </>
-    
-                                                        :
-    
-                                                        !isVendorDropdownOpen && selectedVendors.length == 0 ?
-                                                            <span>&nbsp; <i className='fa fa-caret-down pr-2 cursor-pointer float-right' ></i> </span>
-    
-                                                            :
-    
-                                                            <></>
                                                 }
                                             </p>
+                                            {
+                                                    selectedVendors.length > 0 &&
+                                            <p className='mb-0'>&nbsp; <i className='fa fa-close cursor-pointer mb-0' onClick={clearVendorList}></i> </p>
+                                            }
+                                            {
+                                                !isVendorDropdownOpen && selectedVendors.length == 0 &&
+                                                    <p className='mb-0 d-flex'>&nbsp; <i className='fa fa-caret-down pr-2 cursor-pointer float-right align-self-center' ></i> </p>
+                                            }
     
                                         </div>
                                         {
@@ -1019,7 +1104,8 @@ const ProductsList = () => {
                                                             selectedItems={selectedVendors}
                                                             selectedItemsChanged={updateSelectedVendorList}
                                                             clearSelectedItemsList={clearSelectedVendorList}
-                                                            applySelectedList={applyFilterOfVendorList}>
+                                                            applySelectedList={applyFilterOfVendorList}
+                                                            showApply={true}>
     
                                                         </SearchableMultiselectList>
                                                     </div>
@@ -1029,9 +1115,9 @@ const ProductsList = () => {
     
                                         <div className='products-speciality-filter-container'>
                                         <div className='speciality-selection-container px-2'>
-                                            <p className='mb-0 pl-2 cursor-pointer' onClick={handleSpecialitySelectionClick}>Speciality
+                                            <p className='mb-0 pl-2 cursor-pointer speciality-text' onClick={handleSpecialitySelectionClick}>Speciality
                                                 {
-                                                    selectedSpecialities.length > 0 ?
+                                                    selectedSpecialities.length > 0 &&
                                                         <>
                                                             <span>&nbsp; is </span>
                                                             {
@@ -1046,20 +1132,18 @@ const ProductsList = () => {
                                                                             </span>
                                                                     })
                                                             }
-                                                            <span>&nbsp; <i className='fa fa-close pl-2 cursor-pointer' onClick={clearSpecialityList}></i> </span>
-    
                                                         </>
-    
-                                                        :
-    
-                                                        !isSpecialityDropdownOpen && selectedSpecialities.length == 0 ?
-                                                            <span>&nbsp; <i className='fa fa-caret-down pr-2 cursor-pointer float-right' onClick={handleSpecialitySelectionClick}></i> </span>
-    
-                                                            :
-    
-                                                            <></>
                                                 }
                                             </p>
+                                            {
+                                                selectedSpecialities.length > 0 &&
+                                                <p className='mb-0'>&nbsp; <i className='fa fa-close cursor-pointer' onClick={clearSpecialityList}></i> </p>
+                                            }
+                                            {
+                                                !isSpecialityDropdownOpen && selectedSpecialities.length == 0 &&
+                                                <p className='mb-0 d-flex'>&nbsp; <i className='fa fa-caret-down pr-2 cursor-pointer float-right align-self-center' onClick={handleSpecialitySelectionClick}></i> </p>
+                                                
+                                            }
                                             </div>
                                             {
                                                 isSpecialityDropdownOpen && (
@@ -1070,7 +1154,8 @@ const ProductsList = () => {
                                                             selectedItems={selectedSpecialities}
                                                             selectedItemsChanged={updateSelectedSpecialityList}
                                                             clearSelectedItemsList={clearSelectedSpecialityList}
-                                                            applySelectedList={applyFilterOfSpecialityList}>
+                                                            applySelectedList={applyFilterOfSpecialityList}
+                                                            showApply={true}>
     
                                                         </SearchableMultiselectList>
                                                     </div>
@@ -1098,10 +1183,10 @@ const ProductsList = () => {
                                                         {
                                                                 columns
                                                                     .map((col: any, index: any) => {
-                                                                        return <li key={index} className='d-flex flex-row px-2'>
+                                                                        return <li key={index} className='d-flex flex-row px-2' onClick={() => toggleColumnVisibility(col)}>
                                                                             <input type="checkbox"
                                                                                 checked={col.isVisible}
-                                                                                onChange={() => toggleColumnVisibility(col)}
+                                                                                onChange={handleCheckboxNoAction}
                                                                             />
                                                                             <a className="dropdown-item ml-0 pl-2 small fw-semibold oneline_ellipsis"
                                                                                 role="button" title="All">{col.visibilityDisplayName}</a></li>
@@ -1192,7 +1277,7 @@ const ProductsList = () => {
                                     </thead>
                                     <tbody>
                                         {
-                                            productsList
+                                            filteredProducts
                                                 .map((product: any, index: any) => {
                                                     return <tr key={index}>
                                                         <td className='products-list'><input type="checkbox" 

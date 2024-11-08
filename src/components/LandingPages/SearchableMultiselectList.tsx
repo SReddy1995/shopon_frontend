@@ -44,6 +44,10 @@ const SearchableMultiselectList = (props : any) => {
         props.applySelectedList();
     }
 
+    const handleCheckboxNoAction = () => {
+        
+    }
+
     return (
         <>
             <div className='mt-2'>
@@ -60,10 +64,10 @@ const SearchableMultiselectList = (props : any) => {
                 {
                     filteredItems
                         .map((item: any, index: any) => {
-                            return <li key={item.value+index} className='d-flex flex-row px-2'>
+                            return <li key={item.value} className='d-flex flex-row px-2' onClick={() => toggleSelectedOption(item)}>
                                 <input type="checkbox"
                                     checked={selectedList.some((obj: any) => obj.value === item.value)}
-                                    onChange={() => toggleSelectedOption(item)}
+                                    onChange={handleCheckboxNoAction}
                                 />
                                 <a className="dropdown-item ml-0 pl-2 small fw-semibold ellipsis"
                                     role="button" title="All">{item.label}</a></li>
@@ -77,9 +81,13 @@ const SearchableMultiselectList = (props : any) => {
                         Clear
                     </p>
 
-                    <p className='clear-text mb-0 cursor-pointer' onClick={applyFilterForList}>
+                    {
+                        props.showApply &&
+                        <p className='clear-text mb-0 cursor-pointer' onClick={applyFilterForList}>
                         Apply
                     </p>
+                    }
+                  
                 </li>
             </ul>
         </>
