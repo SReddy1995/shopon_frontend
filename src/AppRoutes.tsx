@@ -111,7 +111,9 @@ export const AppRoutes = () => {
         path: '*',
         element: <Navigate to="/home" replace />
     },
-  ]);
+  ],{
+    basename: "/client",
+  });
 
   return <RouterProvider router={router} />;
 };
