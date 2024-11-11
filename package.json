@@ -1,5 +1,6 @@
 {
   "name": "ondc-shop-on",
+  "homepage": "/client",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
