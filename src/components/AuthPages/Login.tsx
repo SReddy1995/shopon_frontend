@@ -8,6 +8,7 @@ import { requestOtpForLogin, verifyLoginOTP } from '../../services/AuthService';
 import { showSuccessMessage } from '../../shared/notificationProvider';
 import { useDispatch } from 'react-redux';
 import { updateSelectedStore, updateStoresList } from '../../utils/reduxStore/storesSlice';
+import { LOGIN_SUCCESSFULL, OTP_SENT } from '../../utils/constants/NotificationConstants';
 
 interface FormValues {
  email_address: string;
@@ -57,6 +58,7 @@ const Login = () => {
     }
     requestOtpForLogin(body)
       .then((data: any) => {
+        showSuccessMessage(OTP_SENT);
           setAllowEnterOtp(true);
       })
       .catch(err => {
@@ -84,12 +86,44 @@ const Login = () => {
      verifyLoginOTP(payload)
      .then((response: any) => {
       setSubmitting(false);
-      navigateToDashboard();
+      showSuccessMessage(LOGIN_SUCCESSFULL)
+      routeBasedOnRole();
+      
      })
      .catch(err => {
       setSubmitting(false);
      });
    }
+
+  const routeBasedOnRole = () => {
+   let userDetails =  localStorage.getItem('user_details') ? JSON.parse(localStorage.getItem('user_details') || '{}') : null
+   if(userDetails){
+    if(userDetails.roles.includes('Admin')){
+      navigateToAccount();
+    }
+    else if(userDetails.roles.includes('Operator')){
+      navigateToAccount();
+    }
+    else if(userDetails.roles.includes('Inventory')){
+      navigateToProducts();
+    }
+    else if(userDetails.roles.includes('Finance')){
+      navigateToFinance();
+    }
+   }
+  }
+
+  const navigateToAccount = () => {
+    navigate("/landing-page/account");
+  }
+
+  const navigateToProducts = () => {
+    navigate("/landing-page/products/products-list");
+  }
+
+  const navigateToFinance = () => {
+    navigate("/landing-page/finance");
+  }
 
   const handleChangeEvent = (event: any, index: any, setFieldValue: any) => {
     const { value } = event.target;

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import AddUserForm from './AddUserForm';
 import ModalWindow from './ModalWindow';
 import { getUsersList } from '../../services/UsersService';
+import { useLocation } from 'react-router-dom';
 
 const UserManagement = () => {
     const [open, setModalOpen] = useState(false);
@@ -10,21 +11,30 @@ const UserManagement = () => {
     const [users_list, setUsersList] = useState([]);
     const [selectedUser, setSelectedUser] = useState({user_id: null, firstname: null, lastname: null, email_address: null,
         contact_number: null, roles: null, enabled: null})
+        const location = useLocation();
+
+
+        useEffect(() => {
+            fetchData();
+          }, [location]); 
 
     useEffect(() => {
         fetchData();
       }, []);
 
     const fetchData = () => {
-        getUsersList()
+        setLoading(true);
+       getUsersList()
         .then((data: any) => {
             if(data){
                 setUsersList(data)
+                console.log(data)
+            setLoading(false);
+
             }
             else{
                 // let default initial values load
             }
-            setLoading(false);
         })
         .catch(err => {
             setLoading(false);
@@ -57,8 +67,8 @@ const UserManagement = () => {
 
       const openEditUser = (user: any) => {
         setMode('Edit')
-        setSelectedUser({user_id: user.user_id,firstname : user.firstname, lastname: user.lastname, email_address: user.email_address,
-            contact_number:user.contact_number, roles: user.roles.map((role: any)=> {return {id: role, name: role}}), enabled: user.isActive})
+        setSelectedUser({user_id: user.users.user_id,firstname : user.users.firstname, lastname: user.users.lastname, email_address: user.users.email_address,
+            contact_number:user.users.contact_number, roles: user.roles.map((role: any)=> {return {id: role, name: role}}), enabled: user.status})
         openModal();
       }
 
@@ -101,11 +111,12 @@ const UserManagement = () => {
                                                     users_list
                                                         .map((user: any, index: any) => {
                                                             return  <tr key={index}>
-                                                                        <td><a data-bs-toggle="modal" data-bs-target="#myModal">{user.firstname + user.lastname}</a></td>
-                                                                        <td>{user.email_address}</td>
-                                                                        <td>{user.contact_number}</td>
+                                                                        <td><a data-bs-toggle="modal" data-bs-target="#myModal">{user.users.firstname} &nbsp;{user.users.lastname}</a></td>
+                                                                        <td>{user.users.email_address}</td>
+                                                                        <td>{user.users.contact_number}</td>
                                                                         <td>
                                                                         {
+                                                                            
                                                                             user.roles
                                                                             .map((role: any, index: any) => {
                                                                                 return index>0 ? ', '+(role) : (role)
@@ -113,7 +124,7 @@ const UserManagement = () => {
                                                                         }
                                                                         </td>
                                                                         {
-                                                                            user.isActive === 'Y'
+                                                                            user.status === 'Y'
                                                                             ?
                                                                             <td className='text-success'> Enabled</td>
 

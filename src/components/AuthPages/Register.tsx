@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import { Formik, Field, ErrorMessage, FormikValues, FormikHelpers } from 'formik';
 import { registerBuyer } from '../../services/AuthService';
+import { showSuccessMessage } from '../../shared/notificationProvider';
+import { REGISTRATION_SUCCESSFULL } from '../../utils/constants/NotificationConstants';
 
 interface FormValues {
   firstname: string;
@@ -46,6 +48,7 @@ const Register = () => {
   const registerUser = (values: FormikValues) => {
     registerBuyer(values)
      .then(response => {
+      showSuccessMessage(REGISTRATION_SUCCESSFULL)
       navigateToThankYouPage();
      })
      .catch(error => {

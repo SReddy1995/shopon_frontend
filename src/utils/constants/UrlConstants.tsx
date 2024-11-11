@@ -17,11 +17,20 @@ export const AccountUrls = {
     getDocumentsDetailsList: '/documents',
     uploadDocument: '/document',
     deleteDocument: '/document',
-    downloadDocumentsZip: 'documents/download'
+    downloadDocumentsZip: 'documents/download',
+    storeStatusDetails: '/buyer/status'
 }
 
 export const UserUrls = {
     getUsersList: '/get_users',
     updateUser: '/update_user',
     createUser: '/save_user',
+}
+
+export const ProductSearchUrls = {
+    initiateSearch: '/search',
+    getSearchResults: '/get_search_results',
+    getSellersList: '/get_seller_data',
+    getSpecialityList: '/get_speciality_data',
+    syncWithShopify: '/add_products_from_stream'
 }

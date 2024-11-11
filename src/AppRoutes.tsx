@@ -16,44 +16,62 @@ import AuthGuardRoutes from "./utils/route-guards/AuthGuardRoutes";
 import StoreActivationGuard from "./utils/route-guards/StoreActivationGuard";
 import Logout from "./components/LandingPages/Logout";
 import ProductsList from "./components/LandingPages/ProductsList";
+import MapComponent from "./components/LandingPages/MapComponent";
+import PreviewProducts from "./components/LandingPages/PreviewProducts";
+import RoleGuard from "./utils/route-guards/RoleGuard";
+import Finance from "./components/LandingPages/Finance";
+import StoreSwitchRouteGuard from "./utils/route-guards/StoreSwitchRouteGuard";
+import RouteSwitch from "./components/LandingPages/RouteSwitch";
 
 export const AppRoutes = () => {
   const childRoutes = [
     {
       path: "/landing-page/dashboard",
-      element: <StoreActivationGuard>
-                  <Dashboard />,
-              </StoreActivationGuard>
+      element:<RoleGuard requiredRole={['Admin']}>
+                  <Dashboard />
+                </RoleGuard>
+    },
+    {
+      path: "/landing-page/switch-store",
+      element:<StoreSwitchRouteGuard>
+                  <RouteSwitch />
+                  </StoreSwitchRouteGuard>
     },
     {
       path: "/landing-page/account",
-      element: <Account />,
-    },
-    {
-      path: "/landing-page/profile",
-      element: <StoreActivationGuard>
-                  <Profile />,
-               </StoreActivationGuard>
+      element: <RoleGuard requiredRole={['Admin','Operator']}>
+                  <Account />
+                </RoleGuard>,
     },
     {
       path: "/landing-page/products/collections",
-      element: <StoreActivationGuard>
-                  <Collections />,
-               </StoreActivationGuard>
+      element: <RoleGuard requiredRole={['Admin','Inventory']}>
+                  <Collections />
+                </RoleGuard>
     },
     {
       path: "/landing-page/products/products-list",
-      element: <ProductsList />,
+      element: <RoleGuard requiredRole={['Admin','Inventory']}>
+                  <ProductsList />
+                  </RoleGuard>
     },
     {
-      path: "/landing-page/products/inventory",
-      element: <StoreActivationGuard>
-                <Inventory />
-               </StoreActivationGuard>,
+      path: "/landing-page/products/products-preview",
+      element: <RoleGuard requiredRole={['Admin','Inventory']}>
+                  <PreviewProducts />
+                  </RoleGuard>
     },
     {
       path: "/landing-page/manage-users",
-      element: <UserManagement />,
+      element: <RoleGuard requiredRole={['Admin']}>
+                  <UserManagement />
+                  </RoleGuard>
+    },
+    {
+      path: "/landing-page/finance",
+      element: <RoleGuard requiredRole={['Admin','Finance']}>
+                  <Finance />
+                  </RoleGuard>
     },
   ];
 
@@ -93,7 +111,9 @@ export const AppRoutes = () => {
         path: '*',
         element: <Navigate to="/home" replace />
     },
-  ]);
+  ],{
+    basename: "/client",
+  });
 
   return <RouterProvider router={router} />;
 };

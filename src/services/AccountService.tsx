@@ -171,12 +171,25 @@ export const getLegalEntityDetails = async () => {
       }
   }
 
-  export const downloadDocuments = async () => {
+  export const downloadDocuments = async (buyer_id : string) => {
     try{
   
-        const response = await axiosInstance.get(AccountUrls.downloadDocumentsZip,{
+        const response = await axiosInstance.get(AccountUrls.downloadDocumentsZip+"/"+buyer_id,{
             responseType: 'blob', // Important: Set response type to 'blob'
           })
+        return response;
+  
+    } catch (error) {
+        console.error('Error fetching data: ', error);
+        // Handle errors here or throw them to be handled where the function is called
+        throw error;
+      }
+  }
+
+  export const getStoreStatusDetails = async () => {
+    try{
+  
+        const response = await axiosInstance.get(AccountUrls.storeStatusDetails)
         return response;
   
     } catch (error) {

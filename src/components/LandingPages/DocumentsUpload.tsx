@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import * as Yup from 'yup';
 import { Formik, Field, ErrorMessage, FormikValues, FormikHelpers, FieldArray } from 'formik';
-import { showSuccessMessage } from '../../shared/notificationProvider';
+import { showSuccessMessage, showWarningMessage } from '../../shared/notificationProvider';
 import Multiselect from 'multiselect-react-dropdown';
 import { useSelector } from 'react-redux';
 import { deleteDocument, downloadDocuments, getDocumentDetailsList, getLegalEntityDetails, getOnlineStore, saveOnlineStore } from '../../services/AccountService';
 import ModalWindow from './ModalWindow';
 import UploadFileForm from './UploadFileForm';
 import ConfirmDelete from './ConfirmDelete';
+import { DOC_DELETE_SUCCESS, DOCUMENTS_DOWNLOADED, NO_DOCS_UPLOADED } from '../../utils/constants/NotificationConstants';
 
 
-const DocumentsUpload = ({ onUpdate }: any) => {
+const DocumentsUpload = (props: any) => {
     const refValues = useSelector((store: any) => store.refValues.referenceList);
     const [loading, setLoading] = useState(true)
     const user_details = localStorage.getItem('user_details') ? JSON.parse(localStorage.getItem('user_details') || '{}') : null;
@@ -88,10 +89,11 @@ const DocumentsUpload = ({ onUpdate }: any) => {
         setLoading(true);
         getLegalEntityDetails()
         .then((data: any) => {
-            if(data){
-                setData(data[0]);
-                fetchDocumentsDetails();
+            if(Array.isArray(data) && data.length>0){
+                setData(data[0]);  
             }
+            console.log("calling fetxh documents")
+            fetchDocumentsDetails();
         })
         .catch(err => {
             setLoading(false);
@@ -115,7 +117,7 @@ const DocumentsUpload = ({ onUpdate }: any) => {
         console.log(values)
         let docs = documentsList;
         let org_type = values.nature_of_organization_type;
-        if(org_type === "SOLE_PROP" || org_type === "COMP" || org_type === "AOP" || org_type === "PART_FIRM" || org_type === "LLP"){
+        if(org_type === "TRUST" || org_type === "COMP" || org_type === "AOP" || org_type === "PART_FIRM" || org_type === "LLP"){
             docs.filter((x: any) => x.document_type === "CPAN")[0].applicable = true
             docs.filter((x: any) => x.document_type === "COI")[0].applicable = true
         }
@@ -164,29 +166,42 @@ const DocumentsUpload = ({ onUpdate }: any) => {
         deleteDocument(uploadFileDetails.uploadedFile.doc_reference_id)
         .then((data: any) => {
                 setUploadFileDetails(null)
+                showSuccessMessage(DOC_DELETE_SUCCESS)
                 closeConfirmDeleteModal();
-                fetchOrgTypeData();
+                refreshData();
         })
         .catch(err => {
             
         });
     }
 
+    const refreshData = () => {
+        fetchOrgTypeData();
+        props.reloadStatus();
+    }
+
     const downloadFiles = () => {
-        downloadDocuments()
-        .then((res: any) => {
-            
-                const url = window.URL.createObjectURL(res); // Create a URL for the Blob
-                const a = document.createElement('a'); // Create an anchor element
-                a.href = url;
-                a.download = 'documents.zip'; // Set the file name for download
-                document.body.appendChild(a);
-                a.click(); // Programmatically click the anchor to trigger the download
-                a.remove(); // Clean up
-        })
-        .catch(err => {
-            
-        });
+        if(documentsList.filter((x: any)=> x.uploadedFile !== '' && x.uploadedFile !== null).length>0){
+            downloadDocuments(user_details.buyer_id)
+            .then((res: any) => {
+                
+                    const url = window.URL.createObjectURL(res); // Create a URL for the Blob
+                    const a = document.createElement('a'); // Create an anchor element
+                    a.href = url;
+                    a.download = 'documents.zip'; // Set the file name for download
+                    document.body.appendChild(a);
+                    a.click(); // Programmatically click the anchor to trigger the download
+                    a.remove(); // Clean up
+                    showSuccessMessage(DOCUMENTS_DOWNLOADED)
+            })
+            .catch(err => {
+                
+            });
+        }
+        else{
+            showWarningMessage(NO_DOCS_UPLOADED)
+        }
+
     }
     
 
@@ -278,7 +293,7 @@ const DocumentsUpload = ({ onUpdate }: any) => {
             <></>
         }
             <ModalWindow show={open} modalClosed={closeModal}>
-                <UploadFileForm uploadFileDetails={uploadFileDetails} modalClosed={closeModal} refreshData={fetchOrgTypeData}/>
+                <UploadFileForm uploadFileDetails={uploadFileDetails} modalClosed={closeModal} refreshData={refreshData}/>
             </ModalWindow>
 
             <ModalWindow show={openDeleteConfirm} modalClosed={closeConfirmDeleteModal}>

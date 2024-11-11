@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import styled from 'styled-components';
 import TopBar from '../Layout/TopBar';
@@ -53,14 +53,20 @@ const LandingPage = () => {
         console.log("inside landing page")
     });
 
+    const [roles, setUserRoles] = useState(localStorage.getItem('user_details') ? (JSON.parse(localStorage.getItem('user_details') || '{}').roles) : null)
     const sidebarState = useSelector((store: any) => store.sidebar.show);
+    const handleStoreSwitched = () => {
+        setUserRoles(localStorage.getItem('user_details') ? (JSON.parse(localStorage.getItem('user_details') || '{}').roles) : null)
+    }
+    
+    
     return (
         <>
         <LayoutContainer>
-            <TopBar></TopBar>
+            <TopBar handleStoreSwitched={handleStoreSwitched}></TopBar>
             <MainContentContainer>
                 <SidebarContainer sidebar={sidebarState ? 1 : undefined}>
-                    <SideBar></SideBar>
+                    <SideBar roles={roles}></SideBar>
                 </SidebarContainer>
                 <OutletContainer>
                     <Outlet/>

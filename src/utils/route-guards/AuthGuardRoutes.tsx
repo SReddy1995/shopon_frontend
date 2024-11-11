@@ -36,6 +36,9 @@ const AuthGuardRoutes = ({ children }: any) => {
         fetchRef().then((data: any)=>{
           addReferencesToStore(data[0])
         })
+        .catch((err: any) => {
+          console.log(err)
+        });
     }
 	return localStorageToken ? children : <Navigate to="/login"  replace/>;
 };

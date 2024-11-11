@@ -1,219 +1,1436 @@
-import React, { useEffect } from 'react';
+import Multiselect from 'multiselect-react-dropdown';
+import React, { useEffect, useRef, useState } from 'react';
+import '@splidejs/splide/dist/css/splide.min.css';
+import { v4 as uuidv4 } from 'uuid';
+
+import { Options, Splide, SplideSlide, SplideTrack } from '@splidejs/react-splide';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateProductsColumnsList, updateProductsListFilters, updateSelectedCategoryForProductsList, updateSelectedProductsList, updateSourcePage } from '../../utils/reduxStore/productsSlice';
+import { showSuccessMessage, showWarningMessage } from '../../shared/notificationProvider';
+import { NO_PRODUCTS_SELECTED } from '../../utils/constants/NotificationConstants';
+import { useNavigate } from 'react-router-dom';
+import SearchableMultiselectList from './SearchableMultiselectList';
+import ModalWindow from './ModalWindow';
+import MapComponent from './MapComponent';
+import { getSearchResults, getSellersList, getSpecialityList, initiateSearch } from '../../services/ProductsService';
+import { getOnlineStore } from '../../services/AccountService';
+import ProductDetails from './ProductDetails';
+import moment from 'moment';
 
 const ProductsList = () => {
 
+
+    const [columns_from_api, setColumnsFromApi] = useState<any[]>([
+        {
+            coltitle: "",
+            column: "thumbnail",
+            visibilityDisplayName: "Image",
+            type: "image",
+            serialNo: 1,
+            isVisible: true
+        },
+        {
+            coltitle: "Product",
+            visibilityDisplayName: "Product",
+            column: "product",
+            type: "text",
+            serialNo: 2,
+            isVisible: true,
+            minWidth:'100px'
+        },
+        {
+            coltitle: "Seller",
+            visibilityDisplayName: "Seller",
+            column: "seller",
+            type: "text",
+            serialNo: 2,
+            isVisible: true
+        },
+        {
+            coltitle: "Source",
+            visibilityDisplayName: "Source",
+            column: "source",
+            type: "text",
+            serialNo: 2,
+            isVisible: true
+        },
+        {
+            coltitle: "Measure",
+            visibilityDisplayName: "Measure",
+            column: "measure",
+            type: "text",
+            serialNo: 2,
+            isVisible: true
+        },
+        {
+            coltitle: "Availability",
+            visibilityDisplayName: "Availability",
+            column: "availability",
+            type: "text",
+            serialNo: 2,
+            isVisible: true
+        },
+        {
+            coltitle: "Max Quantity",
+            visibilityDisplayName: "Max Quantity",
+            column: "maximumQuantity",
+            type: "text",
+            serialNo: 2,
+            isVisible: true
+        },
+        {
+            coltitle: "Price",
+            visibilityDisplayName: "Price",
+            column: "price",
+            type: "text",
+            serialNo: 2,
+            isVisible: true
+        },
+        {
+            coltitle: "Category",
+            visibilityDisplayName: "Category",
+            column: "category",
+            type: "text",
+            serialNo: 2,
+            isVisible: true
+        },
+        {
+            coltitle: "Seller Location",
+            visibilityDisplayName: "Seller Location",
+            column: "sellerLocation",
+            type: "text",
+            serialNo: 2,
+            isVisible: true
+        },
+        {
+            coltitle: "Returnable",
+            visibilityDisplayName: "Returnable",
+            column: "returnable",
+            type: "text",
+            serialNo: 2,
+            isVisible: true
+        },
+        {
+            coltitle: "Cancellable",
+            visibilityDisplayName: "Cancellable",
+            column: "cancellable",
+            type: "text",
+            serialNo: 2,
+            isVisible: true
+        },
+        {
+            coltitle: "COD",
+            visibilityDisplayName: "COD",
+            column: "cod",
+            type: "text",
+            serialNo: 2,
+            isVisible: true
+        },
+        {
+            coltitle: "Shipping time",
+            visibilityDisplayName: "Shipping time",
+            column: "shippingTime",
+            type: "text",
+            serialNo: 2,
+            isVisible: true
+        },
+        {
+            coltitle: "Seller return",
+            visibilityDisplayName: "Seller return",
+            column: "sellerPickupReturn",
+            type: "text",
+            serialNo: 2,
+            isVisible: true
+        },
+        {
+            coltitle: "Return Window",
+            visibilityDisplayName: "Return window",
+            column: "returnWindow",
+            type: "text",
+            serialNo: 2,
+            isVisible: true
+        },
+        {
+            coltitle: "Manufacturer",
+            visibilityDisplayName: "Manufacturer",
+            column: "manufacturer",
+            type: "text",
+            serialNo: 2,
+            isVisible: true
+        },
+        {
+            coltitle: "Fulfillment",
+            visibilityDisplayName: "Fulfillment",
+            column: "fulfillment",
+            type: "text",
+            serialNo: 2,
+            isVisible: true
+        },
+        {
+            coltitle: "Deliverable At",
+            visibilityDisplayName: "Deliverable At",
+            column: "deliverableAt",
+            type: "text",
+            serialNo: 2,
+            isVisible: true
+        },
+        
+    ])
+
+    
+
+    const [vendors_list,setVendorsList] = useState<any>([]);
+      
+      const sort_list = [
+        { value: 'product_ame', label: 'Product Name'},
+        { value: 'seller', label: 'Seller'},
+        { value: 'category', label: 'Category'},
+      ]
+
+      const [speciality_list, setSpecialityList] = useState<any>([]);
+
+    const [productsList, setProductList] = useState<any[]>([])
+    const [showBackButton,setShowBackButton] = useState('hide')
+    const [selectedProducts, setSelectedProducts] = useState([])
+    const [columns, setColumns] = useState<any[]>([])
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const [isOpen, setIsOpen] = useState(false);
+    const [isVendorDropdownOpen, setIsVendorDropdownOpen] = useState(false);
+    const [selectedVendors, setSelectedVendors] = useState([])
+    const [selectedCategories, setSelectedCategories] = useState([])
+    const [isSpecialityDropdownOpen, setIsSpecialityDropdownOpen] = useState(false);
+    const [selectedSpecialities, setSelectedSpecialities] = useState([])
+    const [isSortByOpen, setSortByOpen] = useState(false);
+    const [selectedSortBy, setSelectedSortBy] = useState('')
+    const [isColumnVisibilityOpen, setIsColumnVisibilityOpen] = useState(false);
+    const [isProductDetailsOpen, setIsProductDetailsOpen] = useState(false);
+    const [selectedCategory, setSelectedCategory] = useState<any>(null);
+    const [selectedLocation, setSelectedLocation] = useState<any>(null)
+    const [showTable, setShowTable] = useState(false)
+    const [searchString, setSearchString] = useState('')
+    const user_details = localStorage.getItem('user_details') ? JSON.parse(localStorage.getItem('user_details') || '{}') : null;
+    const intervalIdRef =  useRef<number |any>(null)
+    const [lastId, setLastId]= useState<any>(null)
+    const [page, setPage] = useState(1);
+    const [loading, setLoading] = useState(true);
+    const [hasMore, setHasMore] = useState(true);
+    const [open, setModalOpen] = useState(false);
+    const [fullPageLoading, setFullPageLoading] = useState(true)
+    const [searchResultsLoading, setSearchResultsLoading] = useState(true)
+    const [categories, setCategories] = useState([])
+    const [onSearchStatus, setOnSearchStatus] = useState('not-started')
+    const [selectedProductToViewDetails, setSelectedProductToViewDetails] = useState<any>(null)
+
+
+
+
+    const [messageID, setMessageID] = useState<any>(null);
+    const [sellerFiltersForProducts, setSellerFiltersForProducts] = useState<any>([])
+    const [specialityFiltersForProducts, setSpecialityFiltersForProducts] = useState<any>([])
+
+    const sourcePage = useSelector((store: any) => store.products.sourcePage);
+    const selectedCategoryToLoad = useSelector((store: any) => store.products.selectedCategoryForProductList);
+    const productsFromStore = useSelector((store: any) => store.products.selectedProductsList);
+    const filtersFromStore = useSelector((store: any) => store.products.productListFilters);
+    const msgIdFromStore = useSelector((store: any) => store.products.productListFilters).messageID
+    
+    const tablescrollstyles = {
+        loadonscroll:{
+          maxHeight: showBackButton ==='show' ? "300px" : "340px",
+          overflowY: 'scroll' as 'scroll',
+        }
+      };
+
+      const [filteredProducts, setFilteredProducts] = useState<any>(null)
+
+    const setFiltersObject = (filters: any)=>{
+        setSelectedCategories(filters.category)
+        setSelectedLocation(filters.location)
+        setSearchString(filters.searchString)
+        // setMessageID(filters.messageID)   
+    }
+
     useEffect(() => {
-      },[]);
+        // setSelectedCategory(categories.filter((x:any)=> x.id === "Food and beverages")[0])
+        fetchCategoriesFromOnlineStore();
+
+        return () => {
+            dispatch(updateSourcePage(''));
+        }
+
+    },[]);
+
+    const setData = (data: any) => {
+        setColumns(data);
+      }
+
+      const clearLocation = (event: any) => {
+        setSelectedLocation('')
+      }
+
+      const openSelectLocationWindow = () => {
+        setModalOpen(true);
+      }
+
+      const closeSelectLocationWindow = () => {
+        setModalOpen(false);
+      };
+
+    const setSelectedCategoryValue = (cat : any) => {
+        setSelectedCategory(cat)
+        setIsOpen(false)
+      }
+
+    const handleSearchStringChange = (event: any) => {
+        setSearchString(event.target.value);
+      };
+
+    const fetchCategoriesFromOnlineStore = () => {
+        setFullPageLoading(true)
+        getOnlineStore()
+        .then((data: any) => {
+            
+            if(data && data.length>0){
+                setCategiesData(data[0])
+            }
+            else{
+                setCategories([]);
+            }
+            if(sourcePage && sourcePage === 'preview'){
+                setSelectedProducts(productsFromStore)
+                setFiltersObject(filtersFromStore);
+                let messageIDForPayload = getMessageIdFromStore();
+                dispatch(updateSourcePage(''));
+                fetchSearchResults(messageIDForPayload);
+                // set messageid from store
+                // update category, location and search string, lastid and do fetch results call
+            }
+            else if(sourcePage && sourcePage === 'collections'){
+                dispatch(updateSourcePage(''));
+                dispatch(updateSelectedCategoryForProductsList(''));
+                setShowBackButton('show')
+                initiateSearchForProducts()
+            }
+            else{
+                // setMessageID("MSG"+uuidv4())
+            }
+            setData(JSON.parse(JSON.stringify(columns_from_api)))
+            setFullPageLoading(false);
+        })
+        .catch(err => {
+            setFullPageLoading(false);
+        });
+    }
+
+    const setCategiesData = (values: any) => {
+        if(values.categoryCityMappings.length> 0){
+            const uniqueCategories = values.categoryCityMappings.reduce((acc: any, item: any) => {
+                // Check if the category_id is already in the accumulator
+                if (!acc.some((cat: any) => cat.value === item.category_id)) {
+                  acc.push({
+                    value: item.category_id,
+                    label: item.category.description
+                  });
+                }
+                return acc;
+              }, []);
+
+              console.log(uniqueCategories)
+            
+            setCategories(uniqueCategories)
+            
+        }
+
+    }
+
+    const getMessageIdFromStore = () => {
+        const id = msgIdFromStore;
+        setTimeout(()=>{
+            setMessageID(id)
+        },0)
+        return id;
+    }
+
+    const getNewMessageId = () => {
+        let id = "MSG"+uuidv4();
+        setTimeout(()=>{
+        setMessageID(id)
+        },0)
+        return id; 
+    }
+
+    useEffect(() => {
+        
+        if (messageID) {
+            console.log(messageID)
+        }
+      }, [messageID]);
+
+      const resetData =() =>{
+        setTimeout(()=>{
+            setIsOpen(false);
+            setSelectedVendors([])
+            setSelectedSpecialities([])
+            applySellersAndSpecialityFilters();
+            setProductList([]);
+            setSelectedProducts([])
+        },0)
+      }
+
+    const initiateSearchForProducts = () => {
+
+        if(selectedCategories.length === 0){
+            showWarningMessage("No Category selected")
+        }
+        else{
+            resetData();
+            let messageIDForPayload: any;
+            messageIDForPayload = getNewMessageId();
+            setSearchResultsLoading(true)
+            setOnSearchStatus('initiated')
+            setLastId(null)
+            console.log(messageID)
+            let payload = {
+                message_id: messageIDForPayload,
+                criteria: {
+                    
+                    search_string: searchString
+                },
+                domain: getSelectedCategories()
+            }
+            initiateSearch(payload)
+            .then((data: any) => {
+                console.log(data)
+                if(data.error !== null){
+                    // showSuccessMessage("search initiated successfully")
+                    intervalIdRef.current = setInterval(()=>{
+                        fetchSearchResults(messageIDForPayload);
+                    },3000)
+                }
+            })
+            .catch(err => {
+                setLoading(false);
+                showWarningMessage("error initiating")
+                setSearchResultsLoading(false)
+                setOnSearchStatus('finished')
+            });
+        }
+
+      }
+
+      const getSelectedCategories = () => {
+        return selectedCategories.map((item: any) => item.value);
+      }
+
+    const fetchSearchResults = (msgId: any) => {
+        setLoading(true)
+        let payload : any = {
+            message_id: msgId,
+            subscriber_id: "ondc.opteamix.com",
+            range: 25
+        }
+        if(lastId){
+            payload['lastId'] = lastId;
+        }
+        getSearchResults(payload)
+        .then((response: any) => {
+           if (Array.isArray(response) && response.length> 0){
+                let res = response[0];
+                if (intervalIdRef.current !== null) {
+                    console.log("here")
+                    clearInterval(intervalIdRef.current); // Clear the interval when stopping
+                    intervalIdRef.current = null;  
+                }
+
+                  if(res.searched_products && res.searched_products.length>0 && res.searched_products.filter((x: any)=>x.data.prodSearchResponse).length>0){
+                    setLastId(res.lastId)
+                    let results = formatSearchResults(res.searched_products.filter((x: any)=>x.data.prodSearchResponse))
+                    setTimeout(()=>{
+                          setProductList((prevData: any) => [...prevData, ...results]);
+                          setLoading(false);
+                        }, 1000)
+                        setShowTable(true)
+                  }
+                  else{
+                    setTimeout(()=>{
+                        setHasMore(false)
+                        setLoading(false);
+                      }, 1500)
+                      setShowTable(true)
+                  }
+            }
+            else{
+                if (intervalIdRef.current !== null) {
+                    console.log("here")
+                    clearInterval(intervalIdRef.current); // Clear the interval when stopping
+                    intervalIdRef.current = null;  
+                }
+                setHasMore(false)
+                setLoading(false);
+            }
+            setOnSearchStatus('finished')
+        })
+        .catch(err => {
+            if (intervalIdRef.current !== null) {
+                console.log("here")
+                clearInterval(intervalIdRef.current); // Clear the interval when stopping
+                intervalIdRef.current = null;  
+            }
+            console.log(err)
+            setLoading(false);
+            setOnSearchStatus('finished')
+            showWarningMessage("error fetching search results")
+        });
+    }
+
+      const formatSearchResults = (res: any) => {
+        let arr : any[] = []
+        res.forEach((element: any, index: any)=>{
+            if(element.data.prodSearchResponse.message && 
+                element.data.prodSearchResponse.message.catalog && 
+                element.data.prodSearchResponse.message.catalog['bpp/providers'] &&
+                element.data.prodSearchResponse.message.catalog['bpp/descriptor'])
+                {
+                    let catelog = element.data.prodSearchResponse.message.catalog;
+                    arr.push(...formatEachBppProviderResult(catelog['bpp/providers'], catelog['bpp/descriptor'],element.id))
+                }
+        })
+        return arr
+        
+      }
+
+      const formatEachBppProviderResult = (bppproviders: any, bppdescriptors: any, stream_id: any) => {
+        let arr : any[] = []
+        bppproviders.forEach((element: any, index: any)=>{
+            arr.push(...formatEachItem(element, bppdescriptors,stream_id))
+        })
+        return arr
+      }
+
+      const formatEachItem = (provider: any, bppdescriptors: any, stream_id: any) => {
+        let arr: any[] = []
+            provider.items.forEach((item: any, index: any)=>{
+                arr.push({
+                    stream_id: stream_id,
+                    product_id: item.id,
+                    bpp_provider_id: provider? provider.id: '',
+                    thumbnail: item.descriptor.images && item.descriptor.images.length>0? item.descriptor.images[0] : '',
+                    product: item.descriptor.name? item.descriptor.name: '',
+                    product_short_desc: item.descriptor.short_desc? item.descriptor.short_desc: '',
+                    product_long_desc: item.descriptor.long_desc? item.descriptor.long_desc: '',
+                    source: bppdescriptors.name? bppdescriptors.name : '',
+                    measure: item.quantity.unitized? `${item.quantity.unitized.measure.value}  ${item.quantity.unitized.measure.unit}`: '',
+                    availability: item.quantity.available?`${item.quantity.available.count}` : '',
+                    maximumQuantity: item.quantity.maximum?`${item.quantity.maximum.count}`:'',
+                    seller: provider.descriptor? provider.descriptor.name : '',
+                    seller_short_desc: provider.descriptor ? provider.descriptor.short_desc : '',
+                    seller_long_desc: provider.descriptor ? provider.descriptor.long_desc : '',
+                    seller_image: provider.descriptor && provider.descriptor.images.length>0 ? provider.descriptor.images[0] : '',
+                    price: item.price? getPrice(item.price.value, item.price.maximum_value)
+                      :
+                      '',
+                    category: item.category_id? item.category_id : '',
+                    sellerLocation: item.location_id? getLocation(item.location_id,provider.locations): '',
+                    returnable: item['@ondc/org/returnable'] === true? 'Yes': 'No',
+                    cancellable: item['@ondc/org/cancellable'] === true? 'Yes': 'No',
+                    cod: item['@ondc/org/available_on_cod'] === true? 'Yes': 'No',
+                    shippingTime: item['@ondc/org/time_to_ship']? getHumanizedData(item['@ondc/org/time_to_ship']): '',
+                    sellerPickupReturn: item['@ondc/org/seller_pickup_return'] == true? 'Yes': 'No',
+                    returnWindow: item['@ondc/org/return_window']? getHumanizedData(item['@ondc/org/return_window']): '',
+                    manufacturer: 
+                    (
+                        item['@ondc/org/statutory_reqs_packaged_commodities']
+                        &&
+                        item['@ondc/org/statutory_reqs_packaged_commodities'].manufacturer_or_packer_name
+                    )
+                    ?
+                        item['@ondc/org/statutory_reqs_packaged_commodities'].manufacturer_or_packer_name : '',
+                    manufacturer_address: 
+                    (
+                        item['@ondc/org/statutory_reqs_packaged_commodities']
+                        &&
+                        item['@ondc/org/statutory_reqs_packaged_commodities'].manufacturer_or_packer_address
+                    )
+                        ?
+                    item['@ondc/org/statutory_reqs_packaged_commodities'].manufacturer_or_packer_address : '',
+                    commodity_name: 
+                    (
+                        item['@ondc/org/statutory_reqs_packaged_commodities']
+                        &&
+                        item['@ondc/org/statutory_reqs_packaged_commodities'].common_or_generic_name_of_commodity
+                    )
+                        ?
+                    item['@ondc/org/statutory_reqs_packaged_commodities'].common_or_generic_name_of_commodity : '',
+                    month_year_for_package: 
+                    (
+                        item['@ondc/org/statutory_reqs_packaged_commodities']
+                        &&
+                        item['@ondc/org/statutory_reqs_packaged_commodities'].month_year_of_manufacture_packing_import
+                    )
+                        ?
+                    item['@ondc/org/statutory_reqs_packaged_commodities'].month_year_of_manufacture_packing_import : '',
+
+                    fulfillment: item.fulfillment_id? getFulfillment(item.fulfillment_id,provider.fulfillments) : '',
+                    deliverableAt: getDeliverableDetails(provider.tags,provider.locations),
+                    gallery: item.descriptor.images && item.descriptor.images.length>0?
+                     getSlides(item.descriptor.images) : []
+                })
+                
+            })
+        return arr;
+      }
+
+      const getHumanizedData = (value:any) => {
+            return 'In ' +moment.duration(value).humanize()
+      }
+
+      const getDeliverableDetails = (tags: any, locations: any) =>{
+        let locationId : any;
+            if(tags.filter((x: any)=>x.code === 'serviceability') && tags.filter((x: any)=>x.code === 'serviceability').length>0){
+                let list = tags.filter((x: any)=>x.code === 'serviceability')[0].list;
+                if(list && list.length>0){
+                    locationId = list.filter((x:any)=> x.code === 'location')[0].value
+                }
+            }
+            
+        return getLocation(locationId, locations) +' '+ getCircle(locationId, locations)
+
+      }
+
+      const getFulfillment = (id: any, fulfillments: any) => {
+        let fulfillment: any;
+        if(fulfillments.length>0 && fulfillments.filter((loc: any) => loc.id === id).length>0){
+            fulfillment = fulfillments.filter((loc: any) => loc.id === id)[0];
+        }
+        // If the location is found, extract the city
+        if (fulfillment) {
+          const type = fulfillment.type;
+          return type;  // Output: Bengaluru
+        } else {
+          return ''
+        }
+      }
+
+      const getPrice = (price1: any, price2:any)=>{
+        if (price1 === price2){
+           return formatCurrency(price1)
+        }
+        else{
+            return `${formatCurrency(price1)} to ${formatCurrency(price2)}`
+        }
+      }
+
+      const formatCurrency =(price: any) => {
+        // Format the number with currency style
+        const formattedPrice = new Intl.NumberFormat('en-IN', {
+          style: 'currency',
+          currency: 'INR',
+        }).format(price);
+      
+        // Check if the price has decimal part .00 and remove it
+        if (formattedPrice.includes('.00')) {
+          // Remove the decimal part
+          return formattedPrice.split('.')[0];
+        }
+      
+        return formattedPrice;
+      }
+
+      const getLocation = (locationId: any, locations: any) => {
+        let location: any;
+        if(locations.length>0 && locations.filter((loc: any) => loc.id === locationId).length>0){
+         location = locations.filter((loc: any) => loc.id === locationId)[0];
+        }
+        // If the location is found, extract the city
+        if (location) {
+          const city = location.address.city;
+          const area_code = location.address.area_code;
+          return `${city}, ${area_code}`;  // Output: Bengaluru
+        } else {
+          return ''
+        }
+      }
+
+      const getCircle = (locationId: any, locations: any) => {
+        let location: any;
+        if(locations.length>0 && locations.filter((loc: any) => loc.id === locationId).length>0){
+         location = locations.filter((loc: any) => loc.id === locationId)[0];
+        }
+        // If the location is found, extract the city
+        if (location && location.circle) {
+          return `within ${location.circle.radius.value} ${location.circle.radius.unit}`;  // Output: Bengaluru
+        } else {
+          return ''
+        }
+      }
+
+    const getSlides = (images: any) => {
+        return images.reduce((acc: any, imageUrl: any) => {
+            acc.push({ src: imageUrl, alt: '' });
+            return acc;
+          }, []); 
+    }
+
+    const handleScroll = (event: any) => {
+        const { scrollTop, scrollHeight, clientHeight } = event.target;
+        // Check if user has scrolled to the bottom of the table
+        if (scrollHeight - scrollTop <= clientHeight + 10) {
+          loadMore();
+        }
+      };
+
+    const loadMore = () => {
+        setHasMore(true)
+        fetchSearchResults(messageID);
+      };
+    
+
+    const toggleDropdown = () => {
+      setIsOpen(!isOpen);
+    };
+
+    // vendor selection
+
+    const handleVendorSelectionClick = (values: any) => {
+        if(isVendorDropdownOpen){
+            setIsVendorDropdownOpen(false)
+        }
+        else{
+            fetchSellersList();
+        }
+        
+    }
+
+    const fetchSellersList = () => {
+        let payload : any = {
+            message_id: messageID,
+            subscriber_id: "ondc.opteamix.com",
+        }
+
+        getSellersList(payload)
+        .then((response: any) => {
+           if (Array.isArray(response) && response.length> 0){
+                let result = getFormattedSellers(response);
+                setVendorsList(result)
+                setIsVendorDropdownOpen(true)
+            }
+            else{
+                setVendorsList([])
+                setIsVendorDropdownOpen(true)
+            }
+        })
+        .catch(err => {
+            console.log(err)
+            setLoading(false);
+        });
+    }
+
+    const getFormattedSellers = (sellers: any) => {
+        let result: any = [];
+
+        sellers.forEach((seller: any) => {
+                    result.push({
+                        value: seller.provider_id,
+                        label: seller.provider_name
+                    });
+
+        });
+
+        return result;
+    }
+
+    useEffect(()=>{
+        setSellerFiltersForProducts(selectedVendors.map((item: any)=> item.label))
+    },[selectedVendors])
+
+    useEffect(()=>{
+        if(sellerFiltersForProducts.length==0){
+            applySellersAndSpecialityFilters();
+        }
+    },[sellerFiltersForProducts])
+
+    const clearVendorList = () => {
+        setSelectedVendors([])
+        setIsVendorDropdownOpen(false)
+    }
+
+    const updateSelectedVendorList = (list: any) => {
+        setSelectedVendors(list)
+    }
+
+    const clearSelectedVendorList = () => {
+        setSelectedVendors([])
+    }
+
+    const applyFilterOfVendorList  = () => {
+        console.log("applied filter for = ", selectedVendors)
+        applySellersAndSpecialityFilters();
+        setIsVendorDropdownOpen(false)
+    }
+
+    // category selection
+
+    const updateSelectedCategoriesList = (list: any) => {
+        setSelectedCategories(list)
+    }
+
+    const clearSelectedCategoriesList = () => {
+        setSelectedCategories([])
+    }
+
+    const applyFilterOfCategoriesList  = () => {
+        
+    }
+
+    // speciality selection
+
+    const handleSpecialitySelectionClick = (values: any) => {
+        if(isSpecialityDropdownOpen){
+            setIsSpecialityDropdownOpen(false)
+        }
+        else{
+            fetchSpecialityList();
+        }
+        
+    }
+
+    const fetchSpecialityList = () => {
+        let payload : any = {
+            message_id: messageID,
+            subscriber_id: "ondc.opteamix.com",
+        }
+
+        getSpecialityList(payload)
+        .then((response: any) => {
+           if (Array.isArray(response) && response.length> 0){
+                let result = getFormattedSpeciality(response);
+                setSpecialityList(result)
+            setIsSpecialityDropdownOpen(true)
+            }
+            else{
+                setSpecialityList([])
+                setIsSpecialityDropdownOpen(true)
+            }
+        })
+        .catch(err => {
+            console.log(err)
+            setLoading(false);
+        });
+    }
+
+    const getFormattedSpeciality = (specialities: any) => {
+        let result: any = [];
+
+        specialities.forEach((speciality: any) => {
+                    result.push({
+                        value: speciality,
+                        label: speciality
+                    });
+
+        });
+
+        return result;
+    }
+
+    useEffect(()=>{
+        setSpecialityFiltersForProducts(selectedSpecialities.map((item: any)=> item.label))
+    },[selectedSpecialities])
+
+    useEffect(()=>{
+        if(specialityFiltersForProducts.length==0){
+            applySellersAndSpecialityFilters();
+        }
+    },[specialityFiltersForProducts])
+
+    const updateSelectedSpecialityList = (list: any) => {
+        setSelectedSpecialities(list)
+        setSpecialityFiltersForProducts(list.map((item: any)=> item.label))
+    }
+
+
+
+    const clearSpecialityList = () => {
+        setSelectedSpecialities([])
+        setIsSpecialityDropdownOpen(false)
+    }
+
+    const clearSelectedSpecialityList = () => {
+        setSelectedSpecialities([])
+    }
+
+    const applyFilterOfSpecialityList = () => {
+        applySellersAndSpecialityFilters();
+        setIsSpecialityDropdownOpen(false)
+    }
+
+    useEffect(()=>{
+        applySellersAndSpecialityFilters();
+    },[productsList])
+
+    const applySellersAndSpecialityFilters = () => {
+        console.log("before applying filter = ",productsList)
+        setFilteredProducts(productsList.filter(product => 
+            {
+            const categoryFilter = specialityFiltersForProducts.length > 0 ? specialityFiltersForProducts.includes(product.category) : true;
+            const sellerFilter = sellerFiltersForProducts.length > 0 ? sellerFiltersForProducts.includes(product.seller) : true;
+
+            return categoryFilter && sellerFilter;
+            }));
+    }
+
+    // sort by
+
+    const handleSortByClick = (values: any) => {
+        setSortByOpen(!isSortByOpen)
+    }
+
+    const toggleSortByOption = (option: any) => {
+        setSelectedSortBy(option);
+        setSortByOpen(false);
+      };
+
+    // products
+
+    const openProductDetails = (product: any, col: any) => {
+        if (col.column == "product") {
+            if (!isProductDetailsOpen) {
+                setSelectedProductToViewDetails(product)
+                setIsProductDetailsOpen(true)
+            }
+        }
+    }
+
+    const closeProductDetails = () => {
+        setIsProductDetailsOpen(false)
+    }
+
+    // column visibility
+    const handleColumnVisiblityClick = (values: any) => {
+        setIsColumnVisibilityOpen(!isColumnVisibilityOpen)
+    }
+
+    const toggleColumnVisibility = (col: any) => {
+        setColumns((prevSelected: any) => {
+            prevSelected.filter((x: any)=>x.column === col.column)[0].isVisible = !col.isVisible
+              return [...prevSelected];
+            }
+          );
+      }
+
+      const resetColumnVisibility = () => {
+        let data = JSON.parse(JSON.stringify(columns_from_api));
+        setColumns(data)
+      }
+
+      const toggleProductSelection = (product: any) => {
+        if(!isProductDetailsOpen){
+            setSelectedProducts((prevSelected: any) => {
+                if (prevSelected.some((obj: any) => obj.product_id === product.product_id)) {
+                  return prevSelected.filter((item: any) => item.product_id !== product.product_id);
+                } else {
+                  return [...prevSelected, product];
+                }
+              });
+        }
+      }
+
+
+      const previewSelected = () => {
+        if(selectedProducts.length>0){
+            dispatch(updateSelectedProductsList(selectedProducts));
+            dispatch(updateProductsColumnsList(columns));
+            dispatch(updateProductsListFilters({
+                location: selectedLocation,
+                category: selectedCategories,
+                searchString: searchString,
+                seller: null,
+                speciality: null,
+                messageID: messageID
+            }))
+            navigate("/landing-page/products/products-preview")
+
+        }
+        else{
+            showWarningMessage(NO_PRODUCTS_SELECTED)
+        }
+
+      }
+
+    const loadSimilarProductsOfACategory = () => {
+        setSelectedCategory(categories.filter((x:any)=> x.id === selectedCategoryToLoad)[0])
+    }
+
+    const navigateToCollectionsList = () => {
+        navigate('/landing-page/products/collections')
+    }
+
+    const setLocation = (e:any)=>{
+        console.log("selected location = ",e)
+        setSelectedLocation(e)
+        closeSelectLocationWindow();
+
+    }
+
+    const handleCheckboxNoAction = () => {
+
+    }
+    
 
     return (
         <>
-            <div className="d-flex container-fluid mt-3 px-4">
-                <div>
-                    <h3>Products</h3>
-                </div>
-                <div>
-                    <div className="text-right button-right-group">
-                        <a  className="btn-link"><button type="button" className="btn-custom  mt-2 "><i className="fa fa-sync"></i>Sync with shopify</button></a>
-                    </div>
-                </div>
-            </div>
-
-            <div className="container-fluid mt-2 px-4">
-                <div className="card shadow bg-white table-padding mb-3 p-3" >
-                    <div className="d-flex">
-                        <div className="search-container">
-                            <div className="search text-center">
-                                <i className="	fa fa-map-marker" style={{ paddingLeft: '26px', fontSize: '18px' }}> </i><input className="search_input" type="text" name="" placeholder="Select By Location" />
-
+        {
+            !fullPageLoading && (
+                <div className="container-fluid h-auto mt-4 px-5">
+                {
+                    showBackButton ==='show' && (
+                        <div className="row d-flex">
+                        <div className="col text-left">
+                            <div onClick={navigateToCollectionsList} className='back-button-container cursor-pointer'>
+                                <i className='fa fa-arrow-left'></i>
+                                <h6 className='pl-2 mb-0'>Back</h6>
                             </div>
+    
                         </div>
-                        <div className="searchBar">
-                            <div className="dropdown category_dropdown" style={{ borderRight: '2px solid #d4d4d4 !important' }}><button
-                                className="btn btn-secondary bg-transparent dropdown-toggle d-flex flex-row flex-nowrap align-items-center justify-content-between h-100 rounded-0 border-0 px-3 show"
-                                type="button" data-bs-toggle="dropdown" style={{ minWidth: '80px', maxWidth: '180px', overflow: 'hidden' }}
-                                aria-expanded="true"><span className="d-block lh-sm fw-semibold ms-fs-14 text-capitalize text-dark"
-                                    style={{ maxWidth: '160px', overflow: 'hidden', textOverflow: 'ellipsis', fontSize: '15px' }}>All </span><i className="fa fa-caret-down" aria-hidden="true" style={{ color: 'black' }}></i></button>
-                                <div className="dropdown-menu w-100 p-0 pt-2 fs-6 show"
-                                    style={{ position: 'absolute', inset: '0px auto auto 0px', margin: '0px' }}
-                                    data-popper-placement="bottom-start">
-                                    <div className="megamenu_search rounded-3 overflow-hidden p-0 ">
-                                        <div className="row g-0 flex-row flex-nowrap h-100">
-                                            <div className="col-12 col-sm-12 d-flex flex-column flex-nowrap">
-                                                <div className="megamenu_search-nav flex-fill overflow-auto p-3 pt-1" style={{ maxHeight: '320px' }}>
-                                                    <ul className="list-unstyled m-0">
-                                                        <li><a className="dropdown-item small category_selection_list_item fw-semibold oneline_ellipsis"
-                                                            role="button" title="All">All Categories</a></li>
-                                                        <li><a className="dropdown-item small category_selection_list_item fw-semibold oneline_ellipsis"
-                                                            title="Food &amp; Beverages" role="button">Food &amp; Beverages</a></li>
-                                                        <li><a className="dropdown-item small category_selection_list_item fw-semibold oneline_ellipsis"
-                                                            title="Fashion" role="button">Fashion</a></li>
-                                                        <li><a className="dropdown-item small category_selection_list_item fw-semibold oneline_ellipsis"
-                                                            title="Grocery" role="button">Grocery</a></li>
-                                                        <li><a className="dropdown-item small category_selection_list_item fw-semibold oneline_ellipsis"
-                                                            title="Beauty &amp; Personal Care" role="button">Beauty &amp; Personal Care</a></li>
-                                                        <li><a className="dropdown-item small category_selection_list_item fw-semibold oneline_ellipsis"
-                                                            title="Agriculture" role="button">Agriculture</a></li>
-                                                        <li><a className="dropdown-item small category_selection_list_item fw-semibold oneline_ellipsis"
-                                                            title="Home &amp; Kitchen" role="button">Home &amp; Kitchen</a></li>
-                                                        <li><a className="dropdown-item small category_selection_list_item fw-semibold oneline_ellipsis"
-                                                            title="Electronics" role="button">Electronics</a></li>
-                                                        <li><a className="dropdown-item small category_selection_list_item fw-semibold oneline_ellipsis"
-                                                            title="Automotive" role="button">Automotive</a></li>
-                                                        <li><a className="dropdown-item small category_selection_list_item fw-semibold oneline_ellipsis"
-                                                            title="Health &amp; Wellness" role="button">Health &amp; Wellness</a></li>
-                                                    </ul>
-                                                </div>
-                                            </div>
+    
+                    </div>
+                    )
+                }
+
+                <div className="row mt-2">
+                    <div className="col-6 text-left">
+                        <h3>Products</h3>
+                        {/* {
+                            selectedLocation  &&
+                            selectedLocation.map((location: any) => (
+                                <div key={location.location.latitude}>
+                                  <p>latitude: {location.location.latitude}</p>
+                                  <p>longitude: {location.location.longitude}</p>
+                                  <p>Formatted address: {location.formatted_address}</p>
+                                </div>
+                              ))
+                        } */}
+                    </div>
+                    {
+                        selectedProducts.length>0 && (
+                            <div className="col-6 text-right">
+                                <a className="btn-link"><button type="button"
+                                    className="btn-custom" onClick={previewSelected}>Preview Selected</button></a>
+                            </div>
+                        )
+                    }
+
+                </div>
+                <div className="row mt-4">
+                    <div className="col-12 ">
+                        <div className="card shadow bg-white table-padding mb-3 p-3">
+                            <div className="row">
+                                <div className="col-3">
+                                    <div className="select-location-container text-left">
+                                        <div className='d-flex cursor-pointer' onClick={openSelectLocationWindow}>
+                                        <i className="fas fa-location-dot" ></i>
+                                        <p className='mb-0 pl-3 selected-location-text ellipsis'>{selectedLocation ? 
+                                        selectedLocation.map((location: any) => (
+                                              <span key={location.location.latitude}>{location.address}</span>
+                                          ))
+                                        
+                                        : ('Select location')}</p>
                                         </div>
+
+                                        <i className="fa fa-close fa-sm pl-0 pr-3 cursor-pointer" onClick={clearLocation}> </i>
                                     </div>
                                 </div>
+                                <div className="col-9">
+                                    <div className="category-search-container">
+                                        <div className="category-dropdown-toggler w-auto cursor-pointer" onClick={toggleDropdown} >
+                                            <p className="category-text w-auto mb-0 ellipsis">
+                                            {
+                                                    selectedCategories.length > 0 ?
+                                                        <>
+                                                            {
+    
+                                                                selectedCategories
+                                                                    .map((category: any, index: any) => {
+                                                                        return index > 0 ?
+                                                                            <span key={category.value}>,&nbsp;{category.label}
+                                                                            </span>
+                                                                            :
+                                                                            <span key={category.value}>&nbsp;{category.label}
+                                                                            </span>
+                                                                    })
+                                                            }
+                                                            {/* <span>&nbsp; <i className='fa fa-close pl-2 cursor-pointer' onClick={clearSelectedCategoriesList}></i> </span> */}
+    
+                                                        </>
+    
+                                                        :
+    
+                                                        <>Select Category</>
+                                                } </p>
+                                                {
+                                                    isOpen?
+                                                    <i className="fa fa-caret-up " ></i>
+                                                    :
+                                                    <i className="fa fa-caret-down " ></i>
+                                                }
+                                        </div>
+
+                                        <input className="search_input category-selector-search-input" type="text" name="" value={searchString} placeholder="search here" 
+                                        onChange={handleSearchStringChange}/>
+                                        <button id="searchQuerySubmit" type="submit" name="searchQuerySubmit" onClick={initiateSearchForProducts}>
+                                            <svg style={{ width: '24px', height: '24px' }} viewBox="0 0 24 24">
+                                                <path fill="#666666"
+                                                    d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z" />
+                                            </svg>
+                                        </button>
+
+                                    </div>
+                                    {isOpen && (
+                                                <div className="vendor-selection-dropdown">
+                                                    
+                                                <SearchableMultiselectList
+                                                    list={categories}
+                                                    selectedItems={selectedCategories}
+                                                    selectedItemsChanged={updateSelectedCategoriesList}
+                                                    clearSelectedItemsList={clearSelectedCategoriesList}
+                                                    applySelectedList={applyFilterOfCategoriesList}
+                                                    showApply={false}>
+
+                                                </SearchableMultiselectList>
+                                                </div>
+                                        )}
+                                </div>
                             </div>
-                            <input id="searchQueryInput" type="text" name="searchQueryInput" placeholder="Wireless Bluetooth" value="" />
-                            <button id="searchQuerySubmit" type="submit" name="searchQuerySubmit">
-                                <svg style={{ width: '24px', height: '24px' }} viewBox="0 0 24 24">
-                                    <path fill="#666666"
-                                        d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z" />
-                                </svg>
-                            </button>
                         </div>
                     </div>
+                    {
+                        (onSearchStatus == 'finished' && showTable) ?
+                        (
+                            <div className="col-12">
+                            <div className="card shadow bg-white table-padding mb-3 py-3 ">
+                                {/* <div className="row">
+                                    <div className="col"> */}
+                                <div className='filter-sort-container pb-2 px-3'>
+                                    <div className='filters-container'>
+                                        <div className='products-vendor-filter-container'>
+                                        <div className="vendor-selection-container mr-2 px-2" >
+                                            <p className='mb-0 pl-2 cursor-pointer seller-text' onClick={handleVendorSelectionClick}>Product vendor
+                                                {
+                                                    selectedVendors.length > 0 &&
+                                                        <>
+                                                            <span>&nbsp; is </span>
+                                                            {
+    
+                                                                selectedVendors
+                                                                    .map((vendor: any, index: any) => {
+                                                                        return index > 0 ?
+                                                                            <span key={vendor.value}>,&nbsp;{vendor.label}
+                                                                            </span>
+                                                                            :
+                                                                            <span key={vendor.value}>&nbsp;{vendor.label}
+                                                                            </span>
+                                                                    })
+                                                            }
+                                                            
+    
+                                                        </>
+                                                }
+                                            </p>
+                                            {
+                                                    selectedVendors.length > 0 &&
+                                            <p className='mb-0'>&nbsp; <i className='fa fa-close cursor-pointer mb-0' onClick={clearVendorList}></i> </p>
+                                            }
+                                            {
+                                                !isVendorDropdownOpen && selectedVendors.length == 0 &&
+                                                    <p className='mb-0 d-flex'>&nbsp; <i className='fa fa-caret-down pr-2 cursor-pointer float-right align-self-center' ></i> </p>
+                                            }
+    
+                                        </div>
+                                        {
+                                                isVendorDropdownOpen && (
+                                                    <div className="vendor-selection-dropdown">
+    
+                                                        <SearchableMultiselectList
+                                                            list={vendors_list}
+                                                            selectedItems={selectedVendors}
+                                                            selectedItemsChanged={updateSelectedVendorList}
+                                                            clearSelectedItemsList={clearSelectedVendorList}
+                                                            applySelectedList={applyFilterOfVendorList}
+                                                            showApply={true}>
+    
+                                                        </SearchableMultiselectList>
+                                                    </div>
+                                                )
+                                            }
+                                        </div>
+    
+                                        <div className='products-speciality-filter-container'>
+                                        <div className='speciality-selection-container px-2'>
+                                            <p className='mb-0 pl-2 cursor-pointer speciality-text' onClick={handleSpecialitySelectionClick}>Speciality
+                                                {
+                                                    selectedSpecialities.length > 0 &&
+                                                        <>
+                                                            <span>&nbsp; is </span>
+                                                            {
+    
+                                                                selectedSpecialities
+                                                                    .map((speciality: any, index: any) => {
+                                                                        return index > 0 ?
+                                                                            <span key={speciality.value}>,&nbsp;{speciality.label}
+                                                                            </span>
+                                                                            :
+                                                                            <span key={speciality.value}>&nbsp;{speciality.label}
+                                                                            </span>
+                                                                    })
+                                                            }
+                                                        </>
+                                                }
+                                            </p>
+                                            {
+                                                selectedSpecialities.length > 0 &&
+                                                <p className='mb-0'>&nbsp; <i className='fa fa-close cursor-pointer' onClick={clearSpecialityList}></i> </p>
+                                            }
+                                            {
+                                                !isSpecialityDropdownOpen && selectedSpecialities.length == 0 &&
+                                                <p className='mb-0 d-flex'>&nbsp; <i className='fa fa-caret-down pr-2 cursor-pointer float-right align-self-center' onClick={handleSpecialitySelectionClick}></i> </p>
+                                                
+                                            }
+                                            </div>
+                                            {
+                                                isSpecialityDropdownOpen && (
+    
+                                                    <div className="speciality-selection-dropdown">
+                                                        <SearchableMultiselectList
+                                                            list={speciality_list}
+                                                            selectedItems={selectedSpecialities}
+                                                            selectedItemsChanged={updateSelectedSpecialityList}
+                                                            clearSelectedItemsList={clearSelectedSpecialityList}
+                                                            applySelectedList={applyFilterOfSpecialityList}
+                                                            showApply={true}>
+    
+                                                        </SearchableMultiselectList>
+                                                    </div>
+                                                )
+                                            }
+                                        </div>
+                                    </div>
+                                    <div className="column-visibility-sortby-container">
+                                    <div className='column-visibility-container mr-2'>
+                                        <button
+                                            className="btn btn-custom-light float-right column-visibility-selection-container"
+                                            type="button"
+                                            onClick={handleColumnVisiblityClick}
+                                        >
+                                            <i className="fa fa-bars" style={{ fontSize: '17px' }}
+                                            ></i>
+    
+                                        </button>
+                                        {
+                                            isColumnVisibilityOpen && (
+                                                <div className="column-visibility-selection-dropdown">
+                                                    <p className='pl-2 mb-1 mt-1'>Show/Hide Columns</p>
+                                                    <ul className="list-unstyled mt-1 mb-4">
+                                                        
+                                                        {
+                                                                columns
+                                                                    .map((col: any, index: any) => {
+                                                                        return <li key={index} className='d-flex flex-row px-2' onClick={() => toggleColumnVisibility(col)}>
+                                                                            <input type="checkbox"
+                                                                                checked={col.isVisible}
+                                                                                onChange={handleCheckboxNoAction}
+                                                                            />
+                                                                            <a className="dropdown-item ml-0 pl-2 small fw-semibold oneline_ellipsis"
+                                                                                role="button" title="All">{col.visibilityDisplayName}</a></li>
+                                                                    })
+                                                            }
+                                                    </ul>
+                                                    <p className='clear-text mb-0 cursor-pointer pl-2 mt-2' onClick={resetColumnVisibility}>
+                                                                    reset
+                                                                </p>
+                                                </div>
+                                            )
+                                        }
+    
+                                    </div>
+                                    {/* <div className='sort-container'>
+                                        <button
+                                            className="btn btn-custom-light float-right sortby-selection-container"
+                                            type="button"
+                                            onClick={handleSortByClick}
+                                        >
+                                            <i className="fa fa-sort" style={{ fontSize: '17px' }}
+                                            ></i>
+    
+                                        </button>
+                                        {
+                                            isSortByOpen && (
+                                                <div className="sortby-selection-dropdown">
+                                                    <ul className="list-unstyled mt-2 ">
+                                                        <span style={{ paddingLeft: '6px' }}>Sort By</span>
+                                                        {
+                                                            sort_list
+                                                                .map((vendor: any, index: any) => {
+                                                                    return <li key={index}>
+                                                                        <a className="dropdown-item d-flex flex-row justify-content-between" onClick={() => toggleSortByOption(vendor.value)}>
+                                                                            {vendor.label}
+                                                                            {
+                                                                                selectedSortBy == vendor.value ?
+                                                                                    <span className="acc-icons" style={{ color: 'green' }}>
+                                                                                        <i className="fa fa-check-circle"></i>
+                                                                                    </span>
+    
+                                                                                    :
+    
+                                                                                    <span className="acc-icons">
+                                                                                        <i className="fa fa-circle-thin"></i>
+                                                                                    </span>
+                                                                            }
+    
+                                                                        </a>
+                                                                    </li>
+                                                                })
+                                                        }
+                                                    </ul>
+                                                </div>
+                                            )
+                                        }
+    
+                                    </div> */}
+                                    </div>
+    
+                                </div>
+    
+                                    {
+                                        selectedProducts.length>0 && (
+                                        <div className="mb-2 mt-2 me-2" style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                            <div className="px-3" style={{ marginTop: 'auto' }}>
+                                                <span><strong><i className="fa fa-minus-square"></i><span className="px-3">{selectedProducts.length} products selected </span></strong></span>
+                                            </div>
+                                        </div>  
+                                        )
+                                    }
+    
+                                <div className='table-responsive'                            
+                                onScroll={handleScroll}
+                                style={tablescrollstyles.loadonscroll}>                            
+                                <table className="table table-hover  product-table text-left" style={{ marginBottom: '0px', cursor: 'pointer' }}>
+    
+                                    <thead className="table-light">
+                                        <tr>
+                                            <th ></th>
+                                            {
+                                                columns.map((col: any, index: any) => {
+                                                    return col.isVisible && <th key={index} className={col.minWidth? 'min-width-column':'common-width'}>{col.coltitle}</th>
+                                                })
+                                            }
+    
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {
+                                            filteredProducts
+                                                .map((product: any, index: any) => {
+                                                    return <tr key={index}>
+                                                        <td className='products-list'><input type="checkbox" 
+                                                        checked={selectedProducts.some((obj: any) => obj.product_id === product.product_id)}
+                                                        onChange={() => toggleProductSelection(product)} /></td>
+                                                        {
+                                                            columns
+                                                                .map((col: any, i: any) => {
+                                                                    return col.isVisible &&
+                                                                        (
+                                                                            col.type == "image" ?
+                                                                                <td onClick={()=>openProductDetails(product, col)} key={i} className="product-small-image px-0" style={{ paddingLeft: '0px !important' }}><a href="#" className="pop">
+                                                                                    <img src={product[col.column]} alt="" />
+                                                                                </a></td>
+                                                                                :
+    
+                                                                                (
+                                                                                    col.type == "active-draft-button" ?
+                                                                                        <td onClick={()=>openProductDetails(product, col)} key={i}><span className={product[col.column] == 'Active' ? "product-active" : "product-draft"}>{product[col.column]}</span></td>
+                                                                                        :
+                                                                                        <td onClick={()=>openProductDetails(product, col)} key={i}>{product[col.column]}</td>
+                                                                                )
+    
+                                                                        )
+    
+                                                                })
+                                                        }
+                                                    </tr>
+                                                })
+                                        }
+    
+                                    </tbody>
+                                </table>
+                                </div>
+                                {
+                                            loading &&
+                                            <div className="loader-container mt-2">
+                                                <div className="loader">
+    
+                                                </div>
+                                                <div>
+                                                    <p className='mt-2 ml-2'>Loading</p>
+                                                </div>
+    
+                                            </div>
+                                        }
+                                        {
+                                        !hasMore && 
+                                        <>
+                                        <p className='mt-2 mb-0' style={{ textAlign: 'center',color: 'darkgray' }}>No more data.  &nbsp;&nbsp;
+                                            <span className='mt-2 cursor-pointer check-more-text' onClick={loadMore}>Check for more data</span>
+                                        </p>
+
+                                        </>
+                                        }
+                            </div>
+                        </div>
+                        )
+
+                        :
+
+                        onSearchStatus == 'not-started' ?
+
+                        <></>
+
+                        :
+
+                        onSearchStatus == 'initiated'
+                        ?
+                        
+                        <div className="loader-container mt-2">
+                        <div className="loader">
+
+                        </div>
+                        <div>
+                            <p className='mt-2 ml-2'>Loading</p>
+                        </div>
+
+                    </div>
+
+                        : 
+                        <></>
+
+                    }
+
 
                 </div>
-                <div className=" card p-0 table-responsive mb-3">
-                    <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid #d4d4d4' }}>
-                        <div className="d-flex mb-0" style={{
-                            marginTop: '10px',
-                            marginBottom: '-4px !important'
-                        }} >
-                            <div className="flex-grow-1" style={{ width: 'fit-content !important', marginLeft: '0px' }}>
-
-                                <ul className="selected-pname" style={{ display: 'flex', paddingLeft: '18px' }}>
-
-                                    <li className="ms-0">Vendor is Fingertips Bluetooth,Max fashion<span className="close">&times;</span></li>
-                                </ul>
-                            </div>
-                            <div className="flex-grow-1" style={{ width: 'fit-content !important', marginLeft: '12px' }}>
-                                <select className="form-select custom-select " style={{ paddingRight: '30px', height: '1.75rem', border: '1px dotted #aba0a0 !important', paddingTop: '3px' }}
-                                >
-                                    <option value="" selected disabled hidden>Speciality</option>
-                                    <option>Remote</option>
-                                    <option>Audio</option>
-                                    <option>Wireless</option>
-
-                                </select>
-                            </div>
-
+                {
+                    isProductDetailsOpen && (
+                        <div className='card product-details-window'>
+                            <ProductDetails productDetails={selectedProductToViewDetails} closeProductDetails={closeProductDetails}></ProductDetails>
                         </div>
-                        <div className="float-right mb-2 mt-2 me-2">
-                            <span className="dropdown custom-drpdown">
-                                <button className="btn btn-custom-light float-right dropdown-toggle"
-                                    type="button"
-                                    id="dropdownMicroProcessorTrigger"
-                                    data-bs-toggle="dropdown"
-                                    aria-expanded="false"><i className="fa fa-sort" style={{ fontSize: '17px' }}></i></button>
-                                <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMicroProcessorTrigger" style={{ marginRight: '-62px !important', marginTop: '-8px !important', width: 'auto !important', padding: '5px 0px !important' }}>
-                                    <span style={{ paddingLeft: '6px' }}>Sort By</span>
-                                    <li>
-                                        <a className="dropdown-item">
-                                            Product name<span className="acc-icons" style={{ color: 'green' }}><i className="fa fa-check-circle"></i></span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a className="dropdown-item">
-                                            Seller<span className="acc-icons"><i className="fa fa-circle-thin"></i></span>
-                                        </a>
-                                    </li>
-
-                                    <li>
-                                        <a className="dropdown-item">
-                                            Category<span className="acc-icons"><i className="fa fa-circle-thin"></i></span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </span>
-                        </div>
-                    </div>
-
-                    <div className="mb-2 mt-2 me-2" style={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <div className="px-3" style={{ marginTop: 'auto' }}>
-                            <span><strong><i className="fa fa-minus-square"></i><span className="px-3">2 selected </span></strong></span>
-                        </div>
-                        <div className="float-right ">
-                            <button type="button" className="btn btn-custom-light float-right" style={{ float: 'right' }}>Add for sync</button>
-                        </div>
-                    </div>
-
-                    <table className="table table-hover  product-table" style={{ marginBottom: '0px', cursor: 'pointer' }}>
-
-                        <thead className="table-light">
-                            <tr>
-                                <th><input type="checkbox" /></th>
-                                <th></th>
-                                <th>Product</th>
-                                <th>Status</th>
-                                <th>Inventory</th>
-                                <th>Sales</th>
-                                <th>Market</th>
-                                <th>B2B catalogs</th>
-                                <th>Category</th>
-                                <th>Type</th>
-                                <th>Vendor</th>
-
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td ><input type="checkbox" checked /></td>
-                                <td className="product-small-image px-0" style={{ paddingLeft: '0px !important' }}><a className="pop">
-                                    <img src="https://cdn.shopify.com/s/files/1/0567/3084/5242/files/logo41_b107e4e7-e866-401e-a025-d3ab4bcd7efd_40x40@3x.png?v=1728297340" />
-                                </a></td>
-                                <td style={{ paddingLeft: '0px !important', width: '20%' }}>Fingertips Bluetooth Remote Control Wireless</td>
-                                <td><span className="product-active">Active</span></td>
-                                <td>150,000 in stock</td>
-                                <td>56</td>
-                                <td>3</td>
-                                <td>7</td>
-                                <td>Electronics</td>
-                                <td>Retail</td>
-                                <td>Fingertips</td>
-                            </tr>
-                            <tr>
-                                <td><input type="checkbox" checked />
-                                </td>
-                                <td className="product-small-image px-0" style={{ paddingLeft: '0px !important' }}><a className="pop">
-                                    <img src="https://cdn.shopify.com/s/files/1/0567/3084/5242/files/logo41_b107e4e7-e866-401e-a025-d3ab4bcd7efd_40x40@3x.png?v=1728297340" />
-                                </a></td>
-                                <td style={{ paddingLeft: '0px !important', width: '20%' }}>Fingertips Fashion</td>
-                                <td><span className="product-draft">Draft</span></td>
-                                <td>150,000 in stock</td>
-                                <td>56</td>
-                                <td>3</td>
-                                <td>7</td>
-                                <td>Fashion</td>
-                                <td>Retail</td>
-                                <td>Fingertips</td>
-                            </tr>
-                            <tr>
-                                <td><input type="checkbox" checked /></td>
-                                <td className="product-small-image px-0" style={{ paddingLeft: '0px !important' }}><a className="pop">
-                                    <img src="https://cdn.shopify.com/s/files/1/0567/3084/5242/files/logo41_b107e4e7-e866-401e-a025-d3ab4bcd7efd_40x40@3x.png?v=1728297340" />
-                                </a></td>
-                                <td style={{ paddingLeft: '0px !important', width: '20%' }}>Max fashion dress set</td>
-                                <td><span className="product-active">Active</span></td>
-                                <td>150,000 in stock</td>
-                                <td>56</td>
-                                <td>3</td>
-                                <td>7</td>
-                                <td>Fashion</td>
-                                <td>Retail</td>
-                                <td>Max Fashion</td>
-                            </tr>
-
-                        </tbody>
-                    </table>
-                </div>
+                    )
+                }
+                
+                <ModalWindow show={open} modalClosed={closeSelectLocationWindow}>
+                    <MapComponent  closeModal={closeSelectLocationWindow} setLocation={setLocation}/>
+                </ModalWindow>
+               
             </div>
-
+            )
+        }
 
         </>
     ) 
