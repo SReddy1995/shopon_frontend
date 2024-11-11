@@ -150,11 +150,13 @@ const ProductDetails = (props: any) => {
                                     <div className="accordion-body">
                                         <p>About this product</p>
                                         <ul className="mt-0">
-                                            <li>Consumes :  <b>600 W</b></li>
+                                            {/* <li>Consumes :  <b>600 W</b></li>
                                             <li> Capacity : <b>1.2 L</b></li>
                                             <li> Power Indicator : <b>Yes</b></li>
                                             <li> Lockable Lid : <b> No</b></li>
-                                            <li> Auto Switch : <b>Off</b></li>
+                                            <li> Auto Switch : <b>Off</b></li> */}
+                                            <li><p>{product_details.product_short_desc}</p></li>
+                                            <li><p>{product_details.product_long_desc}</p></li>
                                         </ul>
                                 </div>
                             </div>
@@ -177,8 +179,15 @@ const ProductDetails = (props: any) => {
                                 <div id="collapseOne1" className="accordion-collapse collapse " aria-labelledby="headingOne"
                                     data-bs-parent="#accordionExample">
                                     <div className="accordion-body">
-                                        <p>This is the essential information that is collected to create a personal account in our platform.
-                                        </p>
+                                        <div className="row seller-info-container">
+                                            <div className="col-8">
+                                                <h6>{product_details.seller_short_desc}</h6>
+                                                <p>{product_details.seller_long_desc}</p>
+                                            </div>
+                                            <div className="col-3 d-flex align-items-center p-2">
+                                                <img src={product_details.seller_image} alt="" />
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -202,8 +211,10 @@ const ProductDetails = (props: any) => {
                                 <div id="collapseOne2" className="accordion-collapse collapse " aria-labelledby="headingOne"
                                     data-bs-parent="#accordionExample">
                                     <div className="accordion-body">
-                                        <p>This is the essential information that is collected to create a personal account in our platform.
-                                        </p>
+                                        <p>{product_details.manufacturer}</p>
+                                        <p>{product_details.manufacturer_address}</p>
+                                        <p>{product_details.commodity_name}</p>
+                                        <p>{product_details.month_year_for_package}</p>
                                     </div>
                                 </div>
                             </div>

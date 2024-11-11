@@ -514,14 +514,19 @@ const ProductsList = () => {
                 arr.push({
                     stream_id: stream_id,
                     product_id: item.id,
-                    bpp_provider_id: provider.id,
+                    bpp_provider_id: provider? provider.id: '',
                     thumbnail: item.descriptor.images && item.descriptor.images.length>0? item.descriptor.images[0] : '',
                     product: item.descriptor.name? item.descriptor.name: '',
+                    product_short_desc: item.descriptor.short_desc? item.descriptor.short_desc: '',
+                    product_long_desc: item.descriptor.long_desc? item.descriptor.long_desc: '',
                     source: bppdescriptors.name? bppdescriptors.name : '',
                     measure: item.quantity.unitized? `${item.quantity.unitized.measure.value}  ${item.quantity.unitized.measure.unit}`: '',
                     availability: item.quantity.available?`${item.quantity.available.count}` : '',
                     maximumQuantity: item.quantity.maximum?`${item.quantity.maximum.count}`:'',
                     seller: provider.descriptor? provider.descriptor.name : '',
+                    seller_short_desc: provider.descriptor ? provider.descriptor.short_desc : '',
+                    seller_long_desc: provider.descriptor ? provider.descriptor.long_desc : '',
+                    seller_image: provider.descriptor && provider.descriptor.images.length>0 ? provider.descriptor.images[0] : '',
                     price: item.price? getPrice(item.price.value, item.price.maximum_value)
                       :
                       '',
@@ -533,8 +538,39 @@ const ProductsList = () => {
                     shippingTime: item['@ondc/org/time_to_ship']? getHumanizedData(item['@ondc/org/time_to_ship']): '',
                     sellerPickupReturn: item['@ondc/org/seller_pickup_return'] == true? 'Yes': 'No',
                     returnWindow: item['@ondc/org/return_window']? getHumanizedData(item['@ondc/org/return_window']): '',
-                    manufacturer: item['@ondc/org/statutory_reqs_packaged_commodities']?
+                    manufacturer: 
+                    (
+                        item['@ondc/org/statutory_reqs_packaged_commodities']
+                        &&
+                        item['@ondc/org/statutory_reqs_packaged_commodities'].manufacturer_or_packer_name
+                    )
+                    ?
                         item['@ondc/org/statutory_reqs_packaged_commodities'].manufacturer_or_packer_name : '',
+                    manufacturer_address: 
+                    (
+                        item['@ondc/org/statutory_reqs_packaged_commodities']
+                        &&
+                        item['@ondc/org/statutory_reqs_packaged_commodities'].manufacturer_or_packer_address
+                    )
+                        ?
+                    item['@ondc/org/statutory_reqs_packaged_commodities'].manufacturer_or_packer_address : '',
+                    commodity_name: 
+                    (
+                        item['@ondc/org/statutory_reqs_packaged_commodities']
+                        &&
+                        item['@ondc/org/statutory_reqs_packaged_commodities'].common_or_generic_name_of_commodity
+                    )
+                        ?
+                    item['@ondc/org/statutory_reqs_packaged_commodities'].common_or_generic_name_of_commodity : '',
+                    month_year_for_package: 
+                    (
+                        item['@ondc/org/statutory_reqs_packaged_commodities']
+                        &&
+                        item['@ondc/org/statutory_reqs_packaged_commodities'].month_year_of_manufacture_packing_import
+                    )
+                        ?
+                    item['@ondc/org/statutory_reqs_packaged_commodities'].month_year_of_manufacture_packing_import : '',
+
                     fulfillment: item.fulfillment_id? getFulfillment(item.fulfillment_id,provider.fulfillments) : '',
                     deliverableAt: getDeliverableDetails(provider.tags,provider.locations),
                     gallery: item.descriptor.images && item.descriptor.images.length>0?
