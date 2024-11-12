@@ -166,7 +166,7 @@ const BankEscrowForm = (props: any) => {
                                                             const formErrors = await validateForm();
                                                             // Set errors if there are any
                                                             setErrors(formErrors);
-                                                            if(value=='N'){
+                                                            if(value==='N'){
                                                                 setFieldValue('bank_name', '');
                                                                 setFieldValue('escrow_account_number', '');
                                                                 setFieldValue('confirm_escrow_account_number', '');
@@ -198,7 +198,7 @@ const BankEscrowForm = (props: any) => {
                                                             const formErrors = await validateForm();
                                                             // Set errors if there are any
                                                             setErrors(formErrors);
-                                                            if(value=='N'){
+                                                            if(value==='N'){
                                                             setFieldValue('bank_name', '');
                                                             setFieldValue('escrow_account_number', '');
                                                             setFieldValue('confirm_escrow_account_number', '');
