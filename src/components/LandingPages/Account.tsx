@@ -86,12 +86,12 @@ const Account = () => {
     const setData = (res: any) => {
         let details = storeStatus;
         res.forEach((element: any, index: any)=> {
-            if(details.filter((x:any)=> x.stepref == element.step.stepref)[0]){
-            details.filter((x:any)=> x.stepref == element.step.stepref)[0].status = element.status.status;
-            details.filter((x:any)=> x.stepref == element.step.stepref)[0].status_desc = element.status.description;
-            if(element.step.stepref == "LED"){
-                details.filter((x:any)=> x.stepref == element.step.stepref)[1].status = element.status.status;
-                details.filter((x:any)=> x.stepref == element.step.stepref)[1].status_desc = element.status.description;
+            if(details.filter((x:any)=> x.stepref === element.step.stepref)[0]){
+            details.filter((x:any)=> x.stepref === element.step.stepref)[0].status = element.status.status;
+            details.filter((x:any)=> x.stepref === element.step.stepref)[0].status_desc = element.status.description;
+            if(element.step.stepref === "LED"){
+                details.filter((x:any)=> x.stepref === element.step.stepref)[1].status = element.status.status;
+                details.filter((x:any)=> x.stepref === element.step.stepref)[1].status_desc = element.status.description;
             }
             }
         })

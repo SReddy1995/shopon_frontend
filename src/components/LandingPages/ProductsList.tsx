@@ -1,12 +1,9 @@
-import Multiselect from 'multiselect-react-dropdown';
 import React, { useEffect, useRef, useState } from 'react';
 import '@splidejs/splide/dist/css/splide.min.css';
 import { v4 as uuidv4 } from 'uuid';
-
-import { Options, Splide, SplideSlide, SplideTrack } from '@splidejs/react-splide';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateProductsColumnsList, updateProductsListFilters, updateSelectedCategoryForProductsList, updateSelectedProductsList, updateSourcePage } from '../../utils/reduxStore/productsSlice';
-import { showSuccessMessage, showWarningMessage } from '../../shared/notificationProvider';
+import { showWarningMessage } from '../../shared/notificationProvider';
 import { NO_PRODUCTS_SELECTED } from '../../utils/constants/NotificationConstants';
 import { useNavigate } from 'react-router-dom';
 import SearchableMultiselectList from './SearchableMultiselectList';
@@ -17,7 +14,33 @@ import { getOnlineStore } from '../../services/AccountService';
 import ProductDetails from './ProductDetails';
 import moment from 'moment';
 
+const haversineDistance = (lat1: any, lon1: any, lat2: any, lon2: any) => {
+    const toRadians = (degree: any) => degree * (Math.PI / 180);
+  
+    const R = 6371; // Radius of Earth in kilometers
+    const dLat = toRadians(lat2 - lat1);
+    const dLon = toRadians(lon2 - lon1);
+  
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+              Math.cos(toRadians(lat1)) * Math.cos(toRadians(lat2)) * 
+              Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  
+    return R * c; // Distance in kilometers
+  };
+
 const ProductsList = () => {
+
+    const handleDistanceCalculate = (lat1: any, lon1: any, lat2: any, lon2: any) => {
+        if (lat1 && lon1 && lat2 && lon2) {
+          const dist = haversineDistance(parseFloat(lat1), parseFloat(lon1), parseFloat(lat2), parseFloat(lon2));
+          return dist;
+        } else {
+          return null;
+          alert("Please enter valid coordinates for both points.");
+        }
+      };
 
 
     const [columns_from_api, setColumnsFromApi] = useState<any[]>([
@@ -167,6 +190,14 @@ const ProductsList = () => {
             isVisible: true
         },
         {
+            coltitle: "Serviceability",
+            visibilityDisplayName: "Serviceability",
+            column: "serviceability",
+            type: "text",
+            serialNo: 2,
+            isVisible: true
+        },
+        {
             coltitle: "Deliverable At",
             visibilityDisplayName: "Deliverable At",
             column: "deliverableAt",
@@ -266,7 +297,7 @@ const ProductsList = () => {
       }
 
       const clearLocation = (event: any) => {
-        setSelectedLocation('')
+        setSelectedLocation(null)
       }
 
       const openSelectLocationWindow = () => {
@@ -301,7 +332,6 @@ const ProductsList = () => {
                 setSelectedProducts(productsFromStore)
                 setFiltersObject(filtersFromStore);
                 let messageIDForPayload = getMessageIdFromStore();
-                dispatch(updateSourcePage(''));
                 fetchSearchResults(messageIDForPayload);
                 // set messageid from store
                 // update category, location and search string, lastid and do fetch results call
@@ -375,6 +405,10 @@ const ProductsList = () => {
             applySellersAndSpecialityFilters();
             setProductList([]);
             setSelectedProducts([])
+            setIsVendorDropdownOpen(false)
+            setIsSpecialityDropdownOpen(false)
+            setIsColumnVisibilityOpen(false)
+            setHasMore(true)
         },0)
       }
 
@@ -449,23 +483,33 @@ const ProductsList = () => {
                     setTimeout(()=>{
                           setProductList((prevData: any) => [...prevData, ...results]);
                           setLoading(false);
+                          if(sourcePage === 'preview'){
+                            dispatch(updateSourcePage(''));
+                          }
                         }, 1000)
                         setShowTable(true)
                   }
-                  else{
+                  else if (!res.searched_products){
                     setTimeout(()=>{
                         setHasMore(false)
                         setLoading(false);
+                        if(sourcePage === 'preview'){
+                            dispatch(updateSourcePage(''));
+                          }
                       }, 1500)
                       setShowTable(true)
                   }
             }
             else{
+                console.log("inside else")
                 if (intervalIdRef.current !== null) {
                     console.log("here")
                     clearInterval(intervalIdRef.current); // Clear the interval when stopping
                     intervalIdRef.current = null;  
                 }
+                if(sourcePage === 'preview'){
+                    dispatch(updateSourcePage(''));
+                  }
                 setHasMore(false)
                 setLoading(false);
             }
@@ -536,7 +580,7 @@ const ProductsList = () => {
                     cancellable: item['@ondc/org/cancellable'] === true? 'Yes': 'No',
                     cod: item['@ondc/org/available_on_cod'] === true? 'Yes': 'No',
                     shippingTime: item['@ondc/org/time_to_ship']? getHumanizedData(item['@ondc/org/time_to_ship']): '',
-                    sellerPickupReturn: item['@ondc/org/seller_pickup_return'] == true? 'Yes': 'No',
+                    sellerPickupReturn: item['@ondc/org/seller_pickup_return'] === true? 'Yes': 'No',
                     returnWindow: item['@ondc/org/return_window']? getHumanizedData(item['@ondc/org/return_window']): '',
                     manufacturer: 
                     (
@@ -573,6 +617,7 @@ const ProductsList = () => {
 
                     fulfillment: item.fulfillment_id? getFulfillment(item.fulfillment_id,provider.fulfillments) : '',
                     deliverableAt: getDeliverableDetails(provider.tags,provider.locations),
+                    serviceability: getServiceability(provider.tags,provider.locations),
                     gallery: item.descriptor.images && item.descriptor.images.length>0?
                      getSlides(item.descriptor.images) : []
                 })
@@ -584,6 +629,72 @@ const ProductsList = () => {
       const getHumanizedData = (value:any) => {
             return 'In ' +moment.duration(value).humanize()
       }
+      
+      const getSelectedLocation = () => {
+        if(selectedLocation){
+            return selectedLocation;
+        }
+        else{
+            if(sourcePage === 'preview'){
+                return filtersFromStore.location
+            }
+        }
+      }
+
+      const getServiceability = (tags: any, locations: any) => {
+        let locationselected = getSelectedLocation();
+        if(locationselected && locationselected.length>0){
+            let locationId : any;
+            if(tags.filter((x: any)=>x.code === 'serviceability') && tags.filter((x: any)=>x.code === 'serviceability').length>0){
+                let list = tags.filter((x: any)=>x.code === 'serviceability')[0].list;
+                if(list && list.length>0){
+                    locationId = list.filter((x:any)=> x.code === 'location')[0].value
+                }
+
+                
+            let location: any  = getLatLongValues(locationId, locations)
+            let lat1 = locationselected && locationselected[0] ? locationselected[0].location.latitude : null
+            let long1 = locationselected && locationselected[0] ? locationselected[0].location.longitude : null
+            let lat2 = location && location.location.length>0 ? location.location[0] : null
+            let long2 = location && location.location.length>0 ? location.location[1] : null
+
+            let dist = handleDistanceCalculate(lat1,
+                long1,
+                lat2,
+                long2
+            )
+
+            if(dist === null){
+                return 'NA'
+            }
+            else{
+                return dist && location.radius  && dist <= location.radius.value ? 'Yes' : 'No'
+            }
+
+            
+            }
+            else{
+                return 'NA'
+            }
+
+        }
+
+        return 'NA'
+      }
+
+      const getLatLongValues = (locationId: any, locations: any) => {
+        let location: any;
+        if(locations.length>0 && locations.filter((loc: any) => loc.id === locationId).length>0){
+         location = locations.filter((loc: any) => loc.id === locationId)[0];
+        }
+        // If the location is found, extract the city
+        if (location && location.circle) {
+          return  {location:location.circle.gps.split(','), radius: location.circle.radius} // Output: Bengaluru
+        } else {
+          return null
+        }
+
+        }
 
       const getDeliverableDetails = (tags: any, locations: any) =>{
         let locationId : any;
@@ -893,7 +1004,7 @@ const ProductsList = () => {
     // products
 
     const openProductDetails = (product: any, col: any) => {
-        if (col.column == "product") {
+        if (col.column === "product") {
             if (!isProductDetailsOpen) {
                 setSelectedProductToViewDetails(product)
                 setIsProductDetailsOpen(true)
@@ -975,6 +1086,12 @@ const ProductsList = () => {
     const handleCheckboxNoAction = () => {
 
     }
+
+    const handleEnterPressForSearch = (event: any) => {
+        if (event.key === 'Enter') {
+            initiateSearchForProducts();
+        }
+      };
     
 
     return (
@@ -1076,7 +1193,7 @@ const ProductsList = () => {
                                         </div>
 
                                         <input className="search_input category-selector-search-input" type="text" name="" value={searchString} placeholder="search here" 
-                                        onChange={handleSearchStringChange}/>
+                                        onChange={handleSearchStringChange} onKeyDown={handleEnterPressForSearch}/>
                                         <button id="searchQuerySubmit" type="submit" name="searchQuerySubmit" onClick={initiateSearchForProducts}>
                                             <svg style={{ width: '24px', height: '24px' }} viewBox="0 0 24 24">
                                                 <path fill="#666666"
@@ -1104,7 +1221,7 @@ const ProductsList = () => {
                         </div>
                     </div>
                     {
-                        (onSearchStatus == 'finished' && showTable) ?
+                        (onSearchStatus === 'finished' && showTable) ?
                         (
                             <div className="col-12">
                             <div className="card shadow bg-white table-padding mb-3 py-3 ">
@@ -1141,7 +1258,7 @@ const ProductsList = () => {
                                             <p className='mb-0'>&nbsp; <i className='fa fa-close cursor-pointer mb-0' onClick={clearVendorList}></i> </p>
                                             }
                                             {
-                                                !isVendorDropdownOpen && selectedVendors.length == 0 &&
+                                                !isVendorDropdownOpen && selectedVendors.length === 0 &&
                                                     <p className='mb-0 d-flex'>&nbsp; <i className='fa fa-caret-down pr-2 cursor-pointer float-right align-self-center' ></i> </p>
                                             }
     
@@ -1191,7 +1308,7 @@ const ProductsList = () => {
                                                 <p className='mb-0'>&nbsp; <i className='fa fa-close cursor-pointer' onClick={clearSpecialityList}></i> </p>
                                             }
                                             {
-                                                !isSpecialityDropdownOpen && selectedSpecialities.length == 0 &&
+                                                !isSpecialityDropdownOpen && selectedSpecialities.length === 0 &&
                                                 <p className='mb-0 d-flex'>&nbsp; <i className='fa fa-caret-down pr-2 cursor-pointer float-right align-self-center' onClick={handleSpecialitySelectionClick}></i> </p>
                                                 
                                             }
@@ -1274,7 +1391,7 @@ const ProductsList = () => {
                                                                         <a className="dropdown-item d-flex flex-row justify-content-between" onClick={() => toggleSortByOption(vendor.value)}>
                                                                             {vendor.label}
                                                                             {
-                                                                                selectedSortBy == vendor.value ?
+                                                                                selectedSortBy === vendor.value ?
                                                                                     <span className="acc-icons" style={{ color: 'green' }}>
                                                                                         <i className="fa fa-check-circle"></i>
                                                                                     </span>
@@ -1339,15 +1456,15 @@ const ProductsList = () => {
                                                                 .map((col: any, i: any) => {
                                                                     return col.isVisible &&
                                                                         (
-                                                                            col.type == "image" ?
+                                                                            col.type === "image" ?
                                                                                 <td onClick={()=>openProductDetails(product, col)} key={i} className="product-small-image px-0" style={{ paddingLeft: '0px !important' }}><a href="#" className="pop">
                                                                                     <img src={product[col.column]} alt="" />
                                                                                 </a></td>
                                                                                 :
     
                                                                                 (
-                                                                                    col.type == "active-draft-button" ?
-                                                                                        <td onClick={()=>openProductDetails(product, col)} key={i}><span className={product[col.column] == 'Active' ? "product-active" : "product-draft"}>{product[col.column]}</span></td>
+                                                                                    col.type === "active-draft-button" ?
+                                                                                        <td onClick={()=>openProductDetails(product, col)} key={i}><span className={product[col.column] === 'Active' ? "product-active" : "product-draft"}>{product[col.column]}</span></td>
                                                                                         :
                                                                                         <td onClick={()=>openProductDetails(product, col)} key={i}>{product[col.column]}</td>
                                                                                 )
@@ -1390,13 +1507,13 @@ const ProductsList = () => {
 
                         :
 
-                        onSearchStatus == 'not-started' ?
+                        onSearchStatus === 'not-started' ?
 
                         <></>
 
                         :
 
-                        onSearchStatus == 'initiated'
+                        onSearchStatus === 'initiated'
                         ?
                         
                         <div className="loader-container mt-2">

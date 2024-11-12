@@ -1,8 +1,7 @@
-import { Navigate, Outlet, useLocation } from "react-router-dom";
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from "react-redux";
+import { Navigate } from "react-router-dom";
+import React from 'react';
+import { useDispatch } from "react-redux";
 import { updateSelectedStore, updateStoresList } from "../reduxStore/storesSlice";
-import { getReferenceValues } from "../../services/AccountService";
 import { updateReferenceValues } from "../reduxStore/referenceValuesSlice";
 import axiosInstance from "../interceptor/axiosInstance";
 import { AccountUrls } from "../constants/UrlConstants";

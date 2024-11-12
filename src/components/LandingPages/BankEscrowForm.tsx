@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import * as Yup from 'yup';
-import { Formik, Field, ErrorMessage, FormikValues, FormikHelpers } from 'formik';
+import { Formik, Field, ErrorMessage, FormikValues } from 'formik';
 import { showSuccessMessage } from '../../shared/notificationProvider';
 import { getBankInfo, saveBankInfo } from '../../services/AccountService';
 import { BANK_INFO_UPDATE_SUCCESS } from '../../utils/constants/NotificationConstants';
@@ -11,7 +11,7 @@ const bankEscrowValidationSchema = Yup.object().shape({
     escrow_account_number: Yup.string()
     .when('has_escrow_account', 
         ([has_escrow_account], schema) => {
-            if(has_escrow_account == 'Y' ){ 
+            if(has_escrow_account === 'Y' ){ 
                return Yup.string().required("Enter Escrow Account Number");
             }
             else{
@@ -21,7 +21,7 @@ const bankEscrowValidationSchema = Yup.object().shape({
     confirm_escrow_account_number: Yup.string()
     .when(['escrow_account_number', 'has_escrow_account'],
         ([escrow_account_number, has_escrow_account], schema) => {
-            if(escrow_account_number && escrow_account_number.split('').length>0 && has_escrow_account == 'Y'){ 
+            if(escrow_account_number && escrow_account_number.split('').length>0 && has_escrow_account === 'Y'){ 
                return Yup.string().required("Confirm Account Number")
                .oneOf([Yup.ref('escrow_account_number'), ''], 'Account number must match');
             }
@@ -32,7 +32,7 @@ const bankEscrowValidationSchema = Yup.object().shape({
     ifsc: Yup.string()
     .when('has_escrow_account', 
         ([has_escrow_account], schema) => {
-            if(has_escrow_account == 'Y'){ 
+            if(has_escrow_account === 'Y'){ 
                return Yup.string().required("Enter Bank Name");
             }
             else{
@@ -42,7 +42,7 @@ const bankEscrowValidationSchema = Yup.object().shape({
     bank_name: Yup.string()
     .when('has_escrow_account', 
         ([has_escrow_account], schema) => {
-            if(has_escrow_account == 'Y'){ 
+            if(has_escrow_account === 'Y'){ 
                return Yup.string().required("Enter Bank Name");
             }
             else{
@@ -93,7 +93,7 @@ const BankEscrowForm = (props: any) => {
 
     const updateBankEscrowDetails = (values: FormikValues) => {
         let filteredValuesPayload = values;
-        if(values.has_escrow_account == 'N'){
+        if(values.has_escrow_account === 'N'){
             const{ confirm_escrow_account_number,escrow_account_number, ifsc,bank_name, ...filteredValues } = filteredValuesPayload;
             filteredValuesPayload = filteredValues 
         }

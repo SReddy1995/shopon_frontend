@@ -1,5 +1,4 @@
-import { ProductSearchUrls, UserUrls } from "../utils/constants/UrlConstants";
-import axios from "axios";
+import { ProductSearchUrls } from "../utils/constants/UrlConstants";
 import productSearchAxiosInstance from "../utils/interceptor/productsSearchAxiosInstance";
 
 export const initiateSearch = async (body: any) => {

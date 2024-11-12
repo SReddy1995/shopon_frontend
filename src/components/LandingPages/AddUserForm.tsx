@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import * as Yup from 'yup';
-import { Formik, Field, ErrorMessage, FormikValues, FormikHelpers } from 'formik';
+import { Formik, Field, ErrorMessage, FormikValues } from 'formik';
 import { createUser, updateUser } from '../../services/UsersService';
 import { showSuccessMessage } from '../../shared/notificationProvider';
 import Multiselect from 'multiselect-react-dropdown';
@@ -88,7 +88,7 @@ const AddUserForm = (props: any) => {
   ]
 
   useEffect(() => {
-    if(props.mode == 'Edit'){
+    if(props.mode === 'Edit'){
       setData();
     }
     else{
@@ -106,7 +106,7 @@ const AddUserForm = (props: any) => {
   }
 
   const submitForm = (values: FormikValues) => {
-    if(props.mode == 'Add'){
+    if(props.mode === 'Add'){
       addUser(values)
     }
     else{

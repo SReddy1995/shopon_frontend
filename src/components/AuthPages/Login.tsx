@@ -1,13 +1,10 @@
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { Formik, Field, ErrorMessage, FormikValues, FormikHelpers } from 'formik';
 import * as Yup from 'yup';
-import { ActionLink, CustomForm, FormContainer, FormFieldContainer, Input, LoginPageCardContainer, SubmitButton, FormLabel, ButtonsContainer, AuthButton} from '../../shared/styles/GlobalStyles';
 import { useNavigate } from 'react-router-dom';
 import { requestOtpForLogin, verifyLoginOTP } from '../../services/AuthService';
 import { showSuccessMessage } from '../../shared/notificationProvider';
-import { useDispatch } from 'react-redux';
-import { updateSelectedStore, updateStoresList } from '../../utils/reduxStore/storesSlice';
 import { LOGIN_SUCCESSFULL, OTP_SENT } from '../../utils/constants/NotificationConstants';
 
 interface FormValues {
@@ -64,13 +61,6 @@ const Login = () => {
       .catch(err => {
           setAllowEnterOtp(false);
       });
-   }
-
-   const cancelEnterOTP = (values: FormikValues,
-    { resetForm }: any, initialValues: FormikValues) => {
-    console.log("inside cancel OTP")
-    setAllowEnterOtp(false);
-    resetForm()
    }
   
    const verifyOtp = (values: FormikValues,
@@ -152,6 +142,14 @@ const Login = () => {
     }
   };
 
+  const handleEnterPressForSearch = (event: any, values: any) => {
+    console.log(event, values)
+    if (event.key === 'Enter') {
+      event.preventDefault()
+        login(event, values)
+    }
+  };
+
   return (
     <div className="register-page register-body">
       <div className="main">
@@ -180,6 +178,7 @@ const Login = () => {
                                     id="exampleFormControlInput1"
                                     disabled={allowEnterOtp} 
                                     className={errors.email_address && touched.email_address ? 'form-control input-field-error' : 'form-control'}
+                                    onKeyDown={(e: any)=>handleEnterPressForSearch(e,values)}
                               />
                               <ErrorMessage className='error' name="email_address" component="div" />
                             </div>
