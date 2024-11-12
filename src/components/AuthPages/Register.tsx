@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
-import { Formik, Field, ErrorMessage, FormikValues, FormikHelpers } from 'formik';
+import { Formik, Field, ErrorMessage, FormikValues } from 'formik';
 import { registerBuyer } from '../../services/AuthService';
 import { showSuccessMessage } from '../../shared/notificationProvider';
 import { REGISTRATION_SUCCESSFULL } from '../../utils/constants/NotificationConstants';

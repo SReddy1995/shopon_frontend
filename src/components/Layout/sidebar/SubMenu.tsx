@@ -11,7 +11,7 @@ const SidebarLinkContainer = styled.div`
 
 const SidebarLink = styled(NavLink)<{ depth: any; depthstep: any }>`
   display: flex;
-  color: ${(props) => props.depth == 1 ? 'black' : 'rgb(97,97,97)'};
+  color: ${(props) => props.depth === 1 ? 'black' : 'rgb(97,97,97)'};
   justify-content: space-between;
   align-items: center;
   padding: 5px ${(props) => (props.depth * (props.depthstep+8))}px;
@@ -40,7 +40,7 @@ const IconContainer = styled.span`
 
 const SidebarLabel = styled.span<{ depth: any}>`
   margin-left: 8px;
-  padding-left: ${(props) => props.depth == 1 ? 0 : 25}px;
+  padding-left: ${(props) => props.depth === 1 ? 0 : 25}px;
   font-size: 0.9rem;
   font-weight: inherit;
 `;

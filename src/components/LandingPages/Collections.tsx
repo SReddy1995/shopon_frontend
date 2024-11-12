@@ -296,7 +296,7 @@ const Collections = () => {
 
                                                     :
 
-                                                    !isVendorDropdownOpen && selectedVendors.length == 0 ?
+                                                    !isVendorDropdownOpen && selectedVendors.length === 0 ?
                                                         <span>&nbsp; <i className='fa fa-caret-down pr-2 cursor-pointer float-right' onClick={handleVendorSelectionClick}></i> </span>
 
                                                         :
@@ -348,7 +348,7 @@ const Collections = () => {
 
                                                     :
 
-                                                    !isSpecialityDropdownOpen && selectedSpecialities.length == 0 ?
+                                                    !isSpecialityDropdownOpen && selectedSpecialities.length === 0 ?
                                                         <span>&nbsp; <i className='fa fa-caret-down pr-2 cursor-pointer float-right' onClick={handleSpecialitySelectionClick}></i> </span>
 
                                                         :
@@ -418,15 +418,15 @@ const Collections = () => {
                                                             .map((col: any, i: any) => {
                                                                 return col.isVisible &&
                                                                     (
-                                                                        col.type == "image" ?
+                                                                        col.type === "image" ?
                                                                             <td key={i} className="product-small-image px-0" style={{ paddingLeft: '0px !important' }}><a href="#" className="pop">
                                                                                 <img src={item[col.column]} alt="" />
                                                                             </a></td>
                                                                             :
 
                                                                             (
-                                                                                col.type == "active-draft-button" ?
-                                                                                    <td  key={i}><span className={item[col.column] == 'Active' ? "product-active" : "product-draft"}>{item[col.column]}</span></td>
+                                                                                col.type === "active-draft-button" ?
+                                                                                    <td  key={i}><span className={item[col.column] === 'Active' ? "product-active" : "product-draft"}>{item[col.column]}</span></td>
                                                                                     :
                                                                                     <td  key={i}>{item[col.column]}</td>
                                                                             )

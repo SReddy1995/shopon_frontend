@@ -1,4 +1,4 @@
-import { Options, Splide, SplideSlide, SplideTrack } from '@splidejs/react-splide';
+import { Options, Splide, SplideSlide } from '@splidejs/react-splide';
 import React, { useEffect, useRef, useState } from 'react'
 
 const ProductDetails = (props: any) => {

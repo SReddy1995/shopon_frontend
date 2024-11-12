@@ -1,6 +1,5 @@
 import axiosInstance from "../utils/interceptor/axiosInstance";
 import { UserUrls } from "../utils/constants/UrlConstants";
-import { jwtDecode } from "jwt-decode";
 
 
 export const getUsersList = async () => {

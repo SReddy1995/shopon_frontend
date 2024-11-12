@@ -1,7 +1,6 @@
-import { Navigate, Outlet, useLocation } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import React from 'react';
-import { useDispatch, useSelector } from "react-redux";
-import { updateSelectedStore, updateStoresList } from "../reduxStore/storesSlice";
+import { useSelector } from "react-redux";
 
 const StoreActivationGuard = ({ children }: any) => {
     const location = useLocation();

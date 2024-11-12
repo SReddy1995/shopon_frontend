@@ -6,52 +6,6 @@ const Profile = () => {
         <>
         <h1>
             Profile <br/>
-            Profile <br/>
-            Profile <br/>
-            Profile <br/>
-            Profile <br/>
-            Profile <br/>
-            Profile <br/>
-            Profile <br/>
-            Profile <br/>
-            Profile <br/>
-            Profile <br/>
-            Profile <br/>
-            Profile <br/>
-            Profile <br/>
-            Profile <br/>
-            Profile <br/>
-            Profile <br/>
-            Profile <br/>
-            Profile <br/>
-            Profile <br/>
-            Profile <br/>
-            Profile <br/>
-             Profile <br/>
-             Profile <br/>
-             Profile <br/>
-             Profile <br/>
-             Profile <br/>
-             Profile <br/>
-             Profile <br/>
-             Profile <br/>
-             Profile <br/>
-             Profile <br/>
-             Profile <br/>
-             Profile <br/>
-             Profile <br/>
-             Profile <br/>
-             Profile <br/>
-             Profile <br/>
-             Profile <br/>
-             Profile <br/>
-             Profile <br/>
-             Profile <br/>
-             Profile <br/>
-             Profile <br/>
-             Profile <br/>
-             Profile <br/>
-             Profile <br/>
  
         </h1>
         </>

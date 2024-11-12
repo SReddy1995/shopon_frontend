@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { updateProductsColumnsList, updateSelectedProductsList, updateSourcePage } from '../../utils/reduxStore/productsSlice';
+import { updateSelectedProductsList, updateSourcePage } from '../../utils/reduxStore/productsSlice';
 import { syncProductsWithShopify } from '../../services/ProductsService';
 import { showSuccessMessage } from '../../shared/notificationProvider';
 import { SYNC_PRODUCTS_WITH_SUCCESS } from '../../utils/constants/NotificationConstants';
@@ -125,15 +125,15 @@ const PreviewProducts = () => {
                                                                 .map((col: any, i: any) => {
                                                                     return col.isVisible &&
                                                                         (
-                                                                            col.type == "image" ?
+                                                                            col.type === "image" ?
                                                                                 <td key={i} className="product-small-image px-0" style={{ paddingLeft: '0px !important' }}><a href="#" className="pop">
                                                                                     <img src={product[col.column]} alt="" />
                                                                                 </a></td>
                                                                                 :
 
                                                                                 (
-                                                                                    col.type == "active-draft-button" ?
-                                                                                        <td key={i}><span className={product[col.column] == 'Active' ? "product-active" : "product-draft"}>{product[col.column]}</span></td>
+                                                                                    col.type === "active-draft-button" ?
+                                                                                        <td key={i}><span className={product[col.column] === 'Active' ? "product-active" : "product-draft"}>{product[col.column]}</span></td>
                                                                                         :
                                                                                         <td key={i}>{product[col.column]}</td>
                                                                                 )

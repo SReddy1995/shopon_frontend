@@ -1,12 +1,9 @@
-import Multiselect from 'multiselect-react-dropdown';
 import React, { useEffect, useRef, useState } from 'react';
 import '@splidejs/splide/dist/css/splide.min.css';
 import { v4 as uuidv4 } from 'uuid';
-
-import { Options, Splide, SplideSlide, SplideTrack } from '@splidejs/react-splide';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateProductsColumnsList, updateProductsListFilters, updateSelectedCategoryForProductsList, updateSelectedProductsList, updateSourcePage } from '../../utils/reduxStore/productsSlice';
-import { showSuccessMessage, showWarningMessage } from '../../shared/notificationProvider';
+import { showWarningMessage } from '../../shared/notificationProvider';
 import { NO_PRODUCTS_SELECTED } from '../../utils/constants/NotificationConstants';
 import { useNavigate } from 'react-router-dom';
 import SearchableMultiselectList from './SearchableMultiselectList';
@@ -583,7 +580,7 @@ const ProductsList = () => {
                     cancellable: item['@ondc/org/cancellable'] === true? 'Yes': 'No',
                     cod: item['@ondc/org/available_on_cod'] === true? 'Yes': 'No',
                     shippingTime: item['@ondc/org/time_to_ship']? getHumanizedData(item['@ondc/org/time_to_ship']): '',
-                    sellerPickupReturn: item['@ondc/org/seller_pickup_return'] == true? 'Yes': 'No',
+                    sellerPickupReturn: item['@ondc/org/seller_pickup_return'] === true? 'Yes': 'No',
                     returnWindow: item['@ondc/org/return_window']? getHumanizedData(item['@ondc/org/return_window']): '',
                     manufacturer: 
                     (
@@ -1007,7 +1004,7 @@ const ProductsList = () => {
     // products
 
     const openProductDetails = (product: any, col: any) => {
-        if (col.column == "product") {
+        if (col.column === "product") {
             if (!isProductDetailsOpen) {
                 setSelectedProductToViewDetails(product)
                 setIsProductDetailsOpen(true)
@@ -1224,7 +1221,7 @@ const ProductsList = () => {
                         </div>
                     </div>
                     {
-                        (onSearchStatus == 'finished' && showTable) ?
+                        (onSearchStatus === 'finished' && showTable) ?
                         (
                             <div className="col-12">
                             <div className="card shadow bg-white table-padding mb-3 py-3 ">
@@ -1261,7 +1258,7 @@ const ProductsList = () => {
                                             <p className='mb-0'>&nbsp; <i className='fa fa-close cursor-pointer mb-0' onClick={clearVendorList}></i> </p>
                                             }
                                             {
-                                                !isVendorDropdownOpen && selectedVendors.length == 0 &&
+                                                !isVendorDropdownOpen && selectedVendors.length === 0 &&
                                                     <p className='mb-0 d-flex'>&nbsp; <i className='fa fa-caret-down pr-2 cursor-pointer float-right align-self-center' ></i> </p>
                                             }
     
@@ -1311,7 +1308,7 @@ const ProductsList = () => {
                                                 <p className='mb-0'>&nbsp; <i className='fa fa-close cursor-pointer' onClick={clearSpecialityList}></i> </p>
                                             }
                                             {
-                                                !isSpecialityDropdownOpen && selectedSpecialities.length == 0 &&
+                                                !isSpecialityDropdownOpen && selectedSpecialities.length === 0 &&
                                                 <p className='mb-0 d-flex'>&nbsp; <i className='fa fa-caret-down pr-2 cursor-pointer float-right align-self-center' onClick={handleSpecialitySelectionClick}></i> </p>
                                                 
                                             }
@@ -1394,7 +1391,7 @@ const ProductsList = () => {
                                                                         <a className="dropdown-item d-flex flex-row justify-content-between" onClick={() => toggleSortByOption(vendor.value)}>
                                                                             {vendor.label}
                                                                             {
-                                                                                selectedSortBy == vendor.value ?
+                                                                                selectedSortBy === vendor.value ?
                                                                                     <span className="acc-icons" style={{ color: 'green' }}>
                                                                                         <i className="fa fa-check-circle"></i>
                                                                                     </span>
@@ -1459,15 +1456,15 @@ const ProductsList = () => {
                                                                 .map((col: any, i: any) => {
                                                                     return col.isVisible &&
                                                                         (
-                                                                            col.type == "image" ?
+                                                                            col.type === "image" ?
                                                                                 <td onClick={()=>openProductDetails(product, col)} key={i} className="product-small-image px-0" style={{ paddingLeft: '0px !important' }}><a href="#" className="pop">
                                                                                     <img src={product[col.column]} alt="" />
                                                                                 </a></td>
                                                                                 :
     
                                                                                 (
-                                                                                    col.type == "active-draft-button" ?
-                                                                                        <td onClick={()=>openProductDetails(product, col)} key={i}><span className={product[col.column] == 'Active' ? "product-active" : "product-draft"}>{product[col.column]}</span></td>
+                                                                                    col.type === "active-draft-button" ?
+                                                                                        <td onClick={()=>openProductDetails(product, col)} key={i}><span className={product[col.column] === 'Active' ? "product-active" : "product-draft"}>{product[col.column]}</span></td>
                                                                                         :
                                                                                         <td onClick={()=>openProductDetails(product, col)} key={i}>{product[col.column]}</td>
                                                                                 )
@@ -1510,13 +1507,13 @@ const ProductsList = () => {
 
                         :
 
-                        onSearchStatus == 'not-started' ?
+                        onSearchStatus === 'not-started' ?
 
                         <></>
 
                         :
 
-                        onSearchStatus == 'initiated'
+                        onSearchStatus === 'initiated'
                         ?
                         
                         <div className="loader-container mt-2">

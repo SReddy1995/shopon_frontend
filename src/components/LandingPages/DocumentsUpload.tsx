@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import * as Yup from 'yup';
-import { Formik, Field, ErrorMessage, FormikValues, FormikHelpers, FieldArray } from 'formik';
 import { showSuccessMessage, showWarningMessage } from '../../shared/notificationProvider';
-import Multiselect from 'multiselect-react-dropdown';
 import { useSelector } from 'react-redux';
-import { deleteDocument, downloadDocuments, getDocumentDetailsList, getLegalEntityDetails, getOnlineStore, saveOnlineStore } from '../../services/AccountService';
+import { deleteDocument, downloadDocuments, getDocumentDetailsList, getLegalEntityDetails } from '../../services/AccountService';
 import ModalWindow from './ModalWindow';
 import UploadFileForm from './UploadFileForm';
 import ConfirmDelete from './ConfirmDelete';
@@ -147,13 +144,13 @@ const DocumentsUpload = (props: any) => {
       };
 
       const openUploadFileModal = (key: any) => {
-        let data = documentsList.filter((x: any)=> x.document_type == key)[0];
+        let data = documentsList.filter((x: any)=> x.document_type === key)[0];
         setUploadFileDetails(data)
         openModal();
     }
 
     const openConfirmDeleteModal = (key: any) => {
-        let data = documentsList.filter((x: any)=> x.document_type == key)[0];
+        let data = documentsList.filter((x: any)=> x.document_type === key)[0];
         setUploadFileDetails(data)
         setConfirmDeleteModalOpen(true);
     }
