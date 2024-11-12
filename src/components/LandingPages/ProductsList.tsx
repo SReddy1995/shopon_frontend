@@ -557,6 +557,7 @@ const ProductsList = () => {
 
       const formatEachItem = (provider: any, bppdescriptors: any, stream_id: any) => {
         let arr: any[] = []
+            if(provider && provider.items && provider.items.length>0){
             provider.items.forEach((item: any, index: any)=>{
                 arr.push({
                     stream_id: stream_id,
@@ -626,6 +627,7 @@ const ProductsList = () => {
                 })
                 
             })
+        }
         return arr;
       }
 

@@ -40,7 +40,7 @@ const IconContainer = styled.span`
 
 const SidebarLabel = styled.span<{ depth: any}>`
   margin-left: 8px;
-  padding-left: ${(props) => props.depth == 1 ? 0 : 25}px;
+  padding-left: ${(props) => props.depth === 1 ? 0 : 25}px;
   font-size: 13px;
   font-weight: inherit;
 `;
