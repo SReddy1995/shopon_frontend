@@ -229,7 +229,7 @@ const DocumentsUpload = (props: any) => {
                              documentsList
                              .map((doc: any, index: any) => {
                                     return <div key={index} className={"accordion mt-1 " +( doc.applicable ? 'd-block': 'd-none')} id="accordionExample">
-                                    <div className="accordion-item mt-4">
+                                    <div className="accordion-item mt-3">
                                         <h2 className="accordion-header documents-tab-accordian" id="headingOne">
                                             <button className="accordion-button" type="button"  
                                                 aria-expanded="true" aria-controls="collapseOne">

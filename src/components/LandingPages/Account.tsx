@@ -146,7 +146,7 @@ const Account = () => {
             <>
             <AccountInfoOverviewContainer>
                 <SubscriptionInfoContainer>
-                    <div className="card shadow p-3 bg-grey payment-info-card">
+                    <div className="card shadow p-3 bg-grey payment-info-card mt-0">
                         <div className="d-flex">
                             <div className="flex-grow">
                                 <p className="font-weight-bold"><strong>Subscriber ID : </strong><span>{user_details.subscriber_id}</span></p>
@@ -200,13 +200,13 @@ const Account = () => {
                 </SubscriptionProgressContainer>
             </AccountInfoOverviewContainer>
 
-            <h3 className="text-center mb-3 mt-4">
+            <h3 className="text-center mt-0">
                 Account Setup
             </h3>
 
             <AccountInfoDetailsContainer>
                 <AccountDetailsInfoCardContainer>
-                    <div className="card mt-3 mb-3 shadow p-3">
+                    <div className="card mt-0 mb-3 shadow p-3">
                         <ul className="nav nav-pills mb-3 border-bottom border-2" id="pills-tab" role="tablist">
                             {
                                 storeStatus.map((tab: any, index: number) => {

@@ -282,7 +282,7 @@ const RegistrationForm = (props:any) => {
                                                 name="additional_info"
                                                 component="textarea"
                                                 id="exampleFormControlTextarea1"
-                                                rows={3}
+                                                rows={1}
                                                 placeholder="Other Information"
                                                 className={'form-control dashboard-namefield ' + (errors.additional_info && touched.additional_info ? 'input-field-error' : '')}
                                             />
@@ -297,7 +297,7 @@ const RegistrationForm = (props:any) => {
                                                 onClick={() => {
                                                     handleSubmit();
                                                 }}>
-                                                Submit
+                                                Save
                                             </button>
                                         </a>
                                     </div>

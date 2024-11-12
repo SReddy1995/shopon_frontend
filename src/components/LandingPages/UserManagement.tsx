@@ -74,7 +74,7 @@ const UserManagement = () => {
 
     return (
         <>
-            <div className="container-fluid h-auto mt-4 px-5">
+            <div className="container-fluid h-auto mt-3 px-5">
                 <div className="row">
                     <div className="col-6 text-left">
                         <h3>User Management</h3>
@@ -87,7 +87,7 @@ const UserManagement = () => {
                 {
                     !loading ?
 
-                        <div className="row mt-4">
+                        <div className="row mt-2">
                             <div className="col-12 ">
                                 <div className="table-cards shadow bg-white">
 
@@ -103,7 +103,7 @@ const UserManagement = () => {
                                                     <th>Contact No</th>
                                                     <th>Role</th>
                                                     <th>Status</th>
-                                                    <th>Action</th>
+                                                    <th className="text-center">Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody className="custom-td-space">
@@ -132,8 +132,8 @@ const UserManagement = () => {
 
                                                                             <td className='text-danger'> Disabled</td>
                                                                         }
-                                                                        <td>
-                                                                            <i className='fa fa-eye cursor-pointer text-danger'
+                                                                        <td className="text-center">
+                                                                            <i className='fa fa-pencil cursor-pointer'
                                                                             onClick={() => {
                                                                                 openEditUser(user)
                                                                             }}></i>
