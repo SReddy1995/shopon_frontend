@@ -338,7 +338,7 @@ input,.form-select{
 }
 
 .accordion-body{
-  padding: 10px 16px 0px 16px;
+  padding: 10px 16px 0px 20px;
   text-align: left;
 }
 .accordion-button:not(.collapsed){

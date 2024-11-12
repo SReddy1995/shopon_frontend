@@ -39,17 +39,21 @@ const IconContainer = styled.span`
 `;
 
 const SidebarLabel = styled.span<{ depth: any}>`
-  margin-left: 8px;
-  padding-left: ${(props) => props.depth === 1 ? 0 : 25}px;
+  padding-left: ${(props) => props.depth === 1 ? 0 : 40}px;
   font-size: 13px;
   font-weight: inherit;
+  color: ${(props) => props.depth === 1 ? '#303030' : 'rgba(97, 97, 97, 1)'};
+  margin-left: ${(props) => props.depth === 1 ? 8 : 0}px;
+    &:hover {
+     color: ${(props) => props.depth === 1 ? '#006C50;' : '#006c50'};
+}
 `;
 
 const SubMenuContainer = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  font-size: 14px;
+  font-size: 13px;
 `;
 
 interface SubMenuProps {
