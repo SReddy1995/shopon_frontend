@@ -152,6 +152,14 @@ const Login = () => {
     }
   };
 
+  const handleEnterPressForSearch = (event: any, values: any) => {
+    console.log(event, values)
+    if (event.key === 'Enter') {
+      event.preventDefault()
+        login(event, values)
+    }
+  };
+
   return (
     <div className="register-page register-body">
       <div className="main">
@@ -180,6 +188,7 @@ const Login = () => {
                                     id="exampleFormControlInput1"
                                     disabled={allowEnterOtp} 
                                     className={errors.email_address && touched.email_address ? 'form-control input-field-error' : 'form-control'}
+                                    onKeyDown={(e: any)=>handleEnterPressForSearch(e,values)}
                               />
                               <ErrorMessage className='error' name="email_address" component="div" />
                             </div>
