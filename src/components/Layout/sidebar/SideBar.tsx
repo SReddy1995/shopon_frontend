@@ -1,8 +1,7 @@
 
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import SubMenu from "./SubMenu";
-import { useSelector } from "react-redux";
 import { SidebarData } from "./SidebarData";
 
 const SidebarNav = styled.nav`

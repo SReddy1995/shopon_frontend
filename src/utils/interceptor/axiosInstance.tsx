@@ -22,7 +22,7 @@ axiosInstance.interceptors.request.use(
         config.headers.Authorization = `Bearer ${token}`;
       }
     }
-    if(config.url == "/document" && config.method == 'post'){
+    if(config.url === "/document" && config.method === 'post'){
       config.headers['Content-Type'] = 'multipart/form-data'
     }
     // Check if the method is POST
@@ -68,18 +68,18 @@ axiosInstance.interceptors.response.use(
     const originalRequest = error.config;
     // showWarningMessage(error.error.msg)
     console.log(error)
-    if(error.status == 401 && error.response.data.error.code == "1020005"){
+    if(error.status === 401 && error.response.data.error.code === "1020005"){
       showWarningMessage(error.error)
       localStorage.clear();
       window.location.href = '/login';
     }
-    else if(error.status == 404){
+    else if(error.status === 404){
       showWarningMessage(NOT_FOUND_ERROR)
     }
     else{
       showWarningMessage(error.response.data.error.msg)
     }
-    // if (error.response.status === 401 && error.response.message == "Token Expired") {
+    // if (error.response.status === 401 && error.response.message === "Token Expired") {
     //   try {
     //     const refreshToken = localStorage.getItem('refreshToken');
     //     const response = await axios.post('/refresh-token', { refreshToken });
@@ -96,7 +96,7 @@ axiosInstance.interceptors.response.use(
     //     window.location.href = '/';
     //   }
     // }
-    // if (error.response.status === 401 && error.response.message == "Unauthorized") {
+    // if (error.response.status === 401 && error.response.message === "Unauthorized") {
     //     localStorage.clear();
     //     window.location.href = '/';
     // }

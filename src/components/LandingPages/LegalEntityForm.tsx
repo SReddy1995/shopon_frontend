@@ -23,7 +23,7 @@ const legalEntityValidationSchema = Yup.object().shape({
     authorised_signatory_pan: Yup.string()
     .when('pan_or_aadhar', 
         ([pan_or_aadhar], schema) => {
-            if(pan_or_aadhar == "pan"){
+            if(pan_or_aadhar === "pan"){
                return Yup.string().matches(panRegex,'Invalid format').required("Pan required");
             }
             else{
@@ -33,7 +33,7 @@ const legalEntityValidationSchema = Yup.object().shape({
     authorised_signatory_aadhaar: Yup.string()
     .when('pan_or_aadhar', 
         ([pan_or_aadhar], schema) => {
-            if(pan_or_aadhar == "aadhar"){
+            if(pan_or_aadhar === "aadhar"){
                return Yup.string().matches(aadharRegex,'Invalid format').required("Aadhar required");
             }
             else{
@@ -56,7 +56,7 @@ const legalEntityValidationSchema = Yup.object().shape({
     company_cin: Yup.string()
     .when('nature_of_organization_type', 
         ([nature_of_organization_type], schema) => {
-            if(nature_of_organization_type == "COMP"){
+            if(nature_of_organization_type === "COMP"){
                return Yup.string().required("CIN is required");
             }
             else{
@@ -66,7 +66,7 @@ const legalEntityValidationSchema = Yup.object().shape({
     company_llpin: Yup.string()
     .when('nature_of_organization_type', 
         ([nature_of_organization_type], schema) => {
-            if(nature_of_organization_type == "LLP"){
+            if(nature_of_organization_type === "LLP"){
                return Yup.string().required("LLPIN is required");
             }
             else{
@@ -185,8 +185,8 @@ const LegalEntityForm = (props:any) => {
         initialValues.building_street_area = data.addressDetails.building_street_area
         initialValues.locality_town = data.addressDetails.locality_town
         initialValues.city_id = data.addressDetails.city_id
-        initialValues.state = refValues.cities.filter((x: any) => x.city_id == data.addressDetails.city_id)[0].state.description
-        initialValues.country = refValues.cities.filter((x: any) => x.city_id == data.addressDetails.city_id)[0].state.country.description
+        initialValues.state = refValues.cities.filter((x: any) => x.city_id === data.addressDetails.city_id)[0].state.description
+        initialValues.country = refValues.cities.filter((x: any) => x.city_id === data.addressDetails.city_id)[0].state.country.description
         initialValues.pincode = data.addressDetails.pincode
       }
 
@@ -369,7 +369,7 @@ const LegalEntityForm = (props:any) => {
                                     </div>
 
                                     {
-                                        values.pan_or_aadhar == "aadhar"
+                                        values.pan_or_aadhar === "aadhar"
                                         ?
                                             <div className="mb-3 form-field-container-full-width">
                                                 <label htmlFor="exampleFormControlInput1" className="form-label required">Authorized Signatory Aadhaar</label>
@@ -561,7 +561,7 @@ const LegalEntityForm = (props:any) => {
                             </div>
 
                             {
-                                        values.nature_of_organization_type == "LLP"
+                                        values.nature_of_organization_type === "LLP"
                                             ?
                                             <div className="mb-3 form-field-container-full-width">
                                                 <label htmlFor="exampleFormControlInput1" className="form-label required">Company LLPIN</label>
@@ -586,7 +586,7 @@ const LegalEntityForm = (props:any) => {
                                     }
 
                                     {
-                                        values.nature_of_organization_type == "COMP"
+                                        values.nature_of_organization_type === "COMP"
                                             ?
 
                                             <div className="mb-3 form-field-container-full-width">
@@ -651,8 +651,8 @@ const LegalEntityForm = (props:any) => {
                                             onChange={(e: any) => {
                                                 const { value } = e.target;
                                                 setFieldValue("city_id", value);
-                                                setFieldValue("state", refValues.cities.filter((x: any) => x.city_id == value)[0].state.description);
-                                                setFieldValue("country", refValues.cities.filter((x: any) => x.city_id == value)[0].state.country.description);
+                                                setFieldValue("state", refValues.cities.filter((x: any) => x.city_id === value)[0].state.description);
+                                                setFieldValue("country", refValues.cities.filter((x: any) => x.city_id === value)[0].state.country.description);
                                             }} 
                                         >
                                             <option value={""}>--select--</option>

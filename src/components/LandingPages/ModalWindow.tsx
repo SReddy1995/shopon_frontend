@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 const Backdrop = (props: any) => (
     props.show ? <div className="Backdrop" ></div> : null
