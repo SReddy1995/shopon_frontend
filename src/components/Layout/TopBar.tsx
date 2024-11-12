@@ -175,7 +175,7 @@ const TopBar = (props:any) => {
                     <BarsIcon />
                 </SidebarToggler>
                 <LogoIcon></LogoIcon>
-                <LogoTitle>Eazehub</LogoTitle>
+                <LogoTitle>EazeHub</LogoTitle>
             </LogoContainer>
             <ProfileContainer className="profile-container">
                 <ProfileName >
