@@ -232,7 +232,7 @@ const OnlineStoreForm = (props: any) => {
                                                     {values.categories.length > 0 &&
                                                         values.categories.map((category, index) => (
                                                                 <tr key={index} id='addr0' data-id="0" className="hidden">
-                                                                    <td data-name="name">
+                                                                    <td data-name="name" className="input-table-column">
                                                                         <Field as="select"
                                                                             name={`categories.${index}.category_id`}
                                                                             className="form-select custom-select dashboard-three-namefield">
@@ -248,7 +248,7 @@ const OnlineStoreForm = (props: any) => {
                                                                         </Field>
                                                                         <ErrorMessage className='error' name={`categories.${index}.category_id`} component="div" />
                                                                     </td>
-                                                                    <td data-name="name">
+                                                                    <td data-name="name" className="input-table-column">
                                                                         <div className="input-group online-store-form">
                                                                         <Field
                                                                             name={`categories.${index}.city`}
@@ -259,9 +259,9 @@ const OnlineStoreForm = (props: any) => {
                                                                         </div>
                                                                     </td>
 
-                                                                    <td data-name="del" className="text-center">
+                                                                    <td data-name="del" className="text-center input-table-column">
                                                                         <a className="btn-link"><button onClick={() => remove(index)} type="button"
-                                                                            className="btn-custom btn-danger" ><i className="fa fa-trash"></i></button></a>
+                                                                            className="btn-danger-icon" ><i className="fa fa-trash"></i></button></a>
                                                                     </td>
                                                                 </tr>
                                                         ))}
@@ -288,7 +288,7 @@ const OnlineStoreForm = (props: any) => {
                             onClick={() => {
                                 handleSubmit();
                             }}
-                            className="btn-custom mt-2 btn-right" >Submit</button></a>
+                            className="btn-custom mt-2 btn-right" >Save</button></a>
                         </div>
                     </form>
                     )}

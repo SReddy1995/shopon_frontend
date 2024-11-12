@@ -310,7 +310,7 @@ const AddUserForm = (props: any) => {
                               onClick={() => {
                                 handleSubmit();
                               }}>
-                              Submit
+                              Save
                             </button>
                           </a>
                         </div>

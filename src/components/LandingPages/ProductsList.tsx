@@ -67,7 +67,8 @@ const ProductsList = () => {
             column: "seller",
             type: "text",
             serialNo: 2,
-            isVisible: true
+            isVisible: true,
+            minWidth:'80px'
         },
         {
             coltitle: "Source",
@@ -75,7 +76,8 @@ const ProductsList = () => {
             column: "source",
             type: "text",
             serialNo: 2,
-            isVisible: true
+            isVisible: true,
+            minWidth:'80px'
         },
         {
             coltitle: "Measure",
@@ -83,7 +85,8 @@ const ProductsList = () => {
             column: "measure",
             type: "text",
             serialNo: 2,
-            isVisible: true
+            isVisible: true,
+             minWidth:'50px'
         },
         {
             coltitle: "Availability",
@@ -268,7 +271,7 @@ const ProductsList = () => {
     
     const tablescrollstyles = {
         loadonscroll:{
-          maxHeight: showBackButton ==='show' ? "300px" : "340px",
+          maxHeight: showBackButton ==='show' ? "300px" : "450px",
           overflowY: 'scroll' as 'scroll',
         }
       };
@@ -1098,7 +1101,7 @@ const ProductsList = () => {
         <>
         {
             !fullPageLoading && (
-                <div className="container-fluid h-auto mt-4 px-5">
+                <div className="container-fluid h-auto mt-3 px-5">
                 {
                     showBackButton ==='show' && (
                         <div className="row d-flex">
@@ -1114,7 +1117,7 @@ const ProductsList = () => {
                     )
                 }
 
-                <div className="row mt-2">
+                <div className="row mt-0">
                     <div className="col-6 text-left">
                         <h3>Products</h3>
                         {/* {
@@ -1138,9 +1141,9 @@ const ProductsList = () => {
                     }
 
                 </div>
-                <div className="row mt-4">
+                <div className="row mt-0">
                     <div className="col-12 ">
-                        <div className="card shadow bg-white table-padding mb-3 p-3">
+                        <div className="card shadow bg-white table-padding mb-2 px-3 py-2">
                             <div className="row">
                                 <div className="col-3">
                                     <div className="select-location-container text-left">
@@ -1224,7 +1227,7 @@ const ProductsList = () => {
                         (onSearchStatus === 'finished' && showTable) ?
                         (
                             <div className="col-12">
-                            <div className="card shadow bg-white table-padding mb-3 py-3 ">
+                            <div className="card shadow bg-white table-padding mb-3 py-2 ">
                                 {/* <div className="row">
                                     <div className="col"> */}
                                 <div className='filter-sort-container pb-2 px-3'>
@@ -1437,7 +1440,7 @@ const ProductsList = () => {
                                             <th ></th>
                                             {
                                                 columns.map((col: any, index: any) => {
-                                                    return col.isVisible && <th key={index} className={col.minWidth? 'min-width-column':'common-width'}>{col.coltitle}</th>
+                                                    return col.isVisible && <th key={index} className={col.minWidth? 'min-width-column':'common-width'} style={{ padding: '0.375rem'}}>{col.coltitle}</th>
                                                 })
                                             }
     

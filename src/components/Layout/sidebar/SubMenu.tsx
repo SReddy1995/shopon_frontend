@@ -23,7 +23,7 @@ const SidebarLink = styled(NavLink)<{ depth: any; depthstep: any }>`
   font-weight: 550;
   margin-top: 1px;
   color:#303030;
-  font-size:14px;
+  font-size:13px;
   line-height: 40px;
 
   &:hover {
@@ -40,8 +40,8 @@ const IconContainer = styled.span`
 
 const SidebarLabel = styled.span<{ depth: any}>`
   margin-left: 8px;
-  padding-left: ${(props) => props.depth === 1 ? 0 : 25}px;
-  font-size: 0.9rem;
+  padding-left: ${(props) => props.depth == 1 ? 0 : 25}px;
+  font-size: 13px;
   font-weight: inherit;
 `;
 
