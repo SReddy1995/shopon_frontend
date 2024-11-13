@@ -197,7 +197,7 @@ const TopBar = (props:any) => {
                                 selectedStoreData && stores_list ?
                                 stores_list
                                 .map((store : any, index: any) => {
-                                    return store.is_active === 'Y' && <li key={index} onClick={() => handleStoreSwitched(store)}>
+                                    return store.is_active !== 'INACTIVE' && <li key={index} onClick={() => handleStoreSwitched(store)}>
                                         <a className="dropdown-item ml-0 pl-0 ellipsis" >
                                             <span className="acc-icons"
                                                 style={{ color: selectedStoreData && store.buyer_id === selectedStoreData ? 'green' : '' }}>
