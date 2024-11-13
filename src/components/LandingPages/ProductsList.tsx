@@ -268,7 +268,7 @@ const ProductsList = () => {
     const productsFromStore = useSelector((store: any) => store.products.selectedProductsList);
     const filtersFromStore = useSelector((store: any) => store.products.productListFilters);
     const msgIdFromStore = useSelector((store: any) => store.products.productListFilters).messageID
-    
+    const categoryFromCollections = useSelector((store: any) => store.products.selectedCategoryForProductList)
     const tablescrollstyles = {
         loadonscroll:{
           maxHeight: showBackButton ==='show' ? "300px" : "450px",
@@ -341,9 +341,10 @@ const ProductsList = () => {
             }
             else if(sourcePage && sourcePage === 'collections'){
                 dispatch(updateSourcePage(''));
+                setSelectedCategories(categoryFromCollections)
                 dispatch(updateSelectedCategoryForProductsList(''));
                 setShowBackButton('show')
-                initiateSearchForProducts()
+                initiateSearchForProducts(categoryFromCollections)
             }
             else{
                 // setMessageID("MSG"+uuidv4())
@@ -415,9 +416,9 @@ const ProductsList = () => {
         },0)
       }
 
-    const initiateSearchForProducts = () => {
+    const initiateSearchForProducts = (cats: any) => {
 
-        if(selectedCategories.length === 0){
+        if(cats.length === 0){
             showWarningMessage("No Category selected")
         }
         else{
@@ -434,7 +435,7 @@ const ProductsList = () => {
                     
                     search_string: searchString
                 },
-                domain: getSelectedCategories()
+                domain: getSelectedCategories(cats)
             }
             initiateSearch(payload)
             .then((data: any) => {
@@ -456,8 +457,8 @@ const ProductsList = () => {
 
       }
 
-      const getSelectedCategories = () => {
-        return selectedCategories.map((item: any) => item.value);
+      const getSelectedCategories = (cats: any) => {
+        return cats.map((item: any) => item.value);
       }
 
     const fetchSearchResults = (msgId: any) => {
@@ -1094,7 +1095,7 @@ const ProductsList = () => {
 
     const handleEnterPressForSearch = (event: any) => {
         if (event.key === 'Enter') {
-            initiateSearchForProducts();
+            initiateSearchForProducts(selectedCategories);
         }
       };
     
@@ -1167,7 +1168,7 @@ const ProductsList = () => {
                                         <div className="category-dropdown-toggler w-auto cursor-pointer" onClick={toggleDropdown} >
                                             <p className="category-text w-auto mb-0 ellipsis">
                                             {
-                                                    selectedCategories.length > 0 ?
+                                                    selectedCategories && selectedCategories.length > 0 ?
                                                         <>
                                                             {
     
@@ -1199,7 +1200,7 @@ const ProductsList = () => {
 
                                         <input className="search_input category-selector-search-input" type="text" name="" value={searchString} placeholder="search here" 
                                         onChange={handleSearchStringChange} onKeyDown={handleEnterPressForSearch}/>
-                                        <button id="searchQuerySubmit" type="submit" name="searchQuerySubmit" onClick={initiateSearchForProducts}>
+                                        <button id="searchQuerySubmit" type="submit" name="searchQuerySubmit" onClick={()=>initiateSearchForProducts(selectedCategories)}>
                                             <svg style={{ width: '24px', height: '24px' }} viewBox="0 0 24 24">
                                                 <path fill="#666666"
                                                     d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z" />
