@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { requestOtpForLogin, verifyLoginOTP } from '../../services/AuthService';
 import { showSuccessMessage } from '../../shared/notificationProvider';
 import { LOGIN_SUCCESSFULL, OTP_SENT } from '../../utils/constants/NotificationConstants';
+import logo from '../../assets/images/logo-black.png';
 
 interface FormValues {
  email_address: string;
@@ -163,7 +164,8 @@ const Login = () => {
                   >
                   {({ errors, touched, values, handleSubmit, setFieldValue, isValid, dirty, resetForm, initialValues}) => (
                       <section className="wrapper">
-                        <h2 className="index-logo pb-4">Shop On</h2>
+                        {/* <h2 className="index-logo pb-4">Shop On</h2> */}
+                        <img src={logo} style={{margin:'auto',width:'250px'}} className='mb-4'/>
                         <hr/>
                           <h3 className="text-center heading mt-2">Login</h3>
 
