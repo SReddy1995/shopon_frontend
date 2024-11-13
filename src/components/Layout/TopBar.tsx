@@ -8,6 +8,7 @@ import { updateSelectedStore } from '../../utils/reduxStore/storesSlice';
 import { getAccountDetails } from '../../services/AccountService';
 import { useLocation } from 'react-router-dom';
 import { updateLOcationToReload } from '../../utils/reduxStore/storeSwitchSlice';
+import logo from '../../assets/images/logo-white.png';
 
 const OverlayMenuContainer = styled.div<{ overlaymenu: any }>`
   background-color: #FFFFFF;
@@ -174,8 +175,8 @@ const TopBar = (props:any) => {
                 <SidebarToggler onClick={handleSideBarToggle}>
                     <BarsIcon />
                 </SidebarToggler>
-                <LogoIcon></LogoIcon>
-                <LogoTitle>EazeHub</LogoTitle>
+                {/* <LogoIcon></LogoIcon> */}
+                <LogoTitle><img src={logo} style={{marginLeft:'-25px'}}/></LogoTitle>
             </LogoContainer>
             <ProfileContainer className="profile-container">
                 <ProfileName >

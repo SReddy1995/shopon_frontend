@@ -5,6 +5,7 @@ import { Formik, Field, ErrorMessage, FormikValues } from 'formik';
 import { registerBuyer } from '../../services/AuthService';
 import { showSuccessMessage } from '../../shared/notificationProvider';
 import { REGISTRATION_SUCCESSFULL } from '../../utils/constants/NotificationConstants';
+import logo from '../../assets/images/logo-black.png';
 
 interface FormValues {
   firstname: string;
@@ -73,7 +74,8 @@ const Register = () => {
         <main className="main">
           <div className="custom-container">
             <section className="wrapper">
-              <h2 className="index-logo pb-4">Shop On</h2>
+              {/* <h2 className="index-logo pb-4">Shop On</h2> */}
+              <img src={logo} style={{margin:'auto',width:'250px'}} className='mb-4'/>
               <hr/>
               <h3 className="text-center heading mt-2">Registration</h3>
               <Formik
