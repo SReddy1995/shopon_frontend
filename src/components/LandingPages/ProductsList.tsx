@@ -59,7 +59,7 @@ const ProductsList = () => {
             type: "text",
             serialNo: 2,
             isVisible: true,
-            minWidth:'100px'
+            minWidth:'180px'
         },
         {
             coltitle: "Seller",
@@ -68,7 +68,7 @@ const ProductsList = () => {
             type: "text",
             serialNo: 2,
             isVisible: true,
-            minWidth:'80px'
+            minWidth:'130px'
         },
         {
             coltitle: "Source",
@@ -77,7 +77,7 @@ const ProductsList = () => {
             type: "text",
             serialNo: 2,
             isVisible: true,
-            minWidth:'80px'
+            minWidth:'120px'
         },
         {
             coltitle: "Measure",
@@ -86,7 +86,7 @@ const ProductsList = () => {
             type: "text",
             serialNo: 2,
             isVisible: true,
-             minWidth:'50px'
+             minWidth:'100px'
         },
         {
             coltitle: "Availability",
@@ -94,7 +94,8 @@ const ProductsList = () => {
             column: "availability",
             type: "text",
             serialNo: 2,
-            isVisible: true
+            isVisible: true,
+            minWidth:'100px'
         },
         {
             coltitle: "Max Quantity",
@@ -102,7 +103,8 @@ const ProductsList = () => {
             column: "maximumQuantity",
             type: "text",
             serialNo: 2,
-            isVisible: true
+            isVisible: true,
+              minWidth:'110px'
         },
         {
             coltitle: "Price",
@@ -110,7 +112,8 @@ const ProductsList = () => {
             column: "price",
             type: "text",
             serialNo: 2,
-            isVisible: true
+            isVisible: true,
+             minWidth:'105px'
         },
         {
             coltitle: "Category",
@@ -118,7 +121,8 @@ const ProductsList = () => {
             column: "category",
             type: "text",
             serialNo: 2,
-            isVisible: true
+            isVisible: true,
+             minWidth:'auto'
         },
         {
             coltitle: "Seller Location",
@@ -126,7 +130,8 @@ const ProductsList = () => {
             column: "sellerLocation",
             type: "text",
             serialNo: 2,
-            isVisible: true
+            isVisible: true,
+             minWidth:'145px'
         },
         {
             coltitle: "Returnable",
@@ -134,7 +139,8 @@ const ProductsList = () => {
             column: "returnable",
             type: "text",
             serialNo: 2,
-            isVisible: true
+            isVisible: true,
+             minWidth:'100px'
         },
         {
             coltitle: "Cancellable",
@@ -142,7 +148,8 @@ const ProductsList = () => {
             column: "cancellable",
             type: "text",
             serialNo: 2,
-            isVisible: true
+            isVisible: true,
+              minWidth:'100px'
         },
         {
             coltitle: "COD",
@@ -150,7 +157,8 @@ const ProductsList = () => {
             column: "cod",
             type: "text",
             serialNo: 2,
-            isVisible: true
+            isVisible: true,
+              minWidth:'60px'
         },
         {
             coltitle: "Shipping time",
@@ -158,7 +166,8 @@ const ProductsList = () => {
             column: "shippingTime",
             type: "text",
             serialNo: 2,
-            isVisible: true
+            isVisible: true,
+              minWidth:'110px'
         },
         {
             coltitle: "Seller return",
@@ -166,7 +175,8 @@ const ProductsList = () => {
             column: "sellerPickupReturn",
             type: "text",
             serialNo: 2,
-            isVisible: true
+            isVisible: true,
+              minWidth:'110px'
         },
         {
             coltitle: "Return Window",
@@ -174,7 +184,8 @@ const ProductsList = () => {
             column: "returnWindow",
             type: "text",
             serialNo: 2,
-            isVisible: true
+            isVisible: true,
+              minWidth:'110px'
         },
         {
             coltitle: "Manufacturer",
@@ -182,7 +193,8 @@ const ProductsList = () => {
             column: "manufacturer",
             type: "text",
             serialNo: 2,
-            isVisible: true
+            isVisible: true,
+              minWidth:'160px'
         },
         {
             coltitle: "Fulfillment",
@@ -190,7 +202,8 @@ const ProductsList = () => {
             column: "fulfillment",
             type: "text",
             serialNo: 2,
-            isVisible: true
+            isVisible: true,
+              minWidth:'auto'
         },
         {
             coltitle: "Serviceability",
@@ -198,7 +211,8 @@ const ProductsList = () => {
             column: "serviceability",
             type: "text",
             serialNo: 2,
-            isVisible: true
+            isVisible: true,
+              minWidth:'auto'
         },
         {
             coltitle: "Deliverable At",
@@ -206,7 +220,8 @@ const ProductsList = () => {
             column: "deliverableAt",
             type: "text",
             serialNo: 2,
-            isVisible: true
+            isVisible: true,
+              minWidth:'160px'
         },
         
     ])
@@ -271,7 +286,7 @@ const ProductsList = () => {
     const categoryFromCollections = useSelector((store: any) => store.products.selectedCategoryForProductList)
     const tablescrollstyles = {
         loadonscroll:{
-          maxHeight: showBackButton ==='show' ? "300px" : "450px",
+          maxHeight: showBackButton ==='show' ? "300px" : 'calc(100vh - 270px)',
           overflowY: 'scroll' as 'scroll',
         }
       };
@@ -1120,7 +1135,7 @@ const ProductsList = () => {
                     )
                 }
 
-                <div className="row mt-0">
+                <div className="row mt-0 mb-1">
                     <div className="col-6 text-left">
                         <h3>Products</h3>
                         {/* {
@@ -1134,9 +1149,16 @@ const ProductsList = () => {
                               ))
                         } */}
                     </div>
+                    
                     {
                         selectedProducts.length>0 && (
                             <div className="col-6 text-right">
+                                {
+                                       
+                                                <span><strong><i className="fa fa-minus-square"></i><span className="px-3">{selectedProducts.length} products selected </span></strong></span>
+                                        
+                                        
+                                    }
                                 <a className="btn-link"><button type="button"
                                     className="btn-custom" onClick={previewSelected}>Preview Selected</button></a>
                             </div>
@@ -1146,7 +1168,7 @@ const ProductsList = () => {
                 </div>
                 <div className="row mt-0">
                     <div className="col-12 ">
-                        <div className="card shadow bg-white table-padding mb-2 px-3 py-2">
+                        <div className="card shadow bg-white table-padding mb-2 px-3 py-1">
                             <div className="row">
                                 <div className="col-3">
                                     <div className="select-location-container text-left">
@@ -1423,7 +1445,7 @@ const ProductsList = () => {
     
                                 </div>
     
-                                    {
+                                    {/* {
                                         selectedProducts.length>0 && (
                                         <div className="mb-2 mt-2 me-2" style={{ display: 'flex', justifyContent: 'space-between' }}>
                                             <div className="px-3" style={{ marginTop: 'auto' }}>
@@ -1431,7 +1453,7 @@ const ProductsList = () => {
                                             </div>
                                         </div>  
                                         )
-                                    }
+                                    } */}
     
                                 <div className='table-responsive'                            
                                 onScroll={handleScroll}
@@ -1443,7 +1465,7 @@ const ProductsList = () => {
                                             <th ></th>
                                             {
                                                 columns.map((col: any, index: any) => {
-                                                    return col.isVisible && <th key={index} className={col.minWidth? 'min-width-column':'common-width'} style={{ padding: '0.375rem'}}>{col.coltitle}</th>
+                                                    return col.isVisible && <th key={index} style={{ padding: '0.375rem',minWidth:col.minWidth?col.minWidth:"auto"}}>{col.coltitle}</th>
                                                 })
                                             }
     

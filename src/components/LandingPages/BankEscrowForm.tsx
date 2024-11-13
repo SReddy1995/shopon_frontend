@@ -300,7 +300,7 @@ const BankEscrowForm = (props: any) => {
                                         onClick={() => {
                                         handleSubmit();
                                         }}
-                                        className="btn-custom  mt-2 btn-right" >Submit</button></a>
+                                        className="btn-custom  mt-2 btn-right" >Save</button></a>
                                 </div>
                             </form>
                         )}

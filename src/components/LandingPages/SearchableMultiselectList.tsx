@@ -59,7 +59,7 @@ const SearchableMultiselectList = (props : any) => {
                     onChange={handleSearchTermChange}
                 />
             </div>
-            <ul className="list-unstyled mt-3 searchable-multiselction-list">
+            <ul className="list-unstyled mt-2 searchable-multiselction-list">
 
                 {
                     filteredItems
@@ -75,7 +75,7 @@ const SearchableMultiselectList = (props : any) => {
                 }
 
             </ul>
-            <ul className="list-unstyled mt-4 ">
+            <ul className="list-unstyled mt-2 ">
             <li className='d-flex flex-row px-2'>
                     <p className='clear-text mb-0 cursor-pointer' onClick={clearSelectedList}>
                         Clear
