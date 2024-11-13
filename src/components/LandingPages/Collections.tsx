@@ -331,6 +331,10 @@ const Collections = () => {
         setTotalPages(Math.ceil(filteredData.length / entriesPerPage))
     },[filteredData])
 
+    useEffect(()=>{
+        setCurrentPage(1)
+    },[ondcProduct,shopifyProduct])
+
     // Sort filtered data
     // const sortedData = filteredData.sort((a: any, b: any) => {
     //     if (a[sortConfig.key] < b[sortConfig.key]) return sortConfig.direction === 'asc' ? -1 : 1;
@@ -460,22 +464,6 @@ const Collections = () => {
                             {
                                 !noData &&
                                     <div className="card shadow bg-white table-padding mb-3 p-3 d-flex flex-row align-items-center">
-                                        <div>
-                                            <div className='checkbox-with-label'>
-                                                <input type="checkbox"
-                                                    checked={ondcProduct}
-                                                    onChange={handleOndcCheckboxChange}
-                                                />
-                                                <p className='mb-0 pl-1'>ONDC Products</p>
-                                            </div>
-                                            <div className='checkbox-with-label mt-3'>
-                                                <input type="checkbox"
-                                                    checked={shopifyProduct}
-                                                    onChange={handleShopifyCheckboxChange}
-                                                />
-                                                <p className='mb-0 pl-1'>Shopify Products</p>
-                                            </div>
-                                        </div>
                                         <div className='collections-filters'>
                                             <div className='collections-search-by-product-container'>
                                                 <input className="search_input category-selector-search-input" type="text" name="" onChange={handleSearch} placeholder="Search by product" />
@@ -499,6 +487,28 @@ const Collections = () => {
                             !noData &&
                                 <div className="col-12">
                                     <div className="card shadow bg-white table-padding mb-3 pb-3 ">
+                                            <div className="row">
+                                                <div className="col-12">
+                                                    <div className="mb-2 p-3 d-flex flex-row align-items-center">
+                                                        <div className='d-flex flex-row align-items-center'>
+                                                            <div className='checkbox-with-label'>
+                                                                <input type="checkbox"
+                                                                    checked={ondcProduct}
+                                                                    onChange={handleOndcCheckboxChange}
+                                                                />
+                                                                <p className='mb-0 pl-1'>ONDC Products</p>
+                                                            </div>
+                                                            <div className='checkbox-with-label pl-3'>
+                                                                <input type="checkbox"
+                                                                    checked={shopifyProduct}
+                                                                    onChange={handleShopifyCheckboxChange}
+                                                                />
+                                                                <p className='mb-0 pl-1'>Shopify Products</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         <div className="row">
                                             <div className="col-12">
                                                 <div className='table-responsive'>
