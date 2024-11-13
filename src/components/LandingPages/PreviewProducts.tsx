@@ -82,7 +82,7 @@ const PreviewProducts = () => {
     return (
         <>
 
-            <div className="container-fluid h-auto mt-4 px-5">
+            <div className="container-fluid h-auto mt-3 px-5">
                 <div className="row d-flex">
                     <div className="col-6 col-md-4 text-left">
                         <div className='back-button-container '>
@@ -93,7 +93,7 @@ const PreviewProducts = () => {
                     </div>
                    
                 </div>
-                <div className="row d-flex mt-4">
+                <div className="row d-flex mt-1">
                 <div className="col text-left">
                         <div>
 
@@ -106,10 +106,10 @@ const PreviewProducts = () => {
                             className="btn-custom" onClick={syncWithShopify}>Sync with shopify</button></a>
                     </div>
                 </div>
-                <div className="row mt-4">
+                <div className="row mt-1">
                     <div className="col-12">
                     <div className="card shadow bg-white table-padding mb-3 pb-3 ">
-                            <div className='table-responsive'>
+                            <div className='table-responsive' style={{borderRadius:'0.75rem'}}>
                                 <table className="table table-hover  product-table text-left" style={{ marginBottom: '0px', cursor: 'pointer' }}>
 
                                     <thead className="table-light">
@@ -129,7 +129,7 @@ const PreviewProducts = () => {
                                                 .map((product: any, index: any) => {
                                                     return <tr key={index}>
                                                         <td className='products-list'><button type="button"
-                                                            className="btn-custom-light" ><i className="fa fa-trash text-danger" 
+                                                            className="btn-danger-icon" ><i className="fa fa-trash text-danger" 
                                                             onClick={()=> deleteProduct(product)}
                                                             style={{ fontSize: '14px' }}></i></button></td>
                                                         {

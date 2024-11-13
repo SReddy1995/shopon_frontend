@@ -1949,6 +1949,7 @@ font-size: 12px !important;
   height: calc(100vh - 15px);
   right: 0px;
   top:5px;
+  z-index: 2;
 }
 
 .product-details-listing{
@@ -2326,4 +2327,9 @@ table thead th {
 }
 .index-card img{
   border-radius: 0.75rem !important;
+}
+.dropdown-item:active {
+  color:#303030 !important;
+  text-decoration: none;
+  background-color: #f1f1f1 !important;
 }
