@@ -105,7 +105,7 @@ const PreviewProducts = () => {
                                             <th ></th>
                                             {
                                                 columns.map((col: any, index: any) => {
-                                                    return col.isVisible && <th key={index}>{col.coltitle}</th>
+                                                    return col.isVisible && <th key={index} style={{ padding: '0.375rem',minWidth:col.minWidth?col.minWidth:"auto"}}>{col.coltitle}</th>
                                                 })
                                             }
 
