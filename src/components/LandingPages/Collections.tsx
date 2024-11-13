@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import SearchableMultiselectList from './SearchableMultiselectList';
 import SimilarProductsImage from "../../assets/images/product-similar-2.png";
 import { useNavigate } from 'react-router-dom';
@@ -202,8 +202,8 @@ const Collections = () => {
                 "sku": "12344",
                 "inventory_quantity": 15,
                 "alternate_id": "12344",
-                "is_ondc_product": "true",
-                "ondc_category": "Fashion",
+                "is_ondc_product": "false",
+                "ondc_category": "Grocery",
                 "media": [
                     {
                         "media_content_type": "EXTERNAL_VIDEO",
@@ -274,7 +274,9 @@ const Collections = () => {
       const [totalPages, setTotalPages] = useState(Math.ceil(data.length / entriesPerPage));
       const [currentPage, setCurrentPage] = useState(1);
       const refValues = useSelector((store: any) => store.refValues.referenceList);
-      const [searchTerm, setSearchTerm] = useState({key: '', value: ''}); // Global search
+      const [searchTerm, setSearchTerm] = useState(''); // Global search
+      const [ondcProduct, setOndcProduct] =useState(true)
+      const [shopifyProduct, setShopifyProduct] =useState(true)
     
       const handlePrevPage = () => {
         if (currentPage > 1) {
@@ -290,34 +292,51 @@ const Collections = () => {
 
     // Handle Global Search
     const handleSearch = (event: any) => {
-        setSearchTerm((prevData: any) => {
-           return {
-            key: 'product',
-            value:  event.target.value
-           }
-        });
+        setSearchTerm(event.target.value);
     };
 
-    const handleProductTypeFilter = (event: any) => {
-        setSearchTerm((prevData: any) => {
-           return {
-            key: 'is_ondc_product',
-            value:  "true"
-           }
-        });
+     // Handle the checkbox change event
+    const handleOndcCheckboxChange = (event: any) => {
+        setOndcProduct(event.target.checked); // Set the state to the checkbox's checked value
+        if(event.target.checked === false && shopifyProduct === false){
+            setShopifyProduct(true)
+        }
+    };
+
+    const handleShopifyCheckboxChange = (event: any) => {
+        setShopifyProduct(event.target.checked); // Set the state to the checkbox's checked value
+        if(event.target.checked === false && ondcProduct === false){
+            setOndcProduct(true)
+        }
     };
 
     // Filter data based on global search
-    const filteredData = data.filter((item : any) =>
-        item.title.toLowerCase().includes(searchTerm.value.toLowerCase())
+    const filteredData = data.filter((item : any) =>{
+        // return item.title.toLowerCase().includes(searchTerm.value.toLowerCase())
+        if(ondcProduct === true && shopifyProduct === true){
+            return item.title.toLowerCase().includes(searchTerm.toLowerCase())
+        }
+        else if(ondcProduct === true && shopifyProduct === false){
+            return item.title.toLowerCase().includes(searchTerm.toLowerCase()) && 
+            (item.is_ondc_product === true)
+        }
+        else if(ondcProduct === false && shopifyProduct === true){
+            return item.title.toLowerCase().includes(searchTerm.toLowerCase()) && 
+            (item.is_ondc_product === false)
+        }
+    }
     );
 
+    useEffect(()=>{
+        setTotalPages(Math.ceil(filteredData.length / entriesPerPage))
+    },[filteredData])
+
     // Sort filtered data
-    const sortedData = filteredData.sort((a: any, b: any) => {
-        if (a[sortConfig.key] < b[sortConfig.key]) return sortConfig.direction === 'asc' ? -1 : 1;
-        if (a[sortConfig.key] > b[sortConfig.key]) return sortConfig.direction === 'asc' ? 1 : -1;
-        return 0;
-    });
+    // const sortedData = filteredData.sort((a: any, b: any) => {
+    //     if (a[sortConfig.key] < b[sortConfig.key]) return sortConfig.direction === 'asc' ? -1 : 1;
+    //     if (a[sortConfig.key] > b[sortConfig.key]) return sortConfig.direction === 'asc' ? 1 : -1;
+    //     return 0;
+    // });
 
     
     // const filteredData = React.useMemo(() => {
@@ -331,24 +350,25 @@ const Collections = () => {
     //     return filteredItems;
     //   }, [data]);
 
-    //   const sortedData = React.useMemo(() => {
-    //     console.log("here")
-    //     console.log("api response = ",data)
+      const sortedData = React.useMemo(() => {
+        console.log("here")
+        console.log("api response = ",data)
 
-    //     let sortableItems = [...filteredData ];
-    //     if (sortConfig !== null) {
-    //       sortableItems.sort((a: any, b: any) => {
-    //         if (a[sortConfig.key] < b[sortConfig.key]) {
-    //           return sortConfig.direction === 'ascending' ? -1 : 1;
-    //         }
-    //         if (a[sortConfig.key] > b[sortConfig.key]) {
-    //           return sortConfig.direction === 'ascending' ? 1 : -1;
-    //         }
-    //         return 0;
-    //       });
-    //     }
-    //     return sortableItems;
-    //   }, [data, sortConfig]);
+        
+        let sortableItems = [...filteredData ];
+        if (sortConfig !== null) {
+          sortableItems.sort((a: any, b: any) => {
+            if (a[sortConfig.key] < b[sortConfig.key]) {
+              return sortConfig.direction === 'ascending' ? -1 : 1;
+            }
+            if (a[sortConfig.key] > b[sortConfig.key]) {
+              return sortConfig.direction === 'ascending' ? 1 : -1;
+            }
+            return 0;
+          });
+        }
+        return sortableItems;
+      }, [data, sortConfig,filteredData]);
     
       const getPaginatedData = () => {
         const start = (currentPage - 1) * entriesPerPage;
@@ -386,14 +406,14 @@ const Collections = () => {
       }
 
       const processAPIResponse = (response : any) => {
-        setTotalPages(Math.ceil(response.length / entriesPerPage))
+        
            let res =  response.map((x: any)=> x.collection)
            setData((prevData: any) => {
                return  res.map((item: any)=>{
                     return {
                         ...item,
                         thumbnail: getThumbnail(item),
-                        is_ondc_product: item.is_ondc_product === "true" ? 'Yes' : 'No',
+                        is_ondc_product: item.is_ondc_product === "true" ? true : false,
                         price: item.price && item.price !== '' ? formatCurrency(item.price) : ''
                     }
                 })
@@ -443,14 +463,15 @@ const Collections = () => {
                                         <div>
                                             <div className='checkbox-with-label'>
                                                 <input type="checkbox"
-                                                    checked={true}
-                                                    onChange={()=>handleProductTypeFilter('is_ondc_product')}
+                                                    checked={ondcProduct}
+                                                    onChange={handleOndcCheckboxChange}
                                                 />
                                                 <p className='mb-0 pl-1'>ONDC Products</p>
                                             </div>
                                             <div className='checkbox-with-label mt-3'>
                                                 <input type="checkbox"
-                                                    checked={true}
+                                                    checked={shopifyProduct}
+                                                    onChange={handleShopifyCheckboxChange}
                                                 />
                                                 <p className='mb-0 pl-1'>Shopify Products</p>
                                             </div>

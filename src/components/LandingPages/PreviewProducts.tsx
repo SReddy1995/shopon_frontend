@@ -10,6 +10,7 @@ const PreviewProducts = () => {
 
 
     const products = useSelector((store: any) => store.products.selectedProductsList);
+    const selectedDomains = useSelector((store: any) => store.products.productListFilters).category;
     const cols = useSelector((store: any) => store.products.selectedColumnsList);
     const [selectedProductsList, setSelectedProductsList] = useState(products);
     const [columns, setColumns] = useState(cols);
@@ -17,6 +18,7 @@ const PreviewProducts = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const user_details = localStorage.getItem('user_details') ? JSON.parse(localStorage.getItem('user_details') || '{}') : null;
+    const refValues = useSelector((store: any) => store.refValues.referenceList);
 
     const navigateToProductsList = () => {
         dispatch(updateSelectedProductsList(selectedProductsList));
@@ -30,6 +32,7 @@ const PreviewProducts = () => {
             message_id: messageID,
             subscriber_id: "ondc.opteamix.com",
             buyer_id: user_details.buyer_id,
+            domains: getDomains(),
             stream_details: selectedProductsList.map((product:any) => {
                 return {
                     stream_id: product.stream_id,
@@ -40,6 +43,15 @@ const PreviewProducts = () => {
         }
 
         return result;
+    }
+
+    const getDomains = () => {
+        const idsToFilter = selectedDomains.map((item: any) => item.value); // Extracts the 'id' from each object in array2
+
+        const filteredDomains = refValues.categoriesType.filter((cat: any) => idsToFilter.includes(cat.ondc_categories_id));
+
+        return filteredDomains
+
     }
 
     const syncWithShopify = () => {
