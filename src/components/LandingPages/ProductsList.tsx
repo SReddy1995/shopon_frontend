@@ -68,7 +68,7 @@ const ProductsList = () => {
             type: "text",
             serialNo: 2,
             isVisible: true,
-            minWidth:'130px'
+            minWidth:'150px'
         },
         {
             coltitle: "Source",
@@ -77,7 +77,7 @@ const ProductsList = () => {
             type: "text",
             serialNo: 2,
             isVisible: true,
-            minWidth:'120px'
+            minWidth:'140px'
         },
         {
             coltitle: "Measure",
@@ -122,7 +122,7 @@ const ProductsList = () => {
             type: "text",
             serialNo: 2,
             isVisible: true,
-             minWidth:'auto'
+             minWidth:'160px'
         },
         {
             coltitle: "Seller Location",
@@ -1168,7 +1168,7 @@ const ProductsList = () => {
                 </div>
                 <div className="row mt-0">
                     <div className="col-12 ">
-                        <div className="card shadow bg-white table-padding mb-2 px-3 py-1">
+                        <div className="card shadow bg-white table-padding mb-2 px-1 py-1">
                             <div className="row">
                                 <div className="col-3">
                                     <div className="select-location-container text-left">
