@@ -7,7 +7,7 @@ const productsSlice = createSlice({
         selectedProductsList : [],
         selectedColumnsList: [],
         sourcePage: '',
-        selectedCategoryForProductList: '',
+        selectedCategoryForProductList: null,
         productListFilters: {
             location: null,
             category: null,
