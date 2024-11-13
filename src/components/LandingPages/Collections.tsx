@@ -120,7 +120,7 @@ const Collections = () => {
             coltitle: "ONDC Product",
             visibilityDisplayName: "ONDC Product",
             column: "is_ondc_product",
-            type: "text",
+            type: "product_type",
             serialNo: 3,
             isVisible: true,
             minWidth:'160px'
@@ -545,7 +545,19 @@ const Collections = () => {
                                                                                                     col.type === "active-draft-button" ?
                                                                                                         <td key={i}><span className={item[col.column] === 'Active' ? "product-active" : "product-draft"}>{item[col.column]}</span></td>
                                                                                                         :
-                                                                                                        <td key={i}>{item[col.column]}</td>
+                                                                                                        (
+                                                                                                            col.type === "product_type" ?
+                                                                                                            (
+                                                                                                                item[col.column] === true?
+                                                                                                                <td key={i}><span>Yes</span></td>
+                                                                                                                :
+                                                                                                                <td key={i}><span>No</span></td>
+                                                                                                            )
+                                                                                                            
+                                                                                                            :
+                                                                                                            <td key={i}>{item[col.column]}</td>
+                                                                                                        )
+                                                                                                       
 
                                                                                                 )
 
