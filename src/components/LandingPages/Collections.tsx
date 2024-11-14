@@ -25,6 +25,7 @@ const Collections = () => {
         dispatch(updateSourcePage('collections'));
         navigate('/landing-page/products/products-list')
     }
+    
 
     const [columns_from_api, setColumnsFromApi] = useState<any[]>([
         {
@@ -60,7 +61,7 @@ const Collections = () => {
             type: "active-draft-button",
             serialNo: 3,
             isVisible: true,
-            minWidth:'160px'
+            minWidth:'120px'
         },
         {
             coltitle: "Description",
@@ -69,7 +70,7 @@ const Collections = () => {
             type: "text",
             serialNo: 3,
             isVisible: true,
-            minWidth:'160px'
+            minWidth:'275px'
         },
         {
             coltitle: "SKU",
@@ -78,7 +79,7 @@ const Collections = () => {
             type: "text",
             serialNo: 3,
             isVisible: true,
-            minWidth:'160px'
+            minWidth:'130px'
         },
         {
             coltitle: "Product Type",
@@ -478,18 +479,18 @@ const Collections = () => {
         <>
         {
             !loading&&
-                <div className="container-fluid h-auto mt-4 px-5">
-                    <div className="row mt-2">
+                <div className="container-fluid h-auto mt-3 px-5">
+                    <div className="row mt-1">
                         <div className="col-12 text-left">
                             <h3>Collections</h3>
                         </div>
                     </div>
-                    <div className="row mt-4">
+                    <div className="row mt-1">
                         <div className="col-12 ">
                             {
                                 !noData &&
-                                    <div className="card shadow bg-white table-padding mb-3 p-3 d-flex flex-row align-items-center">
-                                        <div className='collections-filters'>
+                                    <div className="card shadow bg-white table-padding mb-2 px-1 py-1 d-flex flex-row align-items-center">
+                                        <div className='collections-filters' style={{width:'100%'}}>
                                             <div className='collections-search-by-product-container'>
                                                 <input className="search_input category-selector-search-input" type="text" name="" onChange={handleSearch} placeholder="Search by product" />
                                                 <button id="searchQuerySubmit" type="submit" name="searchQuerySubmit">
@@ -511,7 +512,7 @@ const Collections = () => {
                         {
                             !noData &&
                                 <div className="col-12">
-                                    <div className="card shadow bg-white table-padding mb-3 pb-3 ">
+                                    <div className="card shadow bg-white table-padding mb-0 pb-0 ">
                                             <div className="row">
                                                 <div className="col-12">
                                                     <div className="mb-2 p-3 d-flex flex-row align-items-center">
@@ -572,6 +573,7 @@ const Collections = () => {
                                                     <table id="example" className="table table-hover  product-table collection-example text-left" data-paging='false' >
                                                         <thead className="table-light">
                                                             <tr>
+                                                            <th style={{ padding: '0.375rem',minWidth:"95px"}}></th>
                                                                 {
                                                                     columns.map((col: any, index: any) => {
                                                                         return col.isVisible && <th key={index} className='cursor-pointer' 
@@ -579,13 +581,13 @@ const Collections = () => {
                                                                         onClick={() => requestSort(col.column)}>{col.coltitle}
                                                                             {
                                                                                 col.column !== "thumbnail" &&
-                                                                                <i className={`float-right mt-1 fa ${sortConfig?.key === col.column ? (sortConfig.direction === 'ascending' ? 'fa-sort-up' : 'fa-sort-down') : 'fa-sort'}`}></i>
+                                                                                <i className={`float-right mt-1 fa ${sortConfig?.key === col.column ? (sortConfig.direction === 'ascending' ? 'fa-sort-up' : 'fa-sort-down') : 'fa-sort'}`} style={{paddingRight:'inherit'}}></i>
                                                                             }
 
                                                                         </th>
                                                                     })
                                                                 }
-                                                                <th style={{ padding: '0.375rem',minWidth:"150px"}}>Actions</th>
+                                                                
 
                                                             </tr>
                                                         </thead>
@@ -595,6 +597,13 @@ const Collections = () => {
                                                                 paginatedData.map((item: any) => (
 
                                                                     <tr key={item.shopify_product_id}>
+                                                                           <td><a><button type="button"
+                                                                            className="btn-danger-icon" ><i className="fa fa-trash text-danger" style={{ fontSize: '14px' }}></i></button></a>
+                                                                            <a > <button type="button" onClick={() => loadSimilarProducts(item.ondc_category)}
+                                                                                className="btn"  style={{marginLeft:'-8px'}}><img src={SimilarProductsImage} style={{ width: '26px', height: '24px !important', padding: '0px 0px', display: 'inline' }} />
+                                                                            </button>
+                                                                            </a>
+                                                                        </td>
                                                                         {
                                                                             columns
                                                                                 .map((col: any, i: any) => {
@@ -632,13 +641,7 @@ const Collections = () => {
 
                                                                                 })
                                                                         }
-                                                                        <td><a><button type="button"
-                                                                            className="btn-custom-light" ><i className="fa fa-trash text-danger" style={{ fontSize: '14px' }}></i></button></a>
-                                                                            <a > <button type="button" onClick={() => loadSimilarProducts(item.ondc_category)}
-                                                                                className="btn-custom-light" ><img src={SimilarProductsImage} style={{ width: '18px', height: '24px !important', padding: '0px 0px', display: 'inline' }} />
-                                                                            </button>
-                                                                            </a>
-                                                                        </td>
+                                                                     
 
                                                                     </tr>
                                                                 ))}
