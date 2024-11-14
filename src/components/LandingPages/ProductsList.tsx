@@ -911,7 +911,7 @@ const ProductsList = () => {
     }
 
     const applyFilterOfCategoriesList  = () => {
-        
+        setIsOpen(false)
     }
 
     // speciality selection
@@ -1219,7 +1219,7 @@ const ProductsList = () => {
                                         </div>
 
                                         <input className="search_input category-selector-search-input" type="text" name="" value={searchString} placeholder="search here" 
-                                        onChange={handleSearchStringChange} onKeyDown={handleEnterPressForSearch}/>
+                                        onChange={handleSearchStringChange} onKeyDown={handleEnterPressForSearch} onClick={applyFilterOfCategoriesList}/>
                                         <button id="searchQuerySubmit" type="submit" name="searchQuerySubmit" onClick={()=>initiateSearchForProducts(selectedCategories)}>
                                             <svg style={{ width: '24px', height: '24px' }} viewBox="0 0 24 24">
                                                 <path fill="#666666"
@@ -1237,7 +1237,7 @@ const ProductsList = () => {
                                                     selectedItemsChanged={updateSelectedCategoriesList}
                                                     clearSelectedItemsList={clearSelectedCategoriesList}
                                                     applySelectedList={applyFilterOfCategoriesList}
-                                                    showApply={false}>
+                                                    showApply={true}>
 
                                                 </SearchableMultiselectList>
                                                 </div>
