@@ -384,8 +384,6 @@ const ProductsList = () => {
                 }
                 return acc;
               }, []);
-
-              console.log(uniqueCategories)
             
             setCategories(uniqueCategories)
             
@@ -443,7 +441,6 @@ const ProductsList = () => {
             setSearchResultsLoading(true)
             setOnSearchStatus('initiated')
             setLastId(null)
-            console.log(messageID)
             let payload = {
                 message_id: messageIDForPayload,
                 criteria: {
@@ -454,7 +451,6 @@ const ProductsList = () => {
             }
             initiateSearch(payload)
             .then((data: any) => {
-                console.log(data)
                 if(data.error !== null){
                     // showSuccessMessage("search initiated successfully")
                     intervalIdRef.current = setInterval(()=>{
@@ -491,7 +487,6 @@ const ProductsList = () => {
            if (Array.isArray(response) && response.length> 0){
                 let res = response[0];
                 if (intervalIdRef.current !== null) {
-                    console.log("here")
                     clearInterval(intervalIdRef.current); // Clear the interval when stopping
                     intervalIdRef.current = null;  
                 }
@@ -499,8 +494,15 @@ const ProductsList = () => {
                   if(res.searched_products && res.searched_products.length>0 && res.searched_products.filter((x: any)=>x.data.prodSearchResponse).length>0){
                     setLastId(res.lastId)
                     let results = formatSearchResults(res.searched_products.filter((x: any)=>x.data.prodSearchResponse))
+                    const uniqueProducts = results.reduce((acc: any, item: any) => {
+                        // Check if the selector_reference_id is already in the accumulator
+                        if (!acc.some((product: any) => product.selector_reference_id === item.selector_reference_id)) {
+                          acc.push(item);
+                        }
+                        return acc;
+                      }, []);
                     setTimeout(()=>{
-                          setProductList((prevData: any) => [...prevData, ...results]);
+                          setProductList((prevData: any) => [...prevData, ...uniqueProducts]);
                           setLoading(false);
                           if(sourcePage === 'preview'){
                             dispatch(updateSourcePage(''));
@@ -520,9 +522,7 @@ const ProductsList = () => {
                   }
             }
             else{
-                console.log("inside else")
                 if (intervalIdRef.current !== null) {
-                    console.log("here")
                     clearInterval(intervalIdRef.current); // Clear the interval when stopping
                     intervalIdRef.current = null;  
                 }
@@ -536,7 +536,6 @@ const ProductsList = () => {
         })
         .catch(err => {
             if (intervalIdRef.current !== null) {
-                console.log("here")
                 clearInterval(intervalIdRef.current); // Clear the interval when stopping
                 intervalIdRef.current = null;  
             }
@@ -578,6 +577,7 @@ const ProductsList = () => {
                 arr.push({
                     stream_id: stream_id,
                     product_id: item.id,
+                    selector_reference_id: stream_id+'.'+provider.id+'.'+item.id,
                     bpp_provider_id: provider? provider.id: '',
                     thumbnail: item.descriptor.images && item.descriptor.images.length>0? item.descriptor.images[0] : '',
                     product: item.descriptor.name? item.descriptor.name: '',
@@ -896,7 +896,6 @@ const ProductsList = () => {
     }
 
     const applyFilterOfVendorList  = () => {
-        console.log("applied filter for = ", selectedVendors)
         applySellersAndSpecialityFilters();
         setIsVendorDropdownOpen(false)
     }
@@ -1001,7 +1000,6 @@ const ProductsList = () => {
     },[productsList])
 
     const applySellersAndSpecialityFilters = () => {
-        console.log("before applying filter = ",productsList)
         setFilteredProducts(productsList.filter(product => 
             {
             const categoryFilter = specialityFiltersForProducts.length > 0 ? specialityFiltersForProducts.includes(product.category) : true;
@@ -1058,8 +1056,8 @@ const ProductsList = () => {
       const toggleProductSelection = (product: any) => {
         if(!isProductDetailsOpen){
             setSelectedProducts((prevSelected: any) => {
-                if (prevSelected.some((obj: any) => obj.product_id === product.product_id)) {
-                  return prevSelected.filter((item: any) => item.product_id !== product.product_id);
+                if (prevSelected.some((obj: any) => obj.selector_reference_id === product.selector_reference_id)) {
+                  return prevSelected.filter((item: any) => item.selector_reference_id !== product.selector_reference_id);
                 } else {
                   return [...prevSelected, product];
                 }
@@ -1477,7 +1475,7 @@ const ProductsList = () => {
                                                 .map((product: any, index: any) => {
                                                     return <tr key={index}>
                                                         <td className='products-list'><input type="checkbox" 
-                                                        checked={selectedProducts.some((obj: any) => obj.product_id === product.product_id)}
+                                                        checked={selectedProducts.some((obj: any) => obj.selector_reference_id === product.selector_reference_id)}
                                                         onChange={() => toggleProductSelection(product)} /></td>
                                                         {
                                                             columns

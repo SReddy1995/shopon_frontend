@@ -68,7 +68,7 @@ const PreviewProducts = () => {
 
     const deleteProduct = (product: any) => {
         setSelectedProductsList((prevSelected: any) => {
-            return prevSelected.filter((item: any) => item.product_id !== product.product_id);
+            return prevSelected.filter((item: any) => item.selector_reference_id !== product.selector_reference_id);
           });
     }
 
