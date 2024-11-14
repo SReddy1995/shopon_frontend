@@ -515,7 +515,7 @@ const Collections = () => {
                                     <div className="card shadow bg-white table-padding mb-0 pb-0 ">
                                             <div className="row">
                                                 <div className="col-12">
-                                                    <div className="mb-2 p-3 d-flex flex-row align-items-center">
+                                                    <div className="mb-0 px-3 py-2 d-flex flex-row align-items-center">
                                                     <div className='collections-vendor-filter-container'>
                                                     <div className="collections-search-by-vendor-container px-2" >
                                                         <p className='mb-0 pl-2 cursor-pointer dynamic-text' onClick={handleProductTypeSelectionClick}>Product Type
@@ -665,12 +665,12 @@ const Collections = () => {
                                                         <ul className="pagination">
                                                             <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
                                                                 <button className="page-link" onClick={handlePrevPage} disabled={currentPage === 1}>
-                                                                    Previous
+                                                                &#8249;
                                                                 </button>
                                                             </li>
                                                             <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
                                                                 <button className="page-link" onClick={handleNextPage} disabled={currentPage === totalPages}>
-                                                                    Next
+                                                                &#8250;
                                                                 </button>
                                                             </li>
                                                         </ul>

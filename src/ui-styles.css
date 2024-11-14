@@ -235,7 +235,7 @@ margin-right: -84px !important;
   text-decoration: none;
   color: #006C50;
   background: #e4e5e5; ;
-  border-left:  3px solid #006C50;
+  /* border-left:  3px solid #006C50; */
 }
 
 .sidebar-nav li a:active,
@@ -244,7 +244,7 @@ margin-right: -84px !important;
   background: #e4e5e5; ;
   color: #006C50;
   background: #e4e5e5; ;
-  border-left:  3px solid #006C50;
+  /* border-left:  3px solid #006C50; */
 }
 
 .sidebar-nav > .sidebar-brand {
@@ -2041,7 +2041,7 @@ border-bottom: 1px solid #ddd;
 
 .collections-search-by-vendor-container {
   border: 1px solid #ccc; /* Visual border for the container */
-  padding: 10px; /* Padding inside the container */
+  padding: 6px; /* Padding inside the container */
   width: auto;
   border: 1px solid #dddd;
   border-radius: 1.5rem;
@@ -2117,28 +2117,27 @@ border-bottom: 1px solid #ddd;
   gap: 0.2rem;
 }
 
-.pagination a {
+.pagination li {
   color: black;
   float: left;
-  padding: 8px 16px;
   text-decoration: none;
-  border: 1px solid #ddd;
+  border: 1px solid #f1f1f1;
 }
 
-.pagination a.active {
+.pagination li.active {
   background-color: #4CAF50;
   color: white;
   border: 1px solid #4CAF50;
 }
 
-.pagination a:hover:not(.active) {background-color: #ddd;}
+.pagination li:hover:not(.active) {background-color: #ddd;}
 
-.pagination a:first-child {
+.pagination li:first-child {
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
 }
 
-.pagination a:last-child {
+.pagination li:last-child {
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;
 }
@@ -2334,6 +2333,15 @@ table thead th {
 }
 
 .product-type-selector :hover{
-  color: gray;
+  color: grey;
   font-weight: 800;
+}
+.page-item.disabled .page-link{
+  border:1px solid grey !important;
+}
+.page-link:focus {
+box-shadow: none !important;
+}
+.page-link{
+  color:#000 !important;
 }
