@@ -30,7 +30,7 @@ const SidebarLink = styled(NavLink)<{ depth: any; depthstep: any }>`
     text-decoration: none;
     color: #006C50;
     background: #e4e5e5; ;
-    border-left:  3px solid #006C50;
+    
   }
 `;
 
