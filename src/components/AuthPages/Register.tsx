@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import { Formik, Field, ErrorMessage, FormikValues } from 'formik';
@@ -67,6 +67,8 @@ const Register = () => {
     store_url: '',
     additional_info: '',
    };
+
+   const [showTooltip, setShowTooltip] = useState(false);
 
     return (
       <div className="register-body">
@@ -204,7 +206,24 @@ const Register = () => {
                     </div>
 
                     <div className="mb-3 form-field-container">
-                      <label htmlFor="exampleFormControlInput1" className="form-label required">Store Url</label>
+                      <label htmlFor="exampleFormControlInput1" className="form-label">
+                        <span className='required'>
+                          Store Url
+                        </span>
+                        <span
+                          className="info-icon"
+                          onMouseEnter={() => setShowTooltip(true)}  // Show tooltip on hover
+                          onMouseLeave={() => setShowTooltip(false)} // Hide tooltip when hover ends
+                        >
+                          <i className='fa fa-info'
+                          ></i>
+                          {showTooltip && (
+                            <div className="info-tooltip">
+                              Url should be in a valid format ex:https://eazehub.com
+                            </div>
+                      )}
+                        </span>
+                      </label>
                       <Field 
                             name="store_url" 
                             type="text" 
