@@ -277,6 +277,9 @@ const Collections = () => {
       const [searchTerm, setSearchTerm] = useState(''); // Global search
       const [ondcProduct, setOndcProduct] =useState(true)
       const [shopifyProduct, setShopifyProduct] =useState(true)
+      
+      const [isProductTypeDropdownOpen, setIsProductTypeDropdownOpen] = useState(false);
+      const [selectedProducType, setSelectedProductType] = useState('both')
     
       const handlePrevPage = () => {
         if (currentPage > 1) {
@@ -313,14 +316,14 @@ const Collections = () => {
     // Filter data based on global search
     const filteredData = data.filter((item : any) =>{
         // return item.title.toLowerCase().includes(searchTerm.value.toLowerCase())
-        if(ondcProduct === true && shopifyProduct === true){
+        if(selectedProducType === 'both'){
             return item.title.toLowerCase().includes(searchTerm.toLowerCase())
         }
-        else if(ondcProduct === true && shopifyProduct === false){
+        else if(selectedProducType === 'ondc'){
             return item.title.toLowerCase().includes(searchTerm.toLowerCase()) && 
             (item.is_ondc_product === true)
         }
-        else if(ondcProduct === false && shopifyProduct === true){
+        else if(selectedProducType === 'shopify'){
             return item.title.toLowerCase().includes(searchTerm.toLowerCase()) && 
             (item.is_ondc_product === false)
         }
@@ -333,7 +336,7 @@ const Collections = () => {
 
     useEffect(()=>{
         setCurrentPage(1)
-    },[ondcProduct,shopifyProduct])
+    },[selectedProducType])
 
     // Sort filtered data
     // const sortedData = filteredData.sort((a: any, b: any) => {
@@ -449,6 +452,28 @@ const Collections = () => {
         return formattedPrice;
       }
 
+      const productTypes = [
+        {
+            value: 'both', label: 'Both', displayLabel: 'both ONDC and Shopify'
+        },
+        {
+            value: 'ondc', label: 'ONDC Products', displayLabel: 'ONDC'
+        },
+        {
+            value: 'shopify', label: 'Shopify Products', displayLabel: 'Shopify'
+        }
+      ]
+
+    // vendor selection
+    const handleProductTypeSelectionClick = (values: any) => {
+        setIsProductTypeDropdownOpen(!isProductTypeDropdownOpen)
+    }
+
+    const handleProductTypeChange = (event: any) => {
+        setSelectedProductType(event);
+        setIsProductTypeDropdownOpen(false)
+    };
+
     return (
         <>
         {
@@ -490,22 +515,54 @@ const Collections = () => {
                                             <div className="row">
                                                 <div className="col-12">
                                                     <div className="mb-2 p-3 d-flex flex-row align-items-center">
-                                                        <div className='d-flex flex-row align-items-center'>
-                                                            <div className='checkbox-with-label'>
-                                                                <input type="checkbox"
-                                                                    checked={ondcProduct}
-                                                                    onChange={handleOndcCheckboxChange}
-                                                                />
-                                                                <p className='mb-0 pl-1'>ONDC Products</p>
+                                                    <div className='collections-vendor-filter-container'>
+                                                    <div className="collections-search-by-vendor-container px-2" >
+                                                        <p className='mb-0 pl-2 cursor-pointer dynamic-text' onClick={handleProductTypeSelectionClick}>Product Type
+                                                            {
+                                                                selectedProducType &&
+                                                                    <>
+                                                                        <span>&nbsp; is </span>
+                                                                        {
+                                                                            <span>{productTypes.filter((x:any)=> x.value === selectedProducType)[0].displayLabel}</span>
+                                                                        }
+                                                                      
+                                                                    </>  
+
+                                                            }
+                                                            {
+                                                                !isProductTypeDropdownOpen ?
+                                                                <span>&nbsp; <i className='fa fa-caret-down pr-2 cursor-pointer float-right align-self-center ml-2 mt-1' onClick={handleProductTypeSelectionClick}></i> </span>
+                                                                :
+                                                                <span>&nbsp; <i className='fa fa-caret-up pr-2 cursor-pointer float-right align-self-center ml-2 mt-1' onClick={handleProductTypeSelectionClick}></i> </span>
+                                                            }
+                                                        </p>
+                                                    </div>
+                                                    {
+                                                        isProductTypeDropdownOpen && (
+                                                            <div className="collections-search-by-vendor-dropdown">
+                                                                <div className='d-flex flex-column align-items-start p-3'>
+                                                                    {
+                                                                        productTypes
+                                                                        .map((type: any, index: any)=>{
+                                                                            return <div key={type.value} className='d-flex flex-row align-items-center w-100 cursor-pointer px-2 product-type-selector' onClick={()=>handleProductTypeChange(type.value)}>
+                                                                                <label>
+                                                                                    <input
+                                                                                        type="radio"
+                                                                                        value={type.value}
+                                                                                        className='mr-2 mt-1'
+                                                                                        checked={selectedProducType === type.value}
+                                                                                    />
+                                                                                    {type.label}
+                                                                                </label>
+                                                                            </div>
+                                                                        })
+                                                                    }
+                                                                </div>
                                                             </div>
-                                                            <div className='checkbox-with-label pl-3'>
-                                                                <input type="checkbox"
-                                                                    checked={shopifyProduct}
-                                                                    onChange={handleShopifyCheckboxChange}
-                                                                />
-                                                                <p className='mb-0 pl-1'>Shopify Products</p>
-                                                            </div>
-                                                        </div>
+                                                        )
+                                                    }
+
+                                                </div>
                                                     </div>
                                                 </div>
                                             </div>

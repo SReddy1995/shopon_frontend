@@ -2042,9 +2042,9 @@ border-bottom: 1px solid #ddd;
 .collections-search-by-vendor-container {
   border: 1px solid #ccc; /* Visual border for the container */
   padding: 10px; /* Padding inside the container */
-  width: 280px;
+  width: auto;
   border: 1px solid #dddd;
-  border-radius: 8px;
+  border-radius: 1.5rem;
   text-align: left;
 }
 
@@ -2053,7 +2053,6 @@ border-bottom: 1px solid #ddd;
   position: absolute;
   background-color: white;
   min-width: 160px;
-  max-width: 220px;
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
   z-index: 2;
   border-radius: 8px;
@@ -2332,4 +2331,9 @@ table thead th {
   color:#303030 !important;
   text-decoration: none;
   background-color: #f1f1f1 !important;
+}
+
+.product-type-selector :hover{
+  color: gray;
+  font-weight: 800;
 }
