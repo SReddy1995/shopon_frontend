@@ -7,7 +7,7 @@ import { updateSelectedCategoryForProductsList, updateSourcePage } from '../../u
 import ImageWithFallback from './ImageWithFallback';
 import { deleteProductFromCollection, getShopifyProducts } from '../../services/CollectionsService';
 import { showSuccessMessage, showWarningMessage } from '../../shared/notificationProvider';
-import { COLLECTION_PRODUCT_DELETED, NO_ONDC_CATEGORY_PRESENT, UNABLE_TO_MAP_ONDC_CATEGORY } from '../../utils/constants/NotificationConstants';
+import { COLLECTION_PRODUCT_DELETED } from '../../utils/constants/NotificationConstants';
 import ModalWindow from './ModalWindow';
 import ConfirmDelete from './ConfirmDelete';
 
@@ -29,18 +29,17 @@ const Collections = () => {
                     value: refValues.categoriesType.filter((x: any)=> x.description === category)[0].ondc_categories_id,
                     label: category
                 })
-                console.log(cat)
                 dispatch(updateSelectedCategoryForProductsList(cat));
-                dispatch(updateSourcePage('collections'));
-                navigate('/landing-page/products/products-list')
             }
             else{
-                showWarningMessage(UNABLE_TO_MAP_ONDC_CATEGORY)
+                dispatch(updateSelectedCategoryForProductsList(null));
             }
         }
         else{
-            showWarningMessage(NO_ONDC_CATEGORY_PRESENT)
+            dispatch(updateSelectedCategoryForProductsList(category));
         }
+        dispatch(updateSourcePage('collections'));
+        navigate('/landing-page/products/products-list')
 
     }
     
