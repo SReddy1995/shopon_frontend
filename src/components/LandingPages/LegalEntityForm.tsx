@@ -651,8 +651,8 @@ const LegalEntityForm = (props:any) => {
                                             onChange={(e: any) => {
                                                 const { value } = e.target;
                                                 setFieldValue("city_id", value);
-                                                setFieldValue("state", refValues.cities.filter((x: any) => x.city_id === value)[0].state.description);
-                                                setFieldValue("country", refValues.cities.filter((x: any) => x.city_id === value)[0].state.country.description);
+                                                setFieldValue("state", refValues.cities.filter((x: any) => x.city_id == value)[0].state.description);
+                                                setFieldValue("country", refValues.cities.filter((x: any) => x.city_id == value)[0].state.country.description);
                                             }} 
                                         >
                                             <option value={""}>--select--</option>
