@@ -288,6 +288,7 @@ const ProductsList = () => {
     const vendorPopupRef = useRef<any>(null);
     const specialityPopupRef = useRef<any>(null);
     const categoriesPopupRef = useRef<any>(null);
+    const columnVisibilityPopupRef = useRef<any>(null);
 
     // Close the popup if clicked outside
     useEffect(() => {
@@ -302,6 +303,10 @@ const ProductsList = () => {
 
         if (categoriesPopupRef.current && !categoriesPopupRef.current.contains(event.target)) {
             setIsOpen(false); // Close the popup if the click is outside
+        }
+
+        if (columnVisibilityPopupRef.current && !columnVisibilityPopupRef.current.contains(event.target)) {
+            setIsColumnVisibilityOpen(false); // Close the popup if the click is outside
         }
     };
 
@@ -1422,7 +1427,7 @@ const ProductsList = () => {
                                         </div>
                                     </div>
                                     <div className="column-visibility-sortby-container">
-                                    <div className='column-visibility-container mr-2'>
+                                    <div className='column-visibility-container mr-2' ref={columnVisibilityPopupRef}>
                                         <button
                                             className="btn btn-custom-light float-right column-visibility-selection-container"
                                             type="button"
