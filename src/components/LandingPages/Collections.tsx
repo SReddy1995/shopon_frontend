@@ -6,8 +6,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateSelectedCategoryForProductsList, updateSourcePage } from '../../utils/reduxStore/productsSlice';
 import ImageWithFallback from './ImageWithFallback';
 import { deleteProductFromCollection, getShopifyProducts } from '../../services/CollectionsService';
-import { showSuccessMessage } from '../../shared/notificationProvider';
-import { COLLECTION_PRODUCT_DELETED } from '../../utils/constants/NotificationConstants';
+import { showSuccessMessage, showWarningMessage } from '../../shared/notificationProvider';
+import { COLLECTION_PRODUCT_DELETED, NO_ONDC_CATEGORY_PRESENT, UNABLE_TO_MAP_ONDC_CATEGORY } from '../../utils/constants/NotificationConstants';
 import ModalWindow from './ModalWindow';
 import ConfirmDelete from './ConfirmDelete';
 
@@ -20,16 +20,28 @@ const Collections = () => {
 
     // navigate to productsList
 
-    const loadSimilarProducts = (category: any) => {
-        let cat = [];
-        cat.push({
-            value: refValues.categoriesType.filter((x: any)=> x.description === category)[0].ondc_categories_id,
-            label: category
-        })
-        console.log(cat)
-        dispatch(updateSelectedCategoryForProductsList(cat));
-        dispatch(updateSourcePage('collections'));
-        navigate('/landing-page/products/products-list')
+    const loadSimilarProducts = (item: any) => {
+        let category = item.ondc_category? item.ondc_category : null;
+        if(category){
+            if(refValues.categoriesType.filter((x: any)=> x.description === category) && refValues.categoriesType.filter((x: any)=> x.description === category).length>0){
+                let cat = [];
+                cat.push({
+                    value: refValues.categoriesType.filter((x: any)=> x.description === category)[0].ondc_categories_id,
+                    label: category
+                })
+                console.log(cat)
+                dispatch(updateSelectedCategoryForProductsList(cat));
+                dispatch(updateSourcePage('collections'));
+                navigate('/landing-page/products/products-list')
+            }
+            else{
+                showWarningMessage(UNABLE_TO_MAP_ONDC_CATEGORY)
+            }
+        }
+        else{
+            showWarningMessage(NO_ONDC_CATEGORY_PRESENT)
+        }
+
     }
     
 
@@ -614,7 +626,7 @@ const Collections = () => {
                                                                     <tr key={item.shopify_product_id}>
                                                                            <td><a><button type="button"
                                                                             className="btn-danger-icon" onClick={() => openConfirmDeleteModal(item.shopify_product_id)}><i className="fa fa-trash text-danger" style={{ fontSize: '14px' }}></i></button></a>
-                                                                            <a > <button type="button" onClick={() => loadSimilarProducts(item.ondc_category)}
+                                                                            <a > <button type="button" onClick={() => loadSimilarProducts(item)}
                                                                                 className="btn"  style={{marginLeft:'-8px'}}><img src={SimilarProductsImage} style={{ width: '26px', height: '24px !important', padding: '0px 0px', display: 'inline' }} />
                                                                             </button>
                                                                             </a>
