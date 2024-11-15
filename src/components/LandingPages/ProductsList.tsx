@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateProductsColumnsList, updateProductsListFilters, updateSelectedCategoryForProductsList, updateSelectedProductsList, updateSourcePage } from '../../utils/reduxStore/productsSlice';
 import { showWarningMessage } from '../../shared/notificationProvider';
-import { CATEGORY_NOT_REGISTERED, NO_PRODUCTS_SELECTED } from '../../utils/constants/NotificationConstants';
+import { CATEGORY_NOT_REGISTERED, NO_CATEGORIES_REGISTERED, NO_PRODUCTS_SELECTED } from '../../utils/constants/NotificationConstants';
 import { useNavigate } from 'react-router-dom';
 import SearchableMultiselectList from './SearchableMultiselectList';
 import ModalWindow from './ModalWindow';
@@ -385,18 +385,28 @@ const ProductsList = () => {
             }
             else if(sourcePage && sourcePage === 'collections'){
                 dispatch(updateSourcePage(''));
-                setSelectedCategories(categoryFromCollections)
                 dispatch(updateSelectedCategoryForProductsList(''));
                 setShowBackButton('show')
-                let cats = getCategiesData(data[0])
-                console.log("categories list = ", cats)
-                console.log("category from store = ", categoryFromCollections)
-                if(cats && cats.length>0 && cats.filter((x: any)=> x.value === categoryFromCollections[0].value).length>0){
-                    initiateSearchForProducts(categoryFromCollections)
+                if(data && data.length>0){
+                    let cats = getCategiesData(data[0])
+                    if(categoryFromCollections !== null){
+                        setSelectedCategories(categoryFromCollections)
+                        if(cats && cats.length>0 && cats.filter((x: any)=> x.value === categoryFromCollections[0].value).length>0){
+                            initiateSearchForProducts(categoryFromCollections)
+                        }
+                        else{
+                            showWarningMessage(CATEGORY_NOT_REGISTERED)
+                        }
+                    }
+                    else{
+                        setSelectedCategories(cats)
+                        initiateSearchForProducts(cats)
+                    }
                 }
                 else{
-                    showWarningMessage(CATEGORY_NOT_REGISTERED)
+                    showWarningMessage(NO_CATEGORIES_REGISTERED)
                 }
+
             }
             else{
                 // setMessageID("MSG"+uuidv4())

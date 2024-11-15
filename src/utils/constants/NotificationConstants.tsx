@@ -18,5 +18,4 @@ export const SYNC_PRODUCTS_WITH_SUCCESS = "Synced selected products successfully
 export const NO_POSTAL_CODE_LOCATION = "Postal code is not available for the selected location"
 export const CATEGORY_NOT_REGISTERED = "Selected category is not registered in your online store"
 export const COLLECTION_PRODUCT_DELETED = "Product is successfully deleted from the collection"
-export const NO_ONDC_CATEGORY_PRESENT = "No ONDC category present for this product"
-export const UNABLE_TO_MAP_ONDC_CATEGORY = "Unable to find any reference for ONDC category of this product"
+export const NO_CATEGORIES_REGISTERED = "No categories registered"
