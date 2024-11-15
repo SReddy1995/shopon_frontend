@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateProductsColumnsList, updateProductsListFilters, updateSelectedCategoryForProductsList, updateSelectedProductsList, updateSourcePage } from '../../utils/reduxStore/productsSlice';
 import { showWarningMessage } from '../../shared/notificationProvider';
-import { NO_PRODUCTS_SELECTED } from '../../utils/constants/NotificationConstants';
+import { CATEGORY_NOT_REGISTERED, NO_PRODUCTS_SELECTED } from '../../utils/constants/NotificationConstants';
 import { useNavigate } from 'react-router-dom';
 import SearchableMultiselectList from './SearchableMultiselectList';
 import ModalWindow from './ModalWindow';
@@ -286,7 +286,7 @@ const ProductsList = () => {
     const categoryFromCollections = useSelector((store: any) => store.products.selectedCategoryForProductList)
     const tablescrollstyles = {
         loadonscroll:{
-          maxHeight: showBackButton ==='show' ? "300px" : 'calc(100vh - 270px)',
+          maxHeight: showBackButton ==='show' ? 'calc(100vh - 290px)' : 'calc(100vh - 270px)',
           overflowY: 'scroll' as 'scroll',
         }
       };
@@ -359,7 +359,15 @@ const ProductsList = () => {
                 setSelectedCategories(categoryFromCollections)
                 dispatch(updateSelectedCategoryForProductsList(''));
                 setShowBackButton('show')
-                initiateSearchForProducts(categoryFromCollections)
+                let cats = getCategiesData(data[0])
+                console.log("categories list = ", cats)
+                console.log("category from store = ", categoryFromCollections)
+                if(cats && cats.length>0 && cats.filter((x: any)=> x.value === categoryFromCollections[0].value).length>0){
+                    initiateSearchForProducts(categoryFromCollections)
+                }
+                else{
+                    showWarningMessage(CATEGORY_NOT_REGISTERED)
+                }
             }
             else{
                 // setMessageID("MSG"+uuidv4())
@@ -370,6 +378,27 @@ const ProductsList = () => {
         .catch(err => {
             setFullPageLoading(false);
         });
+    }
+
+    const getCategiesData = (values: any) => {
+        if(values.categoryCityMappings.length> 0){
+            const uniqueCategories = values.categoryCityMappings.reduce((acc: any, item: any) => {
+                // Check if the category_id is already in the accumulator
+                if (!acc.some((cat: any) => cat.value === item.category_id)) {
+                  acc.push({
+                    value: item.category_id,
+                    label: item.category.description
+                  });
+                }
+                return acc;
+              }, []);
+            
+            return uniqueCategories
+            
+        }
+
+        return []
+
     }
 
     const setCategiesData = (values: any) => {
@@ -584,7 +613,7 @@ const ProductsList = () => {
                     product_short_desc: item.descriptor.short_desc? item.descriptor.short_desc: '',
                     product_long_desc: item.descriptor.long_desc? item.descriptor.long_desc: '',
                     source: bppdescriptors.name? bppdescriptors.name : '',
-                    measure: item.quantity.unitized? `${item.quantity.unitized.measure.value}  ${item.quantity.unitized.measure.unit}`: '',
+                    measure: item.quantity && item.quantity.unitized && item.quantity.unitized.measure? `${item.quantity.unitized.measure.value}  ${item.quantity.unitized.measure.unit}`: '',
                     availability: item.quantity.available?`${item.quantity.available.count}` : '',
                     maximumQuantity: item.quantity.maximum?`${item.quantity.maximum.count}`:'',
                     seller: provider.descriptor? provider.descriptor.name : '',

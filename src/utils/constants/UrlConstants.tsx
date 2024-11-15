@@ -34,3 +34,8 @@ export const ProductSearchUrls = {
     getSpecialityList: '/get_speciality_data',
     syncWithShopify: '/add_products_from_stream'
 }
+
+export const CollectionUrls = {
+    fetchShopifyProducts: '/shopify/fetch-products',
+    deleteShopifyProduct: '/shopify/archive-product',
+}

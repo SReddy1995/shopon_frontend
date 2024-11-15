@@ -31,7 +31,7 @@ const ConfirmDelete = (props : any) => {
                     <div className="col-12">
                         <div className="row">
                             <div className="col-12 mt-4 text-left">
-                                <h6>Are you sure you want to delete the uploaded file?</h6>
+                                <h6>{props.msg}</h6>
                             </div>
                             <div className="col-12 mt-4 text-right">
                                 <button className="btn btn-success btn-sm mt-2" type="button" onClick={closeModal}>Cancel</button>
