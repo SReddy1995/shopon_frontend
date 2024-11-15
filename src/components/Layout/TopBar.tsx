@@ -201,8 +201,8 @@ const TopBar = (props:any) => {
                                     return store.is_active !== 'INACTIVE' && <li key={index} onClick={() => handleStoreSwitched(store)}>
                                         <a className="dropdown-item ml-0 pl-0 ellipsis" >
                                             <span className="acc-icons"
-                                                style={{ color: selectedStoreData && store.buyer_id === selectedStoreData ? 'green' : '' }}>
-                                                <i className={selectedStoreData && store.buyer_id === selectedStoreData ? "fa fa-check-circle" : "fa fa-circle-thin"}></i>
+                                                style={{ color: selectedStoreData && store.buyer_id == selectedStoreData ? 'green' : '' }}>
+                                                <i className={selectedStoreData && store.buyer_id == selectedStoreData ? "fa fa-check-circle" : "fa fa-circle-thin"}></i>
                                             </span>
                                             <span className='ml-2'>
                                                 {store.store_url}
