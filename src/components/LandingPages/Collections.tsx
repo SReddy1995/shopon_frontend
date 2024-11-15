@@ -10,6 +10,7 @@ import { showSuccessMessage, showWarningMessage } from '../../shared/notificatio
 import { COLLECTION_PRODUCT_DELETED } from '../../utils/constants/NotificationConstants';
 import ModalWindow from './ModalWindow';
 import ConfirmDelete from './ConfirmDelete';
+import { ClassNames } from '@emotion/react';
 
 const Collections = () => {
 
@@ -60,7 +61,8 @@ const Collections = () => {
             type: "text",
             serialNo: 2,
             isVisible: true,
-            minWidth:'160px'
+            minWidth:'190px',
+             cssClass:'column-desc'
         },
         {
             coltitle: "Vendor",
@@ -69,7 +71,7 @@ const Collections = () => {
             type: "text",
             serialNo: 2,
             isVisible: true,
-            minWidth:'160px'
+            minWidth:'170px'
         },
         {
             coltitle: "Status",
@@ -87,7 +89,8 @@ const Collections = () => {
             type: "text",
             serialNo: 3,
             isVisible: true,
-            minWidth:'275px'
+            minWidth:'275px',
+            cssClass:'column-desc'
         },
         {
             coltitle: "SKU",
@@ -96,7 +99,8 @@ const Collections = () => {
             type: "text",
             serialNo: 3,
             isVisible: true,
-            minWidth:'130px'
+            minWidth:'160px',
+            
         },
         {
             coltitle: "Product Type",
@@ -605,7 +609,7 @@ const Collections = () => {
                                                     <table id="example" className="table table-hover  product-table collection-example text-left" data-paging='false' >
                                                         <thead className="table-light">
                                                             <tr>
-                                                            <th style={{ padding: '0.375rem',minWidth:"95px"}}></th>
+                                                            <th style={{ padding: '0.375rem',minWidth:"80px"}}></th>
                                                                 {
                                                                     columns.map((col: any, index: any) => {
                                                                         return col.isVisible && <th key={index} className='cursor-pointer' 
@@ -657,7 +661,7 @@ const Collections = () => {
                                                                                                             )
                                                                                                             
                                                                                                             :
-                                                                                                            <td key={i}>{item[col.column]}</td>
+                                                                                                            <td key={i} className={col.column === 'description' || col.column === 'title' ?col.cssClass : ''}>{item[col.column]}</td>
                                                                                                         )
                                                                                                        
 

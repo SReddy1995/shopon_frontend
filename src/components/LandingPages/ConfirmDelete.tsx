@@ -11,8 +11,8 @@ const ConfirmDelete = (props : any) => {
     }
   
     return (
-        <section className="wrapper">
-            <div className="container">
+        <section>
+            <div>
                 <div className="row">
                     <div className="col-12 text-right">
                         <i className="fa fa-close cursor-pointer fa-lg" onClick={closeModal}></i>
@@ -26,14 +26,14 @@ const ConfirmDelete = (props : any) => {
                 
             </div>
             <div className="dropdown-divider"></div>
-            <div className="container my-4" >
+            <div className="container py-4" >
                 <div className="row">
                     <div className="col-12">
                         <div className="row">
-                            <div className="col-12 mt-4 text-left">
+                            <div className="col-12 mt-0 text-left">
                                 <h6>{props.msg}</h6>
                             </div>
-                            <div className="col-12 mt-4 text-right">
+                            <div className="col-12 mt-0 text-right">
                                 <button className="btn btn-success btn-sm mt-2" type="button" onClick={closeModal}>Cancel</button>
                                 <button className="btn btn-danger btn-sm mt-2 ml-2" type="button" onClick={deleteRecord}>Delete</button>
                             </div>
