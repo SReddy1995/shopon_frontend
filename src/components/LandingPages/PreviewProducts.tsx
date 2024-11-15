@@ -83,22 +83,13 @@ const PreviewProducts = () => {
         <>
 
             <div className="container-fluid h-auto mt-3 px-5">
-                <div className="row d-flex">
-                    <div className="col-6 col-md-4 text-left">
-                        <div className='back-button-container '>
-                            <i className='fa fa-arrow-left cursor-pointer' onClick={navigateToProductsList}></i>
-                            <h6 className='pl-2 mb-0 cursor-pointer' onClick={navigateToProductsList}>Back</h6>
-                        </div>
-
-                    </div>
-                   
-                </div>
+                
                 <div className="row d-flex mt-1">
                 <div className="col text-left">
-                        <div>
+                       
 
-                            <h3>Products Selected</h3>
-                        </div>
+                        <span><h3><i className='fa fa-arrow-circle-left me-2' onClick={navigateToProductsList}></i> Products Selected</h3></span>
+                        
                     </div>
 
                     <div className="col text-right">
