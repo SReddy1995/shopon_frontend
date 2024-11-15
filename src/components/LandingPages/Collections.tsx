@@ -5,12 +5,18 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateSelectedCategoryForProductsList, updateSourcePage } from '../../utils/reduxStore/productsSlice';
 import ImageWithFallback from './ImageWithFallback';
+import { deleteProductFromCollection, getShopifyProducts } from '../../services/CollectionsService';
+import { showSuccessMessage } from '../../shared/notificationProvider';
+import { COLLECTION_PRODUCT_DELETED } from '../../utils/constants/NotificationConstants';
+import ModalWindow from './ModalWindow';
+import ConfirmDelete from './ConfirmDelete';
 
 const Collections = () => {
 
 
     const navigate = useNavigate()
     const dispatch = useDispatch();
+    const confirmDeleteMsg = "Are you sure you want to delete this product?"
 
     // navigate to productsList
 
@@ -91,6 +97,15 @@ const Collections = () => {
             minWidth:'160px'
         },
         {
+            coltitle: "Shopify Category",
+            visibilityDisplayName: "Shopify Category",
+            column: "category",
+            type: "text",
+            serialNo: 8,
+            isVisible: true,
+            minWidth:'160px'
+        },
+        {
             coltitle: "Price",
             visibilityDisplayName: "Price",
             column: "price",
@@ -127,8 +142,8 @@ const Collections = () => {
             minWidth:'160px'
         },
         {
-            coltitle: "Category",
-            visibilityDisplayName: "Category",
+            coltitle: "ONDC Category",
+            visibilityDisplayName: "ONDC Category",
             column: "ondc_category",
             type: "text",
             serialNo: 8,
@@ -270,48 +285,32 @@ const Collections = () => {
       const [columns, setColumns] = useState<any[]>([])
       const [loading,setLoading] = useState(true)
       const [noData, setNoData] = useState(false)
-
-      const [entriesPerPage, setEntriesPerPage] = useState(2);
-      const [totalPages, setTotalPages] = useState(Math.ceil(data.length / entriesPerPage));
-      const [currentPage, setCurrentPage] = useState(1);
+      const user_details = localStorage.getItem('user_details') ? JSON.parse(localStorage.getItem('user_details') || '{}') : null;
       const refValues = useSelector((store: any) => store.refValues.referenceList);
       const [searchTerm, setSearchTerm] = useState(''); // Global search
-      const [ondcProduct, setOndcProduct] =useState(true)
-      const [shopifyProduct, setShopifyProduct] =useState(true)
       
       const [isProductTypeDropdownOpen, setIsProductTypeDropdownOpen] = useState(false);
       const [selectedProducType, setSelectedProductType] = useState('both')
+      const [hasNextPage, setHasNextPage] = useState(false)
+      const [hasPreviousPage, setHasPreviousPage] = useState(false)
+      const [startCursor, setStartCursor] = useState(null)
+      const [endCursor, setEndCursor] = useState(null)
+      const [openDeleteConfirm, setConfirmDeleteModalOpen] = useState(false);
+      const [selectedProductToDelete, setSelectedProductToDelete] = useState<any>(null)
+      const  [current_list_next_page_id, setCurrentListNextPageId] = useState<any>(null)
+      const  [current_list_prev_page_id, setCurrentListPrevPageId] = useState<any>(null)
     
       const handlePrevPage = () => {
-        if (currentPage > 1) {
-          setCurrentPage(currentPage - 1);
-        }
+        fetchShopifyProducts(startCursor, null)
       };
     
       const handleNextPage = () => {
-        if (currentPage < totalPages) {
-          setCurrentPage(currentPage + 1);
-        }
+        fetchShopifyProducts(null, endCursor)
       };
 
     // Handle Global Search
     const handleSearch = (event: any) => {
         setSearchTerm(event.target.value);
-    };
-
-     // Handle the checkbox change event
-    const handleOndcCheckboxChange = (event: any) => {
-        setOndcProduct(event.target.checked); // Set the state to the checkbox's checked value
-        if(event.target.checked === false && shopifyProduct === false){
-            setShopifyProduct(true)
-        }
-    };
-
-    const handleShopifyCheckboxChange = (event: any) => {
-        setShopifyProduct(event.target.checked); // Set the state to the checkbox's checked value
-        if(event.target.checked === false && ondcProduct === false){
-            setOndcProduct(true)
-        }
     };
 
     // Filter data based on global search
@@ -331,38 +330,7 @@ const Collections = () => {
     }
     );
 
-    useEffect(()=>{
-        setTotalPages(Math.ceil(filteredData.length / entriesPerPage))
-    },[filteredData])
-
-    useEffect(()=>{
-        setCurrentPage(1)
-    },[selectedProducType])
-
-    // Sort filtered data
-    // const sortedData = filteredData.sort((a: any, b: any) => {
-    //     if (a[sortConfig.key] < b[sortConfig.key]) return sortConfig.direction === 'asc' ? -1 : 1;
-    //     if (a[sortConfig.key] > b[sortConfig.key]) return sortConfig.direction === 'asc' ? 1 : -1;
-    //     return 0;
-    // });
-
-    
-    // const filteredData = React.useMemo(() => {
-    //     console.log("here")
-    //     console.log("api response = ",data)
-
-    //     let filteredItems = [...data ];
-    //     filteredItems.filter((item : any) =>
-    //         item.title.toLowerCase().includes(searchTerm.toLowerCase())
-    //     );
-    //     return filteredItems;
-    //   }, [data]);
-
       const sortedData = React.useMemo(() => {
-        console.log("here")
-        console.log("api response = ",data)
-
-        
         let sortableItems = [...filteredData ];
         if (sortConfig !== null) {
           sortableItems.sort((a: any, b: any) => {
@@ -377,11 +345,9 @@ const Collections = () => {
         }
         return sortableItems;
       }, [data, sortConfig,filteredData]);
-    
-      const getPaginatedData = () => {
-        const start = (currentPage - 1) * entriesPerPage;
-        const end = start + entriesPerPage;
-        return sortedData.slice(start, end);
+
+     const getPaginatedData = () => {
+        return filteredData;
       };
     
       const paginatedData = getPaginatedData();
@@ -396,26 +362,71 @@ const Collections = () => {
 
       useEffect(() => {
         setColumnsData(JSON.parse(JSON.stringify(columns_from_api)))
-        setTimeout(()=>{
-            if(api_response.length>0){
-                processAPIResponse(api_response);
-                setNoData(false)
-            }
-            else{
-                setNoData(true)
-            }
-            setLoading(false)
-          }, 0)
-
+        setLoading(true)
+        fetchShopifyProducts(null,null);
+        
       },[]);
+
+      const fetchShopifyProducts = (prev_page_id: any, next_page_id: any) => {
+        setSelectedProductToDelete(null)
+        let payload = {
+            store_url: user_details.store_url,
+            title: "",
+            next_page_id: next_page_id,
+            prev_page_id: prev_page_id
+        }
+        setCurrentListNextPageId(next_page_id)
+        setCurrentListPrevPageId(prev_page_id)
+        getShopifyProducts(payload)
+        .then((data: any) => {
+                if(data.collections && data.collections.length>0){
+                    processPagination(data)
+                    processAPIResponse(data);
+                    setNoData(false)
+                }
+                else{
+                    setNoData(true)
+                }
+                setLoading(false)
+        })
+        .catch(err => {
+            setNoData(true)
+            setLoading(false)
+        });
+      }
+
+      const performDeleteProductFromCollection = () => {
+        let payload = {
+            shopify_product_id: selectedProductToDelete,
+            store_url: user_details.store_url,
+        }
+        deleteProductFromCollection(payload)
+        .then((data: any) => {
+                showSuccessMessage(COLLECTION_PRODUCT_DELETED)
+                setConfirmDeleteModalOpen(false);
+                fetchShopifyProducts(current_list_prev_page_id,current_list_next_page_id)
+        })
+        .catch(err => {
+            console.log(err)
+            setConfirmDeleteModalOpen(false);
+        });
+      }
 
       const setColumnsData = (data: any) => {
         setColumns(data);
       }
 
-      const processAPIResponse = (response : any) => {
-        
-           let res =  response.map((x: any)=> x.collection)
+      const processPagination = (response: any) => {
+        let page_info = response.page_info;
+
+        setHasNextPage(page_info.hasNextPage)
+        setHasPreviousPage(page_info.hasPreviousPage)
+        setStartCursor(page_info.startCursor)
+        setEndCursor(page_info.endCursor)
+      }
+
+      const processAPIResponse = (response : any) => {        
+           let res =  response.collections
            setData((prevData: any) => {
                return  res.map((item: any)=>{
                     return {
@@ -474,6 +485,16 @@ const Collections = () => {
         setSelectedProductType(event);
         setIsProductTypeDropdownOpen(false)
     };
+
+    const openConfirmDeleteModal = (key: any) => {
+        setSelectedProductToDelete(key)
+        setConfirmDeleteModalOpen(true);
+    }
+
+    const closeConfirmDeleteModal = () => {
+        setSelectedProductToDelete(null)
+        setConfirmDeleteModalOpen(false);
+      }
 
     return (
         <>
@@ -577,13 +598,7 @@ const Collections = () => {
                                                                 {
                                                                     columns.map((col: any, index: any) => {
                                                                         return col.isVisible && <th key={index} className='cursor-pointer' 
-                                                                        style={{ padding: '0.375rem',minWidth:col.minWidth?col.minWidth:"auto"}}
-                                                                        onClick={() => requestSort(col.column)}>{col.coltitle}
-                                                                            {
-                                                                                col.column !== "thumbnail" &&
-                                                                                <i className={`float-right mt-1 fa ${sortConfig?.key === col.column ? (sortConfig.direction === 'ascending' ? 'fa-sort-up' : 'fa-sort-down') : 'fa-sort'}`} style={{paddingRight:'inherit'}}></i>
-                                                                            }
-
+                                                                        style={{ padding: '0.375rem',minWidth:col.minWidth?col.minWidth:"auto"}}>{col.coltitle}
                                                                         </th>
                                                                     })
                                                                 }
@@ -598,7 +613,7 @@ const Collections = () => {
 
                                                                     <tr key={item.shopify_product_id}>
                                                                            <td><a><button type="button"
-                                                                            className="btn-danger-icon" ><i className="fa fa-trash text-danger" style={{ fontSize: '14px' }}></i></button></a>
+                                                                            className="btn-danger-icon" onClick={() => openConfirmDeleteModal(item.shopify_product_id)}><i className="fa fa-trash text-danger" style={{ fontSize: '14px' }}></i></button></a>
                                                                             <a > <button type="button" onClick={() => loadSimilarProducts(item.ondc_category)}
                                                                                 className="btn"  style={{marginLeft:'-8px'}}><img src={SimilarProductsImage} style={{ width: '26px', height: '24px !important', padding: '0px 0px', display: 'inline' }} />
                                                                             </button>
@@ -619,7 +634,7 @@ const Collections = () => {
 
                                                                                                 (
                                                                                                     col.type === "active-draft-button" ?
-                                                                                                        <td key={i}><span className={item[col.column] === 'Active' ? "product-active" : "product-draft"}>{item[col.column]}</span></td>
+                                                                                                        <td key={i}><span className={item[col.column] === 'ARCHIVED' ? "product-archived" : (item[col.column] === 'DRAFT'? "product-draft": "product-active")}>{item[col.column]}</span></td>
                                                                                                         :
                                                                                                         (
                                                                                                             col.type === "product_type" ?
@@ -663,13 +678,13 @@ const Collections = () => {
 
                                                     <nav>
                                                         <ul className="pagination">
-                                                            <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-                                                                <button className="page-link" onClick={handlePrevPage} disabled={currentPage === 1}>
+                                                            <li className={`page-item ${!hasPreviousPage ? 'disabled' : ''}`}>
+                                                                <button className="page-link" onClick={handlePrevPage} disabled={!hasPreviousPage}>
                                                                 &#8249;
                                                                 </button>
                                                             </li>
-                                                            <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
-                                                                <button className="page-link" onClick={handleNextPage} disabled={currentPage === totalPages}>
+                                                            <li className={`page-item ${!hasNextPage ? 'disabled' : ''}`}>
+                                                                <button className="page-link" onClick={handleNextPage} disabled={!hasNextPage}>
                                                                 &#8250;
                                                                 </button>
                                                             </li>
@@ -686,6 +701,9 @@ const Collections = () => {
                     </div>
                 </div>
         }
+            <ModalWindow show={openDeleteConfirm} modalClosed={closeConfirmDeleteModal}>
+                <ConfirmDelete confirmModalClosed={closeConfirmDeleteModal}  deleteRecord={performDeleteProductFromCollection} msg={confirmDeleteMsg}/>
+            </ModalWindow>
 
         </>
     ) 

@@ -15,6 +15,7 @@ const DocumentsUpload = (props: any) => {
     const [open, setModalOpen] = useState(false);
     const [uploadFileDetails, setUploadFileDetails] = useState<any>();
     const [openDeleteConfirm, setConfirmDeleteModalOpen] = useState(false);
+    const confirmDeleteMsg = "Are you sure you want to delete the uploaded file?"
 
     const documents_list = [
         {
@@ -294,7 +295,7 @@ const DocumentsUpload = (props: any) => {
             </ModalWindow>
 
             <ModalWindow show={openDeleteConfirm} modalClosed={closeConfirmDeleteModal}>
-                <ConfirmDelete confirmModalClosed={closeConfirmDeleteModal}  deleteRecord={deleteRecord}/>
+                <ConfirmDelete confirmModalClosed={closeConfirmDeleteModal}  deleteRecord={deleteRecord} msg={confirmDeleteMsg}/>
             </ModalWindow>
 
         </>
