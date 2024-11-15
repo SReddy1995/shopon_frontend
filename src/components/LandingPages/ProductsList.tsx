@@ -284,6 +284,35 @@ const ProductsList = () => {
     const filtersFromStore = useSelector((store: any) => store.products.productListFilters);
     const msgIdFromStore = useSelector((store: any) => store.products.productListFilters).messageID
     const categoryFromCollections = useSelector((store: any) => store.products.selectedCategoryForProductList)
+
+    const vendorPopupRef = useRef<any>(null);
+    const specialityPopupRef = useRef<any>(null);
+    const categoriesPopupRef = useRef<any>(null);
+
+    // Close the popup if clicked outside
+    useEffect(() => {
+    const handleClickOutside = (event: any) => {
+        if (vendorPopupRef.current && !vendorPopupRef.current.contains(event.target)) {
+        setIsVendorDropdownOpen(false); // Close the popup if the click is outside
+        }
+
+        if (specialityPopupRef.current && !specialityPopupRef.current.contains(event.target)) {
+            setIsSpecialityDropdownOpen(false); // Close the popup if the click is outside
+        }
+
+        if (categoriesPopupRef.current && !categoriesPopupRef.current.contains(event.target)) {
+            setIsOpen(false); // Close the popup if the click is outside
+        }
+    };
+
+    // Attach the event listener to the document
+    document.addEventListener('mousedown', handleClickOutside);
+
+    // Cleanup the event listener when the component unmounts
+    return () => {
+        document.removeEventListener('mousedown', handleClickOutside);
+    };
+    }, []);
     const tablescrollstyles = {
         loadonscroll:{
           maxHeight: showBackButton ==='show' ? 'calc(100vh - 290px)' : 'calc(100vh - 270px)',
@@ -906,9 +935,7 @@ const ProductsList = () => {
     },[selectedVendors])
 
     useEffect(()=>{
-        if(sellerFiltersForProducts.length==0){
             applySellersAndSpecialityFilters();
-        }
     },[sellerFiltersForProducts])
 
     const clearVendorList = () => {
@@ -998,9 +1025,7 @@ const ProductsList = () => {
     },[selectedSpecialities])
 
     useEffect(()=>{
-        if(specialityFiltersForProducts.length==0){
             applySellersAndSpecialityFilters();
-        }
     },[specialityFiltersForProducts])
 
     const updateSelectedSpecialityList = (list: any) => {
@@ -1212,7 +1237,7 @@ const ProductsList = () => {
                                         <i className="fa fa-close fa-sm pl-0 pr-3 cursor-pointer" onClick={clearLocation}> </i>
                                     </div>
                                 </div>
-                                <div className="col-9">
+                                <div className="col-9" ref={categoriesPopupRef}>
                                     <div className="category-search-container">
                                         <div className="category-dropdown-toggler w-auto cursor-pointer" onClick={toggleDropdown} >
                                             <p className="category-text w-auto mb-0 ellipsis">
@@ -1284,7 +1309,7 @@ const ProductsList = () => {
                                     <div className="col"> */}
                                 <div className='filter-sort-container pb-2 px-3'>
                                     <div className='filters-container'>
-                                        <div className='products-vendor-filter-container'>
+                                        <div className='products-vendor-filter-container' ref={vendorPopupRef}>
                                         <div className="vendor-selection-container mr-2 px-2 cursor-pointer" onClick={handleVendorSelectionClick}>
                                             <p className='mb-0 pl-2 cursor-pointer seller-text' >Product vendor
                                                 {
@@ -1336,7 +1361,7 @@ const ProductsList = () => {
                                             }
                                         </div>
     
-                                        <div className='products-speciality-filter-container'>
+                                        <div className='products-speciality-filter-container' ref={specialityPopupRef}>
                                         <div className='speciality-selection-container px-2 cursor-pointer' onClick={handleSpecialitySelectionClick}>
                                             <p className='mb-0 pl-2 cursor-pointer speciality-text' >Speciality
                                                 {
