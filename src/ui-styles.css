@@ -1663,7 +1663,7 @@ font-size: 12px !important;
 }
 
 .product-archived{
-  background-color:rgb(235, 183, 99);
+  background-color:rgb(235 183 99 / 64%);
 color: rgba(0, 58, 90, 1);
 padding: 3px 10px;
 border-radius: 8px !important;
@@ -2383,4 +2383,18 @@ box-shadow: none !important;
 }
 .page-link{
   color:#000 !important;
+}
+.column-desc{
+  display: -webkit-box;
+  display: box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp:2 !important;
+  line-clamp:2 !important;
+  overflow: hidden;
+}
+.btn-success:hover{
+  color:#fff !important;
+}
+.btn-danger:hover{
+ color:#fff !important;
 }

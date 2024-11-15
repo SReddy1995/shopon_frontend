@@ -1187,24 +1187,18 @@ const ProductsList = () => {
         {
             !fullPageLoading && (
                 <div className="container-fluid h-auto mt-3 px-5">
-                {
-                    showBackButton ==='show' && (
-                        <div className="row d-flex">
-                        <div className="col text-left">
-                            <div onClick={navigateToCollectionsList} className='back-button-container cursor-pointer'>
-                                <i className='fa fa-arrow-left'></i>
-                                <h6 className='pl-2 mb-0'>Back</h6>
-                            </div>
-    
-                        </div>
-    
-                    </div>
-                    )
-                }
+                
+               
+                
 
                 <div className="row mt-0 mb-1">
                     <div className="col-6 text-left">
-                        <h3>Products</h3>
+                    <h3>
+                        {
+                    showBackButton ==='show' && (
+                        
+                    <span onClick={navigateToCollectionsList} className='cursor-pointer'><i className='fa fa-arrow-circle-left me-2'></i></span>  )
+}Products</h3>
                         {/* {
                             selectedLocation  &&
                             selectedLocation.map((location: any) => (
