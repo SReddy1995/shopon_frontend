@@ -1285,8 +1285,8 @@ const ProductsList = () => {
                                 <div className='filter-sort-container pb-2 px-3'>
                                     <div className='filters-container'>
                                         <div className='products-vendor-filter-container'>
-                                        <div className="vendor-selection-container mr-2 px-2" >
-                                            <p className='mb-0 pl-2 cursor-pointer seller-text' onClick={handleVendorSelectionClick}>Product vendor
+                                        <div className="vendor-selection-container mr-2 px-2 cursor-pointer" onClick={handleVendorSelectionClick}>
+                                            <p className='mb-0 pl-2 cursor-pointer seller-text' >Product vendor
                                                 {
                                                     selectedVendors.length > 0 &&
                                                         <>
@@ -1337,8 +1337,8 @@ const ProductsList = () => {
                                         </div>
     
                                         <div className='products-speciality-filter-container'>
-                                        <div className='speciality-selection-container px-2'>
-                                            <p className='mb-0 pl-2 cursor-pointer speciality-text' onClick={handleSpecialitySelectionClick}>Speciality
+                                        <div className='speciality-selection-container px-2 cursor-pointer' onClick={handleSpecialitySelectionClick}>
+                                            <p className='mb-0 pl-2 cursor-pointer speciality-text' >Speciality
                                                 {
                                                     selectedSpecialities.length > 0 &&
                                                         <>
