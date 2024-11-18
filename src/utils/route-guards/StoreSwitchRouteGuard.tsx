@@ -13,6 +13,10 @@ const StoreSwitchRouteGuard = ({ children }: any) => {
       const navigateToProducts = () => {
         return <Navigate to={"/landing-page/products/products-list"} replace/>
       }
+
+      const navigateToStoreNotActive = () => {
+        return <Navigate to={"/landing-page/products/inactive-store"} replace/>
+      }
     
       const navigateToFinance = () => {
         return <Navigate to={"/landing-page/finance"} replace/>
@@ -34,8 +38,11 @@ const StoreSwitchRouteGuard = ({ children }: any) => {
               else if(userDetails.roles.includes('Operator')){
                 return navigateToAccount();
               }
-              else if(userDetails.roles.includes('Inventory')){
+              else if(userDetails.roles.includes('Inventory') && userDetails.is_active === 'ACTIVE'){
                 return navigateToProducts();
+              }
+              else if(userDetails.roles.includes('Inventory') && userDetails.is_active !== 'ACTIVE'){
+                return navigateToStoreNotActive();
               }
               else if(userDetails.roles.includes('Finance')){
                 return navigateToFinance();

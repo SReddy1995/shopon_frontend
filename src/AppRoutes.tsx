@@ -18,6 +18,7 @@ import RoleGuard from "./utils/route-guards/RoleGuard";
 import Finance from "./components/LandingPages/Finance";
 import StoreSwitchRouteGuard from "./utils/route-guards/StoreSwitchRouteGuard";
 import RouteSwitch from "./components/LandingPages/RouteSwitch";
+import StoreInactive from "./components/LandingPages/StoreInactive";
 
 export const AppRoutes = () => {
   const childRoutes = [
@@ -43,6 +44,12 @@ export const AppRoutes = () => {
       path: "/landing-page/products/collections",
       element: <RoleGuard requiredRole={['Admin','Inventory']}>
                   <Collections />
+                </RoleGuard>
+    },
+    {
+      path: "/landing-page/products/inactive-store",
+      element: <RoleGuard requiredRole={['Inventory']}>
+                  <StoreInactive />
                 </RoleGuard>
     },
     {
