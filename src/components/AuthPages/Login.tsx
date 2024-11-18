@@ -95,8 +95,11 @@ const Login = () => {
     else if(userDetails.roles.includes('Operator')){
       navigateToAccount();
     }
-    else if(userDetails.roles.includes('Inventory')){
+    else if(userDetails.roles.includes('Inventory') && userDetails.is_active === 'ACTIVE'){
       navigateToProducts();
+    }
+    else if(userDetails.roles.includes('Inventory') && userDetails.is_active !== 'ACTIVE'){
+      navigateToStoreNotActive();
     }
     else if(userDetails.roles.includes('Finance')){
       navigateToFinance();
@@ -114,6 +117,10 @@ const Login = () => {
 
   const navigateToFinance = () => {
     navigate("/landing-page/finance");
+  }
+
+  const navigateToStoreNotActive = () => {
+     navigate("/landing-page/products/inactive-store")
   }
 
   const handleChangeEvent = (event: any, index: any, setFieldValue: any) => {
