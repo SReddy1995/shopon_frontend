@@ -669,11 +669,11 @@ const ProductsList = () => {
                       '',
                     category: item.category_id? item.category_id : '',
                     sellerLocation: item.location_id? getLocation(item.location_id,provider.locations): '',
-                    returnable: item['@ondc/org/returnable'] === true? 'Yes': 'No',
-                    cancellable: item['@ondc/org/cancellable'] === true? 'Yes': 'No',
-                    cod: item['@ondc/org/available_on_cod'] === true? 'Yes': 'No',
+                    returnable: item['@ondc/org/returnable'] && item['@ondc/org/returnable'] === true? 'Yes': 'No',
+                    cancellable: item['@ondc/org/cancellable'] && item['@ondc/org/cancellable'] === true? 'Yes': 'No',
+                    cod: item['@ondc/org/available_on_cod'] && item['@ondc/org/available_on_cod'] === true? 'Yes': 'No',
                     shippingTime: item['@ondc/org/time_to_ship']? getHumanizedData(item['@ondc/org/time_to_ship']): '',
-                    sellerPickupReturn: item['@ondc/org/seller_pickup_return'] === true? 'Yes': 'No',
+                    sellerPickupReturn: item['@ondc/org/seller_pickup_return'] && item['@ondc/org/seller_pickup_return'] === true? 'Yes': 'No',
                     returnWindow: item['@ondc/org/return_window']? getHumanizedData(item['@ondc/org/return_window']): '',
                     manufacturer: 
                     (
@@ -708,9 +708,9 @@ const ProductsList = () => {
                         ?
                     item['@ondc/org/statutory_reqs_packaged_commodities'].month_year_of_manufacture_packing_import : '',
 
-                    fulfillment: item.fulfillment_id? getFulfillment(item.fulfillment_id,provider.fulfillments) : '',
-                    deliverableAt: getDeliverableDetails(provider.tags,provider.locations),
-                    serviceability: getServiceability(provider.tags,provider.locations),
+                    fulfillment: item.fulfillment_id && provider.fulfillments? getFulfillment(item.fulfillment_id,provider.fulfillments) : '',
+                    deliverableAt: provider.tags && provider.locations ? getDeliverableDetails(provider.tags,provider.locations): '',
+                    serviceability: provider.tags && provider.locations ? getServiceability(provider.tags,provider.locations): '',
                     gallery: item.descriptor.images && item.descriptor.images.length>0?
                      getSlides(item.descriptor.images) : []
                 })
@@ -805,7 +805,7 @@ const ProductsList = () => {
 
       const getFulfillment = (id: any, fulfillments: any) => {
         let fulfillment: any;
-        if(fulfillments.length>0 && fulfillments.filter((loc: any) => loc.id === id).length>0){
+        if(fulfillments && fulfillments.length>0 && fulfillments.filter((loc: any) => loc.id === id).length>0){
             fulfillment = fulfillments.filter((loc: any) => loc.id === id)[0];
         }
         // If the location is found, extract the city

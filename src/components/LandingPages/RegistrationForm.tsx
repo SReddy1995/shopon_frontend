@@ -140,9 +140,15 @@ const RegistrationForm = (props:any) => {
                             initialValues={initialValues}
                             validationSchema={registerValidationSchema}
                             onSubmit={(values, actions) => {
-                                console.log("register form submitted")
                                 actions.setSubmitting(false);
-                                updateBuyerRegistrationDetails(values);
+                                actions.validateForm().then((errors) => {
+                                    if (Object.keys(errors).length === 0) {
+                                      updateBuyerRegistrationDetails(values);
+                                    } else {
+                                      console.log('Form has validation errors');
+                                    }
+                                  });
+                                
                             }}
                         >
                             {({ isSubmitting, errors, touched, values, setFieldValue, handleSubmit, isValid, dirty, resetForm, initialValues }) => (
@@ -293,7 +299,6 @@ const RegistrationForm = (props:any) => {
                                         <a className="btn-link">
                                             <button type="button"
                                                 className="btn-custom mt-2 btn-right"
-                                                disabled={!(isValid) || isSubmitting}
                                                 onClick={() => {
                                                     handleSubmit();
                                                 }}>
