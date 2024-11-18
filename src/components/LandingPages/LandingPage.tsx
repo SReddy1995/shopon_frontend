@@ -54,9 +54,11 @@ const LandingPage = () => {
     });
 
     const [roles, setUserRoles] = useState(localStorage.getItem('user_details') ? (JSON.parse(localStorage.getItem('user_details') || '{}').roles) : null)
+    const [store_status, setStoreStatus] = useState(localStorage.getItem('user_details') ? (JSON.parse(localStorage.getItem('user_details') || '{}').is_active) : null)
     const sidebarState = useSelector((store: any) => store.sidebar.show);
     const handleStoreSwitched = () => {
         setUserRoles(localStorage.getItem('user_details') ? (JSON.parse(localStorage.getItem('user_details') || '{}').roles) : null)
+        setStoreStatus(localStorage.getItem('user_details') ? (JSON.parse(localStorage.getItem('user_details') || '{}').is_active) : null)
     }
     
     
@@ -66,7 +68,7 @@ const LandingPage = () => {
             <TopBar handleStoreSwitched={handleStoreSwitched}></TopBar>
             <MainContentContainer>
                 <SidebarContainer sidebar={sidebarState ? 1 : undefined}>
-                    <SideBar roles={roles}></SideBar>
+                    <SideBar roles={roles} store_status={store_status}></SideBar>
                 </SidebarContainer>
                 <OutletContainer>
                     <Outlet/>

@@ -262,7 +262,14 @@ const LegalEntityForm = (props:any) => {
                 validationSchema={legalEntityValidationSchema}
                 onSubmit={(values, actions) => {
                     actions.setSubmitting(false);
-                    updateLegalEntityDetails(values);
+                    actions.validateForm().then((errors) => {
+                        if (Object.keys(errors).length === 0) {
+                          updateLegalEntityDetails(values);
+                        } else {
+                          console.log('Form has validation errors');
+                        }
+                      });
+                    
                 }}
             >
                 {({ isSubmitting, errors, touched, values, setFieldValue, handleSubmit, isValid, dirty, resetForm, initialValues }) => (
@@ -712,8 +719,7 @@ const LegalEntityForm = (props:any) => {
                         
                         <div className="text-center">
                             <a className="btn-link"><button type="button"
-                                className="btn-custom  mt-2 btn-right" 
-                                disabled={!(isValid) || isSubmitting}
+                                className="btn-custom  mt-2 btn-right"
                                 onClick={() => {
                                   handleSubmit();
                                 }}>

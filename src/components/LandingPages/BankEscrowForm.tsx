@@ -141,7 +141,13 @@ const BankEscrowForm = (props: any) => {
                         validationSchema={bankEscrowValidationSchema}
                         onSubmit={(values, actions) => {
                             actions.setSubmitting(false);
-                            updateBankEscrowDetails(values);
+                            actions.validateForm().then((errors) => {
+                                if (Object.keys(errors).length === 0) {
+                                    updateBankEscrowDetails(values);
+                                } else {
+                                  console.log('Form has validation errors');
+                                }
+                              });
                         }}
                     >
                         {({ isSubmitting, errors,setErrors, touched, values, handleChange,setFieldValue, handleSubmit, isValid, dirty, resetForm, validateForm }) => (
@@ -296,7 +302,6 @@ const BankEscrowForm = (props: any) => {
 
                                 <div className="text-center">
                                     <a className="btn-link"><button type="button"   
-                                        disabled={!(isValid) || isSubmitting}
                                         onClick={() => {
                                         handleSubmit();
                                         }}

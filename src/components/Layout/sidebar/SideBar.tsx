@@ -30,7 +30,12 @@ const SideBar = (props: any) => {
           .filter(menu => 
             menu.scopes.filter(scope => props.roles.indexOf(scope) !== -1).length > 0)
           .map((item, index) => {
-            return <SubMenu item={item} key={index} depth={1} depthstep={10}/>
+            if(item.id !== 'product'){
+              return <SubMenu item={item} key={index} depth={1} depthstep={10}/>
+            }
+            else if(item.id === 'product' && props.store_status === 'ACTIVE'){
+              return <SubMenu item={item} key={index} depth={1} depthstep={10}/>
+            }
           })}
         </SidebarWrap>
       </SidebarNav>
