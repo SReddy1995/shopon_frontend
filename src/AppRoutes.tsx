@@ -115,7 +115,7 @@ export const AppRoutes = () => {
         element: <Navigate to="/home" replace />
     },
   ],{
-    basename: "/client",
+    basename: process.env.REACT_APP_BASENAME,
   });
 
   return <RouterProvider router={router} />;
