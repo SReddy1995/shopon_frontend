@@ -661,7 +661,11 @@ const Collections = () => {
                                                                                                             )
                                                                                                             
                                                                                                             :
-                                                                                                            <td key={i} className={col.column === 'description' || col.column === 'title' ?col.cssClass : ''}>{item[col.column]}</td>
+                                                                                                            <td key={i} >
+                                                                                                                <div  className={col.column === 'description' || col.column === 'title' ?col.cssClass : ''}>
+                                                                                                                    {item[col.column]}
+                                                                                                                </div>
+                                                                                                                </td>
                                                                                                         )
                                                                                                        
 
