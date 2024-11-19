@@ -7,6 +7,7 @@ import { NOT_FOUND_ERROR } from '../constants/NotificationConstants';
 const baseURL = process.env.REACT_APP_BASEURL!;
 const baseEnv = process.env.REACT_APP_ENV!;
 const storeServiceUrlSuffix = process.env.REACT_APP_STORE_SERVICE_URLSUFFIX!;
+const integration_key = process.env.REACT_APP_INTEGRATION_KEY!;
 const storeServiceAxiosInstance = axios.create({
   baseURL: baseURL+baseEnv+storeServiceUrlSuffix,
   timeout: 5000,
@@ -21,6 +22,7 @@ storeServiceAxiosInstance.interceptors.request.use(
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
       }
+      config.headers['x-integration-key'] = integration_key;
     }
     if(config.url === "/document" && config.method === 'post'){
       config.headers['Content-Type'] = 'multipart/form-data'
