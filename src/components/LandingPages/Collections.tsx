@@ -17,7 +17,8 @@ const Collections = () => {
 
     const navigate = useNavigate()
     const dispatch = useDispatch();
-    const confirmDeleteMsg = "Are you sure you want to delete this product?"
+    const confirmDeleteMsg = "Are you sure you want to delete this product? This action can't be undone."
+    const deleteText = "Delete"
 
     // navigate to productsList
 
@@ -721,7 +722,7 @@ const Collections = () => {
                 </div>
         }
             <ModalWindow show={openDeleteConfirm} modalClosed={closeConfirmDeleteModal}>
-                <ConfirmDelete confirmModalClosed={closeConfirmDeleteModal}  deleteRecord={performDeleteProductFromCollection} msg={confirmDeleteMsg}/>
+                <ConfirmDelete confirmModalClosed={closeConfirmDeleteModal}  deleteRecord={performDeleteProductFromCollection} msg={confirmDeleteMsg} deleteText={deleteText}/>
             </ModalWindow>
 
         </>
