@@ -11,8 +11,8 @@ const ConfirmDelete = (props : any) => {
     }
   
     return (
-        <section>
-            <div>
+        <section className="wrapper">
+            <div className='container'>
                 <div className="row">
                     <div className="col-12 text-right">
                         <i className="fa fa-close cursor-pointer fa-lg" onClick={closeModal}></i>
@@ -20,7 +20,7 @@ const ConfirmDelete = (props : any) => {
                 </div>
                 <div className="row">
                     <div className="col-12 text-left">
-                        <h6>Confirm Delete</h6>
+                        <h6>Warning</h6>
                     </div>
                 </div>
                 
@@ -35,7 +35,7 @@ const ConfirmDelete = (props : any) => {
                             </div>
                             <div className="col-12 mt-0 text-right">
                                 <button className="btn btn-success btn-sm mt-2" type="button" onClick={closeModal}>Cancel</button>
-                                <button className="btn btn-danger btn-sm mt-2 ml-2" type="button" onClick={deleteRecord}>Delete</button>
+                                <button className="btn btn-danger btn-sm mt-2 ml-2" type="button" onClick={deleteRecord}>{props.deleteText}</button>
                             </div>
                         </div>
 
