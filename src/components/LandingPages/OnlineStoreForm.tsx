@@ -58,6 +58,12 @@ const initialValues = {
 
 const OnlineStoreForm = (props: any) => {
     const refValues = useSelector((store: any) => store.refValues.referenceList);
+    const cities = [...refValues.cities];
+    const cityIndex = cities.findIndex(city => city.city_id === 86);
+    if (cityIndex > -1) {
+        const [city] = cities.splice(cityIndex, 1);
+        cities.unshift(city);
+    }
     const [loading, setLoading] = useState(true)
     const user_details = localStorage.getItem('user_details') ? JSON.parse(localStorage.getItem('user_details') || '{}') : null;
 
@@ -253,7 +259,7 @@ const OnlineStoreForm = (props: any) => {
                                                                         <Field
                                                                             name={`categories.${index}.city`}
                                                                             component={CustomMultiselect}
-                                                                            options={refValues.cities}
+                                                                            options={cities}
                                                                         />
                                                                         <ErrorMessage className='error' name={`categories.${index}.city`} component="div" />
                                                                         </div>
