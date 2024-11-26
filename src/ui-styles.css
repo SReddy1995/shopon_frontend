@@ -2398,3 +2398,34 @@ box-shadow: none !important;
 .btn-danger:hover{
  color:#fff !important;
 }
+
+.chart-title-with-filter-container{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.charts-filter-container{
+  display: flex;
+  flex-direction: row;
+  justify-items: left;
+  gap:0.8rem;
+  align-items: center;
+}
+
+.charts-filter-label{
+  margin-bottom: 0rem;
+}
+
+.custom-select-charts-filter {
+  width: auto !important;
+}
+
+.filter-element{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 1rem;
+}

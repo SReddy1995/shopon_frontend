@@ -71,7 +71,7 @@ productSearchAxiosInstance.interceptors.response.use(
     if(error.status === 401 && error.response.data.error.code === "1020005"){
       showWarningMessage(error.error)
       localStorage.clear();
-      window.location.href = '/login';
+      window.location.href = `${process.env.REACT_APP_BASENAME}/login`;
     }
     else if(error.status === 404){
       showWarningMessage(NOT_FOUND_ERROR)
