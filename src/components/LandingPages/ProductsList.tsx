@@ -941,7 +941,7 @@ const ProductsList = () => {
                     });
 
         });
-
+        result.sort((a: any, b: any) => a.label.localeCompare(b.label));
         return result;
     }
 
@@ -1031,7 +1031,7 @@ const ProductsList = () => {
                     });
 
         });
-
+        result.sort((a: any, b: any) => a.label.localeCompare(b.label));
         return result;
     }
 
