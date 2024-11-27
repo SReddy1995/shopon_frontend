@@ -1,5 +1,5 @@
 export const LOGIN_SUCCESSFULL = "Login successful"
-export const OTP_SENT = "OTP sent your registered email successfully"
+export const OTP_SENT = "OTP is sent to your registered email"
 export const REGISTRATION_SUCCESSFULL = "Registration successful"
 export const USER_ADDED_SUCCESS = "User added Successfully"
 export const USER_UPDATE_SUCCESS = "User updated successfully"

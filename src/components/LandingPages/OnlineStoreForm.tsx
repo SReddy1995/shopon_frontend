@@ -222,10 +222,10 @@ const OnlineStoreForm = (props: any) => {
                                                 <thead className="border-white">
                                                     <tr >
                                                         <th className="form-field store-category-column">
-                                                            ONDC Categories You Wish To Signup For
+                                                            ONDC categories you wish to signup for
                                                         </th>
                                                         <th className="form-field ">
-                                                            Select the city
+                                                            Select city
                                                         </th>
 
                                                         <th className="text-center store-action-column" >

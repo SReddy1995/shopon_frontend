@@ -77,7 +77,6 @@ const Login = () => {
      verifyLoginOTP(payload)
      .then((response: any) => {
       setSubmitting(false);
-      showSuccessMessage(LOGIN_SUCCESSFULL)
       routeBasedOnRole();
       
      })

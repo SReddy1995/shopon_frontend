@@ -125,7 +125,7 @@ const BankEscrowForm = (props: any) => {
                     <div id="collapseOne" className="accordion-collapse collapse show" aria-labelledby="headingOne"
                         data-bs-parent="#accordionExample">
                         <div className="accordion-body">
-                            <p>This section collects the Bank Escrow on behalf of ONDC which is to ensure - to ensure secure,
+                            <p>This section collects the Bank Escrow on behalf of ONDC to ensure secure,
                                 transparent, and trustworthy transactions between buyers and sellers.</p>
                         </div>
                     </div>
