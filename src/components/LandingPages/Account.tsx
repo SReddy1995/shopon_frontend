@@ -189,7 +189,7 @@ const Account = () => {
                                 strokeLinecap: 'butt',
                                 textSize: '16px',
                                 pathTransitionDuration: 1,
-                                pathColor: `#FFC107`,
+                                pathColor: percentage === 100 ? '#3BC13A': `#FFC107`,
                                 textColor: 'white',
                                 trailColor: '#d6d6d6',
                                 backgroundColor: '#3e98c7',

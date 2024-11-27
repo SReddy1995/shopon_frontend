@@ -247,7 +247,7 @@ const LegalEntityForm = (props:any) => {
                         data-bs-parent="#accordionExample">
                         <div className="accordion-body">
                             <p>This information is collected for performing KYC with ONDC and requires submitting documents such
-                                as the entity's name, type (e.g., LLC, corporation, partnership), registration address, ownership
+                                as the entity's name, type (e.g Private Limited, LLP, Partnership), registration address, ownership
                                 details, and governing structure. </p>
                         </div>
                     </div>
@@ -352,7 +352,7 @@ const LegalEntityForm = (props:any) => {
                                                 <label htmlFor="radio2" className="radio-button__label">
                                                     <span className="radio-button__custom"></span>
 
-                                                    Aadhar
+                                                    Aadhaar
                                                 </label>
                                             </div>
                                             <div className="radio-button">
@@ -389,7 +389,7 @@ const LegalEntityForm = (props:any) => {
                                                             e.preventDefault();
                                                         }
                                                     }}
-                                                    placeholder="Authorized Signatory Aadhar"
+                                                    placeholder="Authorized Signatory Aadhaar"
                                                 />
                                                 <ErrorMessage className='error' name="authorised_signatory_aadhaar" component="div" />
                                             </div>

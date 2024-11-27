@@ -31,10 +31,10 @@ const DocumentsUpload = (props: any) => {
         {
             document_type: "ASUIDAI",
             description:"",
-            title: "Authorized Signatory AADHAAR ",
+            title: "Authorized Signatory Aadhaar ",
             key: "authorized_signatory_aadhaar",
             uploadedFile: '',
-            details: "Authorized signatory's AADHAR for identity validation identity verification, enabling smoother processing of  KYC with ONDC.",
+            details: "Authorized signatory's Aadhaar for identity validation identity verification, enabling smoother processing of  KYC with ONDC.",
             applicable: true
         },
         {
@@ -49,7 +49,7 @@ const DocumentsUpload = (props: any) => {
         {
             document_type: "BANK",
             description:"",
-            title: "Cancelled Check Leaf OR Pass Book Front Page ",
+            title: "Canceled Cheque Leaf / Passbook Front Page",
             key: "bank_cancelled_cheque_leaf",
             uploadedFile: '',
             details: "To verify bank account details to ensure accuracy in any transactions for payments, refunds, and prevent errors or frauds.",
