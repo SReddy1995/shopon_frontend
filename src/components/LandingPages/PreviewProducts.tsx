@@ -94,7 +94,7 @@ const PreviewProducts = () => {
 
                     <div className="col text-right">
                         <a className="btn-link"><button type="button"
-                            className="btn-custom" onClick={syncWithShopify}>Sync with shopify</button></a>
+                            className="btn-custom" onClick={syncWithShopify}>Sync with Shopify</button></a>
                     </div>
                 </div>
                 <div className="row mt-1">

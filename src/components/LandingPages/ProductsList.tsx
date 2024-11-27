@@ -447,7 +447,7 @@ const ProductsList = () => {
 
     const setCategiesData = (values: any) => {
         if(values.categoryCityMappings.length> 0){
-            const uniqueCategories = values.categoryCityMappings.reduce((acc: any, item: any) => {
+            let uniqueCategories = values.categoryCityMappings.reduce((acc: any, item: any) => {
                 // Check if the category_id is already in the accumulator
                 if (!acc.some((cat: any) => cat.value === item.category_id)) {
                   acc.push({
@@ -457,6 +457,8 @@ const ProductsList = () => {
                 }
                 return acc;
               }, []);
+
+              uniqueCategories.sort((a: any, b: any) => a.label.localeCompare(b.label));
             
             setCategories(uniqueCategories)
             
