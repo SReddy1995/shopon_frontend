@@ -734,7 +734,7 @@ padding-left: 6px;
   color:inherit !important;
 }
 .index-body{
-  background-color: #fff !important;
+  background-color: #f1f1f1 !important;
 }
 .btn-custom{
   justify-content: center;
@@ -863,10 +863,12 @@ button:disabled {
   color: #e3e3e3 !important;
 }
 .register-body{
+  background-color: #f1f1f1;
+  background: #f1f1f1;
  
-background: #42275a;  /* fallback for old browsers */
-background: -webkit-linear-gradient(to right, #734b6d, #42275a);  /* Chrome 10-25, Safari 5.1-6 */
-background: linear-gradient(to right, #734b6d, #42275a); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+/* background: #42275a;  fallback for old browsers */
+/* background: -webkit-linear-gradient(to right, #734b6d, #42275a);  Chrome 10-25, Safari 5.1-6 */
+/* background: linear-gradient(to right, #734b6d, #42275a); W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 
 }
 hr{
@@ -2326,10 +2328,12 @@ table thead th {
 }
 .landingpageBtn:hover{
   color:#fff !important;
+
 }
 .index-card{
   /* box-shadow: 0rem .0625rem 0rem 0rem rgba(26, 26, 26, .07) !important; */
   border-radius: 0.75rem !important;
+  background-color: #fff;
 }
 .index-card img{
   border-radius: 0.75rem !important;
@@ -2428,4 +2432,15 @@ box-shadow: none !important;
   justify-content: flex-end;
   align-items: center;
   gap: 1rem;
+}
+.btn-custom-green{
+  background-color:#12715B !important;
+  color: white;
+  border-color:#12715B !important;
+}
+.btn:focus{
+  box-shadow: none !important;
+}
+.btn-custom-green:first-child:active{
+color:#fff !important;
 }

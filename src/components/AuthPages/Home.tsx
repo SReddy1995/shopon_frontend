@@ -29,13 +29,13 @@ const Home = () => {
                     <div className="custom-container">
                         <div className="row m-5 no-gutters shadow index-card">
                         <div className="col-md-6 d-none d-md-block">
-                            <img 
-                                src="https://images.unsplash.com/photo-1566888596782-c7f41cc184c5?ixlib=rb-1.2.1&auto=format&fit=crop&w=2134&q=80" 
+                           <img 
+                                src="https://static.vecteezy.com/system/resources/previews/015/277/495/non_2x/account-has-been-registered-login-success-concept-illustration-flat-design-eps10-modern-graphic-element-for-landing-page-empty-state-ui-infographic-icon-vector.jpg"
                                 className="img-fluid" 
                                 style={{ minHeight: '100%' }} 
                                 alt=""
                             />
-                        </div>
+                                </div>
                         <div className="col-md-6 bg-white p-5 box">
 
                             {/* <h2 className="index-logo pb-4">Shop On</h2> */}
@@ -45,7 +45,7 @@ const Home = () => {
                         
                         <div>
                                     <button type="submit" 
-                                            className="btn btn-primary w-100 font-weight-bold mt-2 landingpageBtn" 
+                                            className="btn btn-custom-green w-100 font-weight-bold mt-2 landingpageBtn" 
                                             style={{ height: '50px' }}
                                             onClick={() => navigateToRegister()}
                                     >
