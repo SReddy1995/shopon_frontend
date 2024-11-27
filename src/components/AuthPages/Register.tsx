@@ -232,7 +232,7 @@ const Register = () => {
                       <ErrorMessage className='error' name="store_url" component="div" />
                     </div>
 
-                    <div className="mb-3">
+                    <div className="mb-3 form-field-container">
                       <label htmlFor="exampleFormControlTextarea1" className="form-label">Additional Information</label>
                       <Field 
                             name="additional_info" 
