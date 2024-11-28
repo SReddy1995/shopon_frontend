@@ -129,9 +129,8 @@ const PreviewProducts = () => {
                                                                     return col.isVisible &&
                                                                         (
                                                                             col.type === "image" ?
-                                                                                <td key={i} className="product-small-image px-0" style={{ paddingLeft: '0px !important' }}><a href="#" className="pop">
-                                                                                    <img src={product[col.column]} alt="" />
-                                                                                </a></td>
+                                                                                <td key={i} className="product-small-image px-0" style={{ paddingLeft: '0px !important' }}>
+                                                                                    <img src={product[col.column]} alt="" /></td>
                                                                                 :
 
                                                                                 (

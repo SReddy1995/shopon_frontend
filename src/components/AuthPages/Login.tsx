@@ -4,7 +4,7 @@ import { Formik, Field, ErrorMessage, FormikValues, FormikHelpers } from 'formik
 import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
 import { requestOtpForLogin, verifyLoginOTP } from '../../services/AuthService';
-import { showSuccessMessage } from '../../shared/notificationProvider';
+import { showSuccessMessage, showSuccessMessageWithNoTitle } from '../../shared/notificationProvider';
 import { LOGIN_SUCCESSFULL, OTP_SENT } from '../../utils/constants/NotificationConstants';
 import logo from '../../assets/images/logo-black.png';
 
@@ -56,7 +56,7 @@ const Login = () => {
     }
     requestOtpForLogin(body)
       .then((data: any) => {
-        showSuccessMessage(OTP_SENT);
+        showSuccessMessageWithNoTitle(OTP_SENT);
           setAllowEnterOtp(true);
       })
       .catch(err => {

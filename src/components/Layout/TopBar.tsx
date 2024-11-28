@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateSidebarState } from '../../utils/reduxStore/sideBarSlice';
@@ -66,7 +66,6 @@ const ProfileContainer = styled.div`
     justify-content: space-between;
     color: white;
     padding-right: 16px;
-    cursor: pointer;
 `;
 
 const LogoFaIcon = () => {
@@ -98,6 +97,7 @@ const ProfileIcon = styled.div`
     border-radius: 8px;
     color: black;
     margin-right: 10px;
+    cursor: pointer;
 `;
 
 const ProfileIconInitial = styled.p`
@@ -130,6 +130,24 @@ const TopBar = (props:any) => {
     const navigate = useNavigate();
 
     const sidebarState = useSelector((store: any) => store.sidebar.show);
+    const dropDownMenuRef = useRef<any>(null);
+
+        // Close the popup if clicked outside
+        useEffect(() => {
+            const handleClickOutside = (event: any) => {
+                if (dropDownMenuRef.current && !dropDownMenuRef.current.contains(event.target)) {
+                    setOpen(false); // Close the popup if the click is outside
+                }
+            };
+        
+            // Attach the event listener to the document
+            document.addEventListener('mousedown', handleClickOutside);
+        
+            // Cleanup the event listener when the component unmounts
+            return () => {
+                document.removeEventListener('mousedown', handleClickOutside);
+            };
+            }, []);
   
     const handleSideBarToggle = () => {
       dispatch(updateSidebarState(!sidebarState));
@@ -146,6 +164,7 @@ const TopBar = (props:any) => {
                 dispatch(updateSelectedStore(store.buyer_id));
                 localStorage.setItem('selected_store', store.buyer_id)
                 props.handleStoreSwitched();
+                setOpen(false);
                 navigateToSwitchStore();
                 // navigate(location.pathname)
             }
@@ -167,6 +186,10 @@ const TopBar = (props:any) => {
         navigate("/landing-page/switch-store");
     };
 
+    const toggleDropdown = () => {
+        setOpen(!open)
+    }
+
     const stores_list = useSelector((store: any) => store.stores.storesList);
 
     return (
@@ -180,65 +203,70 @@ const TopBar = (props:any) => {
             </LogoContainer>
             <ProfileContainer className="profile-container">
                 <ProfileName >
-                    { user_details ? user_details.legal_entity_name : '' } , {user_details.firstname + ' ' + user_details.lastname}
+                    { user_details ? user_details.legal_entity_name : '' }, {user_details.firstname + ' ' + user_details.lastname}
                 </ProfileName>
-                <ProfileIcon>
-                    <ProfileIconInitial >{user_details.firstname.charAt(0).toUpperCase()+user_details.lastname.charAt(0).toUpperCase()}</ProfileIconInitial>
-                </ProfileIcon>
-                <div className="dropdown-menu pb-2" aria-labelledby="dropdownUser">
-                    <div className="dropdown-item">
-                        <h6>Linked Stores</h6>
+                <ProfileIcon onClick={toggleDropdown}  ref={dropDownMenuRef}>
+                    <ProfileIconInitial>{user_details.firstname.charAt(0).toUpperCase()+user_details.lastname.charAt(0).toUpperCase()}</ProfileIconInitial>
+                    {
+                    open &&
+                    <div className="dropdown-menu pb-2" aria-labelledby="dropdownUser">
+                        <div className="dropdown-item">
+                            <h6>Linked Stores</h6>
 
-                    </div>
-                    {/* <div className="dropdown-divider"></div> */}
-                    <div className="">
-                        <ul className="list-unstyled">
-                            <ul className="list-unstyled ms-4 px-2">
-                                {
-                                selectedStoreData && stores_list ?
-                                stores_list
-                                .map((store : any, index: any) => {
-                                    return store.is_active !== 'INACTIVE' && <li key={index} onClick={() => handleStoreSwitched(store)}>
-                                        <a className="dropdown-item ml-0 pl-0 ellipsis" >
-                                            <span className="acc-icons"
-                                                style={{ color: selectedStoreData && store.buyer_id == selectedStoreData ? 'green' : '' }}>
-                                                <i className={selectedStoreData && store.buyer_id == selectedStoreData ? "fa fa-check-circle" : "fa fa-circle-thin"}></i>
-                                            </span>
-                                            <span className='ml-2'>
-                                                {store.store_url}
-                                            </span>
-                                        </a>
-                                            </li>
-                                })
-                            
-                            :
-                                <></>
-                            }
+                        </div>
+                        {/* <div className="dropdown-divider"></div> */}
+                        <div className="">
+                            <ul className="list-unstyled">
+                                <ul className="list-unstyled ms-4 px-2">
+                                    {
+                                        selectedStoreData && stores_list ?
+                                            stores_list
+                                                .map((store: any, index: any) => {
+                                                    return store.is_active !== 'INACTIVE' && <li key={index} onClick={() => handleStoreSwitched(store)}>
+                                                        <a className="dropdown-item ml-0 pl-0 ellipsis" >
+                                                            <span className="acc-icons"
+                                                                style={{ color: selectedStoreData && store.buyer_id == selectedStoreData ? 'green' : '' }}>
+                                                                <i className={selectedStoreData && store.buyer_id == selectedStoreData ? "fa fa-check-circle" : "fa fa-circle-thin"}></i>
+                                                            </span>
+                                                            <span className='ml-2'>
+                                                                {store.store_url}
+                                                            </span>
+                                                        </a>
+                                                    </li>
+                                                })
+
+                                            :
+                                            <></>
+                                    }
+
+                                </ul>
+                                <div className="dropdown-divider"></div>
+
 
                             </ul>
-                            <div className="dropdown-divider"></div>
+                        </div>
 
+                        <ul className="list-unstyled">
+                            <li>
+                                <a className="dropdown-item" onClick={handleLogOut}>
+                                    <span className="me-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                                            className="feather feather-power">
+                                            <path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path>
+                                            <line x1="12" y1="2" x2="12" y2="12"></line>
+                                        </svg></span>
+                                    Log Out
+                                </a>
+                            </li>
 
                         </ul>
+
                     </div>
+                }
+                </ProfileIcon>
 
-                    <ul className="list-unstyled">
-                        <li>
-                            <a className="dropdown-item" onClick={handleLogOut}>
-                            <span className="me-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
-                                stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-                                className="feather feather-power">
-                                <path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path>
-                                <line x1="12" y1="2" x2="12" y2="12"></line>
-                            </svg></span>
-                                Log Out
-                            </a>
-                        </li>
 
-                    </ul>
-
-                </div>
             </ProfileContainer>
 
         </TopBarContainer>

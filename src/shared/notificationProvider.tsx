@@ -17,6 +17,19 @@ export const showSuccessMessage = (msg: any) => {
       })
 }
 
+export const showSuccessMessageWithNoTitle = (msg: any) => {
+  Store.addNotification({
+      message: msg,
+      type: 'success',                         // 'default', 'success', 'info', 'warning'
+      container: 'top-right',                // where to position the notifications
+      animationIn: ["animated", "fadeIn"],     // animate.css classes that's applied
+      animationOut: ["animated", "fadeOut"],   // animate.css classes that's applied
+      dismiss: {
+        duration: 3000 
+      }
+    })
+}
+
 export const showWarningMessage = (msg: any) => {
   Store.addNotification({
       title: 'Warning',

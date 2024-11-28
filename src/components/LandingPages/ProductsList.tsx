@@ -1548,9 +1548,8 @@ const ProductsList = () => {
                                                                     return col.isVisible &&
                                                                         (
                                                                             col.type === "image" ?
-                                                                                <td onClick={()=>openProductDetails(product, col)} key={i} className="product-small-image px-0" style={{ paddingLeft: '0px !important' }}><a href="#" className="pop">
-                                                                                    <img src={product[col.column]} alt="" />
-                                                                                </a></td>
+                                                                                <td onClick={()=>openProductDetails(product, col)} key={i} className="product-small-image px-0" style={{ paddingLeft: '0px !important' }}>
+                                                                                    <img src={product[col.column]} alt="" /></td>
                                                                                 :
     
                                                                                 (
