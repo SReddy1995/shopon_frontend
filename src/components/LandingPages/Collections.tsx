@@ -641,11 +641,10 @@ const Collections = () => {
                                                                                     return col.isVisible &&
                                                                                         (
                                                                                             col.type === "image" ?
-                                                                                                <td key={col.column + i} className="product-small-image px-0" style={{ paddingLeft: '0px !important' }}><a href="#" className="pop">
+                                                                                                <td key={col.column + i} className="product-small-image px-0" style={{ paddingLeft: '0px !important' }}>
                                                                                                     <ImageWithFallback
                                                                                                         src={item[col.column]}
-                                                                                                        alt=""/>
-                                                                                                </a></td>
+                                                                                                        alt=""/></td>
                                                                                                 :
 
                                                                                                 (
