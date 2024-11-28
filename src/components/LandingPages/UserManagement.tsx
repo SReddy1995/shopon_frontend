@@ -89,13 +89,9 @@ const UserManagement = () => {
 
                         <div className="row mt-2">
                             <div className="col-12 ">
-                                <div className="table-cards shadow bg-white">
-
-
-
-
-                                    <div className="table-responsive card-radius text-left">
-                                        <table className="table rounded-3 p-1 table-sm table-striped">
+                            <div className="card shadow bg-white table-padding mb-3">
+                                    <div className="table-responsive text-left" style={{borderRadius:'0.75rem'}}>
+                                        <table className="table user-table" style={{padding:'0.375rem 0.375rem 0.375rem 0.75rem !important'}}>
                                             <thead className="table-light">
                                                 <tr>
                                                     <th>Name</th>
