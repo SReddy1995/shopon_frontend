@@ -2445,5 +2445,5 @@ box-shadow: none !important;
 color:#fff !important;
 }
 .user-table>:not(caption)>*>* {
-  padding: 0.5rem 0.5rem 0.5rem 0.5rem!important;
+  padding: 0.5rem 0.5rem 0.5rem 0.75rem!important;
 }
