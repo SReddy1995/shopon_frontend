@@ -879,11 +879,30 @@ const ProductsList = () => {
           }, []); 
     }
 
+    const [lastScrollTop, setLastScrollTop] = useState(0)
+    const [lastScrollLeft, setLastScrollLeft] = useState(0)
+
+
     const handleScroll = (event: any) => {
-        const { scrollTop, scrollHeight, clientHeight } = event.target;
-        // Check if user has scrolled to the bottom of the table
-        if (scrollHeight - scrollTop <= clientHeight + 10) {
-          loadMore();
+        const { scrollTop, scrollHeight, clientHeight, scrollLeft, clientWidth, scrollWidth } = event.target;
+
+        // Calculate how much the user has scrolled
+        const verticalScrollChange = Math.abs(scrollTop - lastScrollTop);
+        const horizontalScrollChange = Math.abs(scrollLeft - lastScrollLeft);
+
+        // Check if the user is scrolling vertically or horizontally
+        const isVerticalScroll = verticalScrollChange > horizontalScrollChange;
+        const isHorizontalScroll = horizontalScrollChange > verticalScrollChange;
+
+        // Update last scroll positions
+        setLastScrollTop(scrollTop);
+        setLastScrollLeft(scrollLeft);
+
+        // If vertical scroll is happening and it's at the bottom, load more
+        const isAtBottom = scrollHeight - scrollTop <= clientHeight + 10;
+
+        if (isVerticalScroll && isAtBottom && !isHorizontalScroll) {
+            loadMore();
         }
       };
 
