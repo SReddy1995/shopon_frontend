@@ -203,7 +203,7 @@ const TopBar = (props:any) => {
             </LogoContainer>
             <ProfileContainer className="profile-container">
                 <ProfileName >
-                    { user_details ? user_details.legal_entity_name : '' } , {user_details.firstname + ' ' + user_details.lastname}
+                    { user_details ? user_details.legal_entity_name : '' }, {user_details.firstname + ' ' + user_details.lastname}
                 </ProfileName>
                 <ProfileIcon onClick={toggleDropdown}  ref={dropDownMenuRef}>
                     <ProfileIconInitial>{user_details.firstname.charAt(0).toUpperCase()+user_details.lastname.charAt(0).toUpperCase()}</ProfileIconInitial>
