@@ -13,6 +13,7 @@ import { getSearchResults, getSellersList, getSpecialityList, initiateSearch } f
 import { getOnlineStore } from '../../services/AccountService';
 import ProductDetails from './ProductDetails';
 import moment from 'moment';
+import ConfirmDelete from './ConfirmDelete';
 
 const haversineDistance = (lat1: any, lon1: any, lat2: any, lon2: any) => {
     const toRadians = (degree: any) => degree * (Math.PI / 180);
@@ -289,6 +290,9 @@ const ProductsList = () => {
     const specialityPopupRef = useRef<any>(null);
     const categoriesPopupRef = useRef<any>(null);
     const columnVisibilityPopupRef = useRef<any>(null);
+    const [openRetrySearchConfirm, setConfirmRetrySearchModalOpen] = useState(false);
+    const retrySearchConfirmationMsg = "Search results are removed from the Cache. Do you like to retry the search again?"
+    const retrySearchConfirmationText = "Yes"
 
     // Close the popup if clicked outside
     useEffect(() => {
@@ -617,7 +621,12 @@ const ProductsList = () => {
             console.log(err)
             setLoading(false);
             setOnSearchStatus('finished')
-            showWarningMessage("error fetching search results")
+            if(err && err.response && err.response.data && err.response.data.error && err.response.data.error.code && err.response.data.error.code === "2017004"){
+                    openConfirmRetrySearchModal();
+            }
+            else{
+                showWarningMessage(err.response.data.error.msg)
+            }
         });
     }
 
@@ -1201,6 +1210,19 @@ const ProductsList = () => {
             initiateSearchForProducts(selectedCategories);
         }
       };
+
+    const openConfirmRetrySearchModal = () => {
+        setConfirmRetrySearchModalOpen(true);
+    }
+
+    const closeConfirmRetrySearchModal = () => {
+        setConfirmRetrySearchModalOpen(false);
+      }
+
+    const retrySearch = () => {
+        initiateSearchForProducts(selectedCategories)
+        closeConfirmRetrySearchModal();
+    }
     
 
     return (
@@ -1657,6 +1679,9 @@ const ProductsList = () => {
             </div>
             )
         }
+            <ModalWindow show={openRetrySearchConfirm} modalClosed={closeConfirmRetrySearchModal}>
+                <ConfirmDelete confirmModalClosed={closeConfirmRetrySearchModal}  deleteRecord={retrySearch} msg={retrySearchConfirmationMsg} deleteText={retrySearchConfirmationText}/>
+            </ModalWindow>
 
         </>
     ) 

@@ -76,6 +76,9 @@ productSearchAxiosInstance.interceptors.response.use(
     else if(error.status === 404){
       showWarningMessage(NOT_FOUND_ERROR)
     }
+    else if (error.status === 500 && error.response && error.response.data && error.response.data.error && error.response.data.error.code && error.response.data.error.code === "2017004"){
+      // dont show any warning message
+    }
     else{
       showWarningMessage(error.response.data.error.msg)
     }
