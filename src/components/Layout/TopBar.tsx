@@ -167,7 +167,6 @@ const TopBar = (props:any) => {
     const stores_list = useSelector((store: any) => store.stores.storesList);
 
     return (
-        selectedStoreData &&
         <TopBarContainer>
             <LogoContainer>
                 <SidebarToggler onClick={handleSideBarToggle}>
