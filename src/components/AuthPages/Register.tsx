@@ -7,18 +7,7 @@ import { showSuccessMessage } from '../../shared/notificationProvider';
 import { REGISTRATION_SUCCESSFULL } from '../../utils/constants/NotificationConstants';
 import logo from '../../assets/images/logo-black.png';
 
-interface FormValues {
-  firstname: string;
-  lastname: string;
-  contact_number: number;
-  email_address: string;
-  legal_entity_name: string;
-  has_existing_store: string;
-  store_url: string;
-  additional_info: string;
- }
-
- const emailRegex = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)
+ const emailRegex = new RegExp(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)
 
  const registerValidationSchema = Yup.object().shape({
   firstname: Yup.string()
@@ -77,7 +66,7 @@ const Register = () => {
           <div className="custom-container">
             <section className="wrapper">
               {/* <h2 className="index-logo pb-4">Shop On</h2> */}
-              <img src={logo} style={{margin:'auto',width:'250px'}} className='mb-4'/>
+              <img src={logo} style={{margin:'auto',width:'250px'}} className='mb-4' alt="logo"/>
               <hr/>
               <h3 className="text-center heading mt-2">Registration</h3>
               <Formik
@@ -245,14 +234,12 @@ const Register = () => {
                       <ErrorMessage className='error' name="additional_info" component="div" />
                     </div>
                     <div className="text-center">
-                      <a className="btn-link">
                           <button type="button" className="btn-custom  w-100 mt-2" disabled={!(isValid && dirty) || isSubmitting}
                                   onClick={() => {
                                     handleSubmit();
                                   }}>
                             Submit
                           </button>
-                      </a>
                     </div>
                   </form>
                 )}
