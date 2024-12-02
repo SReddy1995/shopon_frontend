@@ -36,11 +36,11 @@ const ThankPage = () => {
                             <i style={{ fontSize:'18px', color:'#000'}} className="fa">&#xf095;</i> : 080-12100900
                             <i style={{ fontSize:'18px',color:'#000'}} className="fa pl-2">&#xf0e0;</i> : ondc@opteamix.com
                         </p>
-                        <p>Complete your profile by clicking <a className="anchor-text" onClick={() => goToLogin()}>here</a></p>
+                        <p>Complete your profile by clicking <span className="anchor-text cursor-pointer" onClick={() => goToLogin()}>here</span></p>
                     </div>
                     <div className="footer-like">
                         <p>Email not received?
-                            <a onClick={() => resendEmail()}>Click here to send again</a>
+                            <span onClick={() => resendEmail()}>Click here to send again</span>
                         </p>
                     </div>
                 </div>

@@ -4,8 +4,8 @@ import { Formik, Field, ErrorMessage, FormikValues, FormikHelpers } from 'formik
 import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
 import { requestOtpForLogin, verifyLoginOTP } from '../../services/AuthService';
-import { showSuccessMessage, showSuccessMessageWithNoTitle } from '../../shared/notificationProvider';
-import { LOGIN_SUCCESSFULL, OTP_SENT } from '../../utils/constants/NotificationConstants';
+import { showSuccessMessageWithNoTitle } from '../../shared/notificationProvider';
+import { OTP_SENT } from '../../utils/constants/NotificationConstants';
 import logo from '../../assets/images/logo-black.png';
 
 interface FormValues {
@@ -34,10 +34,6 @@ const Login = () => {
 
   const navigate = useNavigate();
   const [allowEnterOtp, setAllowEnterOtp] = useState(false);
-
-  const navigateToDashboard = () => {
-    navigate("/landing-page/dashboard");
-  };
 
   const initialValues: FormValues = {
     email_address: '',
@@ -171,7 +167,7 @@ const Login = () => {
                   {({ errors, touched, values, handleSubmit, setFieldValue, isValid, dirty, resetForm, initialValues}) => (
                       <section className="wrapper">
                         {/* <h2 className="index-logo pb-4">Shop On</h2> */}
-                        <img src={logo} style={{margin:'auto',width:'250px'}} className='mb-4'/>
+                        <img src={logo} style={{margin:'auto',width:'250px'}} className='mb-4' alt="logo"/>
                         <hr/>
                           <h3 className="text-center heading mt-2">Login</h3>
 
@@ -193,7 +189,6 @@ const Login = () => {
                             {
                               !allowEnterOtp ?
                                 <div className="input-control">
-                                  <a className=" font-medium text-indigo-500 hover:text-indigo-600 w-100" id="proceed">
                                     <button type="button" className="btn-custom mt-2 w-100 font-weight-bold" onClick={(e) => {
                                       if (!errors.email_address && touched.email_address) {
                                         login(e, values);
@@ -202,7 +197,6 @@ const Login = () => {
                                     >
                                       Proceed {('>>')}
                                     </button>
-                                  </a>
                                 </div>
                               :
 
@@ -235,17 +229,16 @@ const Login = () => {
                                   <div className="otp_enter_title mt-4 d-flex flex-row flex-start">
                                     
                                     <p className="otp_enter_title pl-1">Didn't receive code?&nbsp;</p>
-                                    <a className="anchor-text"                   
+                                    <p className="anchor-text cursor-pointer"                   
                                       onClick={(e) => {
                                                 if(!errors.email_address && touched.email_address){
                                                   login(e, values);
                                                 }
                                               }}>
                                       Resend
-                                    </a>
+                                    </p>
                                   </div>
                                   <div className="text-center">
-                                    <a className="btn-link"  >
                                       <button type={'button'} 
                                               disabled={!(isValid && dirty)}
                                               onClick={() => {
@@ -256,7 +249,6 @@ const Login = () => {
                                       >
                                         Login
                                       </button>
-                                    </a>
                                   </div>
                                 </div>
                               </>
