@@ -32,18 +32,7 @@ const CustomMultiselect = ({ field, form, options } : any) => {
   );
 };
 
-const emailRegex = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)
-
-interface FormValues {
-  firstname: string;
-  lastname: string;
-  contact_number: number;
-  email_address: string;
-  legal_entity_name: string;
-  has_existing_store: string;
-  store_url: string;
-  additional_info: string;
-}
+const emailRegex = new RegExp(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)
 
 
 const userValidationSchema = Yup.object().shape({
@@ -96,7 +85,7 @@ const AddUserForm = (props: any) => {
       setLoading(false);
     }
 
-  }, []);
+  }, [props.mode]);
 
   const setData = () => {
     setLoading(false);
@@ -148,13 +137,6 @@ const AddUserForm = (props: any) => {
   const closeModal = () =>{
     props.modalClosed();
   }
-
-
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
-    console.log('Submitted value:', inputValue);
-    setInputValue('');
-  };
 
   return (
 
@@ -303,7 +285,6 @@ const AddUserForm = (props: any) => {
 
 
                         <div className="text-center">
-                          <a className="btn-link">
                             <button type="button"
                               className="btn-custom mt-2 btn-right"
                             disabled={!(isValid) || isSubmitting}
@@ -312,7 +293,6 @@ const AddUserForm = (props: any) => {
                               }}>
                               Save
                             </button>
-                          </a>
                         </div>
                       </form>
                 </div>
