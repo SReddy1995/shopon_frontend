@@ -2344,6 +2344,10 @@ table thead th {
   background-color: #f1f1f1 !important;
 }
 
+p.dropdown-item{
+  color: inherit;
+  font-size: 14px;
+}
 .product-type-selector :hover{
   color: grey;
   font-weight: 800;
@@ -2390,7 +2394,7 @@ box-shadow: none !important;
 }
 .column-desc{
   display: -webkit-box;
-  display: box;
+  
   -webkit-box-orient: vertical;
   -webkit-line-clamp:2 !important;
   line-clamp:2 !important;

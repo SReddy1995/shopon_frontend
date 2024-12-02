@@ -65,7 +65,7 @@ axiosInstance.interceptors.response.use(
   },
   async function (error) {
     // Handle the response error and included refresh token logic
-    const originalRequest = error.config;
+    // const originalRequest = error.config;
     // showWarningMessage(error.error.msg)
     console.log(error)
     if(error.status === 401 && error.response.data.error.code === "1020005"){

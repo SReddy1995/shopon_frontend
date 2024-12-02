@@ -5,27 +5,20 @@ import { updateSelectedStore, updateStoresList } from '../../utils/reduxStore/st
 
 const Logout = () => {
     const navigate = useNavigate();
-
-    const navigateToLogin = () => {
-        navigate("/login");
-    }
     const dispatch = useDispatch();
 
     useEffect(() => {
         dispatch(updateStoresList(null));
         dispatch(updateSelectedStore(null));
         localStorage.clear();
-        navigateToLogin();
-      },[]);
+        navigate("/login");
+    }, [dispatch, navigate]);
 
     return (
-        <>
-        <h1>
-            Logout
-        </h1>
-        </>
-    ) 
-
+        <div>
+            <h1>Logout</h1>
+        </div>
+    );
 }
 
 export default Logout;

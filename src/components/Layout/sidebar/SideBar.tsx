@@ -36,6 +36,7 @@ const SideBar = (props: any) => {
             else if(item.id === 'product' && props.store_status === 'ACTIVE'){
               return <SubMenu item={item} key={index} depth={1} depthstep={10}/>
             }
+            return null;
           })}
         </SidebarWrap>
       </SidebarNav>
