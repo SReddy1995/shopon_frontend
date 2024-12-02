@@ -2,7 +2,7 @@ import React from 'react';
 import ReactFrappeChart from 'react-frappe-charts';
 
 const CartAbandonedRate = ({ categoryData }: any) => {
-  const { category, added_to_cart, payment_completed, drop_off, checked_out } = categoryData;
+  const { category, payment_completed, drop_off, checked_out } = categoryData;
 
   return (
     <>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { buildStyles, CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
@@ -68,11 +68,7 @@ const Account = () => {
 
     const [percentage,setPercentage] = useState(0);
 
-    useEffect(()=>{
-        fetchStoreStatusDetails()
-    },[])
-
-    const fetchStoreStatusDetails = () => {
+    const fetchStoreStatusDetails = useCallback(() => {
         setLoading(true)
         getStoreStatusDetails()
         .then((response: any)=>{
@@ -81,7 +77,11 @@ const Account = () => {
         .catch(err=>{
             setLoading(false)
         })
-    }
+      }, []);
+    
+      useEffect(() => {
+        fetchStoreStatusDetails();
+      }, [fetchStoreStatusDetails]);
 
     const setData = (res: any) => {
         let details = storeStatus;

@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import ReactFrappeChart from 'react-frappe-charts';
 import { filterData, summarizeByMonth, summarizeByWeek } from '../../../utils/functions/ChartUtils';
 
-const GenericChart = ({ data, labels, type, title, categories, customRange, setCustomRange, showComparativeFilters }: any) => {
+const GenericChart = ({ data, type, title, categories, customRange, setCustomRange, showComparativeFilters }: any) => {
   const [chartData, setChartData] = useState(data);
   const [timeRange, setTimeRange] = useState('date');
 
@@ -10,21 +10,15 @@ const GenericChart = ({ data, labels, type, title, categories, customRange, setC
     if (timeRange !== 'custom' || (customRange.start && customRange.end)) {
       setChartData(filterData(data, timeRange, customRange, (d: any, f: any) => summarizeByMonth(d, f, categories), (d: any, f: any) => summarizeByWeek(d, f, categories)));
     }
-  }, [data, timeRange]);
+  }, [data, timeRange, customRange, categories]);
 
   const handleFilterChange = (e: any) => {
     const range = e.target.value;
     setTimeRange(range);
-    if (range !== 'custom' || (customRange.start && customRange.end)) {
-      setChartData(filterData(data, range, customRange, (d: any, f: any) => summarizeByMonth(d, f, categories), (d: any, f: any) => summarizeByWeek(d, f, categories)));
-    }
   };
 
   const handleCustomRangeChange = (startDate: any, endDate: any) => {
     setCustomRange({ start: startDate, end: endDate });
-    if(startDate && endDate){
-      setChartData(filterData(data, 'custom', { start: startDate, end: endDate }, (d: any, f: any) => summarizeByMonth(d, f, categories), (d: any, f: any) => summarizeByWeek(d, f, categories)));
-    }
   };
 
   return (

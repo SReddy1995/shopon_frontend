@@ -41,10 +41,6 @@ const UserManagement = () => {
         });
     }
 
-    const toggleModal = () => {
-      setModalOpen(!open);
-    };
-
     const openModal = () => {
         setModalOpen(true);
       };
@@ -80,8 +76,8 @@ const UserManagement = () => {
                         <h3>User Management</h3>
                     </div>
                     <div className="col-6 text-right">
-                        <a className="btn-link"><button type="button"
-                            className="btn-custom" onClick={addUser}>Add User</button></a>
+                        <button type="button"
+                            className="btn-custom" onClick={addUser}>Add User</button>
                     </div>
                 </div>
                 {
@@ -107,7 +103,7 @@ const UserManagement = () => {
                                                     users_list
                                                         .map((user: any, index: any) => {
                                                             return  <tr key={index}>
-                                                                        <td><a data-bs-toggle="modal" data-bs-target="#myModal">{user.users.firstname} &nbsp;{user.users.lastname}</a></td>
+                                                                        <td><p className='mb-0' data-bs-toggle="modal" data-bs-target="#myModal">{user.users.firstname} &nbsp;{user.users.lastname}</p></td>
                                                                         <td>{user.users.email_address}</td>
                                                                         <td>{user.users.contact_number}</td>
                                                                         <td>

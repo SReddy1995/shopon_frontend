@@ -49,13 +49,6 @@ export const requestOtpForLogin = async (body : any) => {
 
  }
 
-const setDataInLocalStorage = (response: any) => {
-    setRegiteredStores(response)
-    setSelectedStore(response)
-    setAuthTokens(response)
-    setUserDetails(response)
-}
-
 const setRegiteredStores = (response: any) => {
     if(response[0].buyersDetails){
         localStorage.setItem('associated_stores', JSON.stringify(response[0].buyersDetails));
