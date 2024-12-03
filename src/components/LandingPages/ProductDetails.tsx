@@ -1,11 +1,11 @@
 import { Options, Splide, SplideSlide } from '@splidejs/react-splide';
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef } from 'react'
 
 const ProductDetails = (props: any) => {
 
     const mainRef = useRef<Splide | null>(null);
     const thumbsRef = useRef<Splide | null>(null);
-    const [product_details, setProductDetails] = useState(props.productDetails)
+    const product_details = props.productDetails;
 
     const mainOptions: Options = {
         type: 'fade',
@@ -36,7 +36,6 @@ const ProductDetails = (props: any) => {
     }
 
     useEffect(() => {
-        console.log(props)
         if (mainRef.current && thumbsRef.current) {
             mainRef.current.sync(thumbsRef.current.splide as any);
           }
