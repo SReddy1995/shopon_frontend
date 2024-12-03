@@ -13,8 +13,8 @@ const PreviewProducts = () => {
     const selectedDomains = useSelector((store: any) => store.products.productListFilters).category;
     const cols = useSelector((store: any) => store.products.selectedColumnsList);
     const [selectedProductsList, setSelectedProductsList] = useState(products);
-    const [columns, setColumns] = useState(cols);
-    const [messageID, setMessageID] = useState(useSelector((store: any) => store.products.productListFilters).messageID)
+    const columns = cols;
+    const messageID = useSelector((store: any) => store.products.productListFilters).messageID;
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const user_details = localStorage.getItem('user_details') ? JSON.parse(localStorage.getItem('user_details') || '{}') : null;
@@ -74,10 +74,10 @@ const PreviewProducts = () => {
 
 
     useEffect(()=>{
-        if(products.length==0){
+        if(products.length===0){
             navigate("/landing-page/products/products-list")
         }
-    },[])
+    },[navigate,products.length])
 
     return (
         <>
@@ -93,8 +93,8 @@ const PreviewProducts = () => {
                     </div>
 
                     <div className="col text-right">
-                        <a className="btn-link"><button type="button"
-                            className="btn-custom" onClick={syncWithShopify}>Sync with Shopify</button></a>
+                        <button type="button"
+                            className="btn-custom" onClick={syncWithShopify}>Sync with Shopify</button>
                     </div>
                 </div>
                 <div className="row mt-1">
