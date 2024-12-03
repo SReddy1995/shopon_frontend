@@ -1,22 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import * as Yup from 'yup';
 import { Formik, Field, ErrorMessage, FormikValues } from 'formik';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { getAccountDetails, saveRegistrationDetails } from '../../services/AccountService';
 import { showSuccessMessage } from '../../shared/notificationProvider';
 import { updateSelectedStore } from '../../utils/reduxStore/storesSlice';
 import { REGISTRATION_UPDATE_SUCCESS } from '../../utils/constants/NotificationConstants';
-
-interface FormValues {
-    firstname: string;
-    lastname: string;
-    contact_number: string;
-    email_address: string;
-    legal_entity_name: string;
-    has_existing_store: string;
-    store_url: string;
-    additional_info: string;
-}
 
 const registerValidationSchema = Yup.object().shape({
     firstname: Yup.string()
@@ -48,21 +37,12 @@ const initialValues = {
    };
 
 const RegistrationForm = (props:any) => {
-
-    const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const selectedStore = useSelector((store: any) => store.stores.selectedStore);
-    const storesList = useSelector((store: any) => store.stores.storesList);
     const [user_details, setUserDetails] = useState(localStorage.getItem('user_details') ? JSON.parse(localStorage.getItem('user_details') || '{}') : null);
     const dispatch = useDispatch();
     const [allowUserToEditStoreContactDetails, setAllowUserToEditStoreContactDetails] = useState(true)
 
-    useEffect(() => {
-        fetchData();
-      }, []);
-
-    const fetchData = () => {
+    const fetchData = useCallback(() => {
         getAccountDetails(user_details.buyer_id)
         .then((data: any) => {
             if(data){
@@ -93,7 +73,12 @@ const RegistrationForm = (props:any) => {
         .catch((err: any) => {
             console.log(err)
         });
-      }
+      },[dispatch, user_details.buyer_id, user_details.email_address]);
+
+    
+      useEffect(() => {
+        fetchData();
+      }, [fetchData]);
 
     const updateBuyerRegistrationDetails = (values: FormikValues) => {
         console.log("reg form details = ", values)
@@ -296,7 +281,6 @@ const RegistrationForm = (props:any) => {
                                         </div>
                                     </div>
                                     <div className="text-center">
-                                        <a className="btn-link">
                                             <button type="button"
                                                 className="btn-custom mt-2 btn-right"
                                                 onClick={() => {
@@ -304,7 +288,6 @@ const RegistrationForm = (props:any) => {
                                                 }}>
                                                 Save
                                             </button>
-                                        </a>
                                     </div>
                                 </form>
                             )}

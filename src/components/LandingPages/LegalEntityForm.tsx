@@ -1,14 +1,13 @@
 import { ErrorMessage, Field, Formik, FormikValues } from 'formik';
 import * as Yup from 'yup';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { getLegalEntityDetails, saveLegalEntityDetails } from '../../services/AccountService';
 import { useSelector } from 'react-redux';
 import { showSuccessMessage } from '../../shared/notificationProvider';
 import { LEGAL_ENTITY_UPDATE_SUCCESS } from '../../utils/constants/NotificationConstants';
 
-const emailRegex = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)
+const emailRegex = new RegExp(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)
 const panRegex = new RegExp("[A-Z]{5}[0-9]{4}[A-Z]{1}")
-const aadharRegexWithSpace = new RegExp("^[2-9]{1}[0-9]{3}\\s[0-9]{4}\\s[0-9]{4}$")
 const aadharRegex = new RegExp("^[2-9]{1}[0-9]{3}[0-9]{4}[0-9]{4}$")
 const legalEntityValidationSchema = Yup.object().shape({
     authorised_signatory_name: Yup.string().required('Required'),
@@ -42,11 +41,11 @@ const legalEntityValidationSchema = Yup.object().shape({
     }),
     company_name: Yup.string().required('Required'),
     sector_of_organization_type: Yup.string().required('Required'),
-    date_of_incorporation: Yup.string().required('Required') .nullable().typeError('Invalid date format'),
+    date_of_incorporation: Yup.string().required('Required').nullable().typeError('Invalid date format'),
     company_phone_number: Yup.string()
-                                        .min(10, 'Contact number must be 10 characters')
-                                        .max(10, 'Contact number must be 10 characters')
-                                        .required('Contact number is required'),
+    .min(10, 'Contact number must be 10 characters')
+    .max(10, 'Contact number must be 10 characters')
+    .required('Contact number is required'),
     company_email_address: Yup.string().email('Invalid email format').required('Email is required'),
 
     annual_turnover_type: Yup.string().required('Required'),
@@ -112,31 +111,10 @@ const initialValues = {
 const LegalEntityForm = (props:any) => {
 
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const selectedStore = useSelector((store: any) => store.stores.selectedStore);
     const refValues = useSelector((store: any) => store.refValues.referenceList);
 
-    useEffect(() => {
-        fetchData();
-      }, []);
 
-      const fetchData = () => {
-        getLegalEntityDetails()
-        .then((data: any) => {
-            if(data && data.length>0){
-                setData(data[0]);
-            }
-            else{
-                resetData()
-            }
-            setLoading(false);
-        })
-        .catch(err => {
-            setLoading(false);
-        });
-      }
-
-      const resetData = () => {
+    const resetData = useCallback(() => {
         initialValues.authorised_signatory_name= '';
         initialValues.authorised_signatory_designation= ''
         initialValues.authorised_signatory_phone_number= ''
@@ -161,9 +139,9 @@ const LegalEntityForm = (props:any) => {
         initialValues.state= ''
         initialValues.country= ''
         initialValues.pincode= ''
-      }
+      },[])
 
-      const setData = (data: any) => {
+      const setData = useCallback((data: any) => {
         initialValues.authorised_signatory_name = data.authorised_signatory_name
         initialValues.authorised_signatory_designation = data.authorised_signatory_designation
         initialValues.authorised_signatory_phone_number = data.authorised_signatory_phone_number
@@ -185,10 +163,30 @@ const LegalEntityForm = (props:any) => {
         initialValues.building_street_area = data.addressDetails.building_street_area
         initialValues.locality_town = data.addressDetails.locality_town
         initialValues.city_id = data.addressDetails.city_id
-        initialValues.state = refValues.cities.filter((x: any) => x.city_id == data.addressDetails.city_id)[0].state.description
-        initialValues.country = refValues.cities.filter((x: any) => x.city_id == data.addressDetails.city_id)[0].state.country.description
+        initialValues.state = refValues.cities.filter((x: any) => x.city_id === data.addressDetails.city_id)[0].state.description
+        initialValues.country = refValues.cities.filter((x: any) => x.city_id === data.addressDetails.city_id)[0].state.country.description
         initialValues.pincode = data.addressDetails.pincode
-      }
+      },[refValues.cities])
+
+      const fetchData = useCallback(() => {
+        getLegalEntityDetails()
+        .then((data: any) => {
+            if(data && data.length>0){
+                setData(data[0]);
+            }
+            else{
+                resetData()
+            }
+            setLoading(false);
+        })
+        .catch(err => {
+            setLoading(false);
+        });
+      },[setData, resetData])
+
+      useEffect(() => {
+        fetchData();
+      }, [fetchData]);
 
       const updateLegalEntityDetails = (values: FormikValues) => {
         let payload = getFormattedPayload(values)
@@ -658,8 +656,8 @@ const LegalEntityForm = (props:any) => {
                                             onChange={(e: any) => {
                                                 const { value } = e.target;
                                                 setFieldValue("city_id", value);
-                                                setFieldValue("state", refValues.cities.filter((x: any) => x.city_id == value)[0].state.description);
-                                                setFieldValue("country", refValues.cities.filter((x: any) => x.city_id == value)[0].state.country.description);
+                                                setFieldValue("state", refValues.cities.filter((x: any) => x.city_id.toString() === value)[0].state.description);
+                                                setFieldValue("country", refValues.cities.filter((x: any) => x.city_id.toString() === value)[0].state.country.description);
                                             }} 
                                         >
                                             <option value={""}>--select--</option>
@@ -718,13 +716,13 @@ const LegalEntityForm = (props:any) => {
                                 </div>
                         
                         <div className="text-center">
-                            <a className="btn-link"><button type="button"
+                            <button type="button"
                                 className="btn-custom  mt-2 btn-right"
                                 onClick={() => {
                                   handleSubmit();
                                 }}>
                                     Save
-                                </button></a>
+                                </button>
                         </div>
                     </form>
                     )}

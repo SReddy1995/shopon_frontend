@@ -21,8 +21,6 @@ const options = {
   zoomControl: true,
 };
 
-const libraries = ["places"]
-
 const MapComponent = (props: any) => {
   const [currentLocation, setCurrentLocation] = useState(center);
   const [markerLocation, setMarkerLocation] = useState(center);
@@ -34,13 +32,6 @@ const MapComponent = (props: any) => {
   const [showLocateLocationOnMap, setShowLocateLocationOnMap] = useState(false)
   const autocompleteRef = useRef<HTMLInputElement | null>(null);
   const [inputValue, setInputValue] = useState('');
-
-  const handleReset = () => {
-    setInputValue('');
-    if (autocompleteRef.current) {
-        autocompleteRef.current.value = ''; // Manually reset the value in the input
-    }
-};
 
   const getCurrentLocation = async () => {
     if (navigator.geolocation) {
@@ -121,23 +112,6 @@ const MapComponent = (props: any) => {
       () => null
     );
   }, []);
-
-  const reverseGeocode = (latLng: any) => {
-    // Ensure the Google Maps API has fully loaded before creating the Geocoder
-    if (window.google && window.google.maps) {
-      const geocoder = new window.google.maps.Geocoder();
-      geocoder.geocode({ location: latLng }, (results, status) => {
-        if (status === 'OK' && results && results[0]) {
-          let res = getAddressFormatted(results[0].address_components, latLng.lat, latLng.lng, results[0].formatted_address)
-          setSelectedAddress(res);
-        } else {
-          console.log('Address not found');
-        }
-      });
-    } else {
-      console.error('Google Maps API is not available');
-    }
-  };
   
   const onLoad = (map: any) => {
     mapRef.current = map; // Store the map reference
@@ -190,14 +164,6 @@ const MapComponent = (props: any) => {
   const closeModal = () => {
     props.closeModal();
   }
-
-  const handleMarkerDragEnd = (e: any) => {
-    const newPosition = {
-      lat: e.latLng.lat(),
-      lng: e.latLng.lng(),
-    };
-    setMarkerLocation(newPosition);
-  };
 
   const handleMapClick = (event: any) => {
     const lat = event.latLng.lat();
