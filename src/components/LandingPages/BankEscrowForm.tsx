@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import * as Yup from 'yup';
 import { Formik, Field, ErrorMessage, FormikValues } from 'formik';
 import { showSuccessMessage } from '../../shared/notificationProvider';
 import { getBankInfo, saveBankInfo } from '../../services/AccountService';
 import { BANK_INFO_UPDATE_SUCCESS } from '../../utils/constants/NotificationConstants';
 
-const ifscRegex = new RegExp("^[A-Z]{4}[0]{1}[A-Z0-9]{6}$")
 const bankEscrowValidationSchema = Yup.object().shape({
     has_escrow_account: Yup.string().required('Select whether you have Escrow Account'),   
     escrow_account_number: Yup.string()
@@ -63,20 +62,17 @@ const BankEscrowForm = (props: any) => {
         bank_name: ''
        }); 
 
-
-    useEffect(() => {
-        fetchData();
-      }, []);
-
-      const fetchData = () => {
+      const fetchData = useCallback(() => {
         getBankInfo()
         .then((data: any) => {
             if(data){
-                initialValues.has_escrow_account = data[0].has_escrow_account
-                initialValues.escrow_account_number = data[0].escrow_account_number
-                initialValues.confirm_escrow_account_number = data[0].escrow_account_number
-                initialValues.ifsc = data[0].ifsc
-                initialValues.bank_name = data[0].bank_name
+                setInitialValues({
+                    has_escrow_account: data[0].has_escrow_account? data[0].has_escrow_account: '',
+                    escrow_account_number: data[0].escrow_account_number? data[0].escrow_account_number: '',
+                    confirm_escrow_account_number: data[0].escrow_account_number? data[0].escrow_account_number: '',
+                    ifsc: data[0].ifsc? data[0].ifsc: '',
+                    bank_name: data[0].bank_name? data[0].bank_name: ''
+                });
                 if(data[0].has_escrow_account === "N"){
                     setShowBankAccountDetails(false)
                 }
@@ -89,7 +85,12 @@ const BankEscrowForm = (props: any) => {
         .catch(err => {
             setLoading(false);
         });
-      }
+      },[])
+
+    
+      useEffect(() => {
+        fetchData();
+      }, [fetchData]);
 
     const updateBankEscrowDetails = (values: FormikValues) => {
         let filteredValuesPayload = values;
@@ -301,11 +302,11 @@ const BankEscrowForm = (props: any) => {
                                 </div>
 
                                 <div className="text-center">
-                                    <a className="btn-link"><button type="button"   
+                                    <button type="button"   
                                         onClick={() => {
                                         handleSubmit();
                                         }}
-                                        className="btn-custom  mt-2 btn-right" >Save</button></a>
+                                        className="btn-custom  mt-2 btn-right" >Save</button>
                                 </div>
                             </form>
                         )}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import * as Yup from 'yup';
 import { Formik, Field, ErrorMessage, FormikValues, FieldArray } from 'formik';
 import { showSuccessMessage } from '../../shared/notificationProvider';
@@ -71,30 +71,7 @@ const OnlineStoreForm = (props: any) => {
     //     option.toLowerCase().includes(searchTerm.toLowerCase())
     //   );
 
-    useEffect(() => {
-        fetchData();
-        // setLoading(false);
-      }, []);
-
-      const fetchData = () => {
-        getOnlineStore()
-        .then((data: any) => {
-            initialValues.store_url = user_details.store_url;
-            initialValues.subscriber_id = user_details.subscriber_id;
-            if(data && data.length>0){
-                setData(data[0])
-            }
-            else{
-                initialValues.categories = [];
-            }
-            setLoading(false);
-        })
-        .catch(err => {
-            setLoading(false);
-        });
-      }
-
-    const setData = (values: any) => {
+    const setData = useCallback((values: any) => {
         if(values.categoryCityMappings.length> 0){
             const formattedData = values.categoryCityMappings.reduce((acc: any, entry: any) => {
                 const { category_id, city_id, city } = entry;
@@ -124,7 +101,30 @@ const OnlineStoreForm = (props: any) => {
 
         setLoading(false)
 
-    }
+    },[])
+
+      const fetchData = useCallback(() => {
+        getOnlineStore()
+        .then((data: any) => {
+            initialValues.store_url = user_details.store_url;
+            initialValues.subscriber_id = user_details.subscriber_id;
+            if(data && data.length>0){
+                setData(data[0])
+            }
+            else{
+                initialValues.categories = [];
+            }
+            setLoading(false);
+        })
+        .catch(err => {
+            setLoading(false);
+        });
+      },[setData, user_details.store_url, user_details.subscriber_id])
+
+      useEffect(() => {
+        fetchData();
+        // setLoading(false);
+      }, [fetchData]);
 
     const updateOnlineStoreDetails = (values: FormikValues) => {
         let payload: any = []
@@ -266,8 +266,8 @@ const OnlineStoreForm = (props: any) => {
                                                                     </td>
 
                                                                     <td data-name="del" className="text-center input-table-column">
-                                                                        <a className="btn-link"><button onClick={() => remove(index)} type="button"
-                                                                            className="btn-danger-icon" ><i className="fa fa-trash"></i></button></a>
+                                                                        <button onClick={() => remove(index)} type="button"
+                                                                            className="btn-danger-icon" ><i className="fa fa-trash"></i></button>
                                                                     </td>
                                                                 </tr>
                                                         ))}
@@ -278,9 +278,9 @@ const OnlineStoreForm = (props: any) => {
                                         </div>
                                     </div>
                                     <div className="mb-5">
-                                        <a className="btn-link"><button type="button"
+                                        <button type="button"
                                             onClick={() => push({ name: '', id: '', city: '' })}
-                                            className="btn-custom btn-success float-right" ><i className="fa fa-plus"></i></button></a>
+                                            className="btn-custom btn-success float-right" ><i className="fa fa-plus"></i></button>
                                     </div>
                                 </>
                             )}
@@ -289,12 +289,12 @@ const OnlineStoreForm = (props: any) => {
 
 
                         <div className="text-center mt-4">
-                            <a  className="btn-link"><button type="button"
+                            <button type="button"
                             disabled={!(isValid) || isSubmitting}
                             onClick={() => {
                                 handleSubmit();
                             }}
-                            className="btn-custom mt-2 btn-right" >Save</button></a>
+                            className="btn-custom mt-2 btn-right" >Save</button>
                         </div>
                     </form>
                     )}

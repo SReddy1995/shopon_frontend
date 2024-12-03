@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { showSuccessMessage, showWarningMessage } from '../../shared/notificationProvider';
 import { deleteDocument, downloadDocuments, getDocumentDetailsList, getLegalEntityDetails } from '../../services/AccountService';
 import ModalWindow from './ModalWindow';
@@ -77,12 +77,43 @@ const DocumentsUpload = (props: any) => {
 
     const [documentsList, setDocumentsList] = useState(documents_list);
 
-    useEffect(() => {
-        
-        fetchOrgTypeData();
-      }, []);
+    const setData = useCallback((values: any) => {
+        console.log(values)
+        let docs = documentsList;
+        let org_type = values.nature_of_organization_type;
+        if(org_type === "TRUST" || org_type === "COMP" || org_type === "AOP" || org_type === "PART_FIRM" || org_type === "LLP"){
+            docs.filter((x: any) => x.document_type === "CPAN")[0].applicable = true
+            docs.filter((x: any) => x.document_type === "COI")[0].applicable = true
+        }
+        setDocumentsList(docs)
 
-      const fetchOrgTypeData = () => {
+    },[documentsList])
+
+    
+    const setDocumentData = useCallback((values: any) => {
+        
+        let docs = documentsList;
+        values.forEach((element: any , index: any) => {
+            docs.filter((x: any) => x.document_type === element.document_type)[0].description = element.document_description;
+            docs.filter((x: any) => x.document_type === element.document_type)[0].uploadedFile = element.document ? element.document : null;
+        })
+        setDocumentsList(docs)
+    },[documentsList])
+
+    const fetchDocumentsDetails = useCallback(() => {
+        getDocumentDetailsList()
+        .then((data: any) => {
+            if(data){
+                setDocumentData(data);
+            }
+            setLoading(false)
+        })
+        .catch(err => {
+            setLoading(false);
+        });
+      },[setDocumentData])
+
+      const fetchOrgTypeData = useCallback(() => {
         setLoading(true);
         getLegalEntityDetails()
         .then((data: any) => {
@@ -95,43 +126,13 @@ const DocumentsUpload = (props: any) => {
         .catch(err => {
             setLoading(false);
         });
-      }
+      },[fetchDocumentsDetails, setData])
 
-      const fetchDocumentsDetails = () => {
-        getDocumentDetailsList()
-        .then((data: any) => {
-            if(data){
-                setDocumentData(data);
-            }
-            setLoading(false)
-        })
-        .catch(err => {
-            setLoading(false);
-        });
-      }
-
-    const setData = (values: any) => {
-        console.log(values)
-        let docs = documentsList;
-        let org_type = values.nature_of_organization_type;
-        if(org_type === "TRUST" || org_type === "COMP" || org_type === "AOP" || org_type === "PART_FIRM" || org_type === "LLP"){
-            docs.filter((x: any) => x.document_type === "CPAN")[0].applicable = true
-            docs.filter((x: any) => x.document_type === "COI")[0].applicable = true
-        }
-        setDocumentsList(docs)
-
-    }
-
-    
-    const setDocumentData = (values: any) => {
+      useEffect(() => {
         
-        let docs = documentsList;
-        values.forEach((element: any , index: any) => {
-            docs.filter((x: any) => x.document_type === element.document_type)[0].description = element.document_description;
-            docs.filter((x: any) => x.document_type === element.document_type)[0].uploadedFile = element.document ? element.document : null;
-        })
-        setDocumentsList(docs)
-    }
+        fetchOrgTypeData();
+      }, [fetchOrgTypeData, setData]);
+
 
     const openModal = () => {
             setModalOpen(true);
