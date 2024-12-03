@@ -782,7 +782,7 @@ flex-direction: column;
 }
 h1{
    
-  font-size:4em;
+  font-size:3em;
   letter-spacing:3px;
   color:inherit ;
   margin:0;
@@ -828,7 +828,7 @@ h1{
 
 @media (min-width:360px){
   h1{
-    font-size:4.5em;
+    font-size:3em;
   }
   .go-home{
     margin-bottom:20px;
@@ -2450,4 +2450,7 @@ color:#fff !important;
 }
 .user-table>:not(caption)>*>* {
   padding: 0.5rem 0.5rem 0.5rem 0.75rem!important;
+}
+.navbar-dark{
+  background-color: #000 !important;
 }
