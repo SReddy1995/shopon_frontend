@@ -65,7 +65,6 @@ const initialValues = {
 
 
 const AddUserForm = (props: any) => {
-  const [inputValue, setInputValue] = useState('');
   const [loading, setLoading] = useState(true);
   const [initialValuesForForm, setFormInitialValues] = useState(initialValues);
 
@@ -78,21 +77,11 @@ const AddUserForm = (props: any) => {
 
   useEffect(() => {
     if(props.mode === 'Edit'){
-      setData();
+      setFormInitialValues({firstname: props.selectedUser.firstname, lastname: props.selectedUser.lastname, email_address: props.selectedUser.email_address,
+        contact_number: props.selectedUser.contact_number, roles: props.selectedUser.roles, status: props.selectedUser.enabled})
     }
-    else{
-      setFormInitialValues({firstname: '', lastname: '', email_address: '', contact_number: '', roles: '', status: ''})
-      setLoading(false);
-    }
-
-  }, [props.mode]);
-
-  const setData = () => {
     setLoading(false);
-    console.log(props.selectedUser)
-    setFormInitialValues({firstname: props.selectedUser.firstname, lastname: props.selectedUser.lastname, email_address: props.selectedUser.email_address,
-      contact_number: props.selectedUser.contact_number, roles: props.selectedUser.roles, status: props.selectedUser.enabled})
-  }
+  }, [props.mode, props.selectedUser]);
 
   const submitForm = (values: FormikValues) => {
     if(props.mode === 'Add'){
