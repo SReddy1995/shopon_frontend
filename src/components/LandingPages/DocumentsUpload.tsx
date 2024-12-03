@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { showSuccessMessage, showWarningMessage } from '../../shared/notificationProvider';
-import { useSelector } from 'react-redux';
 import { deleteDocument, downloadDocuments, getDocumentDetailsList, getLegalEntityDetails } from '../../services/AccountService';
 import ModalWindow from './ModalWindow';
 import UploadFileForm from './UploadFileForm';
@@ -9,7 +8,6 @@ import { DOC_DELETE_SUCCESS, DOCUMENTS_DOWNLOADED, NO_DOCS_UPLOADED } from '../.
 
 
 const DocumentsUpload = (props: any) => {
-    const refValues = useSelector((store: any) => store.refValues.referenceList);
     const [loading, setLoading] = useState(true)
     const user_details = localStorage.getItem('user_details') ? JSON.parse(localStorage.getItem('user_details') || '{}') : null;
     const [open, setModalOpen] = useState(false);

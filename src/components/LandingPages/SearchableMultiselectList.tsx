@@ -69,8 +69,8 @@ const SearchableMultiselectList = (props : any) => {
                                     checked={selectedList.some((obj: any) => obj.value === item.value)}
                                     onChange={handleCheckboxNoAction}
                                 />
-                                <a className="dropdown-item ml-0 pl-2 small fw-semibold ellipsis"
-                                    role="button" title="All">{item.label}</a></li>
+                                <span className="dropdown-item ml-0 pl-2 small fw-semibold ellipsis mb-0 cursor-pointer"
+                                    role="button" title="All">{item.label}</span></li>
                         })
                 }
 

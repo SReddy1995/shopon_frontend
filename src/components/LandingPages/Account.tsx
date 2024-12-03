@@ -71,35 +71,32 @@ const Account = () => {
     const fetchStoreStatusDetails = useCallback(() => {
         setLoading(true)
         getStoreStatusDetails()
-        .then((response: any)=>{
-            setData(response)
+        .then((res: any)=>{
+            let details = storeStatus;
+            res.forEach((element: any, index: any)=> {
+                if(details.filter((x:any)=> x.stepref === element.step.stepref)[0]){
+                details.filter((x:any)=> x.stepref === element.step.stepref)[0].status = element.status.status;
+                details.filter((x:any)=> x.stepref === element.step.stepref)[0].status_desc = element.status.description;
+                if(element.step.stepref === "LED"){
+                    details.filter((x:any)=> x.stepref === element.step.stepref)[1].status = element.status.status;
+                    details.filter((x:any)=> x.stepref === element.step.stepref)[1].status_desc = element.status.description;
+                }
+                }
+            })
+            setProgressBar(details);
+            setStoreStatus(details)
+            setLoading(false)
         })
         .catch(err=>{
             setLoading(false)
         })
-      }, []);
+      }, [storeStatus]);
     
       useEffect(() => {
         fetchStoreStatusDetails();
       }, [fetchStoreStatusDetails]);
-
-    const setData = (res: any) => {
-        let details = storeStatus;
-        res.forEach((element: any, index: any)=> {
-            if(details.filter((x:any)=> x.stepref === element.step.stepref)[0]){
-            details.filter((x:any)=> x.stepref === element.step.stepref)[0].status = element.status.status;
-            details.filter((x:any)=> x.stepref === element.step.stepref)[0].status_desc = element.status.description;
-            if(element.step.stepref === "LED"){
-                details.filter((x:any)=> x.stepref === element.step.stepref)[1].status = element.status.status;
-                details.filter((x:any)=> x.stepref === element.step.stepref)[1].status_desc = element.status.description;
-            }
-            }
-        })
-        setProgressBar(details);
-        setStoreStatus(details)
-        setLoading(false)
-    }
-    const [subscriber_plan, setSubscriber_plan]= useState("Gold");
+      
+    const subscriber_plan = "Gold";
 
     const [activeTab, setActiveTab] = useState(0);
 

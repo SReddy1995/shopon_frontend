@@ -4,7 +4,7 @@ import { showSuccessMessage, showWarningMessage } from '../../shared/notificatio
 import { DOC_UPLOAD_ERROR, DOC_UPLOAD_SUCCESS } from '../../utils/constants/NotificationConstants';
 
 const UploadFileForm = (props: any) => {
-    const [loading, setLoading] = useState(false);
+    const loading = false;
     const [filename, setFileName] = useState('');
     const [file, setFile] = useState('');
     const fileInputRef = useRef<HTMLInputElement | null>(null);
