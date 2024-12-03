@@ -1,16 +1,14 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import SearchableMultiselectList from './SearchableMultiselectList';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import SimilarProductsImage from "../../assets/images/product-similar-2.png";
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateSelectedCategoryForProductsList, updateSourcePage } from '../../utils/reduxStore/productsSlice';
 import ImageWithFallback from './ImageWithFallback';
 import { deleteProductFromCollection, getShopifyProducts } from '../../services/CollectionsService';
-import { showSuccessMessage, showWarningMessage } from '../../shared/notificationProvider';
+import { showSuccessMessage } from '../../shared/notificationProvider';
 import { COLLECTION_PRODUCT_DELETED } from '../../utils/constants/NotificationConstants';
 import ModalWindow from './ModalWindow';
 import ConfirmDelete from './ConfirmDelete';
-import { ClassNames } from '@emotion/react';
 
 const Collections = () => {
 
@@ -23,30 +21,21 @@ const Collections = () => {
     // navigate to productsList
 
     const loadSimilarProducts = (item: any) => {
-        let category = item.ondc_category? item.ondc_category : null;
-        if(category){
-            if(refValues.categoriesType.filter((x: any)=> x.description === category) && refValues.categoriesType.filter((x: any)=> x.description === category).length>0){
-                let cat = [];
-                cat.push({
-                    value: refValues.categoriesType.filter((x: any)=> x.description === category)[0].ondc_categories_id,
-                    label: category
-                })
-                dispatch(updateSelectedCategoryForProductsList(cat));
-            }
-            else{
-                dispatch(updateSelectedCategoryForProductsList(null));
-            }
-        }
-        else{
-            dispatch(updateSelectedCategoryForProductsList(category));
-        }
-        dispatch(updateSourcePage('collections'));
-        navigate('/landing-page/products/products-list')
+        const category = item.ondc_category || null;
+        const categoryData = refValues.categoriesType.find((x: any) => x.description === category);
+        
+        const cat = categoryData ? [{
+            value: categoryData.ondc_categories_id,
+            label: category
+        }] : null;
 
+        dispatch(updateSelectedCategoryForProductsList(cat));
+        dispatch(updateSourcePage('collections'));
+        navigate('/landing-page/products/products-list');
     }
     
 
-    const [columns_from_api, setColumnsFromApi] = useState<any[]>([
+    const columns_from_api = useMemo(() => [
         {
             coltitle: "",
             column: "thumbnail",
@@ -167,137 +156,9 @@ const Collections = () => {
             minWidth:'160px'
         },
         
-    ])
+    ], []);
 
-    const api_response = [
-        {
-            "collection": {
-                "shopify_product_id": "gid://shopify/Product/8899319365877",
-                "title": "Hello There 1",
-                "vendor": "Hey Vendor 1",
-                "status": "DRAFT",
-                "description": "This is a hello product This product says hello to someone in the room, but cannot be heard by anyone.",
-                "product_type": "",
-                "price": "1045.67",
-                "sku": "12344",
-                "inventory_quantity": 15,
-                "alternate_id": "12344",
-                "is_ondc_product": "true",
-                "ondc_category": "Fashion",
-                "media": [
-                    {
-                        "media_content_type": "EXTERNAL_VIDEO",
-                        "media_url": "https://cdn.shopify.com/s/files/1/0721/9383/5253/files/preview_images/hqdefault_0ed7e342-d002-49ab-9cc7-a8c1a8fa0138.jpg?v=1731427566"
-                    },
-                    {
-                        "media_content_type": "IMAGE",
-                        "media_url": "https://cdn.shopify.com/1234s/files/1/0721/9383/5253/files/images_eeff2d52-fd5c-4b27-9064-34e92ef8bbe8.jpg?v=1731427566"
-                    }
-                ]
-            }
-        },
-        {
-            "collection": {
-                "shopify_product_id": "gid://shopify/Product/8899319365878",
-                "title": "Hello There 2",
-                "vendor": "Hey Vendor 2",
-                "status": "DRAFT",
-                "description": "This is a hello product This product says hello to someone in the room, but cannot be heard by anyone.",
-                "product_type": "",
-                "price": "1045.67",
-                "sku": "12344",
-                "inventory_quantity": 15,
-                "alternate_id": "12344",
-                "is_ondc_product": "true",
-                "ondc_category": "Fashion",
-                "media": [
-                    {
-                        "media_content_type": "EXTERNAL_VIDEO",
-                        "media_url": "https://cdn.shopify.com/s/files/1/0721/9383/5253/files/preview_images/hqdefault_0ed7e342-d002-49ab-9cc7-a8c1a8fa0138.jpg?v=1731427566"
-                    },
-                    {
-                        "media_content_type": "IMAGE",
-                        "media_url": ""
-                    }
-                ]
-            }
-        },
-        {
-            "collection": {
-                "shopify_product_id": "gid://shopify/Product/8899319365879",
-                "title": "Hello There 3",
-                "vendor": "Hey Vendor 3",
-                "status": "DRAFT",
-                "description": "This is a hello product This product says hello to someone in the room, but cannot be heard by anyone.",
-                "product_type": "",
-                "price": "1045.67",
-                "sku": "12344",
-                "inventory_quantity": 15,
-                "alternate_id": "12344",
-                "is_ondc_product": "false",
-                "ondc_category": "Grocery",
-                "media": [
-                    {
-                        "media_content_type": "EXTERNAL_VIDEO",
-                        "media_url": "https://cdn.shopify.com/s/files/1/0721/9383/5253/files/preview_images/hqdefault_0ed7e342-d002-49ab-9cc7-a8c1a8fa0138.jpg?v=1731427566"
-                    },
-                    {
-                        "media_content_type": "IMAGE",
-                        "media_url": "https://cdn.shopify.com/s/files/1/0721/9383/5253/files/images_eeff2d52-fd5c-4b27-9064-34e92ef8bbe8.jpg?v=1731427566"
-                    }
-                ]
-            }
-        }
-    ]
-
-    const [data, setData] = useState<any>([
-        // {
-        //     id:1,
-        //     thumbnail: "https://cdn.shopify.com/s/files/1/0567/3084/5242/files/navyblue4_40x40@3x.jpg?v=1727243854",
-        //     product: "Fingertips Bluetooth Remote Control Wireless",
-        //     status: "Active",
-        //     inventory: "150,000 in stock",
-        //     sales: "56",
-        //     market: "3",
-        //     b2b_catalogs: "7",
-        //     category: {
-        //         value: 1,
-        //         label: "Grocery"
-        //     },
-        //     type: "Retail"
-        // },
-        // {
-        //     id:2,
-        //     thumbnail: "https://cdn.shopify.com/s/files/1/0567/3084/5242/files/navyblue4_40x40@3x.jpg?v=1727243854",
-        //     product: "Fingertips Fashion",
-        //     status: "Draft",
-        //     inventory: "150,000 in stock",
-        //     sales: "56",
-        //     market: "3",
-        //     b2b_catalogs: "7",            
-        //     category: {
-        //         value: 3,
-        //         label: "Fashion"
-        //     },
-        //     type: "Retail"
-        // },
-        // {
-        //     id:3,
-        //     thumbnail: "https://cdn.shopify.com/s/files/1/0567/3084/5242/files/navyblue4_40x40@3x.jpg?v=1727243854",
-        //     product: "Max fashion dress set",
-        //     status: "Active",
-        //     inventory: "150,000 in stock",
-        //     sales: "56",
-        //     market: "3",
-        //     b2b_catalogs: "7",            
-        //     category: {
-        //         value: 3,
-        //         label: "Fashion"
-        //     },
-        //     type: "Retail"
-        // },
-      ]);
-      const [sortConfig, setSortConfig] = useState({key: '', direction: ''});
+    const [data, setData] = useState<any>([]);
       const [columns, setColumns] = useState<any[]>([])
       const [loading,setLoading] = useState(true)
       const [noData, setNoData] = useState(false)
@@ -343,24 +204,9 @@ const Collections = () => {
             return item.title.toLowerCase().includes(searchTerm.toLowerCase()) && 
             (item.is_ondc_product === false)
         }
+        return null;
     }
     );
-
-      const sortedData = React.useMemo(() => {
-        let sortableItems = [...filteredData ];
-        if (sortConfig !== null) {
-          sortableItems.sort((a: any, b: any) => {
-            if (a[sortConfig.key] < b[sortConfig.key]) {
-              return sortConfig.direction === 'ascending' ? -1 : 1;
-            }
-            if (a[sortConfig.key] > b[sortConfig.key]) {
-              return sortConfig.direction === 'ascending' ? 1 : -1;
-            }
-            return 0;
-          });
-        }
-        return sortableItems;
-      }, [data, sortConfig,filteredData]);
 
      const getPaginatedData = () => {
         return filteredData;
@@ -368,22 +214,21 @@ const Collections = () => {
     
       const paginatedData = getPaginatedData();
 
-      const requestSort = (key: any) => {
-        let direction = 'ascending';
-        if (sortConfig && sortConfig.key === key && sortConfig.direction === 'ascending') {
-          direction = 'descending';
-        }
-        setSortConfig({ key, direction });
-      };
+      const processAPIResponse = useCallback((response : any) => {        
+        let res =  response.collections
+        setData((prevData: any) => {
+            return  res.map((item: any)=>{
+                 return {
+                     ...item,
+                     thumbnail: getThumbnail(item),
+                     is_ondc_product: item.is_ondc_product === "true" ? true : false,
+                     price: item.price && item.price !== '' ? formatCurrency(item.price) : ''
+                 }
+             })
+        })
+    },[])
 
-      useEffect(() => {
-        setColumnsData(JSON.parse(JSON.stringify(columns_from_api)))
-        setLoading(true)
-        fetchShopifyProducts(null,null);
-        
-      },[]);
-
-      const fetchShopifyProducts = (prev_page_id: any, next_page_id: any) => {
+      const fetchShopifyProducts = useCallback((prev_page_id: any, next_page_id: any) => {
         setSelectedProductToDelete(null)
         let payload = {
             store_url: user_details.store_url,
@@ -409,7 +254,14 @@ const Collections = () => {
             setNoData(true)
             setLoading(false)
         });
-      }
+      },[user_details.store_url, processAPIResponse])
+
+      useEffect(() => {
+        setColumnsData(JSON.parse(JSON.stringify(columns_from_api)))
+        setLoading(true)
+        fetchShopifyProducts(null,null);
+        
+      },[columns_from_api, fetchShopifyProducts]);
 
       const performDeleteProductFromCollection = () => {
         let payload = {
@@ -439,20 +291,6 @@ const Collections = () => {
         setHasPreviousPage(page_info.hasPreviousPage)
         setStartCursor(page_info.startCursor)
         setEndCursor(page_info.endCursor)
-      }
-
-      const processAPIResponse = (response : any) => {        
-           let res =  response.collections
-           setData((prevData: any) => {
-               return  res.map((item: any)=>{
-                    return {
-                        ...item,
-                        thumbnail: getThumbnail(item),
-                        is_ondc_product: item.is_ondc_product === "true" ? true : false,
-                        price: item.price && item.price !== '' ? formatCurrency(item.price) : ''
-                    }
-                })
-           })
       }
 
       const getThumbnail = (item: any) =>{
@@ -628,12 +466,11 @@ const Collections = () => {
                                                                 paginatedData.map((item: any) => (
 
                                                                     <tr key={item.shopify_product_id}>
-                                                                           <td><a><button type="button"
-                                                                            className="btn-danger-icon" onClick={() => openConfirmDeleteModal(item.shopify_product_id)}><i className="fa fa-trash text-danger" style={{ fontSize: '14px' }}></i></button></a>
-                                                                            <a > <button type="button" onClick={() => loadSimilarProducts(item)}
-                                                                                className="btn"  style={{marginLeft:'-8px'}}><img src={SimilarProductsImage} style={{ width: '26px', height: '24px !important', padding: '0px 0px', display: 'inline' }} />
+                                                                           <td><button type="button"
+                                                                            className="btn-danger-icon" onClick={() => openConfirmDeleteModal(item.shopify_product_id)}><i className="fa fa-trash text-danger" style={{ fontSize: '14px' }}></i></button>
+                                                                            <button type="button" onClick={() => loadSimilarProducts(item)}
+                                                                                className="btn"  style={{marginLeft:'-8px'}}><img src={SimilarProductsImage} style={{ width: '26px', height: '24px !important', padding: '0px 0px', display: 'inline' }} alt="store_image"/>
                                                                             </button>
-                                                                            </a>
                                                                         </td>
                                                                         {
                                                                             columns
