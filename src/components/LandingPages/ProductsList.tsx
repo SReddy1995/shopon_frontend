@@ -39,12 +39,11 @@ const ProductsList = () => {
           return dist;
         } else {
           return null;
-          alert("Please enter valid coordinates for both points.");
         }
       };
 
 
-    const [columns_from_api, setColumnsFromApi] = useState<any[]>([
+    const columns_from_api = [
         {
             coltitle: "",
             column: "thumbnail",
@@ -225,17 +224,11 @@ const ProductsList = () => {
               minWidth:'160px'
         },
         
-    ])
+    ]
 
     
 
     const [vendors_list,setVendorsList] = useState<any>([]);
-      
-      const sort_list = [
-        { value: 'product_ame', label: 'Product Name'},
-        { value: 'seller', label: 'Seller'},
-        { value: 'category', label: 'Category'},
-      ]
 
       const [speciality_list, setSpecialityList] = useState<any>([]);
 
@@ -251,23 +244,17 @@ const ProductsList = () => {
     const [selectedCategories, setSelectedCategories] = useState([])
     const [isSpecialityDropdownOpen, setIsSpecialityDropdownOpen] = useState(false);
     const [selectedSpecialities, setSelectedSpecialities] = useState([])
-    const [isSortByOpen, setSortByOpen] = useState(false);
-    const [selectedSortBy, setSelectedSortBy] = useState('')
     const [isColumnVisibilityOpen, setIsColumnVisibilityOpen] = useState(false);
     const [isProductDetailsOpen, setIsProductDetailsOpen] = useState(false);
-    const [selectedCategory, setSelectedCategory] = useState<any>(null);
     const [selectedLocation, setSelectedLocation] = useState<any>(null)
     const [showTable, setShowTable] = useState(false)
     const [searchString, setSearchString] = useState('')
-    const user_details = localStorage.getItem('user_details') ? JSON.parse(localStorage.getItem('user_details') || '{}') : null;
     const intervalIdRef =  useRef<number |any>(null)
     const [lastId, setLastId]= useState<any>(null)
-    const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(true);
     const [hasMore, setHasMore] = useState(true);
     const [open, setModalOpen] = useState(false);
     const [fullPageLoading, setFullPageLoading] = useState(true)
-    const [searchResultsLoading, setSearchResultsLoading] = useState(true)
     const [categories, setCategories] = useState([])
     const [onSearchStatus, setOnSearchStatus] = useState('not-started')
     const [selectedProductToViewDetails, setSelectedProductToViewDetails] = useState<any>(null)
@@ -280,7 +267,6 @@ const ProductsList = () => {
     const [specialityFiltersForProducts, setSpecialityFiltersForProducts] = useState<any>([])
 
     const sourcePage = useSelector((store: any) => store.products.sourcePage);
-    const selectedCategoryToLoad = useSelector((store: any) => store.products.selectedCategoryForProductList);
     const productsFromStore = useSelector((store: any) => store.products.selectedProductsList);
     const filtersFromStore = useSelector((store: any) => store.products.productListFilters);
     const msgIdFromStore = useSelector((store: any) => store.products.productListFilters).messageID
@@ -363,11 +349,6 @@ const ProductsList = () => {
       const closeSelectLocationWindow = () => {
         setModalOpen(false);
       };
-
-    const setSelectedCategoryValue = (cat : any) => {
-        setSelectedCategory(cat)
-        setIsOpen(false)
-      }
 
     const handleSearchStringChange = (event: any) => {
         setSearchString(event.target.value);
@@ -517,7 +498,6 @@ const ProductsList = () => {
             resetData();
             let messageIDForPayload: any;
             messageIDForPayload = getNewMessageId();
-            setSearchResultsLoading(true)
             setOnSearchStatus('initiated')
             setLastId(null)
             let payload = {
@@ -540,7 +520,6 @@ const ProductsList = () => {
             .catch(err => {
                 setLoading(false);
                 showWarningMessage("error initiating")
-                setSearchResultsLoading(false)
                 setOnSearchStatus('finished')
             });
         }
@@ -893,7 +872,7 @@ const ProductsList = () => {
 
 
     const handleScroll = (event: any) => {
-        const { scrollTop, scrollHeight, clientHeight, scrollLeft, clientWidth, scrollWidth } = event.target;
+        const { scrollTop, scrollHeight, clientHeight, scrollLeft} = event.target;
 
         // Calculate how much the user has scrolled
         const verticalScrollChange = Math.abs(scrollTop - lastScrollTop);
@@ -1108,17 +1087,6 @@ const ProductsList = () => {
             }));
     }
 
-    // sort by
-
-    const handleSortByClick = (values: any) => {
-        setSortByOpen(!isSortByOpen)
-    }
-
-    const toggleSortByOption = (option: any) => {
-        setSelectedSortBy(option);
-        setSortByOpen(false);
-      };
-
     // products
 
     const openProductDetails = (product: any, col: any) => {
@@ -1184,10 +1152,6 @@ const ProductsList = () => {
             showWarningMessage(NO_PRODUCTS_SELECTED)
         }
 
-      }
-
-    const loadSimilarProductsOfACategory = () => {
-        setSelectedCategory(categories.filter((x:any)=> x.id === selectedCategoryToLoad)[0])
     }
 
     const navigateToCollectionsList = () => {
@@ -1263,8 +1227,8 @@ const ProductsList = () => {
                                         
                                         
                                     }
-                                <a className="btn-link"><button type="button"
-                                    className="btn-custom" onClick={previewSelected}>Preview Selected</button></a>
+                                <button type="button"
+                                    className="btn-custom" onClick={previewSelected}>Preview Selected</button>
                             </div>
                         )
                     }
@@ -1488,8 +1452,8 @@ const ProductsList = () => {
                                                                                 checked={col.isVisible}
                                                                                 onChange={handleCheckboxNoAction}
                                                                             />
-                                                                            <a className="dropdown-item ml-0 pl-2 small fw-semibold oneline_ellipsis"
-                                                                                role="button" title="All">{col.visibilityDisplayName}</a></li>
+                                                                            <span className="dropdown-item ml-0 pl-2 small fw-semibold oneline_ellipsis"
+                                                                                role="button" title="All">{col.visibilityDisplayName}</span></li>
                                                                     })
                                                             }
                                                     </ul>
@@ -1501,63 +1465,10 @@ const ProductsList = () => {
                                         }
     
                                     </div>
-                                    {/* <div className='sort-container'>
-                                        <button
-                                            className="btn btn-custom-light float-right sortby-selection-container"
-                                            type="button"
-                                            onClick={handleSortByClick}
-                                        >
-                                            <i className="fa fa-sort" style={{ fontSize: '17px' }}
-                                            ></i>
-    
-                                        </button>
-                                        {
-                                            isSortByOpen && (
-                                                <div className="sortby-selection-dropdown">
-                                                    <ul className="list-unstyled mt-2 ">
-                                                        <span style={{ paddingLeft: '6px' }}>Sort By</span>
-                                                        {
-                                                            sort_list
-                                                                .map((vendor: any, index: any) => {
-                                                                    return <li key={index}>
-                                                                        <a className="dropdown-item d-flex flex-row justify-content-between" onClick={() => toggleSortByOption(vendor.value)}>
-                                                                            {vendor.label}
-                                                                            {
-                                                                                selectedSortBy === vendor.value ?
-                                                                                    <span className="acc-icons" style={{ color: 'green' }}>
-                                                                                        <i className="fa fa-check-circle"></i>
-                                                                                    </span>
-    
-                                                                                    :
-    
-                                                                                    <span className="acc-icons">
-                                                                                        <i className="fa fa-circle-thin"></i>
-                                                                                    </span>
-                                                                            }
-    
-                                                                        </a>
-                                                                    </li>
-                                                                })
-                                                        }
-                                                    </ul>
-                                                </div>
-                                            )
-                                        }
-    
-                                    </div> */}
+                                    
                                     </div>
     
                                 </div>
-    
-                                    {/* {
-                                        selectedProducts.length>0 && (
-                                        <div className="mb-2 mt-2 me-2" style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                            <div className="px-3" style={{ marginTop: 'auto' }}>
-                                                <span><strong><i className="fa fa-minus-square"></i><span className="px-3">{selectedProducts.length} products selected </span></strong></span>
-                                            </div>
-                                        </div>  
-                                        )
-                                    } */}
     
                                 <div className='table-responsive'                            
                                 onScroll={handleScroll}

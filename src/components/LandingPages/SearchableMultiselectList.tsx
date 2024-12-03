@@ -31,7 +31,7 @@ const SearchableMultiselectList = (props : any) => {
 
     useEffect(()=>{
         props.selectedItemsChanged(selectedList)
-    },[selectedList])
+    },[selectedList, props])
 
 
     const clearSelectedList = () => {
