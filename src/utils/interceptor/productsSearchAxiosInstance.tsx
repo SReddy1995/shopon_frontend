@@ -9,7 +9,7 @@ const baseEnv = process.env.REACT_APP_ENV!;
 const discoveryServiceUrlSuffix = process.env.REACT_APP_DISCOVER_SERVICE_URLSUFFIX!;
 const productSearchAxiosInstance = axios.create({
   baseURL: baseURL+baseEnv+discoveryServiceUrlSuffix,
-  timeout: 5000,
+  timeout: 10000,
   headers: { 'Content-Type': 'application/json' }
 });
 

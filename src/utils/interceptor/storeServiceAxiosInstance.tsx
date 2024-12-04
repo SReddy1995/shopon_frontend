@@ -10,7 +10,7 @@ const storeServiceUrlSuffix = process.env.REACT_APP_STORE_SERVICE_URLSUFFIX!;
 const integration_key = process.env.REACT_APP_INTEGRATION_KEY!;
 const storeServiceAxiosInstance = axios.create({
   baseURL: baseURL+baseEnv+storeServiceUrlSuffix,
-  timeout: 5000,
+  timeout: 10000,
   headers: { 'Content-Type': 'application/json' }
 });
 
