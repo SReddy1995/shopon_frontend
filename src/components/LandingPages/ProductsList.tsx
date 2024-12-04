@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import '@splidejs/splide/dist/css/splide.min.css';
 import { v4 as uuidv4 } from 'uuid';
 import { useDispatch, useSelector } from 'react-redux';
@@ -43,7 +43,7 @@ const ProductsList = () => {
       };
 
 
-    const columns_from_api = [
+    const columns_from_api = useMemo(() => [
         {
             coltitle: "",
             column: "thumbnail",
@@ -224,7 +224,7 @@ const ProductsList = () => {
               minWidth:'160px'
         },
         
-    ]
+    ], []);
 
     
 
@@ -324,16 +324,6 @@ const ProductsList = () => {
         // setMessageID(filters.messageID)   
     }
 
-    useEffect(() => {
-        // setSelectedCategory(categories.filter((x:any)=> x.id === "Food and beverages")[0])
-        fetchCategoriesFromOnlineStore();
-
-        return () => {
-            dispatch(updateSourcePage(''));
-        }
-
-    },[]);
-
     const setData = (data: any) => {
         setColumns(data);
       }
@@ -353,61 +343,6 @@ const ProductsList = () => {
     const handleSearchStringChange = (event: any) => {
         setSearchString(event.target.value);
       };
-
-    const fetchCategoriesFromOnlineStore = () => {
-        setFullPageLoading(true)
-        getOnlineStore()
-        .then((data: any) => {
-            
-            if(data && data.length>0){
-                setCategiesData(data[0])
-            }
-            else{
-                setCategories([]);
-            }
-            if(sourcePage && sourcePage === 'preview'){
-                setSelectedProducts(productsFromStore)
-                setFiltersObject(filtersFromStore);
-                let messageIDForPayload = getMessageIdFromStore();
-                fetchSearchResults(messageIDForPayload);
-                // set messageid from store
-                // update category, location and search string, lastid and do fetch results call
-            }
-            else if(sourcePage && sourcePage === 'collections'){
-                dispatch(updateSourcePage(''));
-                dispatch(updateSelectedCategoryForProductsList(''));
-                setShowBackButton('show')
-                if(data && data.length>0){
-                    let cats = getCategiesData(data[0])
-                    if(categoryFromCollections !== null){
-                        setSelectedCategories(categoryFromCollections)
-                        if(cats && cats.length>0 && cats.filter((x: any)=> x.value === categoryFromCollections[0].value).length>0){
-                            initiateSearchForProducts(categoryFromCollections)
-                        }
-                        else{
-                            showWarningMessage(CATEGORY_NOT_REGISTERED)
-                        }
-                    }
-                    else{
-                        setSelectedCategories(cats)
-                        initiateSearchForProducts(cats)
-                    }
-                }
-                else{
-                    showWarningMessage(NO_CATEGORIES_REGISTERED)
-                }
-
-            }
-            else{
-                // setMessageID("MSG"+uuidv4())
-            }
-            setData(JSON.parse(JSON.stringify(columns_from_api)))
-            setFullPageLoading(false);
-        })
-        .catch(err => {
-            setFullPageLoading(false);
-        });
-    }
 
     const getCategiesData = (values: any) => {
         if(values.categoryCityMappings.length> 0){
@@ -451,13 +386,13 @@ const ProductsList = () => {
 
     }
 
-    const getMessageIdFromStore = () => {
+    const getMessageIdFromStore = useCallback(() => {
         const id = msgIdFromStore;
         setTimeout(()=>{
             setMessageID(id)
         },0)
         return id;
-    }
+    },[msgIdFromStore])
 
     const getNewMessageId = () => {
         let id = "MSG"+uuidv4();
@@ -474,7 +409,17 @@ const ProductsList = () => {
         }
       }, [messageID]);
 
-      const resetData =() =>{
+      const applySellersAndSpecialityFilters = useCallback(() => {
+        setFilteredProducts(productsList.filter(product => 
+            {
+            const categoryFilter = specialityFiltersForProducts.length > 0 ? specialityFiltersForProducts.includes(product.category) : true;
+            const sellerFilter = sellerFiltersForProducts.length > 0 ? sellerFiltersForProducts.includes(product.seller) : true;
+
+            return categoryFilter && sellerFilter;
+            }));
+    },[productsList, specialityFiltersForProducts, sellerFiltersForProducts])
+
+      const resetData = useCallback(() =>{
         setTimeout(()=>{
             setIsOpen(false);
             setSelectedVendors([])
@@ -487,50 +432,188 @@ const ProductsList = () => {
             setIsColumnVisibilityOpen(false)
             setHasMore(true)
         },0)
-      }
-
-    const initiateSearchForProducts = (cats: any) => {
-
-        if(cats.length === 0){
-            showWarningMessage("No Category selected")
-        }
-        else{
-            resetData();
-            let messageIDForPayload: any;
-            messageIDForPayload = getNewMessageId();
-            setOnSearchStatus('initiated')
-            setLastId(null)
-            let payload = {
-                message_id: messageIDForPayload,
-                criteria: {
-                    
-                    search_string: searchString
-                },
-                domain: getSelectedCategories(cats)
-            }
-            initiateSearch(payload)
-            .then((data: any) => {
-                if(data.error !== null){
-                    // showSuccessMessage("search initiated successfully")
-                    intervalIdRef.current = setInterval(()=>{
-                        fetchSearchResults(messageIDForPayload);
-                    },3000)
-                }
-            })
-            .catch(err => {
-                setLoading(false);
-                showWarningMessage("error initiating")
-                setOnSearchStatus('finished')
-            });
-        }
-
-      }
+      },[applySellersAndSpecialityFilters])
 
       const getSelectedCategories = (cats: any) => {
         return cats.map((item: any) => item.value);
       }
 
-    const fetchSearchResults = (msgId: any) => {
+      const getSelectedLocation = useCallback(() => {
+        if(selectedLocation){
+            return selectedLocation;
+        }
+        else{
+            if(sourcePage === 'preview'){
+                return filtersFromStore.location
+            }
+        }
+      },[filtersFromStore.location, selectedLocation, sourcePage])
+
+      const getServiceability = useCallback((tags: any, locations: any) => {
+        let locationselected = getSelectedLocation();
+        if(locationselected && locationselected.length>0){
+            let locationId : any;
+            if(tags.filter((x: any)=>x.code === 'serviceability') && tags.filter((x: any)=>x.code === 'serviceability').length>0){
+                let list = tags.filter((x: any)=>x.code === 'serviceability')[0].list;
+                if(list && list.length>0){
+                    locationId = list.filter((x:any)=> x.code === 'location')[0].value
+                }
+
+                
+            let location: any  = getLatLongValues(locationId, locations)
+            let lat1 = locationselected && locationselected[0] ? locationselected[0].location.latitude : null
+            let long1 = locationselected && locationselected[0] ? locationselected[0].location.longitude : null
+            let lat2 = location && location.location.length>0 ? location.location[0] : null
+            let long2 = location && location.location.length>0 ? location.location[1] : null
+
+            let dist = handleDistanceCalculate(lat1,
+                long1,
+                lat2,
+                long2
+            )
+
+            if(dist === null){
+                return 'NA'
+            }
+            else{
+                return dist && location.radius  && dist <= location.radius.value ? 'Yes' : 'No'
+            }
+
+            
+            }
+            else{
+                return 'NA'
+            }
+
+        }
+
+        return 'NA'
+      },[getSelectedLocation])
+
+      const getDeliverableDetails = useCallback((tags: any, locations: any) =>{
+        let locationId : any;
+            if(tags.filter((x: any)=>x.code === 'serviceability') && tags.filter((x: any)=>x.code === 'serviceability').length>0){
+                let list = tags.filter((x: any)=>x.code === 'serviceability')[0].list;
+                if(list && list.length>0){
+                    locationId = list.filter((x:any)=> x.code === 'location')[0].value
+                }
+            }
+            
+        return getLocation(locationId, locations) +' '+ getCircle(locationId, locations)
+
+      },[])
+
+      const getPrice = useCallback((price1: any, price2:any)=>{
+        if (price1 === price2){
+           return formatCurrency(price1)
+        }
+        else{
+            return `${formatCurrency(price1)} to ${formatCurrency(price2)}`
+        }
+      },[])
+
+      const formatEachItem = useCallback((provider: any, bppdescriptors: any, stream_id: any) => {
+        let arr: any[] = []
+            if(provider && provider.items && provider.items.length>0){
+            provider.items.forEach((item: any, index: any)=>{
+                arr.push({
+                    stream_id: stream_id,
+                    product_id: item.id,
+                    selector_reference_id: stream_id+'.'+provider.id+'.'+item.id,
+                    bpp_provider_id: provider? provider.id: '',
+                    thumbnail: item.descriptor.images && item.descriptor.images.length>0? item.descriptor.images[0] : '',
+                    product: item.descriptor.name? item.descriptor.name: '',
+                    product_short_desc: item.descriptor.short_desc? item.descriptor.short_desc: '',
+                    product_long_desc: item.descriptor.long_desc? item.descriptor.long_desc: '',
+                    source: bppdescriptors.name? bppdescriptors.name : '',
+                    measure: item.quantity && item.quantity.unitized && item.quantity.unitized.measure? `${item.quantity.unitized.measure.value}  ${item.quantity.unitized.measure.unit}`: '',
+                    availability: item.quantity.available?`${item.quantity.available.count}` : '',
+                    maximumQuantity: item.quantity.maximum?`${item.quantity.maximum.count}`:'',
+                    seller: provider.descriptor? provider.descriptor.name : '',
+                    seller_short_desc: provider.descriptor ? provider.descriptor.short_desc : '',
+                    seller_long_desc: provider.descriptor ? provider.descriptor.long_desc : '',
+                    seller_image: provider.descriptor && provider.descriptor.images.length>0 ? provider.descriptor.images[0] : '',
+                    price: item.price? getPrice(item.price.value, item.price.maximum_value)
+                      :
+                      '',
+                    category: item.category_id? item.category_id : '',
+                    sellerLocation: item.location_id? getLocation(item.location_id,provider.locations): '',
+                    returnable: item['@ondc/org/returnable'] && item['@ondc/org/returnable'] === true? 'Yes': 'No',
+                    cancellable: item['@ondc/org/cancellable'] && item['@ondc/org/cancellable'] === true? 'Yes': 'No',
+                    cod: item['@ondc/org/available_on_cod'] && item['@ondc/org/available_on_cod'] === true? 'Yes': 'No',
+                    shippingTime: item['@ondc/org/time_to_ship']? getHumanizedData(item['@ondc/org/time_to_ship']): '',
+                    sellerPickupReturn: item['@ondc/org/seller_pickup_return'] && item['@ondc/org/seller_pickup_return'] === true? 'Yes': 'No',
+                    returnWindow: item['@ondc/org/return_window']? getHumanizedData(item['@ondc/org/return_window']): '',
+                    manufacturer: 
+                    (
+                        item['@ondc/org/statutory_reqs_packaged_commodities']
+                        &&
+                        item['@ondc/org/statutory_reqs_packaged_commodities'].manufacturer_or_packer_name
+                    )
+                    ?
+                        item['@ondc/org/statutory_reqs_packaged_commodities'].manufacturer_or_packer_name : '',
+                    manufacturer_address: 
+                    (
+                        item['@ondc/org/statutory_reqs_packaged_commodities']
+                        &&
+                        item['@ondc/org/statutory_reqs_packaged_commodities'].manufacturer_or_packer_address
+                    )
+                        ?
+                    item['@ondc/org/statutory_reqs_packaged_commodities'].manufacturer_or_packer_address : '',
+                    commodity_name: 
+                    (
+                        item['@ondc/org/statutory_reqs_packaged_commodities']
+                        &&
+                        item['@ondc/org/statutory_reqs_packaged_commodities'].common_or_generic_name_of_commodity
+                    )
+                        ?
+                    item['@ondc/org/statutory_reqs_packaged_commodities'].common_or_generic_name_of_commodity : '',
+                    month_year_for_package: 
+                    (
+                        item['@ondc/org/statutory_reqs_packaged_commodities']
+                        &&
+                        item['@ondc/org/statutory_reqs_packaged_commodities'].month_year_of_manufacture_packing_import
+                    )
+                        ?
+                    item['@ondc/org/statutory_reqs_packaged_commodities'].month_year_of_manufacture_packing_import : '',
+
+                    fulfillment: item.fulfillment_id && provider.fulfillments? getFulfillment(item.fulfillment_id,provider.fulfillments) : '',
+                    deliverableAt: provider.tags && provider.locations ? getDeliverableDetails(provider.tags,provider.locations): '',
+                    serviceability: provider.tags && provider.locations ? getServiceability(provider.tags,provider.locations): '',
+                    gallery: item.descriptor.images && item.descriptor.images.length>0?
+                     getSlides(item.descriptor.images) : []
+                })
+                
+            })
+        }
+        return arr;
+      },[getDeliverableDetails, getPrice, getServiceability ])
+
+      const formatEachBppProviderResult = useCallback((bppproviders: any, bppdescriptors: any, stream_id: any) => {
+        let arr : any[] = []
+        bppproviders.forEach((element: any, index: any)=>{
+            arr.push(...formatEachItem(element, bppdescriptors,stream_id))
+        })
+        return arr
+      },[formatEachItem])
+
+      const formatSearchResults = useCallback((res: any) => {
+        let arr : any[] = []
+        res.forEach((element: any, index: any)=>{
+            if(element.data.prodSearchResponse.message && 
+                element.data.prodSearchResponse.message.catalog && 
+                element.data.prodSearchResponse.message.catalog['bpp/providers'] &&
+                element.data.prodSearchResponse.message.catalog['bpp/descriptor'])
+                {
+                    let catelog = element.data.prodSearchResponse.message.catalog;
+                    arr.push(...formatEachBppProviderResult(catelog['bpp/providers'], catelog['bpp/descriptor'],element.id))
+                }
+        })
+        return arr
+        
+      },[formatEachBppProviderResult])
+
+      const fetchSearchResults = useCallback((msgId: any) => {
         setLoading(true)
         let payload : any = {
             message_id: msgId,
@@ -607,163 +690,112 @@ const ProductsList = () => {
                 showWarningMessage(err.response.data.error.msg)
             }
         });
-    }
+    },[dispatch, formatSearchResults, lastId, sourcePage])
 
-      const formatSearchResults = (res: any) => {
-        let arr : any[] = []
-        res.forEach((element: any, index: any)=>{
-            if(element.data.prodSearchResponse.message && 
-                element.data.prodSearchResponse.message.catalog && 
-                element.data.prodSearchResponse.message.catalog['bpp/providers'] &&
-                element.data.prodSearchResponse.message.catalog['bpp/descriptor'])
-                {
-                    let catelog = element.data.prodSearchResponse.message.catalog;
-                    arr.push(...formatEachBppProviderResult(catelog['bpp/providers'], catelog['bpp/descriptor'],element.id))
-                }
-        })
-        return arr
-        
-      }
+      const initiateSearchForProducts = useCallback((cats: any) => {
 
-      const formatEachBppProviderResult = (bppproviders: any, bppdescriptors: any, stream_id: any) => {
-        let arr : any[] = []
-        bppproviders.forEach((element: any, index: any)=>{
-            arr.push(...formatEachItem(element, bppdescriptors,stream_id))
-        })
-        return arr
-      }
-
-      const formatEachItem = (provider: any, bppdescriptors: any, stream_id: any) => {
-        let arr: any[] = []
-            if(provider && provider.items && provider.items.length>0){
-            provider.items.forEach((item: any, index: any)=>{
-                arr.push({
-                    stream_id: stream_id,
-                    product_id: item.id,
-                    selector_reference_id: stream_id+'.'+provider.id+'.'+item.id,
-                    bpp_provider_id: provider? provider.id: '',
-                    thumbnail: item.descriptor.images && item.descriptor.images.length>0? item.descriptor.images[0] : '',
-                    product: item.descriptor.name? item.descriptor.name: '',
-                    product_short_desc: item.descriptor.short_desc? item.descriptor.short_desc: '',
-                    product_long_desc: item.descriptor.long_desc? item.descriptor.long_desc: '',
-                    source: bppdescriptors.name? bppdescriptors.name : '',
-                    measure: item.quantity && item.quantity.unitized && item.quantity.unitized.measure? `${item.quantity.unitized.measure.value}  ${item.quantity.unitized.measure.unit}`: '',
-                    availability: item.quantity.available?`${item.quantity.available.count}` : '',
-                    maximumQuantity: item.quantity.maximum?`${item.quantity.maximum.count}`:'',
-                    seller: provider.descriptor? provider.descriptor.name : '',
-                    seller_short_desc: provider.descriptor ? provider.descriptor.short_desc : '',
-                    seller_long_desc: provider.descriptor ? provider.descriptor.long_desc : '',
-                    seller_image: provider.descriptor && provider.descriptor.images.length>0 ? provider.descriptor.images[0] : '',
-                    price: item.price? getPrice(item.price.value, item.price.maximum_value)
-                      :
-                      '',
-                    category: item.category_id? item.category_id : '',
-                    sellerLocation: item.location_id? getLocation(item.location_id,provider.locations): '',
-                    returnable: item['@ondc/org/returnable'] && item['@ondc/org/returnable'] === true? 'Yes': 'No',
-                    cancellable: item['@ondc/org/cancellable'] && item['@ondc/org/cancellable'] === true? 'Yes': 'No',
-                    cod: item['@ondc/org/available_on_cod'] && item['@ondc/org/available_on_cod'] === true? 'Yes': 'No',
-                    shippingTime: item['@ondc/org/time_to_ship']? getHumanizedData(item['@ondc/org/time_to_ship']): '',
-                    sellerPickupReturn: item['@ondc/org/seller_pickup_return'] && item['@ondc/org/seller_pickup_return'] === true? 'Yes': 'No',
-                    returnWindow: item['@ondc/org/return_window']? getHumanizedData(item['@ondc/org/return_window']): '',
-                    manufacturer: 
-                    (
-                        item['@ondc/org/statutory_reqs_packaged_commodities']
-                        &&
-                        item['@ondc/org/statutory_reqs_packaged_commodities'].manufacturer_or_packer_name
-                    )
-                    ?
-                        item['@ondc/org/statutory_reqs_packaged_commodities'].manufacturer_or_packer_name : '',
-                    manufacturer_address: 
-                    (
-                        item['@ondc/org/statutory_reqs_packaged_commodities']
-                        &&
-                        item['@ondc/org/statutory_reqs_packaged_commodities'].manufacturer_or_packer_address
-                    )
-                        ?
-                    item['@ondc/org/statutory_reqs_packaged_commodities'].manufacturer_or_packer_address : '',
-                    commodity_name: 
-                    (
-                        item['@ondc/org/statutory_reqs_packaged_commodities']
-                        &&
-                        item['@ondc/org/statutory_reqs_packaged_commodities'].common_or_generic_name_of_commodity
-                    )
-                        ?
-                    item['@ondc/org/statutory_reqs_packaged_commodities'].common_or_generic_name_of_commodity : '',
-                    month_year_for_package: 
-                    (
-                        item['@ondc/org/statutory_reqs_packaged_commodities']
-                        &&
-                        item['@ondc/org/statutory_reqs_packaged_commodities'].month_year_of_manufacture_packing_import
-                    )
-                        ?
-                    item['@ondc/org/statutory_reqs_packaged_commodities'].month_year_of_manufacture_packing_import : '',
-
-                    fulfillment: item.fulfillment_id && provider.fulfillments? getFulfillment(item.fulfillment_id,provider.fulfillments) : '',
-                    deliverableAt: provider.tags && provider.locations ? getDeliverableDetails(provider.tags,provider.locations): '',
-                    serviceability: provider.tags && provider.locations ? getServiceability(provider.tags,provider.locations): '',
-                    gallery: item.descriptor.images && item.descriptor.images.length>0?
-                     getSlides(item.descriptor.images) : []
-                })
-                
-            })
+        if(cats.length === 0){
+            showWarningMessage("No Category selected")
         }
-        return arr;
-      }
+        else{
+            resetData();
+            let messageIDForPayload: any;
+            messageIDForPayload = getNewMessageId();
+            setOnSearchStatus('initiated')
+            setLastId(null)
+            let payload = {
+                message_id: messageIDForPayload,
+                criteria: {
+                    
+                    search_string: searchString
+                },
+                domain: getSelectedCategories(cats)
+            }
+            initiateSearch(payload)
+            .then((data: any) => {
+                if(data.error !== null){
+                    // showSuccessMessage("search initiated successfully")
+                    intervalIdRef.current = setInterval(()=>{
+                        fetchSearchResults(messageIDForPayload);
+                    },3000)
+                }
+            })
+            .catch(err => {
+                setLoading(false);
+                showWarningMessage("error initiating")
+                setOnSearchStatus('finished')
+            });
+        }
+
+      },[fetchSearchResults, resetData, searchString])
+
+      const fetchCategoriesFromOnlineStore = useCallback(() => {
+        setFullPageLoading(true)
+        getOnlineStore()
+        .then((data: any) => {
+            
+            if(data && data.length>0){
+                setCategiesData(data[0])
+            }
+            else{
+                setCategories([]);
+            }
+            if(sourcePage && sourcePage === 'preview'){
+                setSelectedProducts(productsFromStore)
+                setFiltersObject(filtersFromStore);
+                let messageIDForPayload = getMessageIdFromStore();
+                fetchSearchResults(messageIDForPayload);
+                // set messageid from store
+                // update category, location and search string, lastid and do fetch results call
+            }
+            else if(sourcePage && sourcePage === 'collections'){
+                dispatch(updateSourcePage(''));
+                dispatch(updateSelectedCategoryForProductsList(''));
+                setShowBackButton('show')
+                if(data && data.length>0){
+                    let cats = getCategiesData(data[0])
+                    if(categoryFromCollections !== null){
+                        setSelectedCategories(categoryFromCollections)
+                        if(cats && cats.length>0 && cats.filter((x: any)=> x.value === categoryFromCollections[0].value).length>0){
+                            initiateSearchForProducts(categoryFromCollections)
+                        }
+                        else{
+                            showWarningMessage(CATEGORY_NOT_REGISTERED)
+                        }
+                    }
+                    else{
+                        setSelectedCategories(cats)
+                        initiateSearchForProducts(cats)
+                    }
+                }
+                else{
+                    showWarningMessage(NO_CATEGORIES_REGISTERED)
+                }
+
+            }
+            else{
+                // setMessageID("MSG"+uuidv4())
+            }
+            setData(JSON.parse(JSON.stringify(columns_from_api)))
+            setFullPageLoading(false);
+        })
+        .catch(err => {
+            setFullPageLoading(false);
+        });
+    },[categoryFromCollections, columns_from_api, dispatch, fetchSearchResults, filtersFromStore, getMessageIdFromStore, initiateSearchForProducts, productsFromStore, sourcePage])
+
+    useEffect(() => {
+        // setSelectedCategory(categories.filter((x:any)=> x.id === "Food and beverages")[0])
+        fetchCategoriesFromOnlineStore();
+
+        return () => {
+            dispatch(updateSourcePage(''));
+        }
+// eslint-disable-next-line react-hooks/exhaustive-deps
+    },[]);
 
       const getHumanizedData = (value:any) => {
             return 'In ' +moment.duration(value).humanize()
-      }
-      
-      const getSelectedLocation = () => {
-        if(selectedLocation){
-            return selectedLocation;
-        }
-        else{
-            if(sourcePage === 'preview'){
-                return filtersFromStore.location
-            }
-        }
-      }
-
-      const getServiceability = (tags: any, locations: any) => {
-        let locationselected = getSelectedLocation();
-        if(locationselected && locationselected.length>0){
-            let locationId : any;
-            if(tags.filter((x: any)=>x.code === 'serviceability') && tags.filter((x: any)=>x.code === 'serviceability').length>0){
-                let list = tags.filter((x: any)=>x.code === 'serviceability')[0].list;
-                if(list && list.length>0){
-                    locationId = list.filter((x:any)=> x.code === 'location')[0].value
-                }
-
-                
-            let location: any  = getLatLongValues(locationId, locations)
-            let lat1 = locationselected && locationselected[0] ? locationselected[0].location.latitude : null
-            let long1 = locationselected && locationselected[0] ? locationselected[0].location.longitude : null
-            let lat2 = location && location.location.length>0 ? location.location[0] : null
-            let long2 = location && location.location.length>0 ? location.location[1] : null
-
-            let dist = handleDistanceCalculate(lat1,
-                long1,
-                lat2,
-                long2
-            )
-
-            if(dist === null){
-                return 'NA'
-            }
-            else{
-                return dist && location.radius  && dist <= location.radius.value ? 'Yes' : 'No'
-            }
-
-            
-            }
-            else{
-                return 'NA'
-            }
-
-        }
-
-        return 'NA'
       }
 
       const getLatLongValues = (locationId: any, locations: any) => {
@@ -780,19 +812,6 @@ const ProductsList = () => {
 
         }
 
-      const getDeliverableDetails = (tags: any, locations: any) =>{
-        let locationId : any;
-            if(tags.filter((x: any)=>x.code === 'serviceability') && tags.filter((x: any)=>x.code === 'serviceability').length>0){
-                let list = tags.filter((x: any)=>x.code === 'serviceability')[0].list;
-                if(list && list.length>0){
-                    locationId = list.filter((x:any)=> x.code === 'location')[0].value
-                }
-            }
-            
-        return getLocation(locationId, locations) +' '+ getCircle(locationId, locations)
-
-      }
-
       const getFulfillment = (id: any, fulfillments: any) => {
         let fulfillment: any;
         if(fulfillments && fulfillments.length>0 && fulfillments.filter((loc: any) => loc.id === id).length>0){
@@ -804,15 +823,6 @@ const ProductsList = () => {
           return type;  // Output: Bengaluru
         } else {
           return ''
-        }
-      }
-
-      const getPrice = (price1: any, price2:any)=>{
-        if (price1 === price2){
-           return formatCurrency(price1)
-        }
-        else{
-            return `${formatCurrency(price1)} to ${formatCurrency(price2)}`
         }
       }
 
@@ -958,10 +968,6 @@ const ProductsList = () => {
         setSellerFiltersForProducts(selectedVendors.map((item: any)=> item.label))
     },[selectedVendors])
 
-    useEffect(()=>{
-            applySellersAndSpecialityFilters();
-    },[sellerFiltersForProducts])
-
     const clearVendorList = () => {
         setSelectedVendors([])
         setIsVendorDropdownOpen(false)
@@ -1048,13 +1054,8 @@ const ProductsList = () => {
         setSpecialityFiltersForProducts(selectedSpecialities.map((item: any)=> item.label))
     },[selectedSpecialities])
 
-    useEffect(()=>{
-            applySellersAndSpecialityFilters();
-    },[specialityFiltersForProducts])
-
     const updateSelectedSpecialityList = (list: any) => {
         setSelectedSpecialities(list)
-        setSpecialityFiltersForProducts(list.map((item: any)=> item.label))
     }
 
 
@@ -1075,17 +1076,15 @@ const ProductsList = () => {
 
     useEffect(()=>{
         applySellersAndSpecialityFilters();
-    },[productsList])
+    },[sellerFiltersForProducts, applySellersAndSpecialityFilters])
 
-    const applySellersAndSpecialityFilters = () => {
-        setFilteredProducts(productsList.filter(product => 
-            {
-            const categoryFilter = specialityFiltersForProducts.length > 0 ? specialityFiltersForProducts.includes(product.category) : true;
-            const sellerFilter = sellerFiltersForProducts.length > 0 ? sellerFiltersForProducts.includes(product.seller) : true;
+    useEffect(()=>{
+        applySellersAndSpecialityFilters();
+    },[specialityFiltersForProducts, applySellersAndSpecialityFilters])
 
-            return categoryFilter && sellerFilter;
-            }));
-    }
+    useEffect(()=>{
+        applySellersAndSpecialityFilters();
+    },[productsList, applySellersAndSpecialityFilters])
 
     // products
 
