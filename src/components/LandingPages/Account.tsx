@@ -109,13 +109,11 @@ const Account = () => {
 
     const setProgressBar = (res: any) => {
 
-        if(res.filter((x: any)=> x.status === "COMPLETED").length>0){
-            let length = res.filter((x: any)=> x.status === 'COMPLETED').length;
-            let perPercentage = 100/7;
-            let totalPercent = perPercentage * length;
-            setPercentage(Math.ceil(totalPercent))
-        }
-
+        const completedSteps = res.filter((x: any) => x.status === "COMPLETED").length;
+        const totalSteps = 7;
+        const perPercentage = 100 / totalSteps;
+        const totalPercent = perPercentage * completedSteps;
+        setPercentage(Math.ceil(totalPercent));
 
         
     }
