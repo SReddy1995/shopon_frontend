@@ -53,7 +53,7 @@ const CircularProgressbarContainer = styled.div`
 const Account = () => {
 
     const user_details = localStorage.getItem('user_details') ? JSON.parse(localStorage.getItem('user_details') || '{}') : null;
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     const account_status= [
             { title: "Registration", tabTitle:"Registration", status: "", status_desc:"pending", stepref: "REG", showInTabs: true},

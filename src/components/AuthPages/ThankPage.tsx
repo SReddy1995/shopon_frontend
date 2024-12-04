@@ -19,7 +19,7 @@ const ThankPage = () => {
 
             <nav className="navbar navbar-expand-sm bg-dark navbar-dark" style={{height:'56px'}}>
                 <div className="container-fluid">
-                    <a className="navbar-brand" style={{marginLeft:'-10px'}}><img src={logo} style={{marginLeft:'-25px'}} alt="logo"/></a>
+                    <span className="navbar-brand" style={{marginLeft:'-10px'}}><img src={logo} style={{marginLeft:'-25px'}} alt="logo"/></span>
 
                 </div>
 

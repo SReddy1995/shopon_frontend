@@ -9,7 +9,7 @@ const baseEnv = process.env.REACT_APP_ENV!;
 const baseUrlSuffix = process.env.REACT_APP_BASEURLSUFFIX!;
 const axiosInstance = axios.create({
   baseURL: baseURL+baseEnv+baseUrlSuffix,
-  timeout: 5000,
+  timeout: 10000,
   headers: { 'Content-Type': 'application/json' }
 });
 
