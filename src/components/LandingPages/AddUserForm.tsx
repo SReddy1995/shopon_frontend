@@ -76,9 +76,9 @@ const AddUserForm = (props: any) => {
   ]
 
   useEffect(() => {
-    if(props.mode === 'Edit'){
-      setFormInitialValues({firstname: props.selectedUser.firstname, lastname: props.selectedUser.lastname, email_address: props.selectedUser.email_address,
-        contact_number: props.selectedUser.contact_number, roles: props.selectedUser.roles, status: props.selectedUser.enabled})
+    if (props.mode === 'Edit' && props.selectedUser) {
+      const { firstname, lastname, email_address, contact_number, roles, enabled } = props.selectedUser;
+      setFormInitialValues({ firstname, lastname, email_address, contact_number, roles, status: enabled });
     }
     setLoading(false);
   }, [props.mode, props.selectedUser]);
