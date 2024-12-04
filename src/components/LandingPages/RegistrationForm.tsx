@@ -84,17 +84,12 @@ const RegistrationForm = (props:any) => {
         console.log("reg form details = ", values)
         saveRegistrationDetails(values)
          .then(response => {
-            handleUpdateDetails();
             showSuccessMessage(REGISTRATION_UPDATE_SUCCESS)
             props.reloadStatus();
          })
          .catch(error=>{
             console.log(error)
          })
-      }
-
-      const handleUpdateDetails = () => {
-        fetchData();
       }
 
 

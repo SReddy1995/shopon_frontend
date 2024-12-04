@@ -174,7 +174,6 @@ const DocumentsUpload = (props: any) => {
     }
 
     const refreshData = () => {
-        fetchOrgTypeData();
         props.reloadStatus();
     }
 
