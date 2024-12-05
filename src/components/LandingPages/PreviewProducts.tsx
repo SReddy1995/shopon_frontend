@@ -19,6 +19,7 @@ const PreviewProducts = () => {
     const dispatch = useDispatch();
     const user_details = localStorage.getItem('user_details') ? JSON.parse(localStorage.getItem('user_details') || '{}') : null;
     const refValues = useSelector((store: any) => store.refValues.referenceList);
+    const [syncing, setSyncing] = useState(false);
 
     const navigateToProductsList = () => {
         dispatch(updateSelectedProductsList(selectedProductsList));
@@ -55,14 +56,17 @@ const PreviewProducts = () => {
     }
 
     const syncWithShopify = () => {
+        setSyncing(true)
         let payload = getPayloadForSyncingProductsWithShopify();
         console.log("payload for sync with shopify = ", payload)
         syncProductsWithShopify(payload)
         .then((response: any) => {
            showSuccessMessage(SYNC_PRODUCTS_WITH_SUCCESS)
+           setSyncing(false)
         })
         .catch(err => {
             console.log(err)
+            setSyncing(false)
         });
     }
 
@@ -93,7 +97,7 @@ const PreviewProducts = () => {
                     </div>
 
                     <div className="col text-right">
-                        <button type="button"
+                        <button type="button" disabled={syncing}
                             className="btn-custom" onClick={syncWithShopify}>Sync with Shopify</button>
                     </div>
                 </div>

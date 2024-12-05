@@ -1,7 +1,7 @@
 // src/axiosInstance.js
 import axios from 'axios';
 import { showWarningMessage } from '../../shared/notificationProvider';
-import { NOT_FOUND_ERROR } from '../constants/NotificationConstants';
+import { NOT_FOUND_ERROR, TIMEOUT_ERROR } from '../constants/NotificationConstants';
 
 
 const baseURL = process.env.REACT_APP_BASEURL!;
@@ -9,7 +9,7 @@ const baseEnv = process.env.REACT_APP_ENV!;
 const discoveryServiceUrlSuffix = process.env.REACT_APP_DISCOVER_SERVICE_URLSUFFIX!;
 const productSearchAxiosInstance = axios.create({
   baseURL: baseURL+baseEnv+discoveryServiceUrlSuffix,
-  timeout: 10000,
+  timeout: 0,
   headers: { 'Content-Type': 'application/json' }
 });
 
@@ -75,6 +75,9 @@ productSearchAxiosInstance.interceptors.response.use(
     }
     else if(error.status === 404){
       showWarningMessage(NOT_FOUND_ERROR)
+    }
+    else if(error.status === 504){
+      showWarningMessage(TIMEOUT_ERROR)
     }
     else if (error.status === 500 && error.response && error.response.data && error.response.data.error && error.response.data.error.code && error.response.data.error.code === "2017004"){
       // dont show any warning message
