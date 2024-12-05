@@ -1,7 +1,7 @@
 // src/axiosInstance.js
 import axios from 'axios';
 import { showWarningMessage } from '../../shared/notificationProvider';
-import { NOT_FOUND_ERROR } from '../constants/NotificationConstants';
+import { NOT_FOUND_ERROR, TIMEOUT_ERROR } from '../constants/NotificationConstants';
 
 
 const baseURL = process.env.REACT_APP_BASEURL!;
@@ -9,7 +9,7 @@ const baseEnv = process.env.REACT_APP_ENV!;
 const baseUrlSuffix = process.env.REACT_APP_BASEURLSUFFIX!;
 const axiosInstance = axios.create({
   baseURL: baseURL+baseEnv+baseUrlSuffix,
-  timeout: 10000,
+  timeout: 0,
   headers: { 'Content-Type': 'application/json' }
 });
 
@@ -75,6 +75,9 @@ axiosInstance.interceptors.response.use(
     }
     else if(error.status === 404){
       showWarningMessage(NOT_FOUND_ERROR)
+    }
+    else if(error.status === 504){
+      showWarningMessage(TIMEOUT_ERROR)
     }
     else{
       showWarningMessage(error.response.data.error.msg)

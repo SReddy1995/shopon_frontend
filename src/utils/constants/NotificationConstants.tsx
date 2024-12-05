@@ -19,3 +19,4 @@ export const NO_POSTAL_CODE_LOCATION = "Postal code is not available for the sel
 export const CATEGORY_NOT_REGISTERED = "Selected category is not registered in your online store"
 export const COLLECTION_PRODUCT_DELETED = "Product is successfully deleted from the collection"
 export const NO_CATEGORIES_REGISTERED = "No categories registered"
+export const TIMEOUT_ERROR = "Timeout"
