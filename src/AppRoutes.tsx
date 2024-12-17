@@ -19,6 +19,8 @@ import Finance from "./components/LandingPages/Finance";
 import StoreSwitchRouteGuard from "./utils/route-guards/StoreSwitchRouteGuard";
 import RouteSwitch from "./components/LandingPages/RouteSwitch";
 import StoreInactive from "./components/LandingPages/StoreInactive";
+import Orders from './components/LandingPages/Orders';  
+import OrderDetails from "./components/LandingPages/OrderDetails";
 
 export const AppRoutes = () => {
   const childRoutes = [
@@ -33,6 +35,18 @@ export const AppRoutes = () => {
       element:<StoreSwitchRouteGuard>
                   <RouteSwitch />
                   </StoreSwitchRouteGuard>
+    },
+    {
+      path: "/landing-page/orders/orders-list",
+      element:<RoleGuard requiredRole={['Admin','Operator']}>
+                  <Orders />
+              </RoleGuard>
+    },
+    {
+      path: "/landing-page/orders/order-details",
+      element:<RoleGuard requiredRole={['Admin','Operator']}>
+                  <OrderDetails />
+              </RoleGuard>
     },
     {
       path: "/landing-page/account",

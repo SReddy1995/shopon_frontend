@@ -5,6 +5,7 @@ import storesReducer from './storesSlice';
 import referenceValuesReducer from './referenceValuesSlice';
 import productsReducer from './productsSlice';
 import storeSwitchReducer from './storeSwitchSlice';
+import orderReducer from './orderSlice';
 
 const appStore = configureStore({
     reducer: {
@@ -13,7 +14,8 @@ const appStore = configureStore({
         stores: storesReducer,
         refValues: referenceValuesReducer,
         products: productsReducer,
-        storeSwitch: storeSwitchReducer
+        storeSwitch: storeSwitchReducer,
+        order: orderReducer
     }
 });
 
