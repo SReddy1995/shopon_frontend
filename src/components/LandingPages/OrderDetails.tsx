@@ -68,9 +68,9 @@ const OrderDetails = () => {
                             <div className="row">
                                 <div className="col-12 order-summary-container">
                                     <div className="order-details-left-column">
-                                        <div className="card-orders seller-card-container shadow bg-white mb-0 py-3 px-2">
+                                        <div className="card-orders seller-card-container shadow bg-white mb-0 py-3 px-3">
                                             <div className="seller-wise-order-info">
-                                                <ul className="paid-grey d-flex pl-0">
+                                                <ul className="paid-grey d-flex pl-0 mb-0">
                                                     <span className="me-2 mt-1"><i className="fa fa-dot-circle-o"></i></span><h4>#1102-01</h4>
                                                     <li className="ms-2 bg-default-warning">Unfullfilled(1)</li>
                                                     <li className="ms-2 bg-default-grey">Status</li>
@@ -127,7 +127,7 @@ const OrderDetails = () => {
                                                 </div>
                                                 <div className="product-details-container">
                                                     <div className="table-responsive">
-                                                        <table id="example" className="table table-hover text-left" data-paging='false' >
+                                                        <table id="example" className="table table-hover text-left orders-table-custom" data-paging='false' >
                                                             <thead className="table-light">
                                                                 <tr>
 
@@ -158,7 +158,7 @@ const OrderDetails = () => {
                                                                     <td> <span><b>Wheat</b><span className="item-status-success ms-2">Fullfilled</span><br /></span>
                                                                         <span className="font-small text-grey">SKU: 460615e5-2f0f-4369-8e82-82ef2788924c</span><br />
                                                                         <span className="font-small text-grey">Alt Id: 460615e5-2f0f</span> <span className="font-small text-grey"> | </span>
-                                                                        <span className="font-small text-grey">Tracking Id: <span className="anchor-text cursor-pointer">#460615e5-2f0f</span></span></td>
+                                                                        <span className="font-small text-grey">Tracking Id: <span className="anchor-text-orders cursor-pointer">#460615e5-2f0f</span></span></td>
                                                                     <td>₹285.00</td>
                                                                     <td className="text-center">100</td>
                                                                     <td className="text-center">₹15</td>
@@ -189,7 +189,7 @@ const OrderDetails = () => {
                                                                     <td> <span><b>Sweatshirt for women</b><span className="item-status-success ms-2">Fullfilled</span><br /></span>
                                                                         <span className="font-small text-grey">SKU: 460615e5-2f0f-4369-8e82-82ef2788924c</span><br />
                                                                         <span className="font-small text-grey">Alt Id: 460615e5-2f0f</span><span className="font-small text-grey"> | </span>
-                                                                        <span className="font-small text-grey">Tracking Id: <span className="anchor-text cursor-pointer">#460615e5-2f0f</span></span></td>
+                                                                        <span className="font-small text-grey">Tracking Id: <span className="anchor-text-orders cursor-pointer">#460615e5-2f0f</span></span></td>
                                                                     <td>₹359.00</td>
                                                                     <td className="text-center">10</td>
                                                                     <td className="text-center">₹1500</td>
@@ -222,16 +222,132 @@ const OrderDetails = () => {
                                                         <div className="totals-info p-2">
                                                             <div>
                                                                 <span className="text-grey">Total : </span>
-                                                                <span className="text-default"><b>₹1230.00</b></span>
+                                                                <span className="text-default">₹1230.00</span>
                                                             </div> 
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
+                                        <div className="card-orders order-summary-card-container shadow bg-white mb-3 py-3 px-3">
+                                            <div className="seller-wise-order-info">
+                                                <h4 className="mb-0">Order summary</h4>
+                                            </div>
+                                            <div className="product-shipping-details-container">
+                                                <div className="product-details-container">
+                                                    <div className="totals-container">
+                                                        <div className="order-summary-totals-info border-top-0 p-2">
+                                                                <span className="text-grey title-column">Subtotal </span>
+                                                                <span className="text-left description-column">2 items </span>
+                                                                <span className="text-default value-column">₹980.00</span>
+                                                        </div>
+                                                        <div className="order-summary-totals-info border-top-0 p-2">
+                                                                <span className="text-grey title-column">Shipping </span>
+                                                                <span className="text-left description-column">Standard Shipping (0.0 kg: Items 0.0 kg, Package 0.0 kg)</span>
+                                                                <span className="text-default value-column">₹250.00</span>
+                                                        </div>
+                                                        <div className="order-summary-totals-info border-top-0 p-2">
+                                                                <span className="text-grey title-column">Taxes </span>
+                                                                <span className="text-align-left description-column">Tax details</span>
+                                                                <span className="text-default value-column"><b>₹1230.00</b></span>
+                                                        </div>
+                                                        <div className="order-summary-totals-info border-top-0 p-2">
+                                                                <span className="text-grey title-column"><b>Total</b> </span>
+                                                                <span className="text-default value-column"><b>₹1230.00</b></span>
+                                                        </div>
+                                                        <div className="order-summary-totals-info p-2">
+                                                                <span className="text-grey title-column">Paid </span>
+                                                                <span className="text-default value-column"><b>₹1230.00</b></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div className="order-details-right-column border">
+                                    <div className="order-details-right-column">
+                                        <div className="card-orders text-left shadow bg-white mb-3 py-3 px-3">
+                                            <h6><b>Customer</b></h6>
 
+                                            <span className="cust-name">John Doe</span><br /><br />
+                                            <span className="text-default-orders">Contact Information</span><br />
+                                            <span className="text-grey">No email provided</span><br />
+                                            <span className="cust-name">+91 9898979798</span><br /><br />
+                                            <span className="text-default-orders">Shipping Address</span><br />
+                                            <p>Sai Ranjan,<br /> Opteamix Technology Solutions LLP 42 27th Cross Road Banashankari Stage II Banashankari,<br /> A Block Ground Floor, <br />560070 Bengaluru Karnataka, India</p>
+
+                                            <span className="text-default-orders">Billing Address</span><br />
+                                            <span className="text-grey">Same as shipping address</span><br />
+                                        </div>
+                                        <div className="card-orders text-left shadow bg-white mb-3 py-3 px-3">
+                                            <h6><b>Payment Details</b></h6>
+
+                                            <div>
+                                                <span className="text-grey">Transaction Id : </span>
+                                                <span className="text-default-black">#1234fhtr5</span>
+                                            </div>
+
+                                            <div>
+                                                <span className="text-grey">Payment Type : </span>
+                                                <span className="text-default-black">cash</span>
+                                            </div>
+
+                                            <div>
+                                                <span className="text-grey">Payment Status : </span>
+                                                <span className="text-default-black">Paid</span>
+                                            </div>
+                                        </div>
+                                        <h6 className="text-left ml-2"><b>Timeline</b></h6>
+                                        <div className="card-orders shadow bg-white mb-3 py-3 px-3">
+                                            <div className="card-body p-3">
+
+                                                <ul className="timeline">
+                                                    <li className="timeline-item">
+                                                        <div className="timeline-body">
+                                                            <div className="timeline-meta">
+                                                                <span>32 minutes</span>
+                                                            </div>
+                                                            <div className="timeline-content timeline-indicator">
+                                                                <h6 className="mb-1">Amount received in the PayPal gateway.</h6>
+                                                                <span className="text-secondary fs-7">User: William Lucas</span>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                    <li className="timeline-item">
+                                                        <div className="timeline-body">
+                                                            <div className="timeline-meta">
+                                                                <span>49 minutes</span>
+                                                            </div>
+                                                            <div className="timeline-content timeline-indicator">
+                                                                <h6 className="mb-1">New sale recorded in the Eazehub.</h6>
+                                                                <span className="text-secondary fs-7">Product: Console</span>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                    <li className="timeline-item">
+                                                        <div className="timeline-body">
+                                                            <div className="timeline-meta">
+                                                                <span>2 hours</span>
+                                                            </div>
+                                                            <div className="timeline-content timeline-indicator">
+                                                                <h6 className="mb-1">User registered in the discount campaign.</h6>
+                                                                <span className="text-secondary fs-7">Country: United States</span>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                    <li className="timeline-item">
+                                                        <div className="timeline-body">
+                                                            <div className="timeline-meta">
+                                                                <span>19 hours</span>
+                                                            </div>
+                                                            <div className="timeline-content timeline-indicator">
+                                                                <h6 className="mb-1">Ticket created about the SSL certificate of the domain.</h6>
+                                                                <span className="text-secondary fs-7">Issue: Technical</span>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

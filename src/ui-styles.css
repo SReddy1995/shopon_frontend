@@ -2828,10 +2828,26 @@ background: linear-gradient(to right, #3f4c6b, #606c88); /* W3C, IE 10+/ Edge, F
   gap: 1rem;
  }
 
+ .order-summary-card-container{
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+ }
+
  .seller-wise-order-info{
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+
+  button{
+    height:fit-content;
+  }
+ }
+
+ .order-summary-info{
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
 
   button{
     height:fit-content;
@@ -2922,11 +2938,17 @@ background: linear-gradient(to right, #3f4c6b, #606c88); /* W3C, IE 10+/ Edge, F
 .order-details-left-column{
   width: 70%;
   height: auto;
+  display: flex;
+  flex-direction: column;
+  gap:1rem;
 }
 
 .order-details-right-column{
   width: 30%;
   height: auto;
+  display: flex;
+  flex-direction: column;
+  gap:1rem;
 }
 
 .provider-seller-info-container{
@@ -2982,4 +3004,40 @@ background: linear-gradient(to right, #3f4c6b, #606c88); /* W3C, IE 10+/ Edge, F
   display: flex;
   justify-content: end;
   border-top: 1px solid #dee2e6;
+}
+
+.order-summary-totals-info{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  border-top: 1px solid #dee2e6;
+}
+
+.title-column{
+  width: 100px;
+  max-width: 100px;
+  text-align: left;
+}
+
+.description-column{
+  width: 400px;
+  max-width: 400px;
+  text-align: left;
+}
+
+.value-column{
+  width: 250px;
+  max-width: 250px;
+  text-align: right;
+  white-space: nowrap; /* Prevent line breaks */
+  overflow: hidden;    /* Hide overflow */
+  text-overflow: ellipsis;
+}
+
+.orders-table-custom>:not(caption)>*>* {
+  padding: 0.5rem !important;
+}
+
+.anchor-text-orders{
+  color: blue;
 }
