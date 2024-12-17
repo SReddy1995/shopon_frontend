@@ -1,6 +1,7 @@
-import axiosInstance from "../utils/interceptor/axiosInstance";
+
 import { AccountUrls } from "../utils/constants/UrlConstants";
 import { jwtDecode } from "jwt-decode";
+import { axiosInstance } from "../utils/interceptor/genericAxiosInsatnce";
 
 
 export const getReferenceValues = async () => {

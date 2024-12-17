@@ -1,6 +1,7 @@
-import axiosInstance from "../utils/interceptor/axiosInstance";
+
 import { AuthUrls } from "../utils/constants/UrlConstants";
 import { jwtDecode } from "jwt-decode";
+import { axiosInstance } from "../utils/interceptor/genericAxiosInsatnce";
 
 
 

@@ -39,3 +39,8 @@ export const CollectionUrls = {
     fetchShopifyProducts: '/shopify/fetch-products',
     deleteShopifyProduct: '/shopify/archive-product',
 }
+
+export const OrderUrls = {
+    fetchOrdersList: '/orders_list',
+    fetchOrderDetails: '/order'
+}

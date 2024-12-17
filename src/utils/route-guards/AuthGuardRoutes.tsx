@@ -3,8 +3,8 @@ import React from 'react';
 import { useDispatch } from "react-redux";
 import { updateSelectedStore, updateStoresList } from "../reduxStore/storesSlice";
 import { updateReferenceValues } from "../reduxStore/referenceValuesSlice";
-import axiosInstance from "../interceptor/axiosInstance";
 import { AccountUrls } from "../constants/UrlConstants";
+import { axiosInstance } from "../interceptor/genericAxiosInsatnce";
 
 const AuthGuardRoutes = ({ children }: any) => {
 

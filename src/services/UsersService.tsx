@@ -1,5 +1,6 @@
-import axiosInstance from "../utils/interceptor/axiosInstance";
+
 import { UserUrls } from "../utils/constants/UrlConstants";
+import { axiosInstance } from "../utils/interceptor/genericAxiosInsatnce";
 
 
 export const getUsersList = async () => {

@@ -1,5 +1,6 @@
 import { ProductSearchUrls } from "../utils/constants/UrlConstants";
-import productSearchAxiosInstance from "../utils/interceptor/productsSearchAxiosInstance";
+import { productSearchAxiosInstance } from "../utils/interceptor/genericAxiosInsatnce";
+
 
 export const initiateSearch = async (body: any) => {
     try {
