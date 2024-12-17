@@ -1,6 +1,7 @@
 
 import { CollectionUrls } from "../utils/constants/UrlConstants";
-import storeServiceAxiosInstance from "../utils/interceptor/storeServiceAxiosInstance";
+import { storeServiceAxiosInstance } from "../utils/interceptor/genericAxiosInsatnce";
+
 
 
 
