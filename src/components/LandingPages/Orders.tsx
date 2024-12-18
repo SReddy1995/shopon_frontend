@@ -6,7 +6,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import moment from 'moment';
 import { getOrdersList } from '../../services/OrdersService';
 import Tooltip from './Tooltip';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { updateSelectedOrder } from '../../utils/reduxStore/orderSlice';
 import { useNavigate } from 'react-router-dom';
 
@@ -71,6 +71,7 @@ const Orders = () => {
         },
        
     ], []);
+    const refValues = useSelector((store: any) => store.refValues.referenceList);
     const [from_date, setFromDate] = useState<any>(null);
     const [to_date, setToDate] = useState<any>(null);
     const [columns, setColumns] = useState<any[]>([])
@@ -117,12 +118,10 @@ const Orders = () => {
     const [isStatusDropdownOpen, setIsStatusDropdownOpen] = useState(false);
     const [selectedStatus, setSelectedStatus] = useState([])
 
-    const status_list = [
-        {value: 'pending', label: 'Pending'},
-        {value: 'placed', label: 'Placed'},
-        {value: 'confirmed', label: 'Confirmed'},
-        {value: 'cancelled', label: 'Cancelled'},
-    ]
+    const status_list = refValues.order_staus.map((status: any) => ({
+        value: status.eazehuborderstatusref,
+        label: status.description
+    })) || [];
 
     const clearStatusList = () => {
         setSelectedStatus([])
@@ -149,10 +148,10 @@ const Orders = () => {
     const [isPaymentStatusDropdownOpen, setIsPaymentStatusDropdownOpen] = useState(false);
     const [selectedPaymentStatus, setSelectedPaymentStatus] = useState([])
 
-    const payment_status_list = [
-        {value: 'paid', label: 'Paid'},
-        {value: 'unpaid', label: 'Unpaid'},
-    ]
+    const payment_status_list = refValues.payment_status.map((status: any) => ({
+        value: status.payment_statusref,
+        label: status.description
+    })) || [];
 
     const clearPaymentStatusList = () => {
         setSelectedPaymentStatus([])
@@ -200,11 +199,10 @@ const Orders = () => {
             }
           };
     
-        const fullfillment_status_list = [
-            {value: 'out_for_delivery', label: 'Out for delivery'},
-            {value: 'fullfilled', label: 'Fullfilled'},
-            {value: 'unfullfilled', label: 'Unfullfilled'},
-        ]
+        const fullfillment_status_list = refValues.fulfillment_status.map((status: any) => ({
+            value: status.eazehubfulfillmentstatusref,
+            label: status.description
+        })) || [];
     
         const clearFullfillmentStatusList = () => {
             setSelectedFullfillmentStatus([])
@@ -273,8 +271,10 @@ const Orders = () => {
         if(selectedFullfillmentStatus.length > 0){
             payload['fulfillment_status']=selectedFullfillmentStatus.map((status: any) => status.value).join(',')
         }
-        if(from_date && to_date){
+        if(from_date){
             payload['from_date']=formatDate(from_date)
+        }
+        if(to_date){
             payload['to_date']=formatDate(to_date)
         }
 
@@ -318,6 +318,14 @@ const Orders = () => {
                 order_status: item.order_status,
                 payment_status: item.payment_status,
                 fulfillment_status: item.fulfillment_status,
+                transaction_id: item.transaction_id,
+                order_number: item.order_number,
+                created_date: item.order_created_date,
+                customer_phone: item.customer_phone,
+                customer_email: item.customer_email,
+                shipping_info: item.shipping_info,
+                billing_info: item.billing_info,
+                store_url: item.store_url,
             }
         })
     },[])

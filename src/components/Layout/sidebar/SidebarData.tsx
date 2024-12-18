@@ -39,20 +39,13 @@ export const SidebarData = [
       },
     ]
   },
-  // {
-  //   title: 'Orders',
-  //   id: 'orders',
-  //   path: '/landing-page/orders/orders-list',
-  //   scopes: ['Admin','Operator'],
-  //   icon: <span className="fa-stack fa-md"><i className="fa fa fa-exchange fa-stack-1x "></i></span>
-  // },
-  // {
-  //   title: 'Order details',
-  //   id: 'order-details',
-  //   path: '/landing-page/orders/order-details',
-  //   scopes: ['Admin','Operator'],
-  //   icon: <span className="fa-stack fa-md"><i className="fa fa fa-exchange fa-stack-1x "></i></span>
-  // },
+  {
+    title: 'Orders',
+    id: 'orders',
+    path: '/landing-page/orders/orders-list',
+    scopes: ['Admin','Operator'],
+    icon: <span className="fa-stack fa-md"><i className="fa fa fa-exchange fa-stack-1x "></i></span>
+  },
   {
     title: 'Finance',
     id: 'finance',
