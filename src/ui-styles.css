@@ -3103,3 +3103,8 @@ background: linear-gradient(to right, #3f4c6b, #606c88); /* W3C, IE 10+/ Edge, F
 .custom-rounded-border{
   border-radius: 0.75rem!important;
 }
+
+.is-ondc-product-image{
+  width: 1.3rem;
+  height: 1.3rem;
+}

@@ -6,6 +6,7 @@ import { fetchStatusBySeller, fetchTrackOrderBySeller, getOrderDetails } from ".
 import moment from 'moment';
 import ModalWindow from "./ModalWindow";
 import ReconciliationDetails from "./ReconciliationDetails";
+import ondc_product from '../../assets/images/is_ondc_product.png';
 
 const OrderDetails = () => {
 
@@ -143,14 +144,21 @@ const OrderDetails = () => {
             return acc;
         }, {});
 
+        const sortedGroupedData = Object.keys(groupedData)
+            .sort((a, b) => a.localeCompare(b))
+            .reduce((acc: any, key: any) => {
+            acc[key] = groupedData[key];
+            return acc;
+            }, {});
+
         let sellers: any = [];
         let order_summary_subTotal = 0;
         let order_summary_shipping_charges = 0;
         let taxes = 0;
         let itemsCount = 0;
 
-        for (const key in groupedData) {
-            const itemsList = groupedData[key];
+        for (const key in sortedGroupedData) {
+            const itemsList = sortedGroupedData[key];
             if (itemsList.length) {
                 const subTotal = getSubTotalSellerWise(itemsList);
                 const shippingCharges = getShippingChargesSellerWise(itemsList);
@@ -204,11 +212,17 @@ const OrderDetails = () => {
                 setLoading(false);
             })
             .catch(() => setLoading(false));
-    }, [selected_order.order_id]);
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
-    useEffect(() => {   
-        fetchOrderDetails();
-    },[fetchOrderDetails])
+    useEffect(() => {  
+        if(selected_order){
+            fetchOrderDetails();
+        } 
+        else{
+            navigate("/landing-page/orders/orders-list")
+        }
+    },[selected_order, fetchOrderDetails, navigate]);
 
         // Close the popup if clicked outside
         useEffect(() => {
@@ -348,7 +362,7 @@ const OrderDetails = () => {
                                                         <ul className="paid-grey d-flex pl-0 mb-0">
                                                             <span className="me-2 mt-1">
                                                                 {
-                                                                    seller.is_ondc_product ? <i className="fa fa-dot-circle-o"></i> : ''
+                                                                    seller.is_ondc_product ? <img src={ondc_product} className="is-ondc-product-image" alt="ondc-product"/> : ''
                                                                 }
                                                             </span>
                                                             <h4>#{seller.order_seller_seq}</h4>

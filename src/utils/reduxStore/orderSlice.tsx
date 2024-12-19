@@ -4,7 +4,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const orderSlice = createSlice({
     name: 'order',
     initialState: {
-        selectedOrder : [],
+        selectedOrder : null,
         sourcePage: '',
         ordersListFilters: {
             order_id: null,
