@@ -2771,7 +2771,7 @@ color:#fff !important;
 
 .order-id-text{
   font-size: 0.9rem;
-  font-weight: 800;
+  font-weight: 600;
   cursor: pointer;
 }
 
@@ -3098,4 +3098,8 @@ background: linear-gradient(to right, #3f4c6b, #606c88); /* W3C, IE 10+/ Edge, F
 
 .more-actions-popup-elements:hover{
   background-color: #F1F1F1;
+}
+
+.custom-rounded-border{
+  border-radius: 0.75rem!important;
 }

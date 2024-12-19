@@ -14,11 +14,45 @@ const OrderDetails = () => {
     const selected_order = useSelector((store: any) => store.order.selectedOrder);
     const [loading,setLoading] = useState(true)
     const [data, setData] = useState<any>([])
-    const [noData, setNoData] = useState(false)
+    // const [noData, setNoData] = useState(false)
     const moreActionsPopupRef = useRef<any>(null);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [selectedSellerForMoreActions, setSelectedSellerForMoreActions] = useState<any>(null);
     const [open, setModalOpen] = useState(false);
+    const refValues = useSelector((store: any) => store.refValues.referenceList);
+    const status_list = refValues.order_staus.map((status: any) => ({
+        value: status.eazehuborderstatusref,
+        label: status.description
+    })) || [];
+    const payment_status_list = refValues.payment_status.map((status: any) => ({
+        value: status.payment_statusref,
+        label: status.description
+    })) || [];
+    const fullfillment_status_list = refValues.fulfillment_status.map((status: any) => ({
+        value: status.eazehubfulfillmentstatusref,
+        label: status.description
+    })) || [];
+
+    const getOrderStatus = (item: any)=> {
+        if(item){
+            return status_list.filter((x:any)=>x.value === item)[0].label
+        }
+        return ''
+    }
+
+    const getFulfillmentStatus = (item: any)=> {
+        if(item && fullfillment_status_list.filter((x:any)=>x.value === item).length>0){
+            return fullfillment_status_list.filter((x:any)=>x.value === item)[0].label
+        }
+        return ''
+    }
+
+    const getPaymentStatus = (item: any) => {
+        if(item){
+            return payment_status_list.filter((x:any)=>x.value === item)[0].label
+        }
+        return ''
+    }
 
     const openReconciliationWindow = () => {
         setModalOpen(true);
@@ -34,170 +68,143 @@ const OrderDetails = () => {
     }
 
     const getRowTotal = (ele: any) => {
-        let sum = 0;
-        if(ele.store_item_price && ele.store_item_quantity){
-            sum+= (Number(ele.store_item_price)*Number(ele.store_item_quantity))
+        const { store_item_price, store_item_quantity, packing_charge, convenience_fee, delivery_charge, quote_info } = ele;
+        let sum = (store_item_price && store_item_quantity ? Number(store_item_price) * Number(store_item_quantity) : 0) +
+                  (packing_charge ? Number(packing_charge) : 0) +
+                  (convenience_fee ? Number(convenience_fee) : 0) +
+                  (delivery_charge ? Number(delivery_charge) : 0);
+        if (quote_info?.breakup?.length) {
+            const tax = quote_info.breakup.find((item: any) => item.title === 'Tax');
+            if (tax) sum += Number(tax.price.value);
         }
-        if(ele.packing_charge){
-            sum+=  Number(ele.packing_charge)
-        }
-        if(ele.convenience_fee){
-            sum+=  Number(ele.convenience_fee)
-        }
-        if(ele.delivery_charge){
-            sum+=  Number(ele.delivery_charge)
-        }
-        if(ele.quote_info && ele.quote_info.breakup && ele.quote_info.breakup.length>0 && ele.quote_info.breakup.filter((ele: any) => ele.title === 'Tax').length>0){
-            let res = ele.quote_info.breakup.filter((ele: any) => ele.title === 'Tax')[0];
-            sum+= Number(res.price.value)
-        }
-        return sum
-    }
+        return sum;
+    };
 
-    const getProviderLocation = (ele: any) => {
-        if(ele.bpp_provider_info && ele.bpp_provider_info.locations && ele.bpp_provider_info.locations.length>0 && ele.bpp_provider_info.locations[0].address && ele.bpp_provider_info.locations[0].address.city){
-            return ele.bpp_provider_info.locations[0].address.city
-        }
-            return 'NA'
-    }
+    const getPriceOfItem = (ele: any) => ele.store_item_price && ele.store_item_quantity ? Number(ele.store_item_price) * Number(ele.store_item_quantity) : 0;
 
-    const formatCurrency =(price: any, curr: any) => {
-        // Format the number with currency style
-        let currency = curr ? curr : 'INR';
-        const formattedPrice = new Intl.NumberFormat('en-IN', {
-          style: 'currency',
-          currency: currency,
-        }).format(price);
-      
-        // Check if the price has decimal part .00 and remove it
-        if (formattedPrice.includes('.00')) {
-          // Remove the decimal part
-          return formattedPrice.split('.')[0];
+    const getShippingOfItem = (ele: any) => {
+        const { packing_charge, convenience_fee, delivery_charge } = ele;
+        return (packing_charge ? Number(packing_charge) : 0) +
+               (convenience_fee ? Number(convenience_fee) : 0) +
+               (delivery_charge ? Number(delivery_charge) : 0);
+    };
+
+    const getTaxOfItem = (ele: any) => {
+        if (ele.quote_info?.breakup?.length) {
+            const tax = ele.quote_info.breakup.find((item: any) => item.title === 'Tax');
+            return tax ? Number(tax.price.value) : 0;
         }
-      
-        return formattedPrice;
-      }
+        return 0;
+    };
+
+    const getProviderLocation = (ele: any) => ele.bpp_provider_info?.locations?.[0]?.address?.city || 'NA';
+
+    const formatCurrency = (price: any, curr: any = 'INR') => {
+        const formattedPrice = new Intl.NumberFormat('en-IN', { style: 'currency', currency: curr }).format(price);
+        return formattedPrice.includes('.00') ? formattedPrice.split('.')[0] : formattedPrice;
+    };
 
     const getTax = (ele: any) => {
-        if(ele.quote_info && ele.quote_info.breakup && ele.quote_info.breakup.length>0 && ele.quote_info.breakup.filter((ele: any) => ele.title === 'Tax').length>0){
-            let res = ele.quote_info.breakup.filter((ele: any) => ele.title === 'Tax')[0];
-            return formatCurrency(res.price.value, res.currency) 
+        if (ele.quote_info?.breakup?.length) {
+            const tax = ele.quote_info.breakup.find((item: any) => item.title === 'Tax');
+            return formatCurrency(tax?.price.value || 0, tax?.currency || 'INR');
         }
-        return formatCurrency(0, 'INR') 
-    }
+        return formatCurrency(0, 'INR');
+    };
 
-    const getItemsFormatted = (itemsList: any) => {
-        let arr: any = [];
-        itemsList.forEach((ele: any) => {
-            let item = {
-                name: ele.store_item_title ? ele.store_item_title : null,
-                fulfillment_status: ele.fulfillment_state ? ele.fulfillment_state : null,
-                sku: ele.store_item_sku ? ele.store_item_sku : 'NA',
-                alt_id: ele.alternate_id ? ele.alternate_id : 'NA',
-                tracking_id: ele.tracking_number ? ele.tracking_number : 'NA',
-                price: ele.store_item_price ? formatCurrency(ele.store_item_price, 'INR') : null,
-                qty: ele.store_item_quantity ? ele.store_item_quantity : null,
-                pkg_charge: ele.packing_charge ? formatCurrency(ele.packing_charge, 'INR') : null,
-                convenience_fee: ele.convenience_fee ? formatCurrency(ele.convenience_fee, 'INR') : null,
-                delivery_charge: ele.delivery_charge ? formatCurrency(ele.delivery_charge, 'INR') : null,
-                tax: getTax(ele),
-                total: formatCurrency(getRowTotal(ele), 'INR'),
-            }
-            arr.push(item)
-        })
+    const getItemsFormatted = (itemsList: any) => itemsList.map((ele: any) => ({
+        name: ele.store_item_title || null,
+        fulfillment_status: ele.fulfillment_state || null,
+        sku: ele.store_item_sku || 'NA',
+        alt_id: ele.alternate_id || 'NA',
+        tracking_id: ele.tracking_number || 'NA',
+        price: ele.store_item_price ? formatCurrency(ele.store_item_price, 'INR') : null,
+        qty: ele.store_item_quantity || null,
+        pkg_charge: ele.packing_charge ? formatCurrency(ele.packing_charge, 'INR') : null,
+        convenience_fee: ele.convenience_fee ? formatCurrency(ele.convenience_fee, 'INR') : null,
+        delivery_charge: ele.delivery_charge ? formatCurrency(ele.delivery_charge, 'INR') : null,
+        tax: getTax(ele),
+        total: formatCurrency(getRowTotal(ele), 'INR'),
+    }));
 
-        return arr;
-    }
+    const getSubTotalSellerWise = (itemsList: any) => itemsList.reduce((sum: number, ele: any) => sum + getPriceOfItem(ele), 0);
 
-    const getSubTotalSellerWise = (itemsList: any) => {
-        let sum = 0;
-        itemsList.forEach((ele: any) => {
-            sum+= getRowTotal(ele)
-        })
-        return sum
-    }
+    const getShippingChargesSellerWise = (itemsList: any) => itemsList.reduce((sum: number, ele: any) => sum + getShippingOfItem(ele), 0);
 
-    const getTotalSellerWise = (itemsList: any) => {
-        let sum = 0;
-        itemsList.forEach((ele: any) => {
-            sum+= getRowTotal(ele)
-        })
-        return sum
-    }
+    const getTotalSellerWise = (itemsList: any) => itemsList.reduce((sum: number, ele: any) => sum + getPriceOfItem(ele) + getShippingOfItem(ele), 0);
+
+    const getTaxSellerWise = (itemsList: any) => itemsList.reduce((sum: number, ele: any) => sum + getTaxOfItem(ele), 0);
 
     const formatResponse = (data: any) => {
         const groupedData = data.reduce((acc: any, item: any) => {
             const key = item.order_seller_seq;
-            if (!acc[key]) {
-            acc[key] = [];
-            }
+            if (!acc[key]) acc[key] = [];
             acc[key].push(item);
             return acc;
         }, {});
-        let sellers: any = []
+
+        let sellers: any = [];
         let order_summary_subTotal = 0;
         let order_summary_shipping_charges = 0;
         let taxes = 0;
         let itemsCount = 0;
+
         for (const key in groupedData) {
-            let itemsList = groupedData[key];
-            if(itemsList && itemsList.length>0){
+            const itemsList = groupedData[key];
+            if (itemsList.length) {
+                const subTotal = getSubTotalSellerWise(itemsList);
+                const shippingCharges = getShippingChargesSellerWise(itemsList);
+                const tax = getTaxSellerWise(itemsList);
+                const total = getTotalSellerWise(itemsList);
+
                 sellers.push({
-                    is_ondc_product: itemsList[0].is_ondc_product ? itemsList[0].is_ondc_product : false,
+                    is_ondc_product: itemsList[0].is_ondc_product || false,
                     order_seller_seq: key,
-                    provider_name: itemsList[0].provider_name ? itemsList[0].provider_name : '',
-                    provider_phone: itemsList[0].provider_phone ? itemsList[0].provider_phone : 'NA',
+                    provider_name: itemsList[0].provider_name || '',
+                    provider_phone: itemsList[0].provider_phone || 'NA',
                     provider_location: getProviderLocation(itemsList[0]),
-                    seller_id: itemsList[0].seller_id ? itemsList[0].seller_id : null,
-                    seller_name: itemsList[0].seller_name ? itemsList[0].seller_name : '',
-                    seller_phone: itemsList[0].seller_phone ? itemsList[0].seller_phone : 'NA',
-                    seller_location: itemsList[0].seller_location ? itemsList[0].seller_location : 'NA',
-                    delivery_method: itemsList[0].delivery_method ? itemsList[0].delivery_method : 'NA',
-                    shipping_profile: itemsList[0].shipping_profile ? itemsList[0].shipping_profile : 'NA',
+                    seller_id: itemsList[0].seller_id || null,
+                    seller_name: itemsList[0].seller_name || '',
+                    seller_phone: itemsList[0].seller_phone || 'NA',
+                    seller_location: itemsList[0].seller_location || 'NA',
+                    delivery_method: itemsList[0].delivery_method || 'NA',
+                    shipping_profile: itemsList[0].shipping_profile || 'NA',
                     items: getItemsFormatted(itemsList),
-                    subTotal: formatCurrency(getSubTotalSellerWise(itemsList), 'INR'),
-                    shipping_charges: formatCurrency(0, 'INR'),
-                    total: formatCurrency(getTotalSellerWise(itemsList), 'INR')
-                })
-                itemsCount+=itemsList.length
-                order_summary_subTotal+= getSubTotalSellerWise(itemsList)
-                order_summary_shipping_charges+= 0
-                taxes+= 0
+                    subTotal: formatCurrency(subTotal, 'INR'),
+                    shipping_charges: formatCurrency(shippingCharges, 'INR'),
+                    taxes: formatCurrency(tax, 'INR'),
+                    total: formatCurrency(total, 'INR')
+                });
+
+                itemsCount += itemsList.length;
+                order_summary_subTotal += subTotal;
+                order_summary_shipping_charges += shippingCharges;
+                taxes += tax;
             }
         }
-        console.log("formatted response = ", sellers)
+
         setData({
-            sellers: sellers,
+            sellers,
             order_summary: {
                 subTotal: formatCurrency(order_summary_subTotal, 'INR'),
-                itemsCount: itemsCount,
+                itemsCount,
                 shipping_charges: formatCurrency(order_summary_shipping_charges, 'INR'),
                 taxes: formatCurrency(taxes, 'INR'),
-                total: formatCurrency(order_summary_subTotal, 'INR')
+                total: formatCurrency(order_summary_subTotal + order_summary_shipping_charges + taxes, 'INR')
             }
-        })
-    }
+        });
+    };
 
     const fetchOrderDetails = useCallback(() => {
-        setLoading(true)
-        let payload = {
-            order_id: selected_order.order_id
-        }
+        setLoading(true);
+        const payload = { order_id: selected_order.order_id };
         getOrderDetails(payload)
             .then((data: any) => {
-                if (data && data.length>0) {
-                    formatResponse(data)
-                    setNoData(false)
-                }
-                else{
-                    setNoData(true)
-                }
-                setLoading(false)
+                if (data?.length) formatResponse(data);
+                setLoading(false);
             })
-            .catch(err => {
-                setLoading(false)
-            });
-    },[selected_order.order_id])
+            .catch(() => setLoading(false));
+    }, [selected_order.order_id]);
 
     useEffect(() => {   
         fetchOrderDetails();
@@ -292,21 +299,35 @@ const OrderDetails = () => {
                                         <h4><span className='cursor-pointer d-flex'><i
                                             className='fa fa-arrow-circle-left me-2' onClick={navigateToOrderssList}></i>#{selected_order.order_id}</span></h4>
                                     </div>
-                                    <div>
-                                        <ul className="paid-grey pl-2">
-                                            <li className="ms-0 bg-default-grey">{selected_order.order_status}</li>
-                                        </ul>
-                                    </div>
-                                    <div>
-                                        <ul className="paid-grey pl-2">
-                                            <li className="ms-0 bg-default-warning">{selected_order.fulfillment_status}</li>
-                                        </ul>
-                                    </div>
-                                    <div>
-                                        <ul className="paid-grey pl-2">
-                                            <li className="ms-0 bg-default-grey">{selected_order.payment_status}</li>
-                                        </ul>
-                                    </div>
+                                    {
+                                        selected_order.order_status && <p
+                                        className={
+                                            selected_order.order_status === "CREATED" || selected_order.order_status === "INPROGRESS" || selected_order.order_status === "PARTIAL" ? "ml-2 product-draft custom-rounded-border" : 
+                                            selected_order.order_status === "COMPLETED" ||  selected_order.order_status === "ACCEPTED" ? "ml-2 product-active  custom-rounded-border" :
+                                            selected_order.order_status === "CANCELLED" ? "ml-2 product-danger  custom-rounded-border" : ""
+                                        }>
+                                            {getOrderStatus(selected_order.order_status)}
+                                        </p>
+                                    }
+                                    {
+                                        selected_order.fulfillment_status &&  <p
+                                        className={
+                                            selected_order.fulfillment_status === "PENDING" || selected_order.fulfillment_status === "PARTIAL" ? "ml-2 product-draft  custom-rounded-border" : 
+                                            selected_order.fulfillment_status === "DELIVERED" ? "ml-2 product-active  custom-rounded-border" :
+                                            selected_order.fulfillment_status === "CANCELLED" ? "ml-2 product-danger  custom-rounded-border" : ""
+                                        }>
+                                            {getFulfillmentStatus(selected_order.fulfillment_status)}
+                                        </p>
+                                    }
+                                    {
+                                        selected_order.payment_status && <p
+                                        className={
+                                            selected_order.payment_status === "PAID" ? "ml-2 product-active  custom-rounded-border" : 
+                                            selected_order.payment_status === "NOT_PAID" ? "ml-2 product-danger  custom-rounded-border" : ""
+                                        }>
+                                            {getPaymentStatus(selected_order.payment_status)}
+                                        </p>
+                                    }
                                 </div>
                             </div>
                         </div>
@@ -334,7 +355,8 @@ const OrderDetails = () => {
                                                             {/* <li className="ms-2 bg-default-warning">$Unfullfilled(1)</li>
                                                             <li className="ms-2 bg-default-grey">$Status</li> */}
                                                         </ul>
-                                                        <button type="button" className="btn-custom button-parent" onClick={()=> openMoreActions(seller.order_seller_seq)} >
+                                                        <button type="button" className="btn-custom button-parent" onClick={()=> openMoreActions(seller.order_seller_seq)} 
+                                                            ref={moreActionsPopupRef}>
                                                             More Actions
                                                             {
                                                                 isPopupOpen && selectedSellerForMoreActions === seller.order_seller_seq ?
@@ -344,7 +366,7 @@ const OrderDetails = () => {
                                                             }
                                                             
                                                             {(isPopupOpen && selectedSellerForMoreActions === seller.order_seller_seq) && (
-                                                                <div className="more-actions-popup" >
+                                                                <div className="more-actions-popup" ref={moreActionsPopupRef}>
                                                                     <div className='d-flex flex-column align-items-start'>
                                                                         <div onClick={()=>getStatusBySeller(seller)} className="more-actions-popup-elements px-3 py-2">
                                                                             <i className="fa fa-question-circle me-2"></i>
@@ -445,7 +467,11 @@ const OrderDetails = () => {
                                                                             seller.items
                                                                             .map((item: any, index: number) => {
                                                                                 return <tr key={item.name+index}>
-                                                                                <td> <span><b>{item.name}</b><span className="item-status-success ms-2">{item.fulfillment_status}</span><br /></span>
+                                                                                <td> <span><b>{item.name}</b>
+                                                                                {
+                                                                                    item.fulfillment_status && <span className="item-status-success ms-2">{getFulfillmentStatus(item.fulfillment_status)}</span>
+                                                                                }
+                                                                                <br /></span>
                                                                                     <span className="font-small text-grey">SKU: {item.sku}</span><br />
                                                                                     <span className="font-small text-grey">Alt Id: {item.alt_id}</span> <span className="font-small text-grey"> | </span>
                                                                                     <span className="font-small text-grey">Tracking Id: <span className="anchor-text-orders cursor-pointer">{item.tracking_id}</span></span></td>
@@ -475,6 +501,12 @@ const OrderDetails = () => {
                                                                     <div>
                                                                         <span className="text-grey">Shipping charges : </span>
                                                                         <span className="text-default">{seller.shipping_charges}</span>
+                                                                    </div> 
+                                                                </div>
+                                                                <div className="totals-info p-2">
+                                                                    <div>
+                                                                        <span className="text-grey">Taxes : </span>
+                                                                        <span className="text-default">{seller.taxes}</span>
                                                                     </div> 
                                                                 </div>
                                                                 <div className="totals-info p-2">
@@ -566,7 +598,7 @@ const OrderDetails = () => {
 
                                             <div>
                                                 <span className="text-grey">Payment Status : </span>
-                                                <span className="text-default-black">{selected_order.payment_status}</span>
+                                                <span className="text-default-black">{getPaymentStatus(selected_order.payment_status)}</span>
                                             </div>
                                         </div>
                                     </div>

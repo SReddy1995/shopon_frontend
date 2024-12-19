@@ -1,5 +1,5 @@
 import { Navigate } from "react-router-dom";
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useDispatch } from "react-redux";
 import { updateSelectedStore, updateStoresList } from "../reduxStore/storesSlice";
 import { updateReferenceValues } from "../reduxStore/referenceValuesSlice";
@@ -11,17 +11,17 @@ const AuthGuardRoutes = ({ children }: any) => {
     const [isLoading, setIsLoading] = React.useState(true);
     const [isAuthenticated, setIsAuthenticated] = React.useState(false);
 
-    const addStoresToRedux = (state: any) => {
+    const addStoresToRedux = useCallback((state: any) => {
         dispatch(updateStoresList(state));
-    };
+    },[dispatch]);
 
-    const updateSelectedStoreToRedux = (state: any) => {
+    const updateSelectedStoreToRedux = useCallback((state: any) => {
         dispatch(updateSelectedStore(state));
-    };
+    },[dispatch]);
 
-    const addReferencesToStore = (state: any) => {
+    const addReferencesToStore = useCallback((state: any) => {
         dispatch(updateReferenceValues(state));
-    };
+    },[dispatch]);
 
     const fetchRef = async () => {
         const response = await axiosInstance.get(AccountUrls.getRefValues);
@@ -30,9 +30,7 @@ const AuthGuardRoutes = ({ children }: any) => {
 
     React.useEffect(() => {
         const checkAuth = async () => {
-            let localStorageToken = null;
             if (localStorage.getItem("token")) {
-                localStorageToken = localStorage.getItem("token");
                 addStoresToRedux(JSON.parse(localStorage.getItem("associated_stores") || '{}'));
                 updateSelectedStoreToRedux(JSON.parse(localStorage.getItem("selected_store") || '{}'));
                 try {
@@ -47,7 +45,7 @@ const AuthGuardRoutes = ({ children }: any) => {
             setIsLoading(false);
         };
         checkAuth();
-    }, []);
+    }, [addReferencesToStore, addStoresToRedux, updateSelectedStoreToRedux]);
 
     if (isLoading) {
         return <div>Loading...</div>;

@@ -423,6 +423,27 @@ const Orders = () => {
         setLoading(true)
     },[columns_from_api])
 
+    const getOrderStatus = (item: any)=> {
+        if(item){
+            return status_list.filter((x:any)=>x.value === item)[0].label
+        }
+        return ''
+    }
+
+    const getFulfillmentStatus = (item: any)=> {
+        if(item && fullfillment_status_list.filter((x:any)=>x.value === item).length>0){
+            return fullfillment_status_list.filter((x:any)=>x.value === item)[0].label
+        }
+        return ''
+    }
+
+    // const getPaymentStatus = (item: any) => {
+    //     if(item){
+    //         return payment_status_list.filter((x:any)=>x.value === item)[0].label
+    //     }
+    //     return ''
+    // }
+
     return (
         <>
             <div className="container-fluid h-auto mt-3 px-4">
@@ -698,32 +719,42 @@ const Orders = () => {
 																{
 																	columns
 																		.map((col: any) => {
-																			return col.type === "active-inactive-button" ? 
-																					<td key={col.column}><span className={item[col.column] === 'INACTIVE' ? "product-inactive" : (item[col.column] === 'INITIAL' ? "product-draft" : "product-active")}>
-																						{
-																							item[col.column]
-																						}
-																						</span></td>
-																					:
-
-																					col.type === "list" ?
-																					(
-																						<td>
-																						{
-																							
-																							item[col.column]
-																							.map((step: any, index: any) => {
-																								return  <p className='mb-0'>{step.stepref}: {step.statusref}</p>
-																							})
-																						}
-																						</td>
-																					)
-																					:
-                                                                                    
-                                                                                        col.column === "order_id" ?
-                                                                                        <td key={col.column} className='order-id-text' onClick={()=>openOrderDetails(item, col)}>{item[col.column]}</td>
+																			return col.column === "order_id" ?
+                                                                                        <td key={col.column} className='order-id-text' onClick={()=>openOrderDetails(item, col)}>#{item[col.column]}</td>
                                                                                         :
-                                                                                        <td key={col.column}>{item[col.column]}</td>
+                                                                                        col.column === "order_status" ?
+                                                                                            (
+                                                                                                item[col.column] ? <td key={col.column}>
+                                                                                                <span
+                                                                                                className={
+                                                                                                    item[col.column] === "CREATED" || item[col.column] === "INPROGRESS" || item[col.column] === "PARTIAL" ? "product-draft" : 
+                                                                                                    item[col.column] === "COMPLETED" ||  item[col.column] === "ACCEPTED" ? " product-active" :
+                                                                                                    item[col.column] === "CANCELLED" ? "product-danger" : ""
+                                                                                                }>
+                                                                                                    {getOrderStatus(item[col.column])}
+                                                                                                </span>
+                                                                                                </td>
+                                                                                                :
+                                                                                                <td key={col.column}></td>
+                                                                                            )
+                                                                                            :
+                                                                                            col.column === "fulfillment_statusr" ?
+                                                                                            (
+                                                                                                item[col.column] ? <td key={col.column}>
+                                                                                                    <span
+                                                                                                className={
+                                                                                                    item[col.column] === "PENDING" || item[col.column] === "PARTIAL" ? "product-draft" : 
+                                                                                                    item[col.column] === "DELIVERED" ? " product-active" :
+                                                                                                    item[col.column] === "CANCELLED" ? "product-danger" : ""
+                                                                                                }>
+                                                                                                    {getFulfillmentStatus(item[col.column])}
+                                                                                                </span>
+                                                                                                </td>
+                                                                                                :
+                                                                                                <td key={col.column}></td>
+                                                                                            )
+                                                                                            :
+                                                                                            <td key={col.column}>{item[col.column]}</td>
 																					
 																		})
 																}
