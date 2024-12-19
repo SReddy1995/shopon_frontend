@@ -6,7 +6,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import moment from 'moment';
 import { getOrdersList } from '../../services/OrdersService';
 import Tooltip from './Tooltip';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { updateSelectedOrder } from '../../utils/reduxStore/orderSlice';
 import { useNavigate } from 'react-router-dom';
 
@@ -71,6 +71,7 @@ const Orders = () => {
         },
        
     ], []);
+    const refValues = useSelector((store: any) => store.refValues.referenceList);
     const [from_date, setFromDate] = useState<any>(null);
     const [to_date, setToDate] = useState<any>(null);
     const [columns, setColumns] = useState<any[]>([])
@@ -117,12 +118,10 @@ const Orders = () => {
     const [isStatusDropdownOpen, setIsStatusDropdownOpen] = useState(false);
     const [selectedStatus, setSelectedStatus] = useState([])
 
-    const status_list = [
-        {value: 'pending', label: 'Pending'},
-        {value: 'placed', label: 'Placed'},
-        {value: 'confirmed', label: 'Confirmed'},
-        {value: 'cancelled', label: 'Cancelled'},
-    ]
+    const status_list = refValues.order_staus.map((status: any) => ({
+        value: status.eazehuborderstatusref,
+        label: status.description
+    })) || [];
 
     const clearStatusList = () => {
         setSelectedStatus([])
@@ -149,10 +148,10 @@ const Orders = () => {
     const [isPaymentStatusDropdownOpen, setIsPaymentStatusDropdownOpen] = useState(false);
     const [selectedPaymentStatus, setSelectedPaymentStatus] = useState([])
 
-    const payment_status_list = [
-        {value: 'paid', label: 'Paid'},
-        {value: 'unpaid', label: 'Unpaid'},
-    ]
+    const payment_status_list = refValues.payment_status.map((status: any) => ({
+        value: status.payment_statusref,
+        label: status.description
+    })) || [];
 
     const clearPaymentStatusList = () => {
         setSelectedPaymentStatus([])
@@ -200,11 +199,10 @@ const Orders = () => {
             }
           };
     
-        const fullfillment_status_list = [
-            {value: 'out_for_delivery', label: 'Out for delivery'},
-            {value: 'fullfilled', label: 'Fullfilled'},
-            {value: 'unfullfilled', label: 'Unfullfilled'},
-        ]
+        const fullfillment_status_list = refValues.fulfillment_status.map((status: any) => ({
+            value: status.eazehubfulfillmentstatusref,
+            label: status.description
+        })) || [];
     
         const clearFullfillmentStatusList = () => {
             setSelectedFullfillmentStatus([])
@@ -273,8 +271,10 @@ const Orders = () => {
         if(selectedFullfillmentStatus.length > 0){
             payload['fulfillment_status']=selectedFullfillmentStatus.map((status: any) => status.value).join(',')
         }
-        if(from_date && to_date){
+        if(from_date){
             payload['from_date']=formatDate(from_date)
+        }
+        if(to_date){
             payload['to_date']=formatDate(to_date)
         }
 
@@ -318,6 +318,14 @@ const Orders = () => {
                 order_status: item.order_status,
                 payment_status: item.payment_status,
                 fulfillment_status: item.fulfillment_status,
+                transaction_id: item.transaction_id,
+                order_number: item.order_number,
+                created_date: item.order_created_date,
+                customer_phone: item.customer_phone,
+                customer_email: item.customer_email,
+                shipping_info: item.shipping_info,
+                billing_info: item.billing_info,
+                store_url: item.store_url,
             }
         })
     },[])
@@ -414,6 +422,27 @@ const Orders = () => {
         setApplyfilter(true)
         setLoading(true)
     },[columns_from_api])
+
+    const getOrderStatus = (item: any)=> {
+        if(item){
+            return status_list.filter((x:any)=>x.value === item)[0].label
+        }
+        return ''
+    }
+
+    const getFulfillmentStatus = (item: any)=> {
+        if(item && fullfillment_status_list.filter((x:any)=>x.value === item).length>0){
+            return fullfillment_status_list.filter((x:any)=>x.value === item)[0].label
+        }
+        return ''
+    }
+
+    // const getPaymentStatus = (item: any) => {
+    //     if(item){
+    //         return payment_status_list.filter((x:any)=>x.value === item)[0].label
+    //     }
+    //     return ''
+    // }
 
     return (
         <>
@@ -690,32 +719,42 @@ const Orders = () => {
 																{
 																	columns
 																		.map((col: any) => {
-																			return col.type === "active-inactive-button" ? 
-																					<td key={col.column}><span className={item[col.column] === 'INACTIVE' ? "product-inactive" : (item[col.column] === 'INITIAL' ? "product-draft" : "product-active")}>
-																						{
-																							item[col.column]
-																						}
-																						</span></td>
-																					:
-
-																					col.type === "list" ?
-																					(
-																						<td>
-																						{
-																							
-																							item[col.column]
-																							.map((step: any, index: any) => {
-																								return  <p className='mb-0'>{step.stepref}: {step.statusref}</p>
-																							})
-																						}
-																						</td>
-																					)
-																					:
-                                                                                    
-                                                                                        col.column === "order_id" ?
-                                                                                        <td key={col.column} className='order-id-text' onClick={()=>openOrderDetails(item, col)}>{item[col.column]}</td>
+																			return col.column === "order_id" ?
+                                                                                        <td key={col.column} className='order-id-text' onClick={()=>openOrderDetails(item, col)}>#{item[col.column]}</td>
                                                                                         :
-                                                                                        <td key={col.column}>{item[col.column]}</td>
+                                                                                        col.column === "order_status" ?
+                                                                                            (
+                                                                                                item[col.column] ? <td key={col.column}>
+                                                                                                <span
+                                                                                                className={
+                                                                                                    item[col.column] === "CREATED" || item[col.column] === "INPROGRESS" || item[col.column] === "PARTIAL" ? "product-draft" : 
+                                                                                                    item[col.column] === "COMPLETED" ||  item[col.column] === "ACCEPTED" ? " product-active" :
+                                                                                                    item[col.column] === "CANCELLED" ? "product-danger" : ""
+                                                                                                }>
+                                                                                                    {getOrderStatus(item[col.column])}
+                                                                                                </span>
+                                                                                                </td>
+                                                                                                :
+                                                                                                <td key={col.column}></td>
+                                                                                            )
+                                                                                            :
+                                                                                            col.column === "fulfillment_statusr" ?
+                                                                                            (
+                                                                                                item[col.column] ? <td key={col.column}>
+                                                                                                    <span
+                                                                                                className={
+                                                                                                    item[col.column] === "PENDING" || item[col.column] === "PARTIAL" ? "product-draft" : 
+                                                                                                    item[col.column] === "DELIVERED" ? " product-active" :
+                                                                                                    item[col.column] === "CANCELLED" ? "product-danger" : ""
+                                                                                                }>
+                                                                                                    {getFulfillmentStatus(item[col.column])}
+                                                                                                </span>
+                                                                                                </td>
+                                                                                                :
+                                                                                                <td key={col.column}></td>
+                                                                                            )
+                                                                                            :
+                                                                                            <td key={col.column}>{item[col.column]}</td>
 																					
 																		})
 																}

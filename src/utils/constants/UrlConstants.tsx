@@ -42,5 +42,8 @@ export const CollectionUrls = {
 
 export const OrderUrls = {
     fetchOrdersList: '/orders_list',
-    fetchOrderDetails: '/order'
+    fetchOrderDetails: '/order_details',
+    trackOrderBySeller: '/track_by_seller',
+    statusBySeller: '/status_by_seller',
+    cancelBySeller: '/cancel_by_seller'
 }
