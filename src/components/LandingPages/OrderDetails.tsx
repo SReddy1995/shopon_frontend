@@ -351,7 +351,7 @@ const OrderDetails = () => {
                             </div>
                         </div>
                         <div className="col-12 text-left">
-                            <p className="text-default-grey"><span>Transaction Id : </span>{selected_order.transaction_id} <span>|</span> <span>Shopify Order No : {selected_order.order_number}</span> <span>|</span> <span>{selected_order.created_date ? moment(selected_order.created_date).format('MMMM DD, YYYY [at] h:mm a') : ''} from Eazehub</span></p>
+                            <p className="text-default-grey"><span>Transaction Id: </span>{selected_order.transaction_id} <span>|</span> <span>Shopify Order No: {selected_order.order_number}</span> <span>|</span> <span>{selected_order.created_date ? moment(selected_order.created_date).format('MMMM DD, YYYY [at] h:mm a') : ''} from Eazehub</span></p>
                         </div>
                         <div className="col-12">
                             <div className="row">
@@ -412,33 +412,33 @@ const OrderDetails = () => {
                                                     <div className="provider-seller-info-container">
                                                         <div className="provider-container p-2">
                                                             <div>
-                                                                <span className="text-grey">Provider Name : </span>
+                                                                <span className="text-grey">Provider Name: </span>
                                                                 <span className="text-default">{seller.provider_name}</span>
                                                             </div>
         
                                                             <div>
-                                                                <span className="text-grey">Phone : </span>
+                                                                <span className="text-grey">Phone: </span>
                                                                 <span className="text-default">{seller.provider_phone}</span>
                                                             </div>
         
                                                             <div>
-                                                                <span className="text-grey">Website / Location : </span>
+                                                                <span className="text-grey">Website / Location: </span>
                                                                 <span className="text-default">{seller.provider_location}</span>
                                                             </div>
                                                         </div>
                                                         <div className="seller-container p-2">
                                                             <div>
-                                                                <span className="text-grey">Seller Name : </span>
+                                                                <span className="text-grey">Seller Name: </span>
                                                                 <span className="text-default">{seller.seller_name}</span>
                                                             </div>
         
                                                             <div>
-                                                                <span className="text-grey">Phone : </span>
+                                                                <span className="text-grey">Phone: </span>
                                                                 <span className="text-default">{seller.seller_phone}</span>
                                                             </div>
         
                                                             <div>
-                                                                <span className="text-grey">Location : </span>
+                                                                <span className="text-grey">Location: </span>
                                                                 <span className="text-default">{seller.seller_location}</span>
                                                             </div>
                                                         </div>
@@ -446,12 +446,12 @@ const OrderDetails = () => {
                                                     <div className="product-shipping-details-container">
                                                         <div className="shipping-details-container p-2">
                                                             <div>
-                                                                <span className="text-grey">Delivery method : </span>
+                                                                <span className="text-grey">Delivery method: </span>
                                                                 <span className="text-default">{seller.delivery_method}</span>
                                                             </div>
         
                                                             <div>
-                                                                <span className="text-grey">Shipping profile : </span>
+                                                                <span className="text-grey">Shipping profile: </span>
                                                                 <span className="text-default">{seller.shipping_profile}</span>
                                                             </div>
                                                         </div>
@@ -512,25 +512,25 @@ const OrderDetails = () => {
                                                             <div className="totals-container">
                                                                 <div className="totals-info p-2">
                                                                     <div>
-                                                                        <span className="text-grey">Sub Total : </span>
+                                                                        <span className="text-grey">Sub Total: </span>
                                                                         <span className="text-default">{seller.subTotal}</span>
                                                                     </div> 
                                                                 </div>
                                                                 <div className="totals-info p-2">
                                                                     <div>
-                                                                        <span className="text-grey">Shipping charges : </span>
+                                                                        <span className="text-grey">Shipping charges: </span>
                                                                         <span className="text-default">{seller.shipping_charges}</span>
                                                                     </div> 
                                                                 </div>
                                                                 <div className="totals-info p-2">
                                                                     <div>
-                                                                        <span className="text-grey">Taxes : </span>
+                                                                        <span className="text-grey">Taxes: </span>
                                                                         <span className="text-default">{seller.taxes}</span>
                                                                     </div> 
                                                                 </div>
                                                                 <div className="totals-info p-2">
                                                                     <div>
-                                                                        <span className="text-grey">Total : </span>
+                                                                        <span className="text-grey">Total: </span>
                                                                         <span className="text-default">{seller.total}</span>
                                                                     </div> 
                                                                 </div>
@@ -606,17 +606,17 @@ const OrderDetails = () => {
                                             <h6><b>Payment Details</b></h6>
 
                                             <div>
-                                                <span className="text-grey">Transaction Id : </span>
+                                                <span className="text-grey">Transaction Id: </span>
                                                 <span className="text-default-black">{selected_order.transaction_id}</span>
                                             </div>
 
                                             <div>
-                                                <span className="text-grey">Payment Type : </span>
+                                                <span className="text-grey">Payment Type: </span>
                                                 <span className="text-default-black">{selected_order.payment_type}</span>
                                             </div>
 
                                             <div>
-                                                <span className="text-grey">Payment Status : </span>
+                                                <span className="text-grey">Payment Status: </span>
                                                 <span className="text-default-black">{getPaymentStatus(selected_order.payment_status)}</span>
                                             </div>
                                         </div>
