@@ -1289,13 +1289,12 @@ table{
 
 .search{
   margin-bottom: auto;
-  margin-top: 3px;
-  padding-top: 2px;
-  height: 2.8rem;
+  margin-top: auto;
+  height: inherit;
   background-color: #f1f1f1;
-  border-radius:1.5rem;
+  border-radius:0.75rem;
   /* padding: 10px; */
-/* margin-right: -2px; */
+
   }
 
   .search_input {
@@ -1310,7 +1309,7 @@ table{
 
   .search .search_input{
   padding: 0 10px;
-  width: 80%;
+  width: 95%;
   caret-color:#000;
   transition: width 0.4s linear;
   }
@@ -1321,14 +1320,14 @@ table{
   } */
 
   .search_icon {
-      height: 40px;
+      /* height: 40px; */
       width: 40px;
       float: right;
       display: flex;
       justify-content: center;
       align-items: center;
-      border-radius: 9%;
-      color: #000000;
+      border-radius: 0.75rem;
+      /* color: #000000; */
       background-color: #f1f1f1;
   }
 
