@@ -7,6 +7,8 @@ import moment from 'moment';
 import ModalWindow from "./ModalWindow";
 import ReconciliationDetails from "./ReconciliationDetails";
 import ondc_product from '../../assets/images/is_ondc_product.png';
+import { showSuccessMessage } from "../../shared/notificationProvider";
+import { RECONCILIATION_INITIATED_SUCCESSFULLY, STATUS_INITIATED_SUCCESSFULLY, TRACK_INITIATED_SUCCESSFULLY } from "../../utils/constants/NotificationConstants";
 
 const OrderDetails = () => {
 
@@ -270,6 +272,7 @@ const OrderDetails = () => {
         fetchStatusBySeller(payload)
             .then((data: any) => {
                 console.log("status response = ", data)
+                showSuccessMessage(STATUS_INITIATED_SUCCESSFULLY)
             })
             .catch(err => {
                 
@@ -286,6 +289,7 @@ const OrderDetails = () => {
         fetchTrackOrderBySeller(payload)
             .then((data: any) => {
                 console.log("track response = ", data)
+                showSuccessMessage(TRACK_INITIATED_SUCCESSFULLY)
             })
             .catch(err => {
                 
@@ -299,6 +303,7 @@ const OrderDetails = () => {
 
     const getReconciliationBySeller = (seller: any) => {
         openReconciliationWindow()
+        showSuccessMessage(RECONCILIATION_INITIATED_SUCCESSFULLY)
     }
 
     return (
