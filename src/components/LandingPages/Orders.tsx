@@ -649,7 +649,7 @@ const Orders = () => {
                                     }
                                 </div>
                                 <div className='orders-filter-by-date'>
-                                    <p className="align-self-center mb-0 text-nowrap">From :</p>
+                                    <p className="align-self-center mb-0 text-nowrap">From:</p>
                                       <DatePicker
                                             showIcon
                                             selected={from_date}
@@ -661,7 +661,7 @@ const Orders = () => {
                                             className="order-date-filter"
                                             dateFormat="dd/MM/yyyy"
                                             />
-                                    <p className="align-self-center mb-0 text-nowrap">To :</p>
+                                    <p className="align-self-center mb-0 text-nowrap">To:</p>
                                     <DatePicker
                                             showIcon
                                             selected={to_date}

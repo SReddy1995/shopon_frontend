@@ -20,3 +20,6 @@ export const CATEGORY_NOT_REGISTERED = "Selected category is not registered in y
 export const COLLECTION_PRODUCT_DELETED = "Product is successfully deleted from the collection"
 export const NO_CATEGORIES_REGISTERED = "No categories registered"
 export const TIMEOUT_ERROR = "Timeout"
+export const STATUS_INITIATED_SUCCESSFULLY = "Status initiated successfully"
+export const TRACK_INITIATED_SUCCESSFULLY = "Tracking initiated successfully"
+export const RECONCILIATION_INITIATED_SUCCESSFULLY = "Reconciliation initiated successfully"
