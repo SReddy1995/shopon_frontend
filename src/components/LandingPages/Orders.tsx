@@ -341,7 +341,7 @@ const Orders = () => {
                 if(data.orders.length > 0){
                     let res = formatResponse(data.orders)
                     setData(res)
-
+                    setNoData(false)
                 }
                 else{
                     setData(data.orders)
