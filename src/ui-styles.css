@@ -3003,17 +3003,12 @@ background: linear-gradient(to right, #3f4c6b, #606c88); /* W3C, IE 10+/ Edge, F
 }
 
 .provider-seller-name-container{
-  width: 41%;
+  width: 50%;
   text-align: left;
 }
 
-.provider-seller-phone-container{
-  width: 18%;
-  text-align: center;
-}
-
 .provider-seller-location-container{
-  width: 41%;
+  width: 50%;
   text-align: right;
 }
 
