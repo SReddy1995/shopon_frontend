@@ -21,8 +21,8 @@ const PreviewProducts = () => {
     const refValues = useSelector((store: any) => store.refValues.referenceList);
     const [syncing, setSyncing] = useState(false);
 
-    const navigateToProductsList = () => {
-        dispatch(updateSelectedProductsList(selectedProductsList));
+    const navigateToProductsList = (products: any) => {
+        dispatch(updateSelectedProductsList(products));
         dispatch(updateSourcePage('preview'));
         navigate("/landing-page/products/products-list")
     }
@@ -63,6 +63,7 @@ const PreviewProducts = () => {
         .then((response: any) => {
            showSuccessMessage(SYNC_PRODUCTS_WITH_SUCCESS)
            setSyncing(false)
+           navigateToProductsList([])
         })
         .catch(err => {
             console.log(err)
@@ -92,7 +93,7 @@ const PreviewProducts = () => {
                 <div className="col text-left">
                        
 
-                        <span><h3><i className='fa fa-arrow-circle-left me-2 cursor-pointer' onClick={navigateToProductsList}></i> Shortlisted Products</h3></span>
+                        <span><h3><i className='fa fa-arrow-circle-left me-2 cursor-pointer' onClick={()=>navigateToProductsList(selectedProductsList)}></i> Shortlisted Products</h3></span>
                         
                     </div>
 
