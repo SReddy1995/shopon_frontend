@@ -3002,6 +3002,21 @@ background: linear-gradient(to right, #3f4c6b, #606c88); /* W3C, IE 10+/ Edge, F
   border-bottom-right-radius: 0.75rem;
 }
 
+.provider-seller-name-container{
+  width: 41%;
+  text-align: left;
+}
+
+.provider-seller-phone-container{
+  width: 18%;
+  text-align: center;
+}
+
+.provider-seller-location-container{
+  width: 41%;
+  text-align: right;
+}
+
 .product-shipping-details-container{
   display: flex;
   flex-direction: column;
