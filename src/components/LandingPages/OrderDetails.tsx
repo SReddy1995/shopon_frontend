@@ -16,7 +16,7 @@ const OrderDetails = () => {
     const dispatch = useDispatch();
     const selected_order = useSelector((store: any) => store.order.selectedOrder);
     const [loading,setLoading] = useState(true)
-    const [data, setData] = useState<any>([])
+    const [data, setData] = useState<any>(null)
     // const [noData, setNoData] = useState(false)
     const moreActionsPopupRef = useRef<any>(null);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -100,8 +100,6 @@ const OrderDetails = () => {
         return 0;
     };
 
-    const getProviderLocation = (ele: any) => ele.bpp_provider_info?.locations?.[0]?.address?.city || 'NA';
-
     const formatCurrency = (price: any, curr: any = 'INR') => {
         const formattedPrice = new Intl.NumberFormat('en-IN', { style: 'currency', currency: curr }).format(price);
         return formattedPrice.includes('.00') ? formattedPrice.split('.')[0] : formattedPrice;
@@ -139,19 +137,6 @@ const OrderDetails = () => {
     const getTaxSellerWise = (itemsList: any) => itemsList.reduce((sum: number, ele: any) => sum + getTaxOfItem(ele), 0);
 
     const formatResponse = (data: any) => {
-        const groupedData = data.reduce((acc: any, item: any) => {
-            const key = item.order_seller_seq;
-            if (!acc[key]) acc[key] = [];
-            acc[key].push(item);
-            return acc;
-        }, {});
-
-        const sortedGroupedData = Object.keys(groupedData)
-            .sort((a, b) => a.localeCompare(b))
-            .reduce((acc: any, key: any) => {
-            acc[key] = groupedData[key];
-            return acc;
-            }, {});
 
         let sellers: any = [];
         let order_summary_subTotal = 0;
@@ -159,42 +144,51 @@ const OrderDetails = () => {
         let taxes = 0;
         let itemsCount = 0;
 
-        for (const key in sortedGroupedData) {
-            const itemsList = sortedGroupedData[key];
-            if (itemsList.length) {
-                const subTotal = getSubTotalSellerWise(itemsList);
-                const shippingCharges = getShippingChargesSellerWise(itemsList);
-                const tax = getTaxSellerWise(itemsList);
-                const total = getTotalSellerWise(itemsList);
+        if(data?.seller?.length>0){
+            data.seller.forEach((element: any, index: any)=> {
+                if (element.orderItemDetails.length > 0) {
+                    const subTotal = getSubTotalSellerWise(element.orderItemDetails);
+                    const shippingCharges = getShippingChargesSellerWise(element.orderItemDetails);
+                    const tax = getTaxSellerWise(element.orderItemDetails);
+                    const total = getTotalSellerWise(element.orderItemDetails);
 
-                sellers.push({
-                    is_ondc_product: itemsList[0].is_ondc_product || false,
-                    order_seller_seq: key,
-                    provider_name: itemsList[0].provider_name || '',
-                    provider_phone: itemsList[0].provider_phone || 'NA',
-                    provider_location: getProviderLocation(itemsList[0]),
-                    seller_id: itemsList[0].seller_id || null,
-                    seller_name: itemsList[0].seller_name || '',
-                    seller_phone: itemsList[0].seller_phone || 'NA',
-                    seller_location: itemsList[0].seller_location || 'NA',
-                    delivery_method: itemsList[0].delivery_method || 'NA',
-                    shipping_profile: itemsList[0].shipping_profile || 'NA',
-                    items: getItemsFormatted(itemsList),
-                    subTotal: formatCurrency(subTotal, 'INR'),
-                    shipping_charges: formatCurrency(shippingCharges, 'INR'),
-                    taxes: formatCurrency(tax, 'INR'),
-                    total: formatCurrency(total, 'INR')
-                });
-
-                itemsCount += itemsList.length;
-                order_summary_subTotal += subTotal;
-                order_summary_shipping_charges += shippingCharges;
-                taxes += tax;
-            }
+                    sellers.push({
+                        is_ondc_product: element.is_ondc_product || false,
+                        ondc_order_state: element.ondc_order_state || null,
+                        fulfillment_status: element.fulfillemnt_status || null,
+                        order_seller_seq: element.order_seller_seq,
+                        provider_name: element.provider_name || '',
+                        seller_id: element.seller_id || null,
+                        seller_name: element.seller_name || '',
+                        seller_phone: element.seller_phone || 'NA',
+                        seller_email: element.seller_email || 'NA',
+                        shipping_profile: element.shipping_profile || 'NA',
+                        items: getItemsFormatted(element.orderItemDetails),
+                        subTotal: formatCurrency(subTotal, 'INR'),
+                        shipping_charges: formatCurrency(shippingCharges, 'INR'),
+                        taxes: formatCurrency(tax, 'INR'),
+                        total: formatCurrency(total, 'INR')
+                    });
+    
+                    itemsCount += element.orderItemDetails.length;
+                    order_summary_subTotal += subTotal;
+                    order_summary_shipping_charges += shippingCharges;
+                    taxes += tax;
+                }
+            })
         }
 
-        setData({
-            sellers,
+        let res = {
+            info: {
+                customer_name: data.customer_name? data.customer_name : 'NA',
+                customer_email: data.customer_email? data.customer_email : null,
+                customer_phone: data.customer_phone? data.customer_phone : null,
+                billing_info: data.billing_info? data.billing_info : null,
+                shipping_info: data.shipping_info? data.shipping_info : null,
+                payment_status: data.payment_status? data.payment_status : null,
+                payment_type: data.payment_type? data.payment_type : 'NA'
+            },
+            sellers: sellers,
             order_summary: {
                 subTotal: formatCurrency(order_summary_subTotal, 'INR'),
                 itemsCount,
@@ -202,7 +196,8 @@ const OrderDetails = () => {
                 taxes: formatCurrency(taxes, 'INR'),
                 total: formatCurrency(order_summary_subTotal + order_summary_shipping_charges + taxes, 'INR')
             }
-        });
+        }
+        setData(res);
     };
 
     const fetchOrderDetails = useCallback(() => {
@@ -210,7 +205,7 @@ const OrderDetails = () => {
         const payload = { order_id: selected_order.order_id };
         getOrderDetails(payload)
             .then((data: any) => {
-                if (data?.length) formatResponse(data);
+                if (data) formatResponse(data);
                 setLoading(false);
             })
             .catch(() => setLoading(false));
@@ -359,7 +354,7 @@ const OrderDetails = () => {
                                     <div className="order-details-left-column">
                                         {/* seller cards starts here for loop */}
                                         {
-                                            data.sellers?.length>0 && <>
+                                            data?.sellers?.length>0 && <>
                                             {
                                                 data.sellers.map((seller: any, index: number) => {
                                                     return <div key={seller.order_seller_seq} className="card-orders seller-card-container shadow bg-white mb-0 py-3 px-3">
@@ -371,8 +366,8 @@ const OrderDetails = () => {
                                                                 }
                                                             </span>
                                                             <h4>#{seller.order_seller_seq}</h4>
-                                                            {/* <li className="ms-2 bg-default-warning">$Unfullfilled(1)</li>
-                                                            <li className="ms-2 bg-default-grey">$Status</li> */}
+                                                            <li className="ms-2 bg-default-warning">{seller.fulfillment_status}</li>
+                                                            <li className="ms-2 bg-default-grey">{seller.ondc_order_state}</li>
                                                         </ul>
                                                         <button type="button" className="btn-custom button-parent" onClick={()=> openMoreActions(seller.order_seller_seq)} 
                                                             ref={moreActionsPopupRef}>
@@ -416,39 +411,31 @@ const OrderDetails = () => {
                                                                 <span className="text-default">{seller.provider_name}</span>
                                                             </div>
         
-                                                            <div className="provider-seller-phone-container">
-                                                                <span className="text-grey">Phone: </span>
-                                                                <span className="text-default">{seller.provider_phone}</span>
-                                                            </div>
-        
                                                             <div className="provider-seller-location-container">
-                                                                <span className="text-grey">Website / Location: </span>
-                                                                <span className="text-default">{seller.provider_location}</span>
-                                                            </div>
-                                                        </div>
-                                                        <div className="seller-container p-2">
-                                                            <div className="provider-seller-name-container">
                                                                 <span className="text-grey">Seller Name: </span>
                                                                 <span className="text-default">{seller.seller_name}</span>
                                                             </div>
+                                                        </div>
+                                                        <div className="seller-container p-2">
+
         
-                                                            <div className="provider-seller-phone-container">
+                                                            <div className="provider-seller-name-container">
                                                                 <span className="text-grey">Phone: </span>
                                                                 <span className="text-default">{seller.seller_phone}</span>
                                                             </div>
         
                                                             <div className="provider-seller-location-container">
-                                                                <span className="text-grey">Location: </span>
-                                                                <span className="text-default">{seller.seller_location}</span>
+                                                                <span className="text-grey">Email: </span>
+                                                                <span className="text-default">{seller.seller_email}</span>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div className="product-shipping-details-container">
                                                         <div className="shipping-details-container p-2">
-                                                            <div>
+                                                            {/* <div>
                                                                 <span className="text-grey">Delivery method: </span>
                                                                 <span className="text-default">{seller.delivery_method}</span>
-                                                            </div>
+                                                            </div> */}
         
                                                             <div>
                                                                 <span className="text-grey">Shipping profile: </span>
@@ -545,7 +532,7 @@ const OrderDetails = () => {
                                         
                                          {/* seller cards ends here */}
                                         {
-                                            data.order_summary && <div className="card-orders order-summary-card-container shadow bg-white mb-3 py-3 px-3">
+                                            data?.order_summary && <div className="card-orders order-summary-card-container shadow bg-white mb-3 py-3 px-3">
                                             <div className="seller-wise-order-info">
                                                 <h4 className="mb-0">Order summary</h4>
                                             </div>
@@ -581,20 +568,21 @@ const OrderDetails = () => {
                                         </div>
                                         }
                                     </div>
-                                    <div className="order-details-right-column">
+                                    {
+                                        data?.info &&  <div className="order-details-right-column">
                                         <div className="card-orders text-left shadow bg-white mb-3 py-3 px-3">
                                             <h6><b>Customer</b></h6>
 
-                                            <span className="cust-name">{selected_order.customer_name}</span><br /><br />
+                                            <span className="cust-name">{data.info.customer_name}</span><br /><br />
                                             <span className="text-default-orders">Contact Information</span><br />
-                                            <span className="text-grey">{selected_order.customer_email ? selected_order.customer_email : 'No email provided'}</span><br />
-                                            <span className="cust-name">{selected_order.customer_phone ? selected_order.customer_phone : 'No phone provided'}</span><br /><br />
+                                            <span className="text-grey">{data.info.customer_email ? data.info.customer_email : 'No email provided'}</span><br />
+                                            <span className="cust-name">{data.info.customer_phone ? data.info.customer_phone : 'No phone provided'}</span><br /><br />
                                             <span className="text-default-orders">Shipping Address</span><br />
-                                            <p className="mb-0">{selected_order.shipping_info.name},</p> 
-                                            <p className="mb-0">{selected_order.shipping_info.address1},</p>
-                                            <p className="mb-0">{selected_order.shipping_info.address2},</p>
-                                            <p className="mb-0">{selected_order.shipping_info.city}, {selected_order.shipping_info.province}</p>
-                                            <p>{selected_order.shipping_info.country} - {selected_order.shipping_info.zip}</p>
+                                            <p className="mb-0">{data.info.shipping_info?.name},</p> 
+                                            <p className="mb-0">{data.info.shipping_info?.address1},</p>
+                                            <p className="mb-0">{data.info.shipping_info?.address2},</p>
+                                            <p className="mb-0">{data.info.shipping_info?.city}, {data.info.shipping_info?.province}</p>
+                                            <p>{data.info.shipping_info?.country} - {data.info.shipping_info?.zip}</p>
                                         </div>
                                         <div className="card-orders text-left shadow bg-white mb-3 py-3 px-3">
                                             <h6><b>Payment Details</b></h6>
@@ -606,23 +594,25 @@ const OrderDetails = () => {
 
                                             <div>
                                                 <span className="text-grey">Payment Type: </span>
-                                                <span className="text-default-black">{selected_order.payment_type}</span>
+                                                <span className="text-default-black">{data.info.payment_type}</span>
                                             </div>
 
                                             <div>
                                                 <span className="text-grey">Payment Status: </span>
-                                                <span className="text-default-black">{getPaymentStatus(selected_order.payment_status)}</span>
+                                                <span className="text-default-black">{getPaymentStatus(data.info.payment_status)}</span>
                                             </div>
                                             <div className="mt-4">
                                                 <span className="text-default-orders">Billing Address</span><br />
-                                                <p className="mb-0">{selected_order.billing_info.name},</p> 
-                                                <p className="mb-0">{selected_order.billing_info.address1},</p>
-                                                <p className="mb-0">{selected_order.billing_info.address2},</p>
-                                                <p className="mb-0">{selected_order.billing_info.city}, {selected_order.billing_info.province}</p>
-                                                <p>{selected_order.billing_info.country} - {selected_order.billing_info.zip}</p>
+                                                <p className="mb-0">{data.info.billing_info?.name},</p> 
+                                                <p className="mb-0">{data.info.billing_info?.address1},</p>
+                                                <p className="mb-0">{data.info.billing_info?.address2},</p>
+                                                <p className="mb-0">{data.info.billing_info?.city}, {data.info.billing_info?.province}</p>
+                                                <p>{data.info.billing_info?.country} - {data.info.billing_info?.zip}</p>
                                             </div>
                                         </div>
                                     </div>
+                                    }
+
                                 </div>
                             </div>
                         </div>
