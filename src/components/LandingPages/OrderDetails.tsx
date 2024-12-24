@@ -110,9 +110,9 @@ const OrderDetails = () => {
     const getTax = (ele: any) => {
         if (ele.quote_info?.breakup?.length) {
             const tax = ele.quote_info.breakup.find((item: any) => item.title === 'Tax');
-            return formatCurrency(tax?.price.value || 0, tax?.currency || 'INR');
+            return tax?.price.value || 0;
         }
-        return formatCurrency(0, 'INR');
+        return 0;
     };
 
     const getItemsFormatted = (itemsList: any) => itemsList.map((ele: any) => ({
@@ -121,11 +121,11 @@ const OrderDetails = () => {
         sku: ele.store_item_sku || 'NA',
         alt_id: ele.alternate_id || 'NA',
         tracking_id: ele.tracking_number || 'NA',
-        price: ele.store_item_price ? formatCurrency(ele.store_item_price, 'INR') : null,
-        qty: ele.store_item_quantity || null,
-        pkg_charge: ele.packing_charge ? formatCurrency(ele.packing_charge, 'INR') : null,
-        convenience_fee: ele.convenience_fee ? formatCurrency(ele.convenience_fee, 'INR') : null,
-        delivery_charge: ele.delivery_charge ? formatCurrency(ele.delivery_charge, 'INR') : null,
+        price: ele.store_item_price ? ele.store_item_price : 0,
+        qty: ele.store_item_quantity || 0,
+        pkg_charge: ele.packing_charge ? ele.packing_charge : 0,
+        convenience_fee: ele.convenience_fee ? ele.convenience_fee : 0,
+        delivery_charge: ele.delivery_charge ? ele.delivery_charge : 0,
         tax: getTax(ele),
         total: formatCurrency(getRowTotal(ele), 'INR'),
     }));
@@ -411,33 +411,33 @@ const OrderDetails = () => {
                                                     </div>
                                                     <div className="provider-seller-info-container">
                                                         <div className="provider-container p-2">
-                                                            <div>
+                                                            <div className="provider-seller-name-container">
                                                                 <span className="text-grey">Provider Name: </span>
                                                                 <span className="text-default">{seller.provider_name}</span>
                                                             </div>
         
-                                                            <div>
+                                                            <div className="provider-seller-phone-container">
                                                                 <span className="text-grey">Phone: </span>
                                                                 <span className="text-default">{seller.provider_phone}</span>
                                                             </div>
         
-                                                            <div>
+                                                            <div className="provider-seller-location-container">
                                                                 <span className="text-grey">Website / Location: </span>
                                                                 <span className="text-default">{seller.provider_location}</span>
                                                             </div>
                                                         </div>
                                                         <div className="seller-container p-2">
-                                                            <div>
+                                                            <div className="provider-seller-name-container">
                                                                 <span className="text-grey">Seller Name: </span>
                                                                 <span className="text-default">{seller.seller_name}</span>
                                                             </div>
         
-                                                            <div>
+                                                            <div className="provider-seller-phone-container">
                                                                 <span className="text-grey">Phone: </span>
                                                                 <span className="text-default">{seller.seller_phone}</span>
                                                             </div>
         
-                                                            <div>
+                                                            <div className="provider-seller-location-container">
                                                                 <span className="text-grey">Location: </span>
                                                                 <span className="text-default">{seller.seller_location}</span>
                                                             </div>
@@ -463,7 +463,7 @@ const OrderDetails = () => {
         
         
                                                                             <th colSpan={3} className="border-bottom-none"></th>
-                                                                            <th colSpan={3} className="text-center border-bottom-none">Charges</th>
+                                                                            <th colSpan={3} className="text-center border-bottom-none">Charges (in Rs)</th>
                                                                             <th colSpan={2} className="border-bottom-none"></th>
         
                                                                         </tr>
@@ -472,13 +472,13 @@ const OrderDetails = () => {
                                                                         <tr>
         
                                                                             <th style={{ width: "85%" }} >Product Details</th>
-                                                                            <th className="text-center">Price</th>
-                                                                            <th className="text-center">Qty</th>
-                                                                            <th className="text-center">Pkg</th>
-                                                                            <th className="text-center">Conv</th>
-                                                                            <th className="text-center">Delivery</th>
-                                                                            <th className="text-center">Tax</th>
-                                                                            <th className="text-center">Total</th>
+                                                                            <th >Price</th>
+                                                                            <th >Qty</th>
+                                                                            <th >Pkg</th>
+                                                                            <th >Conv</th>
+                                                                            <th >Delivery</th>
+                                                                            <th >Tax</th>
+                                                                            <th >Total</th>
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody>
@@ -495,11 +495,11 @@ const OrderDetails = () => {
                                                                                     <span className="font-small text-grey">Alt Id: {item.alt_id}</span> <span className="font-small text-grey"> | </span>
                                                                                     <span className="font-small text-grey">Tracking Id: <span className="anchor-text-orders cursor-pointer">{item.tracking_id}</span></span></td>
                                                                                 <td>{item.price}</td>
-                                                                                <td className="text-center">{item.qty}</td>
-                                                                                <td className="text-center">{item.pkg_charge}</td>
-                                                                                <td className="text-center">{item.convenience_fee}</td>
-                                                                                <td className="text-center">{item.delivery_charge}</td>
-                                                                                <td className="text-center">{item.tax}</td>
+                                                                                <td >{item.qty}</td>
+                                                                                <td >{item.pkg_charge}</td>
+                                                                                <td >{item.convenience_fee}</td>
+                                                                                <td >{item.delivery_charge}</td>
+                                                                                <td >{item.tax}</td>
                                                                                 <td className="text-right">{item.total}</td>
             
                                                                             </tr>
@@ -595,12 +595,6 @@ const OrderDetails = () => {
                                             <p className="mb-0">{selected_order.shipping_info.address2},</p>
                                             <p className="mb-0">{selected_order.shipping_info.city}, {selected_order.shipping_info.province}</p>
                                             <p>{selected_order.shipping_info.country} - {selected_order.shipping_info.zip}</p>
-                                            <span className="text-default-orders">Billing Address</span><br />
-                                            <p className="mb-0">{selected_order.billing_info.name},</p> 
-                                            <p className="mb-0">{selected_order.billing_info.address1},</p>
-                                            <p className="mb-0">{selected_order.billing_info.address2},</p>
-                                            <p className="mb-0">{selected_order.billing_info.city}, {selected_order.billing_info.province}</p>
-                                            <p>{selected_order.billing_info.country} - {selected_order.billing_info.zip}</p>
                                         </div>
                                         <div className="card-orders text-left shadow bg-white mb-3 py-3 px-3">
                                             <h6><b>Payment Details</b></h6>
@@ -618,6 +612,14 @@ const OrderDetails = () => {
                                             <div>
                                                 <span className="text-grey">Payment Status: </span>
                                                 <span className="text-default-black">{getPaymentStatus(selected_order.payment_status)}</span>
+                                            </div>
+                                            <div className="mt-4">
+                                                <span className="text-default-orders">Billing Address</span><br />
+                                                <p className="mb-0">{selected_order.billing_info.name},</p> 
+                                                <p className="mb-0">{selected_order.billing_info.address1},</p>
+                                                <p className="mb-0">{selected_order.billing_info.address2},</p>
+                                                <p className="mb-0">{selected_order.billing_info.city}, {selected_order.billing_info.province}</p>
+                                                <p>{selected_order.billing_info.country} - {selected_order.billing_info.zip}</p>
                                             </div>
                                         </div>
                                     </div>
