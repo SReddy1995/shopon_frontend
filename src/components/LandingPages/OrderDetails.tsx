@@ -359,7 +359,7 @@ const OrderDetails = () => {
                                     <div className="order-details-left-column">
                                         {/* seller cards starts here for loop */}
                                         {
-                                            data.sellers.length>0 && <>
+                                            data.sellers?.length>0 && <>
                                             {
                                                 data.sellers.map((seller: any, index: number) => {
                                                     return <div key={seller.order_seller_seq} className="card-orders seller-card-container shadow bg-white mb-0 py-3 px-3">
