@@ -23,7 +23,7 @@ const Orders = () => {
         },
         {
             coltitle: "Confirmation No",
-            column: "store_order_confirmation_num",
+            column: "store_order_confirmation_number",
             visibilityDisplayName: "Confirmation No",
             type: "text",
             serialNo: 1,
@@ -77,6 +77,14 @@ const Orders = () => {
             serialNo: 3,
             isVisible: true,
         },
+        {
+            coltitle: "Settlement Status",
+            visibilityDisplayName: "Settlement status",
+            column: "settlement_status",
+            type: "active-draft-button",
+            serialNo: 3,
+            isVisible: true,
+        },
        
     ], []);
     const refValues = useSelector((store: any) => store.refValues.referenceList);
@@ -93,7 +101,7 @@ const Orders = () => {
     const categories_list = [
         {value: 'order_id', label: 'Order ID'},
         {value: 'customer_name', label: 'Customer name'},
-        {value: 'store_order_confirmation_num', label: 'Confirmation No'},
+        {value: 'store_order_confirmation_number', label: 'Confirmation No'},
     ]
 
     const updateSelectedCategory = (cat: any) => {
@@ -233,6 +241,36 @@ const Orders = () => {
             setIsFullfillmentStatusDropdownOpen(false)
         }
 
+        // settlement status
+        const settlementStatusPopupRef = useRef<any>(null);
+        const [isSettlementStatusDropdownOpen, setIsSettlementStatusDropdownOpen] = useState(false);
+        const [selectedSettlementStatus, setSelectedSettlementStatus] = useState([])
+    
+        const settlement_status_list = refValues.payment_status.map((status: any) => ({
+            value: status.payment_statusref,
+            label: status.description
+        })) || [];
+    
+        const clearSettlementStatusList = () => {
+            setSelectedSettlementStatus([])
+            setIsSettlementStatusDropdownOpen(false)
+            setApplyfilter(true)
+        }
+    
+        const updateSelectedSettlementStatusList = (list: any) => {
+            setSelectedSettlementStatus(list)
+        }
+    
+        const clearSelectedSettlementStatusList = () => {
+            setSelectedSettlementStatus([])
+            setApplyfilter(true)
+        }
+    
+        const applyFilterOfSettlementStatusList  = () => {
+            setApplyfilter(true)
+            setIsSettlementStatusDropdownOpen(false)
+        }
+
      // Close the popup if clicked outside
      useEffect(() => {
         const handleClickOutside = (event: any) => {
@@ -245,7 +283,9 @@ const Orders = () => {
             if (fullfillmentStatusPopupRef.current && !fullfillmentStatusPopupRef.current.contains(event.target)) {
                 setIsFullfillmentStatusDropdownOpen(false); // Close the popup if the click is outside
             }
-
+            if (settlementStatusPopupRef.current && !settlementStatusPopupRef.current.contains(event.target)) {
+                setIsSettlementStatusDropdownOpen(false); // Close the popup if the click is outside
+            }
             if (categoryPopupRef.current && !categoryPopupRef.current.contains(event.target)) {
                 setIsOpen(false); // Close the popup if the click is outside
             }
@@ -271,8 +311,8 @@ const Orders = () => {
         if(selectedCategory && selectedCategory.value === 'customer_name'){
             payload['customer_name']=searchString
         }
-        if(selectedCategory && selectedCategory.value === 'store_order_confirmation_num'){
-            payload['store_order_confirmation_num']=searchString
+        if(selectedCategory && selectedCategory.value === 'store_order_confirmation_number'){
+            payload['store_order_confirmation_number']=searchString
         }
         if(selectedStatus.length > 0){
             payload['order_status']=selectedStatus.map((status: any) => status.value).join(',')
@@ -282,6 +322,9 @@ const Orders = () => {
         }
         if(selectedFullfillmentStatus.length > 0){
             payload['fulfillment_status']=selectedFullfillmentStatus.map((status: any) => status.value).join(',')
+        }
+        if(selectedSettlementStatus.length > 0){
+            payload['settlement_status']=selectedSettlementStatus.map((status: any) => status.value).join(',')
         }
         if(from_date){
             payload['from_date']=formatDate(from_date)
@@ -324,13 +367,14 @@ const Orders = () => {
         return data.map((item: any) => {
             return {
                 order_id: item.order_id,
-                store_order_confirmation_num: item.store_order_confirmation_num? item.store_order_confirmation_num : null,
-                order_created_date: moment(item.order_created_date).format("DD/MM/YYYY"),
+                store_order_confirmation_number: item.store_order_confirmation_number? item.store_order_confirmation_number : null,
+                order_created_date: moment(item.order_created_date).format("DD/MM/YYYY h:mm a"),
                 customer_name: item.customer_name,
                 order_value: formatCurrency(item.store_order_price, item.store_currency),
                 order_status: item.order_status,
                 payment_status: item.payment_status,
                 fulfillment_status: item.fulfillment_status,
+                settlement_status: item.settlement_status,
                 transaction_id: item.transaction_id,
                 order_number: item.order_number,
                 created_date: item.order_created_date,
@@ -403,6 +447,16 @@ const Orders = () => {
             
     }
 
+    const handleSettlementStatusSelectionClick = (values: any) => {
+        if(isSettlementStatusDropdownOpen){
+            setIsSettlementStatusDropdownOpen(false)
+        }
+        else{
+            setIsSettlementStatusDropdownOpen(true)
+        }
+            
+    }
+
     const setColumnsData = (data: any) => {
         setColumns(data);
       }
@@ -450,12 +504,12 @@ const Orders = () => {
         return ''
     }
 
-    // const getPaymentStatus = (item: any) => {
-    //     if(item){
-    //         return payment_status_list.filter((x:any)=>x.value === item)[0].label
-    //     }
-    //     return ''
-    // }
+    const getPaymentStatus = (item: any) => {
+        if(item){
+            return payment_status_list.filter((x:any)=>x.value === item)[0].label
+        }
+        return ''
+    }
 
     return (
         <>
@@ -661,6 +715,57 @@ const Orders = () => {
                                         )
                                     }
                                 </div>
+                                <div className='fullfillment-status-filter-container' ref={settlementStatusPopupRef}>
+                                    <div className="fullfillment-status-selection-container mr-2 px-2 cursor-pointer" onClick={handleSettlementStatusSelectionClick}>
+                                        <p className='mb-0 pl-2 cursor-pointer order-text' >Settlement status
+                                            {
+                                                selectedSettlementStatus.length > 0 &&
+                                                <>
+                                                    <span>&nbsp; is </span>
+                                                    {
+
+                                                        selectedSettlementStatus
+                                                            .map((status: any, index: any) => {
+                                                                return index > 0 ?
+                                                                    <span key={status.value}>,&nbsp;{status.label}
+                                                                    </span>
+                                                                    :
+                                                                    <span key={status.value}>&nbsp;{status.label}
+                                                                    </span>
+                                                            })
+                                                    }
+
+
+                                                </>
+                                            }
+                                        </p>
+                                        {
+                                            selectedSettlementStatus.length > 0 &&
+                                            <p className='mb-0'>&nbsp; <i className='fa fa-close cursor-pointer mb-0 mt-1' onClick={clearSettlementStatusList}></i> </p>
+                                        }
+                                        {
+                                            !isSettlementStatusDropdownOpen && selectedSettlementStatus.length === 0 &&
+                                            <p className='mb-0 d-flex'>&nbsp; <i className='fa fa-caret-down pr-2 cursor-pointer float-right align-self-center' ></i> </p>
+                                        }
+
+                                    </div>
+                                    {
+                                        isSettlementStatusDropdownOpen && (
+                                            <div className="fullfillment-status-selection-dropdown">
+
+                                                <SearchableMultiselectList
+                                                    list={settlement_status_list}
+                                                    selectedItems={selectedSettlementStatus}
+                                                    selectedItemsChanged={updateSelectedSettlementStatusList}
+                                                    clearSelectedItemsList={clearSelectedSettlementStatusList}
+                                                    applySelectedList={applyFilterOfSettlementStatusList}
+                                                    showApply={true}>
+
+                                                </SearchableMultiselectList>
+                                            </div>
+                                        )
+                                    }
+                                </div>
                                 <div className='orders-filter-by-date'>
                                     <p className="align-self-center mb-0 text-nowrap">From:</p>
                                       <DatePicker
@@ -748,7 +853,7 @@ const Orders = () => {
                                                                                                 <td key={col.column}></td>
                                                                                             )
                                                                                             :
-                                                                                            col.column === "fulfillment_statusr" ?
+                                                                                            col.column === "fulfillment_status" ?
                                                                                             (
                                                                                                 item[col.column] ? <td key={col.column}>
                                                                                                     <span
@@ -760,6 +865,13 @@ const Orders = () => {
                                                                                                     {getFulfillmentStatus(item[col.column])}
                                                                                                 </span>
                                                                                                 </td>
+                                                                                                :
+                                                                                                <td key={col.column}></td>
+                                                                                            )
+                                                                                            :
+                                                                                            col.column === "payment_status" ?
+                                                                                            (
+                                                                                                item[col.column] ? <td>{getPaymentStatus(item[col.column])}</td>
                                                                                                 :
                                                                                                 <td key={col.column}></td>
                                                                                             )
