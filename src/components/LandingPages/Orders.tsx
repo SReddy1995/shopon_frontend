@@ -22,6 +22,14 @@ const Orders = () => {
             isVisible: true
         },
         {
+            coltitle: "Confirmation No",
+            column: "store_order_confirmation_num",
+            visibilityDisplayName: "Confirmation No",
+            type: "text",
+            serialNo: 1,
+            isVisible: true
+        },
+        {
             coltitle: "Date & Time",
             visibilityDisplayName: "Date & time",
             column: "order_created_date",
@@ -85,6 +93,7 @@ const Orders = () => {
     const categories_list = [
         {value: 'order_id', label: 'Order ID'},
         {value: 'customer_name', label: 'Customer name'},
+        {value: 'store_order_confirmation_num', label: 'Confirmation No'},
     ]
 
     const updateSelectedCategory = (cat: any) => {
@@ -262,6 +271,9 @@ const Orders = () => {
         if(selectedCategory && selectedCategory.value === 'customer_name'){
             payload['customer_name']=searchString
         }
+        if(selectedCategory && selectedCategory.value === 'store_order_confirmation_num'){
+            payload['store_order_confirmation_num']=searchString
+        }
         if(selectedStatus.length > 0){
             payload['order_status']=selectedStatus.map((status: any) => status.value).join(',')
         }
@@ -312,6 +324,7 @@ const Orders = () => {
         return data.map((item: any) => {
             return {
                 order_id: item.order_id,
+                store_order_confirmation_num: item.store_order_confirmation_num? item.store_order_confirmation_num : null,
                 order_created_date: moment(item.order_created_date).format("DD/MM/YYYY"),
                 customer_name: item.customer_name,
                 order_value: formatCurrency(item.store_order_price, item.store_currency),
