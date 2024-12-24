@@ -316,7 +316,7 @@ const OrderDetails = () => {
                                 <div className="d-flex">
                                     <div>
                                         <h4><span className='cursor-pointer d-flex'><i
-                                            className='fa fa-arrow-circle-left me-2' onClick={navigateToOrderssList}></i>#{selected_order.order_id}</span></h4>
+                                            className='fa fa-arrow-left me-2' onClick={navigateToOrderssList}></i>#{selected_order.order_id}</span></h4>
                                     </div>
                                     {
                                         selected_order.order_status && <p
