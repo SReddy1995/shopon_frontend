@@ -334,7 +334,7 @@ const Orders = () => {
         }
 
         return payload;
-    },[from_date, selectedCategory, selectedFullfillmentStatus, selectedPaymentStatus, selectedStatus, to_date, user_details.buyer_id, searchString])
+    },[from_date, selectedCategory, selectedFullfillmentStatus, selectedPaymentStatus, selectedSettlementStatus, selectedStatus, to_date, user_details.buyer_id, searchString])
 
     const formatDate = (date: any) =>{
         return moment(date).format("DD-MM-YYYY")
