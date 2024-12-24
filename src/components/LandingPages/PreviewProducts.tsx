@@ -93,7 +93,7 @@ const PreviewProducts = () => {
                 <div className="col text-left">
                        
 
-                        <span><h3><i className='fa fa-arrow-circle-left me-2 cursor-pointer' onClick={()=>navigateToProductsList(selectedProductsList)}></i> Shortlisted Products</h3></span>
+                        <span><h3><i className='fa fa-arrow-left me-2 cursor-pointer' onClick={()=>navigateToProductsList(selectedProductsList)}></i> Shortlisted Products</h3></span>
                         
                     </div>
 
