@@ -607,7 +607,7 @@ const Orders = () => {
 
                                     </div>
                                 <div className='orders-status-filter-container' ref={statusPopupRef}>
-                                    <div className="status-selection-container mr-2 px-2 cursor-pointer" onClick={handleStatusSelectionClick}>
+                                    <div className="status-selection-container px-2 cursor-pointer" onClick={handleStatusSelectionClick}>
                                         <p className='mb-0 pl-2 cursor-pointer order-text' >Order status
                                             {
                                                 selectedStatus.length > 0 &&
@@ -658,7 +658,7 @@ const Orders = () => {
                                     }
                                 </div>
                                 <div className='fullfillment-status-filter-container' ref={fullfillmentStatusPopupRef}>
-                                    <div className="fullfillment-status-selection-container mr-2 px-2 cursor-pointer" onClick={handleFullfillmentStatusSelectionClick}>
+                                    <div className="fullfillment-status-selection-container px-2 cursor-pointer" onClick={handleFullfillmentStatusSelectionClick}>
                                         <p className='mb-0 pl-2 cursor-pointer order-text' >Fulfillment status
                                             {
                                                 selectedFullfillmentStatus.length > 0 &&
@@ -709,7 +709,7 @@ const Orders = () => {
                                     }
                                 </div>
                                 <div className='fullfillment-status-filter-container' ref={settlementStatusPopupRef}>
-                                    <div className="fullfillment-status-selection-container mr-2 px-2 cursor-pointer" onClick={handleSettlementStatusSelectionClick}>
+                                    <div className="fullfillment-status-selection-container px-2 cursor-pointer" onClick={handleSettlementStatusSelectionClick}>
                                         <p className='mb-0 pl-2 cursor-pointer order-text' >Settlement status
                                             {
                                                 selectedSettlementStatus.length > 0 &&
