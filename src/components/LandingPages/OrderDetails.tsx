@@ -385,18 +385,26 @@ const OrderDetails = () => {
                                 <div className="d-flex">
                                     <div>
                                         <h4><span className='cursor-pointer d-flex'><i
-                                            className='fa fa-arrow-left me-2' onClick={navigateToOrderssList}></i>#{selected_order.order_id}</span></h4>
+                                            className='fa fa-arrow-left me-2 fa-left-icon' onClick={navigateToOrderssList}></i>#{selected_order.order_id}</span></h4>
+                                    </div>
+                                    <div>
+                                    <span className="status-label">Order : </span> 
                                     </div>
                                     {
+                                        
                                         data.info.order_status && <p
                                         className={
                                             data.info.order_status === "CREATED" || data.info.order_status === "INPROGRESS" || data.info.order_status === "PARTIAL" ? "ml-2 product-draft custom-rounded-border" : 
                                             data.info.order_status === "COMPLETED" ||  data.info.order_status === "ACCEPTED" ? "ml-2 product-active  custom-rounded-border" :
                                             data.info.order_status === "CANCELLED" ? "ml-2 product-danger  custom-rounded-border" : ""
                                         }>
-                                            {getOrderStatus(data.info.order_status)}
+                                             {getOrderStatus(data.info.order_status)}
                                         </p>
                                     }
+                                     <span style={{marginLeft:"10px",marginTop:"5px",color:"grey"}}> | </span>
+                                      <div>
+                                    <span className="status-label">Fulfillment : </span> 
+                                    </div>
                                     {
                                         data.info.fulfillment_status &&  <p
                                         className={
@@ -407,12 +415,22 @@ const OrderDetails = () => {
                                             {getFulfillmentStatus(data.info.fulfillment_status)}
                                         </p>
                                     }
+                                    <span style={{marginLeft:"10px",marginTop:"5px",color:"grey"}}> | </span>
+                                     <div>
+                                    <span className="status-label">Settlement : </span> 
+                                  
+                                    </div>
                                     {
                                         data.info.settlement_status && <p
                                             className="ml-2 product-active  custom-rounded-border">
                                             {getSettlementStatus(data.info.settlement_status)}
                                         </p>
+                                      
                                     }
+                                      <span style={{marginLeft:"10px",marginTop:"5px",color:"grey"}}> | </span>
+                                     <div>
+                                    <span className="status-label">Refund : </span>                                     
+                                    </div>
                                     {
                                         data.info.payment_status && <p
                                         className={
@@ -425,8 +443,10 @@ const OrderDetails = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className="col-12 text-left">
-                            <p className="text-default-grey"><span>{selected_order.created_date ? moment(selected_order.created_date).format('MMMM DD, YYYY [at] h:mm A') : ''}<span>&nbsp;|</span> <span>Transaction Id: </span>{selected_order.transaction_id}</span> <span>|</span> <span>Shopify Order No: {selected_order.order_number} shipped via {data.info.shipping_method}</span></p>
+                        <div className="col-12 text-left order-desc">
+                            <p className="text-default-grey"><span>{selected_order.created_date ? moment(selected_order.created_date).format('MMMM DD, YYYY [at] h:mm A') : ''}<span>&nbsp;|</span> <span>Transaction Id: </span>{selected_order.transaction_id}</span> <span>|</span> <span>Shopify Order No: {selected_order.order_number}</span></p>
+                            <p className="text-default-grey" style={{marginTop:"-10px"}}><span >Shipped Through :  {data.info.shipping_method}</span></p>
+
                         </div>
                         <div className="col-12">
                             <div className="row">
@@ -440,12 +460,12 @@ const OrderDetails = () => {
                                                     return <div key={seller.order_seller_seq} className="card-orders seller-card-container shadow bg-white mb-0 py-3 px-3">
                                                     <div className="seller-wise-order-info" >
                                                         <ul className="paid-grey d-flex pl-0 mb-0">
-                                                            <span className="me-2 mt-1">
+                                                            <span className="me-2 mt-0">
                                                                 {
                                                                     seller.is_ondc_product ? <img src={ondc_product} className="is-ondc-product-image" alt="ondc-product"/> : ''
                                                                 }
                                                             </span>
-                                                            <h4>#{seller.order_seller_seq}</h4>
+                                                            <h4 className="seller-order-id">#{seller.order_seller_seq}</h4>
                                                             <li className="ms-2 bg-default-warning">{getFulfillmentStatus(seller.fulfillment_status)}</li>
                                                             <li className="ms-2 bg-default-grey">{getOrderStatus(seller.ondc_order_state)}</li>
                                                             <li className="ms-2 bg-default-warning">{getSettlementStatus(seller.settlement_status)}</li>
@@ -490,13 +510,13 @@ const OrderDetails = () => {
                                                     </div>
                                                     <div className="provider-seller-info-container px-2 py-2">
                                                         <div className="d-flex justify-content-between">
-                                                                <span className="text-default">{seller?.seller_name} </span>
+                                                                <span >{seller?.seller_name} </span>
                                                         </div>
                                                         <div className="d-flex justify-content-between">
-                                                                <p className="text-default mb-0">{seller?.provider_info?.name}: <span className="text-grey">{seller?.provider_info?.id}</span></p>
+                                                                <span className=" mb-0">{seller?.provider_info?.name}: <span className="text-grey">{seller?.provider_info?.id}</span></span>
                                                         </div>
                                                         <div className="d-flex justify-content-between">
-                                                            <span className="text-default">{seller?.provider_info?.address}</span>
+                                                            <span>{seller?.provider_info?.address}</span>
                                                         </div>
                                                     </div>
                                                     <div className="product-shipping-details-container">
@@ -537,13 +557,13 @@ const OrderDetails = () => {
                                                                                 }
                                                                                 <br /></span>
                                                                                     <span className="font-small text-grey">SKU: {item.sku}</span><br />
-                                                                                    <span className="font-small text-grey">Alt Id: {item.alt_id}</span> <span className="font-small text-grey"> | </span></td>
+                                                                                    <span className="font-small text-grey">Alt Id: {item.alt_id}</span></td>
                                                                                 <td>{item.price}</td>
-                                                                                <td >{item.qty}</td>
-                                                                                <td >{item.pkg_charge}</td>
-                                                                                <td >{item.convenience_fee}</td>
-                                                                                <td >{item.delivery_charge}</td>
-                                                                                <td >{item.tax}</td>
+                                                                                <td className="text-centre">{item.qty}</td>
+                                                                                <td  className="text-centre">{item.pkg_charge}</td>
+                                                                                <td  className="text-centre">{item.convenience_fee}</td>
+                                                                                <td  className="text-centre">{item.delivery_charge}</td>
+                                                                                <td  className="text-centre">{item.tax}</td>
                                                                                 <td className="text-right">{item.total}</td>
             
                                                                             </tr>
@@ -553,31 +573,21 @@ const OrderDetails = () => {
                                                                     </tbody>
                                                                 </table>
                                                             </div>
-                                                            <div className="totals-container">
-                                                                <div className="totals-info p-2">
-                                                                    <div>
+                                                            <div className="seller-wise-totals-container">
+                                                                    <div className="totals-labels">
                                                                         <span className="text-grey">Sub Total: </span>
-                                                                        <span className="text-default">{seller.subTotal}</span>
-                                                                    </div> 
-                                                                </div>
-                                                                <div className="totals-info p-2">
-                                                                    <div>
                                                                         <span className="text-grey">Shipping charges: </span>
-                                                                        <span className="text-default">{seller.shipping_charges}</span>
-                                                                    </div> 
-                                                                </div>
-                                                                <div className="totals-info p-2">
-                                                                    <div>
                                                                         <span className="text-grey">Taxes: </span>
-                                                                        <span className="text-default">{seller.taxes}</span>
-                                                                    </div> 
-                                                                </div>
-                                                                <div className="totals-info p-2">
-                                                                    <div>
+                                                                        <div className="dropdown-divider w-100 my-0"></div>
                                                                         <span className="text-grey">Total: </span>
+                                                                    </div>
+                                                                    <div className="totals-values">
+                                                                        <span className="text-default">{seller.subTotal}</span>
+                                                                        <span className="text-default">{seller.shipping_charges}</span>
+                                                                        <span className="text-default">{seller.taxes}</span>
+                                                                        <div className="dropdown-divider w-100 my-0"></div>
                                                                         <span className="text-default">{seller.total}</span>
-                                                                    </div> 
-                                                                </div>
+                                                                    </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -627,7 +637,7 @@ const OrderDetails = () => {
                                     </div>
                                     {
                                         data?.info &&  <div className="order-details-right-column">
-                                        <div className="card-orders text-left shadow bg-white mb-3 py-3 px-3">
+                                        <div className="card-orders text-left shadow bg-white mb-1 py-3 px-3">
                                             <h6><b>Customer Information</b></h6>
 
                                             <span className="cust-name">{data.info.customer_info?.first_name} {data.info.customer_info?.last_name}</span><br />
@@ -637,7 +647,7 @@ const OrderDetails = () => {
                                             <p className="mb-0">{data.info.customer_info?.city}, {data.info.customer_info?.state}</p>
                                             <p>{data.info.customer_info?.areacode}</p>
                                         </div>
-                                        <div className="card-orders text-left shadow bg-white mb-3 py-3 px-3">
+                                        <div className="card-orders text-left shadow bg-white mb-1 py-3 px-3">
 
                                             <h6><b>Shipping Address</b></h6>
                                             <p className="mb-0">{data.info.shipping_info?.name},</p> 
