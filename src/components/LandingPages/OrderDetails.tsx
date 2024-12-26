@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { updateSelectedOrder } from "../../utils/reduxStore/orderSlice";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { fetchStatusBySeller, fetchTrackOrderBySeller, getOrderDetails } from "../../services/OrdersService";
+import { fetchStatusBySeller, fetchTrackOrderBySeller, getOrderDetails, getUpdatedStatusesForOrder } from "../../services/OrdersService";
 import moment from 'moment';
 import ModalWindow from "./ModalWindow";
 import ReconciliationDetails from "./ReconciliationDetails";
@@ -23,6 +23,7 @@ const OrderDetails = () => {
     const [selectedSellerForMoreActions, setSelectedSellerForMoreActions] = useState<any>(null);
     const [open, setModalOpen] = useState(false);
     const refValues = useSelector((store: any) => store.refValues.referenceList);
+    const [statusUpdating, setStatusUpdating] = useState(false)
     const status_list = refValues.order_staus.map((status: any) => ({
         value: status.eazehuborderstatusref,
         label: status.description
@@ -125,6 +126,7 @@ const OrderDetails = () => {
     };
 
     const getItemsFormatted = (itemsList: any) => itemsList.map((ele: any) => ({
+        store_item_id: ele.store_item_id || null,
         name: ele.store_item_title || null,
         fulfillment_status: ele.fulfillment_state || null,
         sku: ele.store_item_sku || 'NA',
@@ -192,7 +194,7 @@ const OrderDetails = () => {
                     sellers.push({
                         is_ondc_product: element.is_ondc_product || false,
                         ondc_order_state: element.ondc_order_state || null,
-                        fulfillment_status: element.fulfillemnt_status || null,
+                        fulfillment_status: element.eazehub_fulfillment_status || null,
                         settlement_status: element.settlement_status || null,
                         order_seller_seq: element.order_seller_seq,
                         provider_info: getProviderInfo(element),
@@ -287,6 +289,45 @@ const OrderDetails = () => {
         setSelectedSellerForMoreActions(null);
     }
 
+    const updateStatuses = (data: any) => {
+        setData((prevData: any) => ({
+            ...prevData,
+            info: {
+            ...prevData.info,
+            fulfillment_status: data.fulfillment_status,
+            order_status: data.order_status,
+            settlement_status: data.settlement_status,
+            },
+            sellers: prevData.sellers.map((seller: any) => {
+            const updatedSeller = data.seller.find((s: any) => s.order_seller_seq === seller.order_seller_seq);
+            return updatedSeller ? {
+                ...seller,
+                fulfillment_status: updatedSeller.eazehub_fulfillment_status,
+                ondc_order_state: updatedSeller.ondc_order_state,
+                settlement_status: updatedSeller.settlement_status
+                ,
+                items: seller.items.map((item: any) => {
+                    const updatedItem = updatedSeller.orderItemDetails.find((i: any) => i.store_item_id === item.store_item_id);
+                    return updatedItem ? {
+                        ...item,
+                        fulfillment_status: updatedItem.fulfillment_state
+                    } : item;
+                })
+            } : seller;
+            })
+        }));
+    }
+
+    const fetchUpdatedStatuses = () => {
+        const payload = { order_id: selected_order.order_id };
+        getUpdatedStatusesForOrder(payload)
+            .then((data: any) => {
+                if (data) updateStatuses(data);
+                setStatusUpdating(false)
+            })
+            .catch(() => setStatusUpdating(false));
+    }
+
     const getStatusBySeller = (seller: any) => {
         let payload = {
             order_number: selected_order.order_number,
@@ -297,6 +338,10 @@ const OrderDetails = () => {
             .then((data: any) => {
                 console.log("status response = ", data)
                 showSuccessMessage(STATUS_INITIATED_SUCCESSFULLY)
+                setStatusUpdating(true)
+                setTimeout(()=>{
+                    fetchUpdatedStatuses()
+                },5000)
             })
             .catch(err => {
                 
