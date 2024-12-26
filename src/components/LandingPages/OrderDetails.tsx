@@ -35,6 +35,10 @@ const OrderDetails = () => {
         value: status.eazehubfulfillmentstatusref,
         label: status.description
     })) || [];
+    const settlement_status_list = refValues.settlement_status.map((status: any) => ({
+        value: status.eazehubsettlementstatusref,
+        label: status.description
+    })) || [];
 
     const getOrderStatus = (item: any)=> {
         if(item){
@@ -46,6 +50,13 @@ const OrderDetails = () => {
     const getFulfillmentStatus = (item: any)=> {
         if(item && fullfillment_status_list.filter((x:any)=>x.value === item).length>0){
             return fullfillment_status_list.filter((x:any)=>x.value === item)[0].label
+        }
+        return ''
+    }
+
+    const getSettlementStatus = (item: any) => {
+        if(item){
+            return settlement_status_list.filter((x:any)=>x.value === item)[0].label
         }
         return ''
     }
@@ -136,6 +147,32 @@ const OrderDetails = () => {
 
     const getTaxSellerWise = (itemsList: any) => itemsList.reduce((sum: number, ele: any) => sum + getTaxOfItem(ele), 0);
 
+    const getFormattedAddress = (address: any) => {
+        let formattedAddress = '';
+        if (address?.street) formattedAddress += address.street + ', ';
+        if (address?.locality) formattedAddress += address.locality + ', ';
+        if (address?.city) formattedAddress += address.city + ', ';
+        if (address?.state) formattedAddress += address.state + ', ';
+        if (address?.area_code) formattedAddress += address.area_code;
+        return formattedAddress;
+    }
+
+    const getProviderInfo = (seller: any) => {
+        let obj: any ={}
+        if(seller?.bpp_provider_info){
+            obj['id'] = seller.bpp_provider_info.id
+        }
+        if(seller?.bpp_provider_info?.descriptor?.name){
+            obj['name'] = seller.bpp_provider_info.descriptor.name
+        }
+        if(seller?.bpp_provider_info?.locations?.length>0){
+            if(seller.bpp_provider_info.locations[0].address){
+                obj['address'] = getFormattedAddress(seller.bpp_provider_info.locations[0].address)
+            }
+        }
+        return obj;
+    }
+
     const formatResponse = (data: any) => {
 
         let sellers: any = [];
@@ -156,12 +193,10 @@ const OrderDetails = () => {
                         is_ondc_product: element.is_ondc_product || false,
                         ondc_order_state: element.ondc_order_state || null,
                         fulfillment_status: element.fulfillemnt_status || null,
+                        settlement_status: element.settlement_status || null,
                         order_seller_seq: element.order_seller_seq,
-                        provider_name: element.provider_name || '',
-                        seller_id: element.seller_id || null,
-                        seller_name: element.seller_name || '',
-                        seller_phone: element.seller_phone || 'NA',
-                        seller_email: element.seller_email || 'NA',
+                        provider_info: getProviderInfo(element),
+                        seller_name: element.bpp_descriptor_info?.name || null,
                         shipping_profile: element.shipping_profile || 'NA',
                         items: getItemsFormatted(element.orderItemDetails),
                         subTotal: formatCurrency(subTotal, 'INR'),
@@ -178,16 +213,10 @@ const OrderDetails = () => {
             })
         }
 
+        const{ seller, ...filteredValues } = data;
+
         let res = {
-            info: {
-                customer_name: data.customer_name? data.customer_name : 'NA',
-                customer_email: data.customer_email? data.customer_email : null,
-                customer_phone: data.customer_phone? data.customer_phone : null,
-                billing_info: data.billing_info? data.billing_info : null,
-                shipping_info: data.shipping_info? data.shipping_info : null,
-                payment_status: data.payment_status? data.payment_status : null,
-                payment_type: data.payment_type? data.payment_type : 'NA'
-            },
+            info: filteredValues,
             sellers: sellers,
             order_summary: {
                 subTotal: formatCurrency(order_summary_subTotal, 'INR'),
@@ -314,39 +343,45 @@ const OrderDetails = () => {
                                             className='fa fa-arrow-left me-2' onClick={navigateToOrderssList}></i>#{selected_order.order_id}</span></h4>
                                     </div>
                                     {
-                                        selected_order.order_status && <p
+                                        data.info.order_status && <p
                                         className={
-                                            selected_order.order_status === "CREATED" || selected_order.order_status === "INPROGRESS" || selected_order.order_status === "PARTIAL" ? "ml-2 product-draft custom-rounded-border" : 
-                                            selected_order.order_status === "COMPLETED" ||  selected_order.order_status === "ACCEPTED" ? "ml-2 product-active  custom-rounded-border" :
-                                            selected_order.order_status === "CANCELLED" ? "ml-2 product-danger  custom-rounded-border" : ""
+                                            data.info.order_status === "CREATED" || data.info.order_status === "INPROGRESS" || data.info.order_status === "PARTIAL" ? "ml-2 product-draft custom-rounded-border" : 
+                                            data.info.order_status === "COMPLETED" ||  data.info.order_status === "ACCEPTED" ? "ml-2 product-active  custom-rounded-border" :
+                                            data.info.order_status === "CANCELLED" ? "ml-2 product-danger  custom-rounded-border" : ""
                                         }>
-                                            {getOrderStatus(selected_order.order_status)}
+                                            {getOrderStatus(data.info.order_status)}
                                         </p>
                                     }
                                     {
-                                        selected_order.fulfillment_status &&  <p
+                                        data.info.fulfillment_status &&  <p
                                         className={
-                                            selected_order.fulfillment_status === "PENDING" || selected_order.fulfillment_status === "PARTIAL" ? "ml-2 product-draft  custom-rounded-border" : 
-                                            selected_order.fulfillment_status === "DELIVERED" ? "ml-2 product-active  custom-rounded-border" :
-                                            selected_order.fulfillment_status === "CANCELLED" ? "ml-2 product-danger  custom-rounded-border" : ""
+                                            data.info.fulfillment_status === "PENDING" || data.info.fulfillment_status === "PARTIAL" ? "ml-2 product-draft  custom-rounded-border" : 
+                                            data.info.fulfillment_status === "DELIVERED" ? "ml-2 product-active  custom-rounded-border" :
+                                            data.info.fulfillment_status === "CANCELLED" ? "ml-2 product-danger  custom-rounded-border" : ""
                                         }>
-                                            {getFulfillmentStatus(selected_order.fulfillment_status)}
+                                            {getFulfillmentStatus(data.info.fulfillment_status)}
                                         </p>
                                     }
                                     {
-                                        selected_order.payment_status && <p
+                                        data.info.settlement_status && <p
+                                            className="ml-2 product-active  custom-rounded-border">
+                                            {getSettlementStatus(data.info.settlement_status)}
+                                        </p>
+                                    }
+                                    {
+                                        data.info.payment_status && <p
                                         className={
-                                            selected_order.payment_status === "PAID" ? "ml-2 product-active  custom-rounded-border" : 
-                                            selected_order.payment_status === "NOT_PAID" ? "ml-2 product-danger  custom-rounded-border" : ""
+                                            data.info.payment_status === "PAID" ? "ml-2 product-active  custom-rounded-border" : 
+                                            data.info.payment_status === "NOT_PAID" ? "ml-2 product-danger  custom-rounded-border" : ""
                                         }>
-                                            {getPaymentStatus(selected_order.payment_status)}
+                                            {getPaymentStatus(data.info.payment_status)}
                                         </p>
                                     }
                                 </div>
                             </div>
                         </div>
                         <div className="col-12 text-left">
-                            <p className="text-default-grey"><span>Transaction Id: </span>{selected_order.transaction_id} <span>|</span> <span>Shopify Order No: {selected_order.order_number}</span> <span>|</span> <span>{selected_order.created_date ? moment(selected_order.created_date).format('MMMM DD, YYYY [at] h:mm a') : ''} from Eazehub</span></p>
+                            <p className="text-default-grey"><span>{selected_order.created_date ? moment(selected_order.created_date).format('MMMM DD, YYYY [at] h:mm A') : ''}<span>&nbsp;|</span> <span>Transaction Id: </span>{selected_order.transaction_id}</span> <span>|</span> <span>Shopify Order No: {selected_order.order_number} shipped via {data.info.shipping_method}</span></p>
                         </div>
                         <div className="col-12">
                             <div className="row">
@@ -366,10 +401,12 @@ const OrderDetails = () => {
                                                                 }
                                                             </span>
                                                             <h4>#{seller.order_seller_seq}</h4>
-                                                            <li className="ms-2 bg-default-warning">{seller.fulfillment_status}</li>
-                                                            <li className="ms-2 bg-default-grey">{seller.ondc_order_state}</li>
+                                                            <li className="ms-2 bg-default-warning">{getFulfillmentStatus(seller.fulfillment_status)}</li>
+                                                            <li className="ms-2 bg-default-grey">{getOrderStatus(seller.ondc_order_state)}</li>
+                                                            <li className="ms-2 bg-default-warning">{getSettlementStatus(seller.settlement_status)}</li>
                                                         </ul>
-                                                        <button type="button" className="btn-custom button-parent" onClick={()=> openMoreActions(seller.order_seller_seq)} 
+                                                        {
+                                                            seller.is_ondc_product && <button type="button" className="btn-custom button-parent" onClick={()=> openMoreActions(seller.order_seller_seq)} 
                                                             ref={moreActionsPopupRef}>
                                                             More Actions
                                                             {
@@ -402,51 +439,27 @@ const OrderDetails = () => {
                                                                 </div>
                                                             )}
                                                         </button>
+                                                        }
+                                                        
 
                                                     </div>
-                                                    <div className="provider-seller-info-container">
-                                                        <div className="provider-container p-2">
-                                                            <div className="provider-seller-name-container">
-                                                                <span className="text-grey">Provider Name: </span>
-                                                                <span className="text-default">{seller.provider_name}</span>
-                                                            </div>
-        
-                                                            <div className="provider-seller-location-container">
-                                                                <span className="text-grey">Seller Name: </span>
-                                                                <span className="text-default">{seller.seller_name}</span>
-                                                            </div>
+                                                    <div className="provider-seller-info-container px-2 py-2">
+                                                        <div className="d-flex justify-content-between">
+                                                                <span className="text-default">{seller?.seller_name} </span>
                                                         </div>
-                                                        <div className="seller-container p-2">
-
-        
-                                                            <div className="provider-seller-name-container">
-                                                                <span className="text-grey">Phone: </span>
-                                                                <span className="text-default">{seller.seller_phone}</span>
-                                                            </div>
-        
-                                                            <div className="provider-seller-location-container">
-                                                                <span className="text-grey">Email: </span>
-                                                                <span className="text-default">{seller.seller_email}</span>
-                                                            </div>
+                                                        <div className="d-flex justify-content-between">
+                                                                <p className="text-default mb-0">{seller?.provider_info?.name}: <span className="text-grey">{seller?.provider_info?.id}</span></p>
+                                                        </div>
+                                                        <div className="d-flex justify-content-between">
+                                                            <span className="text-default">{seller?.provider_info?.address}</span>
                                                         </div>
                                                     </div>
                                                     <div className="product-shipping-details-container">
-                                                        <div className="shipping-details-container p-2">
-                                                            {/* <div>
-                                                                <span className="text-grey">Delivery method: </span>
-                                                                <span className="text-default">{seller.delivery_method}</span>
-                                                            </div> */}
-        
-                                                            <div>
-                                                                <span className="text-grey">Shipping profile: </span>
-                                                                <span className="text-default">{seller.shipping_profile}</span>
-                                                            </div>
-                                                        </div>
                                                         <div className="product-details-container">
                                                             <div className="table-responsive">
                                                                 <table id="example" className="table table-hover text-left orders-table-custom" data-paging='false' >
                                                                     <thead className="table-light">
-                                                                        <tr>
+                                                                        <tr >
         
         
                                                                             <th colSpan={3} className="border-bottom-none"></th>
@@ -479,8 +492,7 @@ const OrderDetails = () => {
                                                                                 }
                                                                                 <br /></span>
                                                                                     <span className="font-small text-grey">SKU: {item.sku}</span><br />
-                                                                                    <span className="font-small text-grey">Alt Id: {item.alt_id}</span> <span className="font-small text-grey"> | </span>
-                                                                                    <span className="font-small text-grey">Tracking Id: <span className="anchor-text-orders cursor-pointer">{item.tracking_id}</span></span></td>
+                                                                                    <span className="font-small text-grey">Alt Id: {item.alt_id}</span> <span className="font-small text-grey"> | </span></td>
                                                                                 <td>{item.price}</td>
                                                                                 <td >{item.qty}</td>
                                                                                 <td >{item.pkg_charge}</td>
@@ -571,13 +583,18 @@ const OrderDetails = () => {
                                     {
                                         data?.info &&  <div className="order-details-right-column">
                                         <div className="card-orders text-left shadow bg-white mb-3 py-3 px-3">
-                                            <h6><b>Customer</b></h6>
+                                            <h6><b>Customer Information</b></h6>
 
-                                            <span className="cust-name">{data.info.customer_name}</span><br /><br />
-                                            <span className="text-default-orders">Contact Information</span><br />
-                                            <span className="text-grey">{data.info.customer_email ? data.info.customer_email : 'No email provided'}</span><br />
-                                            <span className="cust-name">{data.info.customer_phone ? data.info.customer_phone : 'No phone provided'}</span><br /><br />
-                                            <span className="text-default-orders">Shipping Address</span><br />
+                                            <span className="cust-name">{data.info.customer_info?.first_name} {data.info.customer_info?.last_name}</span><br />
+                                            <span className="text-grey"><i className="fa fa-envelope"></i> {data.info.customer_info?.email ? data.info.customer_info?.email : 'No email provided'}</span><br />
+                                            <p className="mb-0">{data.info.customer_info?.address1},</p>
+                                            <p className="mb-0">{data.info.customer_info?.address2},</p>
+                                            <p className="mb-0">{data.info.customer_info?.city}, {data.info.customer_info?.state}</p>
+                                            <p>{data.info.customer_info?.areacode}</p>
+                                        </div>
+                                        <div className="card-orders text-left shadow bg-white mb-3 py-3 px-3">
+
+                                            <h6><b>Shipping Address</b></h6>
                                             <p className="mb-0">{data.info.shipping_info?.name},</p> 
                                             <p className="mb-0">{data.info.shipping_info?.address1},</p>
                                             <p className="mb-0">{data.info.shipping_info?.address2},</p>
@@ -585,30 +602,19 @@ const OrderDetails = () => {
                                             <p>{data.info.shipping_info?.country} - {data.info.shipping_info?.zip}</p>
                                         </div>
                                         <div className="card-orders text-left shadow bg-white mb-3 py-3 px-3">
-                                            <h6><b>Payment Details</b></h6>
+                                        <h6><b>Payment Details</b></h6>
 
-                                            <div>
-                                                <span className="text-grey">Transaction Id: </span>
-                                                <span className="text-default-black">{selected_order.transaction_id}</span>
-                                            </div>
+                                                <div>
+                                                    <span className="text-default-black">{data.info.payment_gateway.join(', ')}</span>
+                                                </div>
 
-                                            <div>
-                                                <span className="text-grey">Payment Type: </span>
-                                                <span className="text-default-black">{data.info.payment_type}</span>
-                                            </div>
-
-                                            <div>
-                                                <span className="text-grey">Payment Status: </span>
-                                                <span className="text-default-black">{getPaymentStatus(data.info.payment_status)}</span>
-                                            </div>
-                                            <div className="mt-4">
-                                                <span className="text-default-orders">Billing Address</span><br />
+                                                <br/>
+                                            <h6><b>Billing Address</b></h6>
                                                 <p className="mb-0">{data.info.billing_info?.name},</p> 
                                                 <p className="mb-0">{data.info.billing_info?.address1},</p>
                                                 <p className="mb-0">{data.info.billing_info?.address2},</p>
                                                 <p className="mb-0">{data.info.billing_info?.city}, {data.info.billing_info?.province}</p>
                                                 <p>{data.info.billing_info?.country} - {data.info.billing_info?.zip}</p>
-                                            </div>
                                         </div>
                                     </div>
                                     }

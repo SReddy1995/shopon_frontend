@@ -19,7 +19,17 @@ const Orders = () => {
             visibilityDisplayName: "Order ID",
             type: "text",
             serialNo: 1,
-            isVisible: true
+            isVisible: true,
+            minWidth:'80px'
+        },
+        {
+            coltitle: "Shopify ID",
+            column: "order_number",
+            visibilityDisplayName: "Shopify ID",
+            type: "text",
+            serialNo: 1,
+            isVisible: true,
+            minWidth:'80px'
         },
         {
             coltitle: "Confirmation No",
@@ -27,7 +37,8 @@ const Orders = () => {
             visibilityDisplayName: "Confirmation No",
             type: "text",
             serialNo: 1,
-            isVisible: true
+            isVisible: true,
+            minWidth:'125px'
         },
         {
             coltitle: "Date & Time",
@@ -36,6 +47,7 @@ const Orders = () => {
             type: "date",
             serialNo: 2,
             isVisible: true,
+            minWidth:'145px'
         },
         {
             coltitle: "Customer Name",
@@ -44,46 +56,70 @@ const Orders = () => {
             type: "text",
             serialNo: 2,
             isVisible: true,
+            minWidth:'115px'
+        },
+        {
+            coltitle: "Customer Contact",
+            visibilityDisplayName: "Customer contact",
+            column: "customer_contact",
+            type: "text",
+            serialNo: 2,
+            isVisible: true,
+            minWidth:'170px'
+        },
+        {
+            coltitle: "Shipped To",
+            visibilityDisplayName: "Shipped To",
+            column: "shipped_to",
+            type: "text",
+            serialNo: 2,
+            isVisible: true,
+            minWidth:'115px'
+        },
+        {
+            coltitle: "Delivery Location",
+            visibilityDisplayName: "Delivery Location",
+            column: "shipment_place",
+            type: "text",
+            serialNo: 2,
+            isVisible: true,
+            minWidth:'180px'
         },
         {
             coltitle: "Order Value",
-            visibilityDisplayName: "Order value",
+            visibilityDisplayName: "Order Value",
             column: "order_value",
             type: "text",
             serialNo: 2,
             isVisible: true,
+            minWidth:'105px'
         },
         {
             coltitle: "Order Status",
-            visibilityDisplayName: "Order status",
+            visibilityDisplayName: "Order Status",
             column: "order_status",
             type: "active-draft-button",
             serialNo: 3,
             isVisible: true,
+            minWidth:'100px'
         },
         {
-            coltitle: "Payment status",
-            visibilityDisplayName: "Payment status",
-            column: "payment_status",
-            type: "text",
-            serialNo: 2,
-            isVisible: true,
-        },
-        {
-            coltitle: "Fullfillment Status",
+            coltitle: "Fullfill Status",
             visibilityDisplayName: "Fullfillment status",
             column: "fulfillment_status",
             type: "active-draft-button",
             serialNo: 3,
             isVisible: true,
+            minWidth:'100px'
         },
         {
-            coltitle: "Settlement Status",
+            coltitle: "Settle Status",
             visibilityDisplayName: "Settlement status",
             column: "settlement_status",
             type: "active-draft-button",
             serialNo: 3,
             isVisible: true,
+            minWidth:'100px'
         },
        
     ], []);
@@ -100,8 +136,9 @@ const Orders = () => {
     const [searchString, setSearchString] = useState('')
     const categories_list = [
         {value: 'order_id', label: 'Order ID'},
-        {value: 'customer_name', label: 'Customer name'},
-        {value: 'store_order_confirmation_number', label: 'Confirmation No'},
+        {value: 'order_number', label: 'Shopify ID'},
+        {value: 'customer_name', label: 'Customer Name'},
+        {value: 'store_order_confirmation_number', label: 'Confirmation #'},
     ]
 
     const updateSelectedCategory = (cat: any) => {
@@ -160,43 +197,14 @@ const Orders = () => {
         setIsStatusDropdownOpen(false)
     }
 
-    // payment status
-    const paymentStatusPopupRef = useRef<any>(null);
-    const [isPaymentStatusDropdownOpen, setIsPaymentStatusDropdownOpen] = useState(false);
-    const [selectedPaymentStatus, setSelectedPaymentStatus] = useState([])
-
-    const payment_status_list = refValues.payment_status.map((status: any) => ({
-        value: status.payment_statusref,
-        label: status.description
-    })) || [];
-
-    const clearPaymentStatusList = () => {
-        setSelectedPaymentStatus([])
-        setIsPaymentStatusDropdownOpen(false)
-        setApplyfilter(true)
-    }
-
-    const updateSelectedPaymentStatusList = (list: any) => {
-        setSelectedPaymentStatus(list)
-    }
-
-    const clearSelectedPaymentStatusList = () => {
-        setSelectedPaymentStatus([])
-        setApplyfilter(true)
-    }
-
-    const applyFilterOfPaymentStatusList  = () => {
-        setApplyfilter(true)
-        setIsPaymentStatusDropdownOpen(false)
-    }
-
         // fullfillment status
         const fullfillmentStatusPopupRef = useRef<any>(null);
         const [isFullfillmentStatusDropdownOpen, setIsFullfillmentStatusDropdownOpen] = useState(false);
         const [selectedFullfillmentStatus, setSelectedFullfillmentStatus] = useState([])
-        const limit = 20;
+        const limit = 25;
         const [totalPages, setTotalPages] = useState(0);
         const [currentPage, setCurrentPage] = useState(0);
+        const [totalRecords, setTotalRecords] = useState(0);
         const [applyFilter, setApplyfilter] = useState(false)
         const user_details = localStorage.getItem('user_details') ? JSON.parse(localStorage.getItem('user_details') || '{}') : null;
         const [data, setData] = useState<any>([])
@@ -246,8 +254,8 @@ const Orders = () => {
         const [isSettlementStatusDropdownOpen, setIsSettlementStatusDropdownOpen] = useState(false);
         const [selectedSettlementStatus, setSelectedSettlementStatus] = useState([])
     
-        const settlement_status_list = refValues.payment_status.map((status: any) => ({
-            value: status.payment_statusref,
+        const settlement_status_list = refValues.settlement_status.map((status: any) => ({
+            value: status.eazehubsettlementstatusref,
             label: status.description
         })) || [];
     
@@ -276,9 +284,6 @@ const Orders = () => {
         const handleClickOutside = (event: any) => {
             if (statusPopupRef.current && !statusPopupRef.current.contains(event.target)) {
                 setIsStatusDropdownOpen(false); // Close the popup if the click is outside
-            }
-            if (paymentStatusPopupRef.current && !paymentStatusPopupRef.current.contains(event.target)) {
-                setIsPaymentStatusDropdownOpen(false); // Close the popup if the click is outside
             }
             if (fullfillmentStatusPopupRef.current && !fullfillmentStatusPopupRef.current.contains(event.target)) {
                 setIsFullfillmentStatusDropdownOpen(false); // Close the popup if the click is outside
@@ -311,14 +316,14 @@ const Orders = () => {
         if(selectedCategory && selectedCategory.value === 'customer_name'){
             payload['customer_name']=searchString
         }
+        if(selectedCategory && selectedCategory.value === 'order_number'){
+            payload['order_number']=searchString
+        }
         if(selectedCategory && selectedCategory.value === 'store_order_confirmation_number'){
             payload['store_order_confirmation_number']=searchString
         }
         if(selectedStatus.length > 0){
             payload['order_status']=selectedStatus.map((status: any) => status.value).join(',')
-        }
-        if(selectedPaymentStatus.length > 0){
-            payload['payment_status']=selectedPaymentStatus.map((status: any) => status.value).join(',')
         }
         if(selectedFullfillmentStatus.length > 0){
             payload['fulfillment_status']=selectedFullfillmentStatus.map((status: any) => status.value).join(',')
@@ -334,7 +339,7 @@ const Orders = () => {
         }
 
         return payload;
-    },[from_date, selectedCategory, selectedFullfillmentStatus, selectedPaymentStatus, selectedSettlementStatus, selectedStatus, to_date, user_details.buyer_id, searchString])
+    },[from_date, selectedCategory, selectedFullfillmentStatus, selectedSettlementStatus, selectedStatus, to_date, user_details.buyer_id, searchString])
 
     const formatDate = (date: any) =>{
         return moment(date).format("DD-MM-YYYY")
@@ -363,16 +368,68 @@ const Orders = () => {
         navigate("/landing-page/orders/order-details")
     }
 
+    const getCustomerContact = (item: any) => {
+        let str = ''
+        let contatenator = ''
+        if(item.customer_email){
+            str = str + contatenator + item.customer_email
+            contatenator = ', '
+        }
+        if(item.customer_phone){
+            str = str + contatenator + item.customer_phone
+        }
+
+        return str;
+    }
+
+    const getShippedTo = (item: any) => {
+        let str = ''
+        let contatenator = ''
+        if(item.shipping_info){
+            if(item.shipping_info.name){
+                str = str + contatenator + item.shipping_info.name
+                contatenator = ', '
+            }
+            if(item.shipping_info.phone){
+                str = str + contatenator + item.shipping_info.phone
+            }
+        }
+
+        return str;
+    }
+
+    const getShipmentPlace = (item: any) => {
+        let str = ''
+        let contatenator = ''
+        if(item.shipping_info){
+            if(item.shipping_info.city){
+                str = str + contatenator + item.shipping_info.city
+                contatenator = ', '
+            }
+            if(item.shipping_info.province){
+                str = str + contatenator + item.shipping_info.province
+                contatenator = ', '
+            }
+            if(item.shipping_info.zip){
+                str = str + contatenator + item.shipping_info.zip
+            }
+        }
+
+        return str;
+    }
+
     const formatResponse = useCallback((data: any) => {
         return data.map((item: any) => {
             return {
                 order_id: item.order_id,
                 store_order_confirmation_number: item.store_order_confirmation_number? item.store_order_confirmation_number : null,
-                order_created_date: moment(item.order_created_date).format("DD/MM/YYYY h:mm a"),
+                order_created_date: moment(item.order_created_date).format("DD/MM/YYYY h:mm A"),
                 customer_name: item.customer_name,
+                customer_contact: getCustomerContact(item),
+                shipped_to: getShippedTo(item),
+                shipment_place: getShipmentPlace(item),
                 order_value: formatCurrency(item.store_order_price, item.store_currency),
                 order_status: item.order_status,
-                payment_status: item.payment_status,
                 fulfillment_status: item.fulfillment_status,
                 settlement_status: item.settlement_status,
                 transaction_id: item.transaction_id,
@@ -407,6 +464,7 @@ const Orders = () => {
                 if(data.pagination){
                     setTotalPages(data.pagination.totalPages)
                     setCurrentPage(data.pagination.currentPage)
+                    setTotalRecords(data.pagination.totalRecords)
                 }
             }
             setLoading(false)
@@ -423,16 +481,6 @@ const Orders = () => {
         }
         else{
             setIsStatusDropdownOpen(true)
-        }
-            
-    }
-
-    const handlePaymentStatusSelectionClick = (values: any) => {
-        if(isPaymentStatusDropdownOpen){
-            setIsPaymentStatusDropdownOpen(false)
-        }
-        else{
-            setIsPaymentStatusDropdownOpen(true)
         }
             
     }
@@ -477,7 +525,6 @@ const Orders = () => {
         setSelectedCategory(null)
         setSearchString('')
         setSelectedStatus([])
-        setSelectedPaymentStatus([])
         setSelectedFullfillmentStatus([])
         setFromDate(null)
         setToDate(null)
@@ -504,19 +551,16 @@ const Orders = () => {
         return ''
     }
 
-    const getPaymentStatus = (item: any) => {
-        if(item){
-            return payment_status_list.filter((x:any)=>x.value === item)[0].label
-        }
-        return ''
-    }
-
     return (
         <>
             <div className="container-fluid h-auto mt-3 px-4">
                 <div className="row mt-1">
-                    <div className="col-12 text-left">
+                    <div className="col-12 d-flex align-items-center">
                         <h3>Orders</h3>
+                        <span><strong>
+                        <i className="fa fa-cart-plus"></i>
+                        <span className="px-2 total-orders-text">{totalRecords} orders</span></strong></span>
+                      
                     </div>
                 </div>
                 <div className="row mt-1">
@@ -606,57 +650,6 @@ const Orders = () => {
                                                     selectedItemsChanged={updateSelectedStatusList}
                                                     clearSelectedItemsList={clearSelectedStatusList}
                                                     applySelectedList={applyFilterOfStatusList}
-                                                    showApply={true}>
-
-                                                </SearchableMultiselectList>
-                                            </div>
-                                        )
-                                    }
-                                </div>
-                                <div className='payment-status-filter-container' ref={paymentStatusPopupRef}>
-                                    <div className="payment-status-selection-container mr-2 px-2 cursor-pointer" onClick={handlePaymentStatusSelectionClick}>
-                                        <p className='mb-0 pl-2 cursor-pointer order-text' >Payment status
-                                            {
-                                                selectedPaymentStatus.length > 0 &&
-                                                <>
-                                                    <span>&nbsp; is </span>
-                                                    {
-
-                                                        selectedPaymentStatus
-                                                            .map((status: any, index: any) => {
-                                                                return index > 0 ?
-                                                                    <span key={status.value}>,&nbsp;{status.label}
-                                                                    </span>
-                                                                    :
-                                                                    <span key={status.value}>&nbsp;{status.label}
-                                                                    </span>
-                                                            })
-                                                    }
-
-
-                                                </>
-                                            }
-                                        </p>
-                                        {
-                                            selectedPaymentStatus.length > 0 &&
-                                            <p className='mb-0'>&nbsp; <i className='fa fa-close cursor-pointer mb-0 mt-1' onClick={clearPaymentStatusList}></i> </p>
-                                        }
-                                        {
-                                            !isPaymentStatusDropdownOpen && selectedPaymentStatus.length === 0 &&
-                                            <p className='mb-0 d-flex'>&nbsp; <i className='fa fa-caret-down pr-2 cursor-pointer float-right align-self-center' ></i> </p>
-                                        }
-
-                                    </div>
-                                    {
-                                        isPaymentStatusDropdownOpen && (
-                                            <div className="payment-status-selection-dropdown">
-
-                                                <SearchableMultiselectList
-                                                    list={payment_status_list}
-                                                    selectedItems={selectedPaymentStatus}
-                                                    selectedItemsChanged={updateSelectedPaymentStatusList}
-                                                    clearSelectedItemsList={clearSelectedPaymentStatusList}
-                                                    applySelectedList={applyFilterOfPaymentStatusList}
                                                     showApply={true}>
 
                                                 </SearchableMultiselectList>
@@ -839,7 +832,7 @@ const Orders = () => {
                                                                                         :
                                                                                         col.column === "order_status" ?
                                                                                             (
-                                                                                                item[col.column] ? <td key={col.column}>
+                                                                                                item[col.column] ? <td className='text-center' key={col.column}>
                                                                                                 <span
                                                                                                 className={
                                                                                                     item[col.column] === "CREATED" || item[col.column] === "INPROGRESS" || item[col.column] === "PARTIAL" ? "product-draft" : 
@@ -855,7 +848,7 @@ const Orders = () => {
                                                                                             :
                                                                                             col.column === "fulfillment_status" ?
                                                                                             (
-                                                                                                item[col.column] ? <td key={col.column}>
+                                                                                                item[col.column] ? <td className='text-center' key={col.column}>
                                                                                                     <span
                                                                                                 className={
                                                                                                     item[col.column] === "PENDING" || item[col.column] === "PARTIAL" ? "product-draft" : 
@@ -865,13 +858,6 @@ const Orders = () => {
                                                                                                     {getFulfillmentStatus(item[col.column])}
                                                                                                 </span>
                                                                                                 </td>
-                                                                                                :
-                                                                                                <td key={col.column}></td>
-                                                                                            )
-                                                                                            :
-                                                                                            col.column === "payment_status" ?
-                                                                                            (
-                                                                                                item[col.column] ? <td>{getPaymentStatus(item[col.column])}</td>
                                                                                                 :
                                                                                                 <td key={col.column}></td>
                                                                                             )
