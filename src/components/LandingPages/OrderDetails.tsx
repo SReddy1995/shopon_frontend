@@ -551,73 +551,74 @@ const OrderDetails = () => {
                                                         
                          
                                                     </div>
-                                                    <div className="seller-wise-statuses-container">
-                                                            <div>
+                                                    {
+                                                            seller.is_ondc_product && <div className="seller-wise-statuses-container">
+
                                                                 <span className="status-label ml-0">Order : </span>
-                                                            </div>
-                                                            {
-                                                                statusUpdating ?
-                                                                    <p
-                                                                        className="ml-2 mb-0 product-active bg-default-grey  custom-rounded-border">
-                                                                        ...
-                                                                    </p>
-                                                                    :
-                                                                    seller.ondc_order_state && <p
-                                                                    className={
-                                                                        seller.ondc_order_state === "CREATED" || seller.ondc_order_state === "INPROGRESS" || seller.ondc_order_state === "PARTIAL" ? "ml-2 mb-0 product-draft custom-rounded-border" :
-                                                                        seller.ondc_order_state === "COMPLETED" || seller.ondc_order_state === "ACCEPTED" ? "ml-2 mb-0 product-active  custom-rounded-border" :
-                                                                        seller.ondc_order_state === "CANCELLED" ? "ml-2 mb-0 product-danger  custom-rounded-border" : ""
-                                                                    }>
-                                                                    {getOrderStatus(seller.ondc_order_state)}
-                                                                </p>
-                                                            }
-                                                            <span style={{marginLeft:"10px",marginTop:"5px",color:"grey"}}> | </span>
-                                                            <div>
+
+                                                                {
+                                                                    statusUpdating ?
+                                                                        <p
+                                                                            className="ml-2 mb-0 product-active bg-default-grey  custom-rounded-border">
+                                                                            ...
+                                                                        </p>
+                                                                        :
+                                                                        seller.ondc_order_state && <p
+                                                                            className={
+                                                                                seller.ondc_order_state === "CREATED" || seller.ondc_order_state === "INPROGRESS" || seller.ondc_order_state === "PARTIAL" ? "ml-2 mb-0 product-draft custom-rounded-border" :
+                                                                                    seller.ondc_order_state === "COMPLETED" || seller.ondc_order_state === "ACCEPTED" ? "ml-2 mb-0 product-active  custom-rounded-border" :
+                                                                                        seller.ondc_order_state === "CANCELLED" ? "ml-2 mb-0 product-danger  custom-rounded-border" : ""
+                                                                            }>
+                                                                            {getOrderStatus(seller.ondc_order_state)}
+                                                                        </p>
+                                                                }
+                                                                <span style={{ marginLeft: "10px", marginTop: "5px", color: "grey" }}> | </span>
+
                                                                 <span className="status-label">Settlement : </span>
-                                                            </div>
-                                                            {
-                                                                statusUpdating ?
-                                                                    <p
-                                                                        className="ml-2 mb-0 product-active bg-default-grey  custom-rounded-border">
-                                                                        ...
-                                                                    </p>
-                                                                    :
-                                                                    seller.settlement_status &&  <p
-                                                                    className={
-                                                                        seller.settlement_status === "INITIATED" || seller.settlement_status === "PARTIAL" || seller.settlement_status === "PENDING" ? "ml-2 mb-0 product-draft  custom-rounded-border" : 
-                                                                        seller.settlement_status === "SETTLED" ? "ml-2 mb-0 product-active  custom-rounded-border" :
-                                                                        seller.settlement_status === "NOT_SETTLED" ? "ml-2 mb-0 product-danger  custom-rounded-border" : ""
-                                                                    }>
-                                                                    {getSettlementStatus(seller.settlement_status)}
-                                                                </p>
-                                                            }
-                                                            <span style={{marginLeft:"10px",marginTop:"5px",color:"grey"}}> | </span>
-                                                            <div>
+
+                                                                {
+                                                                    statusUpdating ?
+                                                                        <p
+                                                                            className="ml-2 mb-0 product-active bg-default-grey  custom-rounded-border">
+                                                                            ...
+                                                                        </p>
+                                                                        :
+                                                                        seller.settlement_status && <p
+                                                                            className={
+                                                                                seller.settlement_status === "INITIATED" || seller.settlement_status === "PARTIAL" || seller.settlement_status === "PENDING" ? "ml-2 mb-0 product-draft  custom-rounded-border" :
+                                                                                    seller.settlement_status === "SETTLED" ? "ml-2 mb-0 product-active  custom-rounded-border" :
+                                                                                        seller.settlement_status === "NOT_SETTLED" ? "ml-2 mb-0 product-danger  custom-rounded-border" : ""
+                                                                            }>
+                                                                            {getSettlementStatus(seller.settlement_status)}
+                                                                        </p>
+                                                                }
+                                                                <span style={{ marginLeft: "10px", marginTop: "5px", color: "grey" }}> | </span>
+
                                                                 <span className="status-label">Fulfillment : </span>
+
+                                                                {
+                                                                    statusUpdating ?
+                                                                        <p
+                                                                            className="ml-2 mb-0 product-active bg-default-grey  custom-rounded-border">
+                                                                            ...
+                                                                        </p>
+                                                                        :
+                                                                        seller.fulfillment_status && <p
+                                                                            className={
+                                                                                seller.fulfillment_status === "PENDING" || seller.fulfillment_status === "PARTIAL" ||
+                                                                                    seller.fulfillment_status === "AGENT_ASSIGNED" || seller.fulfillment_status === "AT_DESTINATION_HUB" ||
+                                                                                    seller.fulfillment_status === "IN_TRANSIT" || seller.fulfillment_status === "RTO_INITIATED" ? "ml-2 mb-0 product-draft  custom-rounded-border" :
+                                                                                    seller.fulfillment_status === "PACKED" || seller.fulfillment_status === "OUT_FOR_DELIVERY" ||
+                                                                                        seller.fulfillment_status === "ORDER_DELIVERED" || seller.fulfillment_status === "ORDER_PICKED_UP" ||
+                                                                                        seller.fulfillment_status === "OUT_FOR_PICKUP" || seller.fulfillment_status === "RTO_DELIVERED" ? "ml-2 mb-0 product-active  custom-rounded-border" :
+                                                                                        seller.fulfillment_status === "CANCELLED" || seller.fulfillment_status === "DELIVERY_FAILED" ||
+                                                                                            seller.fulfillment_status === "PICKUP_FAILED" || seller.fulfillment_status === "RTO_DISPOSED" ? "ml-2 mb-0 product-danger  custom-rounded-border" : ""
+                                                                            }>
+                                                                            {getFulfillmentStatus(seller.fulfillment_status)}
+                                                                        </p>
+                                                                }
                                                             </div>
-                                                            {
-                                                                statusUpdating ?
-                                                                    <p
-                                                                        className="ml-2 mb-0 product-active bg-default-grey  custom-rounded-border">
-                                                                        ...
-                                                                    </p>
-                                                                    :
-                                                                    seller.fulfillment_status &&  <p
-                                                                    className={
-                                                                        seller.fulfillment_status === "PENDING" || seller.fulfillment_status === "PARTIAL" ||
-                                                                        seller.fulfillment_status === "AGENT_ASSIGNED" || seller.fulfillment_status === "AT_DESTINATION_HUB" ||
-                                                                        seller.fulfillment_status === "IN_TRANSIT" || seller.fulfillment_status === "RTO_INITIATED" ? "ml-2 mb-0 product-draft  custom-rounded-border" : 
-                                                                        seller.fulfillment_status === "PACKED" || seller.fulfillment_status === "OUT_FOR_DELIVERY" ||
-                                                                        seller.fulfillment_status === "ORDER_DELIVERED" || seller.fulfillment_status === "ORDER_PICKED_UP" ||
-                                                                        seller.fulfillment_status === "OUT_FOR_PICKUP" || seller.fulfillment_status === "RTO_DELIVERED" ? "ml-2 mb-0 product-active  custom-rounded-border" :
-                                                                        seller.fulfillment_status === "CANCELLED" || seller.fulfillment_status === "DELIVERY_FAILED" ||
-                                                                        seller.fulfillment_status === "PICKUP_FAILED" || seller.fulfillment_status === "RTO_DISPOSED" ? "ml-2 mb-0 product-danger  custom-rounded-border" : ""
-                                                                    }>
-                                                                    {getFulfillmentStatus(seller.fulfillment_status)}
-                                                                </p>
-                                                            }
-                                                        </div>
-                                                   
+                                                    }
                                                    {
                                                         seller.seller_id !== "shopify" && <div className="provider-seller-info-container px-2 py-2">
                                                             <div className="d-flex align-items-center">
@@ -683,14 +684,14 @@ const OrderDetails = () => {
                                                                                 <td>
                                                                                 <span><b>{item.name}</b>
                                                                                         {
-                                                                                            statusUpdating && <span
+                                                                                            seller.is_ondc_product && statusUpdating && <span
                                                                                             className="ml-2 product-active bg-default-grey  custom-rounded-border">
                                                                                             ...
                                                                                             </span>
 
                                                                                         }
                                                                                         {
-                                                                                            !statusUpdating && item.fulfillment_status && <span
+                                                                                            seller.is_ondc_product && !statusUpdating && item.fulfillment_status && <span
                                                                                             className={
                                                                                                 item.fulfillment_status === "PENDING" || item.fulfillment_status === "PARTIAL" ||
                                                                                                 item.fulfillment_status === "AGENT_ASSIGNED" || item.fulfillment_status === "AT_DESTINATION_HUB" ||
