@@ -436,7 +436,11 @@ const OrderDetails = () => {
                                         </p>
                                         :
                                         data.info.settlement_status && <p
-                                            className="ml-2 product-active  custom-rounded-border">
+                                        className={
+                                            data.info.settlement_status === "INITIATED" || data.info.settlement_status === "PARTIAL" || data.info.settlement_status === "PENDING" ? "ml-2 product-draft  custom-rounded-border" : 
+                                            data.info.settlement_status === "SETTLED" ? "ml-2 product-active  custom-rounded-border" :
+                                            data.info.settlement_status === "NOT_SETTLED" ? "ml-2 product-danger  custom-rounded-border" : ""
+                                        }>
                                             {getSettlementStatus(data.info.settlement_status)}
                                         </p>
                                       
