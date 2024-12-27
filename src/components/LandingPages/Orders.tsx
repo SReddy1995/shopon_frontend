@@ -551,6 +551,13 @@ const Orders = () => {
         return ''
     }
 
+    const getSettlementStatus = (item: any) => {
+        if(item){
+            return settlement_status_list.filter((x:any)=>x.value === item)[0].label
+        }
+        return ''
+    }
+
     return (
         <>
             <div className="container-fluid h-auto mt-3 px-4">
@@ -587,7 +594,7 @@ const Orders = () => {
                                         </div>
 
                                         <div className="search d-flex">
-                                            <input className="search_input" type="text" name="" value={searchString} placeholder="search here" 
+                                            <input className="search_input" type="text" name="" value={searchString} placeholder="" 
                                             onChange={handleSearchStringChange} onKeyDown={handleEnterPressForSearch}/>
                                             <span className="search_icon cursor-pointer" onClick={()=>setApplyfilter(true)}><i className="fa fa-search"></i></span>
                                         </div>
@@ -856,6 +863,22 @@ const Orders = () => {
                                                                                                     item[col.column] === "CANCELLED" ? "product-danger" : ""
                                                                                                 }>
                                                                                                     {getFulfillmentStatus(item[col.column])}
+                                                                                                </span>
+                                                                                                </td>
+                                                                                                :
+                                                                                                <td key={col.column}></td>
+                                                                                            )
+                                                                                            :
+                                                                                            col.column === "settlement_status" ?
+                                                                                            (
+                                                                                                item[col.column] ? <td className='text-center' key={col.column}>
+                                                                                                    <span
+                                                                                                className={
+                                                                                                    item[col.column] === "INITIATED" || item[col.column] === "PARTIAL" || item[col.column] === "PENDING" ? "product-draft" : 
+                                                                                                    item[col.column] === "SETTLED" ? "product-active" :
+                                                                                                    item[col.column] === "NOT_SETTLED" ? "product-danger" : ""
+                                                                                                }>
+                                                                                                    {getSettlementStatus(item[col.column])}
                                                                                                 </span>
                                                                                                 </td>
                                                                                                 :

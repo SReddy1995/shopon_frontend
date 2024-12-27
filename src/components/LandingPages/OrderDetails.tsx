@@ -151,11 +151,27 @@ const OrderDetails = () => {
 
     const getFormattedAddress = (address: any) => {
         let formattedAddress = '';
-        if (address?.street) formattedAddress += address.street + ', ';
-        if (address?.locality) formattedAddress += address.locality + ', ';
-        if (address?.city) formattedAddress += address.city + ', ';
-        if (address?.state) formattedAddress += address.state + ', ';
-        if (address?.area_code) formattedAddress += address.area_code;
+        let concatenator = '';
+        if (address?.street){
+            formattedAddress += concatenator + address.street;
+            concatenator = ', ';
+        } 
+        if (address?.locality) {
+            formattedAddress += concatenator + address.locality ;
+            concatenator = ', ';
+        }
+        if (address?.city) {
+            formattedAddress += concatenator + address.city ;
+            concatenator = ', ';
+        }
+        if (address?.state){
+            formattedAddress += concatenator + address.state;
+            concatenator = ', ';
+        } 
+        if (address?.area_code){
+            formattedAddress += concatenator + address.area_code;
+            concatenator = ', ';
+        } 
         return formattedAddress;
     }
 
@@ -219,7 +235,7 @@ const OrderDetails = () => {
 
         let res = {
             info: filteredValues,
-            sellers: sellers,
+            sellers: sellers.sort((a: any, b: any) => a.order_seller_seq.localeCompare(b.order_seller_seq)),
             order_summary: {
                 subTotal: formatCurrency(order_summary_subTotal, 'INR'),
                 itemsCount,
@@ -444,7 +460,7 @@ const OrderDetails = () => {
                                         </p>
                                       
                                     }
-                                      <span style={{marginLeft:"10px",marginTop:"5px",color:"grey"}}> | </span>
+                                      {/* <span style={{marginLeft:"10px",marginTop:"5px",color:"grey"}}> | </span>
                                      <div>
                                     <span className="status-label">Refund : </span>                                     
                                     </div>
@@ -462,7 +478,7 @@ const OrderDetails = () => {
                                         }>
                                             {getPaymentStatus(data.info.payment_status)}
                                         </p>
-                                    }
+                                    } */}
                                 </div>
                             </div>
                         </div>
@@ -561,9 +577,12 @@ const OrderDetails = () => {
 
                                                     </div>
                                                     <div className="provider-seller-info-container px-2 py-2">
-                                                        <div className="d-flex justify-content-between">
-                                                                <span >{seller?.seller_name} </span>
-                                                        </div>
+                                                        {
+                                                            seller?.seller_name !== seller?.provider_info?.name && <div className="d-flex justify-content-between">
+                                                                    <span >{seller?.seller_name} </span>
+                                                            </div>
+                                                        }
+                                                        
                                                         <div className="d-flex justify-content-between">
                                                                 <span className=" mb-0">{seller?.provider_info?.name}: <span className="text-grey">{seller?.provider_info?.id}</span></span>
                                                         </div>
@@ -588,7 +607,7 @@ const OrderDetails = () => {
         
                                                                         <tr>
         
-                                                                            <th style={{ width: "85%" }} >Product Details</th>
+                                                                            <th style={{ width: "85%" }} >Product</th>
                                                                             <th >Price</th>
                                                                             <th >Qty</th>
                                                                             <th >Pkg</th>
@@ -708,19 +727,37 @@ const OrderDetails = () => {
 
                                             <span className="cust-name">{data.info.customer_info?.first_name} {data.info.customer_info?.last_name}</span><br />
                                             <span className="text-grey"><i className="fa fa-envelope"></i> {data.info.customer_info?.email ? data.info.customer_info?.email : 'No email provided'}</span><br />
-                                            <p className="mb-0">{data.info.customer_info?.address1},</p>
-                                            <p className="mb-0">{data.info.customer_info?.address2},</p>
-                                            <p className="mb-0">{data.info.customer_info?.city}, {data.info.customer_info?.state}</p>
-                                            <p>{data.info.customer_info?.areacode}</p>
+                                            {
+                                                data.info.customer_info?.address1 && <p className="mb-0">{data.info.customer_info?.address1},</p>
+                                            }
+                                            {
+                                                data.info.customer_info?.address2 && <p className="mb-0">{data.info.customer_info?.address2},</p>
+                                            }
+                                            {
+                                                data.info.customer_info?.city && <p className="mb-0">{data.info.customer_info?.city}, {data.info.customer_info?.state}</p>
+                                            }
+                                            {
+                                                data.info.customer_info?.areacode && <p>{data.info.customer_info?.areacode}</p> 
+                                            }
                                         </div>
                                         <div className="card-orders text-left shadow bg-white mb-1 py-3 px-3">
 
                                             <h6><b>Shipping Address</b></h6>
-                                            <p className="mb-0">{data.info.shipping_info?.name},</p> 
-                                            <p className="mb-0">{data.info.shipping_info?.address1},</p>
-                                            <p className="mb-0">{data.info.shipping_info?.address2},</p>
-                                            <p className="mb-0">{data.info.shipping_info?.city}, {data.info.shipping_info?.province}</p>
-                                            <p>{data.info.shipping_info?.country} - {data.info.shipping_info?.zip}</p>
+                                            {
+                                                data.info.shipping_info?.name && <p className="mb-0">{data.info.shipping_info?.name},</p> 
+                                            }
+                                            {
+                                                data.info.shipping_info?.address1 && <p className="mb-0">{data.info.shipping_info?.address1},</p>
+                                            }
+                                            {
+                                                data.info.shipping_info?.address2 && <p className="mb-0">{data.info.shipping_info?.address2},</p>
+                                            }
+                                            {
+                                                data.info.shipping_info?.city && <p className="mb-0">{data.info.shipping_info?.city}, {data.info.shipping_info?.province}</p>
+                                            }
+                                            {
+                                                data.info.shipping_info?.country && <p>{data.info.shipping_info?.country} - {data.info.shipping_info?.zip}</p>
+                                            }
                                         </div>
                                         <div className="card-orders text-left shadow bg-white mb-3 py-3 px-3">
                                         <h6><b>Payment Details</b></h6>
@@ -731,11 +768,21 @@ const OrderDetails = () => {
 
                                                 <br/>
                                             <h6><b>Billing Address</b></h6>
-                                                <p className="mb-0">{data.info.billing_info?.name},</p> 
-                                                <p className="mb-0">{data.info.billing_info?.address1},</p>
-                                                <p className="mb-0">{data.info.billing_info?.address2},</p>
-                                                <p className="mb-0">{data.info.billing_info?.city}, {data.info.billing_info?.province}</p>
-                                                <p>{data.info.billing_info?.country} - {data.info.billing_info?.zip}</p>
+                                            {
+                                                data.info.billing_info?.name && <p className="mb-0">{data.info.billing_info?.name},</p> 
+                                            }
+                                            {
+                                                data.info.billing_info?.address1 && <p className="mb-0">{data.info.billing_info?.address1},</p>
+                                            }
+                                            {
+                                                data.info.billing_info?.address2 && <p className="mb-0">{data.info.billing_info?.address2},</p>
+                                            }
+                                            {
+                                                data.info.billing_info?.city && <p className="mb-0">{data.info.billing_info?.city}, {data.info.billing_info?.province}</p>
+                                            }
+                                            {
+                                                data.info.billing_info?.country && <p>{data.info.billing_info?.country} - {data.info.billing_info?.zip}</p>
+                                            }
                                         </div>
                                     </div>
                                     }
