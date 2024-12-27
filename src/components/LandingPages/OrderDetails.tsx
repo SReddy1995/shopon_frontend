@@ -212,6 +212,7 @@ const OrderDetails = () => {
                         ondc_order_state: element.ondc_order_state || null,
                         fulfillment_status: element.eazehub_fulfillment_status || null,
                         settlement_status: element.settlement_status || null,
+                        seller_id: element.seller_id || null,
                         order_seller_seq: element.order_seller_seq,
                         provider_info: getProviderInfo(element),
                         seller_name: element.bpp_descriptor_info?.name || null,
@@ -607,7 +608,8 @@ const OrderDetails = () => {
                                                             }
                                                         </div>
                                                    
-                                                    <div className="provider-seller-info-container px-2 py-2">
+                                                   {
+                                                        seller.seller_id !== "shopify" && <div className="provider-seller-info-container px-2 py-2">
                                                         {
                                                             seller?.seller_name !== seller?.provider_info?.name && <div className="d-flex justify-content-between">
                                                                     <span >{seller?.seller_name} </span>
@@ -621,6 +623,9 @@ const OrderDetails = () => {
                                                             <span>{seller?.provider_info?.address}</span>
                                                         </div>
                                                     </div>
+
+                                                   }
+                                                    
                                                     <div className="product-shipping-details-container">
                                                         <div className="product-details-container">
                                                             <div className="table-responsive">
