@@ -858,9 +858,14 @@ const Orders = () => {
                                                                                                 item[col.column] ? <td className='text-center' key={col.column}>
                                                                                                     <span
                                                                                                 className={
-                                                                                                    item[col.column] === "PENDING" || item[col.column] === "PARTIAL" ? "product-draft" : 
-                                                                                                    item[col.column] === "PACKED" || item[col.column] === "OUT_FOR_DELIVERY"? " product-active" :
-                                                                                                    item[col.column] === "CANCELLED" ? "product-danger" : ""
+                                                                                                    item[col.column] === "PENDING" || item[col.column] === "PARTIAL" ||
+                                                                                                    item[col.column] === "AGENT_ASSIGNED" || item[col.column] === "AT_DESTINATION_HUB" ||
+                                                                                                    item[col.column] === "IN_TRANSIT" || item[col.column] === "RTO_INITIATED" ? "product-draft" : 
+                                                                                                    item[col.column] === "PACKED" || item[col.column] === "OUT_FOR_DELIVERY" ||
+                                                                                                    item[col.column] === "ORDER_DELIVERED" || item[col.column] === "ORDER_PICKED_UP" ||
+                                                                                                    item[col.column] === "OUT_FOR_PICKUP" || item[col.column] === "RTO_DELIVERED" ? " product-active" :
+                                                                                                    item[col.column] === "CANCELLED" || item[col.column] === "DELIVERY_FAILED" ||
+                                                                                                    item[col.column] === "PICKUP_FAILED" || item[col.column] === "RTO_DISPOSED" ? "product-danger" : ""
                                                                                                 }>
                                                                                                     {getFulfillmentStatus(item[col.column])}
                                                                                                 </span>

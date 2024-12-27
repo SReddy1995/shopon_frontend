@@ -454,9 +454,14 @@ const OrderDetails = () => {
                                         :
                                         data.info.fulfillment_status &&  <p
                                         className={
-                                            data.info.fulfillment_status === "PENDING" || data.info.fulfillment_status === "PARTIAL" ? "ml-2 product-draft  custom-rounded-border" : 
-                                            data.info.fulfillment_status === "PACKED" || data.info.fulfillment_status === "OUT_FOR_DELIVERY" ? "ml-2 product-active  custom-rounded-border" :
-                                            data.info.fulfillment_status === "CANCELLED" ? "ml-2 product-danger  custom-rounded-border" : ""
+                                            data.info.fulfillment_status === "PENDING" || data.info.fulfillment_status === "PARTIAL" ||
+                                            data.info.fulfillment_status === "AGENT_ASSIGNED" || data.info.fulfillment_status === "AT_DESTINATION_HUB" ||
+                                            data.info.fulfillment_status === "IN_TRANSIT" || data.info.fulfillment_status === "RTO_INITIATED" ? "ml-2 product-draft  custom-rounded-border" : 
+                                            data.info.fulfillment_status === "PACKED" || data.info.fulfillment_status === "OUT_FOR_DELIVERY" ||
+                                            data.info.fulfillment_status === "ORDER_DELIVERED" || data.info.fulfillment_status === "ORDER_PICKED_UP" ||
+                                            data.info.fulfillment_status === "OUT_FOR_PICKUP" || data.info.fulfillment_status === "RTO_DELIVERED" ? "ml-2 product-active  custom-rounded-border" :
+                                            data.info.fulfillment_status === "CANCELLED" || data.info.fulfillment_status === "DELIVERY_FAILED" ||
+                                            data.info.fulfillment_status === "PICKUP_FAILED" || data.info.fulfillment_status === "RTO_DISPOSED" ? "ml-2 product-danger  custom-rounded-border" : ""
                                         }>
                                             {getFulfillmentStatus(data.info.fulfillment_status)}
                                         </p>
@@ -599,9 +604,14 @@ const OrderDetails = () => {
                                                                     :
                                                                     seller.fulfillment_status &&  <p
                                                                     className={
-                                                                        seller.fulfillment_status === "PENDING" || seller.fulfillment_status === "PARTIAL" ? "ml-2 mb-0 product-draft  custom-rounded-border" :
-                                                                        seller.fulfillment_status === "PACKED" || seller.fulfillment_status === "OUT_FOR_DELIVERY" ? "ml-2 mb-0 product-active  custom-rounded-border" :
-                                                                        seller.fulfillment_status === "CANCELLED" ? "ml-2 mb-0 product-danger  custom-rounded-border" : ""
+                                                                        seller.fulfillment_status === "PENDING" || seller.fulfillment_status === "PARTIAL" ||
+                                                                        seller.fulfillment_status === "AGENT_ASSIGNED" || seller.fulfillment_status === "AT_DESTINATION_HUB" ||
+                                                                        seller.fulfillment_status === "IN_TRANSIT" || seller.fulfillment_status === "RTO_INITIATED" ? "ml-2 mb-0 product-draft  custom-rounded-border" : 
+                                                                        seller.fulfillment_status === "PACKED" || seller.fulfillment_status === "OUT_FOR_DELIVERY" ||
+                                                                        seller.fulfillment_status === "ORDER_DELIVERED" || seller.fulfillment_status === "ORDER_PICKED_UP" ||
+                                                                        seller.fulfillment_status === "OUT_FOR_PICKUP" || seller.fulfillment_status === "RTO_DELIVERED" ? "ml-2 mb-0 product-active  custom-rounded-border" :
+                                                                        seller.fulfillment_status === "CANCELLED" || seller.fulfillment_status === "DELIVERY_FAILED" ||
+                                                                        seller.fulfillment_status === "PICKUP_FAILED" || seller.fulfillment_status === "RTO_DISPOSED" ? "ml-2 mb-0 product-danger  custom-rounded-border" : ""
                                                                     }>
                                                                     {getFulfillmentStatus(seller.fulfillment_status)}
                                                                 </p>
@@ -669,9 +679,14 @@ const OrderDetails = () => {
                                                                                         {
                                                                                             !statusUpdating && item.fulfillment_status && <span
                                                                                             className={
-                                                                                                item.fulfillment_status === "PENDING" || item.fulfillment_status === "PARTIAL" ? "ml-2 product-draft  custom-rounded-border" :
-                                                                                                item.fulfillment_status === "PACKED" || item.fulfillment_status === "OUT_FOR_DELIVERY" ? "ml-2 product-active  custom-rounded-border" :
-                                                                                                item.fulfillment_status === "CANCELLED" ? "ml-2 product-danger  custom-rounded-border" : ""
+                                                                                                item.fulfillment_status === "PENDING" || item.fulfillment_status === "PARTIAL" ||
+                                                                                                item.fulfillment_status === "AGENT_ASSIGNED" || item.fulfillment_status === "AT_DESTINATION_HUB" ||
+                                                                                                item.fulfillment_status === "IN_TRANSIT" || item.fulfillment_status === "RTO_INITIATED" ? "ml-2 mb-0 product-draft  custom-rounded-border" : 
+                                                                                                item.fulfillment_status === "PACKED" || item.fulfillment_status === "OUT_FOR_DELIVERY" ||
+                                                                                                item.fulfillment_status === "ORDER_DELIVERED" || item.fulfillment_status === "ORDER_PICKED_UP" ||
+                                                                                                item.fulfillment_status === "OUT_FOR_PICKUP" || item.fulfillment_status === "RTO_DELIVERED" ? "ml-2 mb-0 product-active  custom-rounded-border" :
+                                                                                                item.fulfillment_status === "CANCELLED" || item.fulfillment_status === "DELIVERY_FAILED" ||
+                                                                                                item.fulfillment_status === "PICKUP_FAILED" || item.fulfillment_status === "RTO_DISPOSED" ? "ml-2 mb-0 product-danger  custom-rounded-border" : ""
                                                                                             }>
                                                                                             {getFulfillmentStatus(item.fulfillment_status)}
                                                                                             </span>
