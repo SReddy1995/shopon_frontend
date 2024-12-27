@@ -119,7 +119,7 @@ const Orders = () => {
             type: "active-draft-button",
             serialNo: 3,
             isVisible: true,
-            minWidth:'100px'
+            minWidth:'130px'
         },
        
     ], []);

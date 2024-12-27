@@ -130,7 +130,7 @@ const OrderDetails = () => {
         name: ele.store_item_title || null,
         fulfillment_status: ele.fulfillment_state || null,
         sku: ele.store_item_sku || 'NA',
-        alt_id: ele.alternate_id || 'NA',
+        alt_id: ele.alternate_id || null,
         tracking_id: ele.tracking_number || 'NA',
         price: ele.store_item_price ? ele.store_item_price : 0,
         qty: ele.store_item_quantity || 0,
@@ -436,7 +436,11 @@ const OrderDetails = () => {
                                         </p>
                                         :
                                         data.info.settlement_status && <p
-                                            className="ml-2 product-active  custom-rounded-border">
+                                        className={
+                                            data.info.settlement_status === "INITIATED" || data.info.settlement_status === "PARTIAL" || data.info.settlement_status === "PENDING" ? "ml-2 product-draft  custom-rounded-border" : 
+                                            data.info.settlement_status === "SETTLED" ? "ml-2 product-active  custom-rounded-border" :
+                                            data.info.settlement_status === "NOT_SETTLED" ? "ml-2 product-danger  custom-rounded-border" : ""
+                                        }>
                                             {getSettlementStatus(data.info.settlement_status)}
                                         </p>
                                       
@@ -616,6 +620,8 @@ const OrderDetails = () => {
                                                    
                                                    {
                                                         seller.seller_id !== "shopify" && <div className="provider-seller-info-container px-2 py-2">
+                                                            <div className="d-flex align-items-center">
+                                                            <div>
                                                         {
                                                             seller?.seller_name !== seller?.provider_info?.name && <div className="d-flex justify-content-between">
                                                                     <span >{seller?.seller_name} </span>
@@ -623,8 +629,8 @@ const OrderDetails = () => {
                                                         }
                                                     
                     
-                                                        <div className="d-flex">
-                                                            <div>
+                                                        
+                                                            
                                                             <div className="d-flex justify-content-between">
                                                                     <span className=" mb-0">{seller?.provider_info?.name}: <span className="text-grey">{seller?.provider_info?.id}</span></span>
                                                             </div>
@@ -700,7 +706,10 @@ const OrderDetails = () => {
                                                                                         }
                                                                                     </span><br />
                                                                                     <span className="font-small text-grey">SKU: {item.sku}</span><br />
-                                                                                    <span className="font-small text-grey">Alt Id: {item.alt_id}</span></td>
+                                                                                    {
+                                                                                        item.alt_id && <span className="font-small text-grey">Alt Id: {item.alt_id}</span>
+                                                                                    }
+                                                                                    </td>
                                                                                 <td>{item.price}</td>
                                                                                 <td className="text-centre">{item.qty}</td>
                                                                                 <td  className="text-centre">{item.pkg_charge}</td>
