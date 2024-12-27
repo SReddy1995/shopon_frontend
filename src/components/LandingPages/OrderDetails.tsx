@@ -484,7 +484,7 @@ const OrderDetails = () => {
                         </div>
                         <div className="col-12 text-left order-desc">
                             <p className="text-default-grey"><span>{selected_order.created_date ? moment(selected_order.created_date).format('MMMM DD, YYYY [at] h:mm A') : ''}<span>&nbsp;|</span> <span>Transaction Id: </span>{selected_order.transaction_id}</span> <span>|</span> <span>Shopify Order No: {selected_order.order_number}</span></p>
-                            <p className="text-default-grey" style={{marginTop:"-10px"}}><span >Shipped Through :  {data.info.shipping_method}</span></p>
+                            <p className="text-default" style={{marginTop:"-10px"}}><span >Shipped through   {data.info.shipping_method}</span></p>
 
                         </div>
                         <div className="col-12">
@@ -574,8 +574,9 @@ const OrderDetails = () => {
                                                         </button>
                                                         }
                                                         
-
+                         
                                                     </div>
+                                                   
                                                     <div className="provider-seller-info-container px-2 py-2">
                                                         {
                                                             seller?.seller_name !== seller?.provider_info?.name && <div className="d-flex justify-content-between">
@@ -599,7 +600,7 @@ const OrderDetails = () => {
         
         
                                                                             <th colSpan={3} className="border-bottom-none"></th>
-                                                                            <th colSpan={3} className="text-center border-bottom-none">Charges (in Rs)</th>
+                                                                            <th colSpan={3} className="text-center border-bottom-none">Charges in Rs</th>
                                                                             <th colSpan={2} className="border-bottom-none"></th>
         
                                                                         </tr>
@@ -663,15 +664,15 @@ const OrderDetails = () => {
                                                                         <span className="text-grey">Sub Total: </span>
                                                                         <span className="text-grey">Shipping charges: </span>
                                                                         <span className="text-grey">Taxes: </span>
-                                                                        <div className="dropdown-divider w-100 my-0"></div>
-                                                                        <span className="text-grey">Total: </span>
+                                                                        <div className="dropdown-divider total-label-divider w-100 my-0" ></div>
+                                                                        <span className="text-grey total-span" >Total: </span>
                                                                     </div>
                                                                     <div className="totals-values">
                                                                         <span className="text-default">{seller.subTotal}</span>
                                                                         <span className="text-default">{seller.shipping_charges}</span>
                                                                         <span className="text-default">{seller.taxes}</span>
-                                                                        <div className="dropdown-divider w-100 my-0"></div>
-                                                                        <span className="text-default">{seller.total}</span>
+                                                                        <div className="dropdown-divider total-divider w-100 my-0 "></div>
+                                                                        <span className="text-default total-span">{seller.total}</span>
                                                                     </div>
                                                             </div>
                                                         </div>
