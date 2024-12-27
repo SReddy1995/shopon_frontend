@@ -3205,3 +3205,9 @@ background: linear-gradient(to right, #3f4c6b, #606c88); /* W3C, IE 10+/ Edge, F
   margin-bottom: 5px;
  }
  
+ .product-detail-table-container{
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #dee2e6;
+  border-radius: 0.75rem;
+ }
