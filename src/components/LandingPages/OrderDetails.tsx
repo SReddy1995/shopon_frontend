@@ -9,6 +9,7 @@ import ReconciliationDetails from "./ReconciliationDetails";
 import ondc_product from '../../assets/images/ondc-icon.png';
 import { showSuccessMessage } from "../../shared/notificationProvider";
 import { RECONCILIATION_INITIATED_SUCCESSFULLY, STATUS_INITIATED_SUCCESSFULLY, TRACK_INITIATED_SUCCESSFULLY } from "../../utils/constants/NotificationConstants";
+import TrackingDetails from "./TrackingDetails";
 
 const OrderDetails = () => {
 
@@ -22,6 +23,8 @@ const OrderDetails = () => {
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [selectedSellerForMoreActions, setSelectedSellerForMoreActions] = useState<any>(null);
     const [open, setModalOpen] = useState(false);
+    const [openTrackModal, setTrackModalOpen] = useState(false);
+    const [selectedSeller, setSelectedSeller] = useState<any>(null);
     const refValues = useSelector((store: any) => store.refValues.referenceList);
     const [statusUpdating, setStatusUpdating] = useState(false)
     const [itemDetailsOpen, setItemDetailsOpen] = useState<any>(null)
@@ -365,23 +368,6 @@ const OrderDetails = () => {
             closeMoreActions();
     }
 
-    const getTrackBySeller = (seller: any) => {
-        let payload = {
-            order_number: selected_order.order_number,
-            store_url: selected_order.store_url,
-            seller_id: seller.seller_id
-        }
-        fetchTrackOrderBySeller(payload)
-            .then((data: any) => {
-                console.log("track response = ", data)
-                showSuccessMessage(TRACK_INITIATED_SUCCESSFULLY)
-            })
-            .catch(err => {
-                
-            });
-            closeMoreActions();
-    }
-
     const getIGMBySeller = (seller: any) => {
         
     }
@@ -389,6 +375,21 @@ const OrderDetails = () => {
     const getReconciliationBySeller = (seller: any) => {
         openReconciliationWindow()
         showSuccessMessage(RECONCILIATION_INITIATED_SUCCESSFULLY)
+    }
+
+    const openTrackBySellerWindow = () => {
+        setTrackModalOpen(true);
+    }
+
+    const closeTrackBySellerWindow = () => {
+        setSelectedSeller(null)
+        setTrackModalOpen(false);
+    }
+
+    const openTrackBySeller = (seller: any) => {
+        setSelectedSeller(seller)
+        openTrackBySellerWindow()
+        closeMoreActions();
     }
 
     return (
@@ -530,7 +531,7 @@ const OrderDetails = () => {
                                                                             <i className="fa fa-question-circle me-2"></i>
                                                                             <p className="mb-0">Status</p>
                                                                         </div>
-                                                                        <div onClick={()=>getTrackBySeller(seller)} className="more-actions-popup-elements px-3 py-2">
+                                                                        <div onClick={()=>openTrackBySeller(seller)} className="more-actions-popup-elements px-3 py-2">
                                                                             <i className="fa fa-truck me-2"></i>
                                                                             <p className="mb-0">Track</p>
                                                                         </div>
@@ -890,6 +891,9 @@ const OrderDetails = () => {
         }
                 <ModalWindow show={open} detailsOf={'reconciliation'} modalClosed={closeReconciliationWindow}>
                     <ReconciliationDetails  closeModal={closeReconciliationWindow}/>
+                </ModalWindow>
+                <ModalWindow show={openTrackModal} detailsOf={'reconciliation'} modalClosed={closeTrackBySellerWindow}>
+                    <TrackingDetails seller={selectedSeller} selected_order={selected_order} closeModal={closeTrackBySellerWindow}/>
                 </ModalWindow>
 
         </>
