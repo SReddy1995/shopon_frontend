@@ -44,6 +44,16 @@ import { orderServiceAxiosInstance } from "../utils/interceptor/genericAxiosInsa
     }
   };
 
+  export const fetchTrackDetailsBySeller = async (body: any) => {
+    try {
+      const response = await orderServiceAxiosInstance.post(OrderUrls.trackDetailsBySeller, body);  // Adjust the endpoint accordingly
+      return response;
+    } catch (error) {
+        console.error('Error fetching data: ', error);
+      throw error;  // Throw the error so the calling component can handle it
+    }
+  };
+
   export const fetchStatusBySeller = async (body: any) => {
     try {
       const response = await orderServiceAxiosInstance.post(OrderUrls.statusBySeller, body);  // Adjust the endpoint accordingly

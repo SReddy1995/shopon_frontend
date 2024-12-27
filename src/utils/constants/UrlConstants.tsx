@@ -46,5 +46,6 @@ export const OrderUrls = {
     trackOrderBySeller: '/track_by_seller',
     statusBySeller: '/status_by_seller',
     cancelBySeller: '/cancel_by_seller',
-    fetchUpdatedStatusesForOrder: '/get_order_details_status'
+    fetchUpdatedStatusesForOrder: '/get_order_details_status',
+    trackDetailsBySeller: '/get_track_by_seller',
 }
