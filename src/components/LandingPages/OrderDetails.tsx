@@ -6,7 +6,7 @@ import { fetchStatusBySeller, fetchTrackOrderBySeller, getOrderDetails, getUpdat
 import moment from 'moment';
 import ModalWindow from "./ModalWindow";
 import ReconciliationDetails from "./ReconciliationDetails";
-import ondc_product from '../../assets/images/is_ondc_product.png';
+import ondc_product from '../../assets/images/ondc-icon.png';
 import { showSuccessMessage } from "../../shared/notificationProvider";
 import { RECONCILIATION_INITIATED_SUCCESSFULLY, STATUS_INITIATED_SUCCESSFULLY, TRACK_INITIATED_SUCCESSFULLY } from "../../utils/constants/NotificationConstants";
 
@@ -510,11 +510,7 @@ const OrderDetails = () => {
                                                     return <div key={seller.order_seller_seq} className="card-orders seller-card-container shadow bg-white mb-0 py-3 px-3">
                                                     <div className="seller-wise-order-info" >
                                                         <ul className="paid-grey d-flex pl-0 mb-0">
-                                                            <span className="me-2 mt-0">
-                                                                {
-                                                                    seller.is_ondc_product ? <img src={ondc_product} className="is-ondc-product-image" alt="ondc-product"/> : ''
-                                                                }
-                                                            </span>
+                                                            
                                                             <h4 className="seller-order-id">#{seller.order_seller_seq}</h4>
                                                         </ul>
                                                         {
@@ -629,12 +625,22 @@ const OrderDetails = () => {
                                                                     <span >{seller?.seller_name} </span>
                                                             </div>
                                                         }
-                                                        
-                                                        <div className="d-flex justify-content-between">
-                                                                <span className=" mb-0">{seller?.provider_info?.name}: <span className="text-grey">{seller?.provider_info?.id}</span></span>
-                                                        </div>
-                                                        <div className="d-flex justify-content-between">
-                                                            <span>{seller?.provider_info?.address}</span>
+                                                    
+                    
+                                                        <div className="d-flex">
+                                                            <div>
+                                                            <div className="d-flex justify-content-between">
+                                                                    <span className=" mb-0">{seller?.provider_info?.name}: <span className="text-grey">{seller?.provider_info?.id}</span></span>
+                                                            </div>
+                                                            <div className="d-flex justify-content-between">
+                                                                <span>{seller?.provider_info?.address}</span>
+                                                            </div>
+                                                            </div>
+                                                            {
+                                                            seller.is_ondc_product && <div>
+                                                                <img src={ondc_product} style={{width:"38px"}}/>
+                                                            </div>
+                                                            }
                                                         </div>
                                                     </div>
 
@@ -672,7 +678,8 @@ const OrderDetails = () => {
                                                                             seller.items
                                                                             .map((item: any, index: number) => {
                                                                                 return <tr key={item.name+index}>
-                                                                                <td> <span><b>{item.name}</b>
+                                                                                <td>
+                                                                                <span><b>{item.name}</b>
                                                                                         {
                                                                                             statusUpdating && <span
                                                                                             className="ml-2 product-active bg-default-grey  custom-rounded-border">
