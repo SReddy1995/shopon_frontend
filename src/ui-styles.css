@@ -3192,3 +3192,11 @@ background: linear-gradient(to right, #3f4c6b, #606c88); /* W3C, IE 10+/ Edge, F
   padding-top:4px !important;
   padding-bottom: 4px !important;
  }
+
+ .seller-wise-statuses-container{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  margin-top:-0.8rem;
+ }

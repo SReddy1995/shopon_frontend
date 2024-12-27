@@ -104,18 +104,18 @@ const Orders = () => {
             minWidth:'100px'
         },
         {
-            coltitle: "Fullfill Status",
-            visibilityDisplayName: "Fullfillment status",
-            column: "fulfillment_status",
+            coltitle: "Settle Status",
+            visibilityDisplayName: "Settlement status",
+            column: "settlement_status",
             type: "active-draft-button",
             serialNo: 3,
             isVisible: true,
             minWidth:'100px'
         },
         {
-            coltitle: "Settle Status",
-            visibilityDisplayName: "Settlement status",
-            column: "settlement_status",
+            coltitle: "Fullfill Status",
+            visibilityDisplayName: "Fullfillment status",
+            column: "fulfillment_status",
             type: "active-draft-button",
             serialNo: 3,
             isVisible: true,
@@ -859,7 +859,7 @@ const Orders = () => {
                                                                                                     <span
                                                                                                 className={
                                                                                                     item[col.column] === "PENDING" || item[col.column] === "PARTIAL" ? "product-draft" : 
-                                                                                                    item[col.column] === "DELIVERED" ? " product-active" :
+                                                                                                    item[col.column] === "PACKED" || item[col.column] === "OUT_FOR_DELIVERY"? " product-active" :
                                                                                                     item[col.column] === "CANCELLED" ? "product-danger" : ""
                                                                                                 }>
                                                                                                     {getFulfillmentStatus(item[col.column])}
