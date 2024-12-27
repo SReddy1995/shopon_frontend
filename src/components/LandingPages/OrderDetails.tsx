@@ -24,12 +24,9 @@ const OrderDetails = () => {
     const [open, setModalOpen] = useState(false);
     const refValues = useSelector((store: any) => store.refValues.referenceList);
     const [statusUpdating, setStatusUpdating] = useState(false)
+    const [itemDetailsOpen, setItemDetailsOpen] = useState<any>(null)
     const status_list = refValues.order_staus.map((status: any) => ({
         value: status.eazehuborderstatusref,
-        label: status.description
-    })) || [];
-    const payment_status_list = refValues.payment_status.map((status: any) => ({
-        value: status.payment_statusref,
         label: status.description
     })) || [];
     const fullfillment_status_list = refValues.fulfillment_status.map((status: any) => ({
@@ -58,13 +55,6 @@ const OrderDetails = () => {
     const getSettlementStatus = (item: any) => {
         if(item){
             return settlement_status_list.filter((x:any)=>x.value === item)[0].label
-        }
-        return ''
-    }
-
-    const getPaymentStatus = (item: any) => {
-        if(item){
-            return payment_status_list.filter((x:any)=>x.value === item)[0].label
         }
         return ''
     }
@@ -304,6 +294,15 @@ const OrderDetails = () => {
     const closeMoreActions = () => {
         setIsPopupOpen(false)
         setSelectedSellerForMoreActions(null);
+    }
+
+    const toggleItemDetails = (item: any) => {
+        if(itemDetailsOpen === item.store_item_id){
+            setItemDetailsOpen(null)
+        }
+        else{
+            setItemDetailsOpen(item.store_item_id)
+        }
     }
 
     const updateStatuses = (data: any) => {
@@ -641,7 +640,7 @@ const OrderDetails = () => {
                                                             </div>
                                                             {
                                                             seller.is_ondc_product && <div>
-                                                                <img src={ondc_product} style={{width:"38px"}}/>
+                                                                <img src={ondc_product} style={{width:"38px"}} alt="ondc_product"/>
                                                             </div>
                                                             }
                                                         </div>
@@ -682,7 +681,7 @@ const OrderDetails = () => {
                                                                             .map((item: any, index: number) => {
                                                                                 return <tr key={item.name+index}>
                                                                                 <td>
-                                                                                <span><b>{item.name}</b>
+                                                                                <span><b onClick={()=>toggleItemDetails(item)} className="cursor-pointer">{item.name}</b>
                                                                                         {
                                                                                             seller.is_ondc_product && statusUpdating && <span
                                                                                             className="ml-2 product-active bg-default-grey  custom-rounded-border">
@@ -706,10 +705,15 @@ const OrderDetails = () => {
                                                                                             </span>
                                                                                         }
                                                                                     </span><br />
-                                                                                    <span className="font-small text-grey">SKU: {item.sku}</span><br />
                                                                                     {
-                                                                                        item.alt_id && <span className="font-small text-grey">Alt Id: {item.alt_id}</span>
+                                                                                        itemDetailsOpen === item.store_item_id && <>
+                                                                                                <span className="font-small text-grey">SKU: {item.sku}</span><br />
+                                                                                            {
+                                                                                                item.alt_id && <span className="font-small text-grey">Alt Id: {item.alt_id}</span>
+                                                                                            }
+                                                                                        </>
                                                                                     }
+                                                                                    
                                                                                     </td>
                                                                                 <td>{item.price}</td>
                                                                                 <td className="text-centre">{item.qty}</td>
