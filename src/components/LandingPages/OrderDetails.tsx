@@ -587,7 +587,7 @@ const OrderDetails = () => {
                                                             }
                                                             <span style={{marginLeft:"10px",marginTop:"5px",color:"grey"}}> | </span>
                                                             <div>
-                                                                <span className="status-label">Fulfullment : </span>
+                                                                <span className="status-label">Fulfillment : </span>
                                                             </div>
                                                             {
                                                                 statusUpdating ?
@@ -753,8 +753,15 @@ const OrderDetails = () => {
                                     </div>
                                     {
                                         data?.info &&  <div className="order-details-right-column">
-                                        <div className="card-orders text-left shadow bg-white mb-1 py-3 px-3">
-                                            <h6><b>Customer Information</b></h6>
+                                        <div className="card-orders bg-white text-left shadow  mb-1 pt-3 pb-1 px-3" style={{backgroundColor: "#5CBCE652 !important"}}>
+                                            <div className="d-flex cust-divider">
+                                                <div>
+                                                <h6><b>Customer Information</b></h6>
+                                                </div>
+                                                <div>
+                                                <span><i className="fa fa-user"></i></span>
+                                                </div>
+                                            </div>
 
                                             <span className="cust-name">{data.info.customer_info?.first_name} {data.info.customer_info?.last_name}</span><br />
                                             <span className="text-grey"><i className="fa fa-envelope"></i> {data.info.customer_info?.email ? data.info.customer_info?.email : 'No email provided'}</span><br />
@@ -771,9 +778,16 @@ const OrderDetails = () => {
                                                 data.info.customer_info?.areacode && <p>{data.info.customer_info?.areacode}</p> 
                                             }
                                         </div>
-                                        <div className="card-orders text-left shadow bg-white mb-1 py-3 px-3">
+                                        <div className="card-orders  text-left shadow bg-white mb-1 pt-3 pb-1 px-3">
 
-                                            <h6><b>Shipping Address</b></h6>
+                                        <div className="d-flex cust-divider">
+                                                <div>
+                                                <h6><b>Shipping Address</b></h6>
+                                                </div>
+                                                <div>
+                                                <span><i className="fa fa-map-marker"></i></span>
+                                                </div>
+                                            </div>
                                             {
                                                 data.info.shipping_info?.name && <p className="mb-0">{data.info.shipping_info?.name},</p> 
                                             }
@@ -789,10 +803,17 @@ const OrderDetails = () => {
                                             {
                                                 data.info.shipping_info?.country && <p>{data.info.shipping_info?.country} - {data.info.shipping_info?.zip}</p>
                                             }
+                                        
                                         </div>
-                                        <div className="card-orders text-left shadow bg-white mb-3 py-3 px-3">
-                                        <h6><b>Payment Details</b></h6>
-
+                                        <div className="card-orders text-left shadow bg-white mb-3  pt-3 pb-1 px-3">
+                                        <div className="d-flex cust-divider">
+                                                <div>
+                                                <h6><b>Payment Details</b></h6>
+                                                </div>
+                                                <div>
+                                                <span><i className="fa fa-credit-card"></i></span>
+                                                </div>
+                                            </div>
                                                 <div>
                                                     <span className="text-default-black">{data.info.payment_gateway.join(', ')}</span>
                                                 </div>

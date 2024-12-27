@@ -3198,5 +3198,10 @@ background: linear-gradient(to right, #3f4c6b, #606c88); /* W3C, IE 10+/ Edge, F
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  margin-top:-0.8rem;
+  margin-top:-1rem;
  }
+ .cust-divider{
+  border-bottom: 1px solid #aea9a9;
+  margin-bottom: 5px;
+ }
+ 
