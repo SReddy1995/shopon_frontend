@@ -571,7 +571,7 @@ const OrderDetails = () => {
                                                                             {getOrderStatus(seller.ondc_order_state)}
                                                                         </p>
                                                                 }
-                                                                <span style={{ marginLeft: "10px", marginTop: "5px", color: "grey" }}> | </span>
+                                                                <span style={{ marginLeft: "10px", color: "grey" }}> | </span>
 
                                                                 <span className="status-label">Settlement : </span>
 
@@ -591,7 +591,7 @@ const OrderDetails = () => {
                                                                             {getSettlementStatus(seller.settlement_status)}
                                                                         </p>
                                                                 }
-                                                                <span style={{ marginLeft: "10px", marginTop: "5px", color: "grey" }}> | </span>
+                                                                <span style={{ marginLeft: "10px", color: "grey" }}> | </span>
 
                                                                 <span className="status-label">Fulfillment : </span>
 
@@ -648,10 +648,10 @@ const OrderDetails = () => {
 
                                                    }
                                                     
-                                                    <div className="product-shipping-details-container">
-                                                        <div className="product-details-container">
-                                                            <div className="table-responsive">
-                                                                <table id="example" className="table table-hover text-left orders-table-custom" data-paging='false' >
+                                                 
+                                                        <div className="product-detail-table-container">
+                                                            <div className="table-responsive " style={{borderRadius:"0.75rem"}}>
+                                                                <table id="example" className="table text-left orders-table-custom" data-paging='false' >
                                                                     <thead className="table-light">
                                                                         <tr >
         
@@ -747,8 +747,8 @@ const OrderDetails = () => {
                                                                     </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                </div>
+                                                   </div>
+                                               
                                                 })
                                             }
                                             </>
