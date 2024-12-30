@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { fetchTrackDetailsBySeller, fetchTrackOrderBySeller } from '../../services/OrdersService';
 
 const TrackingDetails = (props: any) => {
@@ -7,7 +7,7 @@ const TrackingDetails = (props: any) => {
     const [noData, setNoData] = useState(false);
     const [data, setData] = useState<any>(null);
 
-    const fetchTrackDetails = () => {   
+    const fetchTrackDetails = useCallback(() => {   
         let payload = {
             order_id: props.selected_order.order_id,
             seller_id: props.seller.seller_id
@@ -23,9 +23,9 @@ const TrackingDetails = (props: any) => {
                     setLoading(false);
                 });
         
-    }
+    },[props.selected_order.order_id, props.seller.seller_id])
 
-     const getTrackBySeller = () => {
+     const getTrackBySeller = useCallback(() => {
         setLoading(true);
             let payload = {
                 order_number: props.selected_order.order_number,
@@ -43,11 +43,11 @@ const TrackingDetails = (props: any) => {
                     setData(err?.response?.data?.error?.msg)
                     setLoading(false);
                 });
-        }
+        },[fetchTrackDetails, props.selected_order.order_number, props.selected_order.store_url, props.seller.seller_id])
 
     useEffect(()=>{
         getTrackBySeller();
-    },[props])
+    },[getTrackBySeller])
 
     const closeModal = () => {
         props.closeModal();

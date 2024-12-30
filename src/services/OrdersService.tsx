@@ -1,6 +1,6 @@
 
 import { OrderUrls } from "../utils/constants/UrlConstants";
-import { orderServiceAxiosInstance } from "../utils/interceptor/genericAxiosInsatnce";
+import { orderServiceAxiosInstance, reconServiceAxiosInstance } from "../utils/interceptor/genericAxiosInsatnce";
 
 
 
@@ -47,6 +47,26 @@ import { orderServiceAxiosInstance } from "../utils/interceptor/genericAxiosInsa
   export const fetchTrackDetailsBySeller = async (body: any) => {
     try {
       const response = await orderServiceAxiosInstance.post(OrderUrls.trackDetailsBySeller, body);  // Adjust the endpoint accordingly
+      return response;
+    } catch (error) {
+        console.error('Error fetching data: ', error);
+      throw error;  // Throw the error so the calling component can handle it
+    }
+  };
+
+  export const fetchSettleOrderBySeller = async (body: any) => {
+    try {
+      const response = await reconServiceAxiosInstance.post(OrderUrls.settleOrderBySeller, body);  // Adjust the endpoint accordingly
+      return response;
+    } catch (error) {
+        console.error('Error fetching data: ', error);
+      throw error;  // Throw the error so the calling component can handle it
+    }
+  };
+
+  export const fetchSettleDetailsBySeller = async (body: any) => {
+    try {
+      const response = await reconServiceAxiosInstance.post(OrderUrls.settleDetailsBySeller, body);  // Adjust the endpoint accordingly
       return response;
     } catch (error) {
         console.error('Error fetching data: ', error);
