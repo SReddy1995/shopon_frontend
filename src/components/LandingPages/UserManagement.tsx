@@ -70,7 +70,7 @@ const UserManagement = () => {
 
     return (
         <>
-            <div className="container-fluid h-auto mt-3 px-5">
+            <div className="container-fluid h-auto mt-3 px-3">
                 <div className="row">
                     <div className="col-6 text-left">
                         <h3>User Management</h3>
@@ -80,6 +80,7 @@ const UserManagement = () => {
                             className="btn-custom" onClick={addUser}>Add User</button>
                     </div>
                 </div>
+                
                 {
                     !loading ?
 

@@ -560,7 +560,7 @@ const Orders = () => {
 
     return (
         <>
-            <div className="container-fluid h-auto mt-3 px-4">
+            <div className="container-fluid h-auto mt-3 px-3">
                 <div className="row mt-1">
                     <div className="col-12 d-flex align-items-center">
                         <h3>Orders</h3>
@@ -814,13 +814,13 @@ const Orders = () => {
                             <div className="row">
                                 <div className="col-12">
                                     <div className="table-responsive" style={{ borderRadius: '0.75rem' }}>
-                                        <table id="example" className="table table-hover collection-example text-left" data-paging='false' >
+                                        <table id="example" className="table table-hover collection-example text-left order-table" data-paging='false' >
                                             <thead className="table-light">
                                                 <tr>
                                                     {
                                                         columns.map((col: any, index: any) => {
                                                             return col.isVisible && <th key={index} className='cursor-pointer'
-                                                                style={{ padding: '0.375rem', minWidth: col.minWidth ? col.minWidth : "auto" }}>{col.coltitle}
+                                                                style={{ padding: '0.375rem', paddingLeft:'0.575rem !important',minWidth: col.minWidth ? col.minWidth : "auto" }}>{col.coltitle}
                                                             </th>
                                                         })
                                                     }
@@ -835,7 +835,7 @@ const Orders = () => {
 																	columns
 																		.map((col: any) => {
 																			return col.column === "order_id" ?
-                                                                                        <td key={col.column} className='order-id-text' onClick={()=>openOrderDetails(item, col)}>#{item[col.column]}</td>
+                                                                                        <td key={col.column} className='order-id-text' onClick={()=>openOrderDetails(item, col)} style={{paddingLeft:'0.575rem !important'}}>#{item[col.column]}</td>
                                                                                         :
                                                                                         col.column === "order_status" ?
                                                                                             (

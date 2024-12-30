@@ -30,13 +30,13 @@ const AccountInfoDetailsContainer = styled.div`
 
 const SubscriptionInfoContainer = styled.div`
     display: flex;
-    width: 78%;
+    width: 81%;
     height: 100%;
 `;
 
 const AccountDetailsInfoCardContainer = styled.div`
     display: flex;
-    width: 94.4%;
+    width: 97.4%;
     height: 100%;
 `;
 
@@ -177,7 +177,7 @@ const Account = () => {
                     </div>
                 </SubscriptionInfoContainer>
                 <SubscriptionProgressContainer>
-                    <div className="card-progress shadow p-3">
+                    <div className="card-progress p-3">
                         <CircularProgressbarContainer>
                             <CircularProgressbar value={percentage} text={`${percentage}%`} strokeWidth={12} 
                             styles={buildStyles({
