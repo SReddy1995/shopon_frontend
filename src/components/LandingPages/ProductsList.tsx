@@ -1192,7 +1192,7 @@ const ProductsList = () => {
         <>
         {
             !fullPageLoading && (
-                <div className="container-fluid h-auto mt-3 px-5">
+                <div className="container-fluid h-auto mt-3 px-3">
                 
                
                 

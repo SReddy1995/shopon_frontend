@@ -960,7 +960,7 @@ background: #606c88;  /* fallback for old browsers */
 background: -webkit-linear-gradient(to right, #3f4c6b, #606c88);  /* Chrome 10-25, Safari 5.1-6 */
 background: linear-gradient(to right, #3f4c6b, #606c88); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 
-border-radius:5px;
+border-radius:0.75rem;
  
 }
 .payment-info-card {
@@ -3210,4 +3210,10 @@ background: linear-gradient(to right, #3f4c6b, #606c88); /* W3C, IE 10+/ Edge, F
   flex-direction: column;
   border: 1px solid #dee2e6;
   border-radius: 0.75rem;
+ }
+ .order-table thead th, td{
+  padding-left: 0.395rem !important;
+ }
+ .color-grey{
+  color:rgba(97, 97, 97, 1) !important;
  }

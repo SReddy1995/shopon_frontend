@@ -354,7 +354,7 @@ const Collections = () => {
         <>
         {
             !loading&&
-                <div className="container-fluid h-auto mt-3 px-5">
+                <div className="container-fluid h-auto mt-3 px-3">
                     <div className="row mt-1">
                         <div className="col-12 text-left">
                             <h3>Collections</h3>

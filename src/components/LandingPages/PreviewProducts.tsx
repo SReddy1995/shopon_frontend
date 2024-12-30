@@ -87,7 +87,7 @@ const PreviewProducts = () => {
     return (
         <>
 
-            <div className="container-fluid h-auto mt-3 px-5">
+            <div className="container-fluid h-auto mt-3 px-3">
                 
                 <div className="row d-flex mt-1">
                 <div className="col text-left">

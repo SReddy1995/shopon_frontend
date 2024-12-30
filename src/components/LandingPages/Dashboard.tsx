@@ -421,9 +421,9 @@ const cancellationAnalysisData = [
       
     return (
         <>
-        <div className="container-fluid">
+        <div className="container-fluid px-3">
             <div className="row">
-                <div className="col-12 mt-3">
+                <div className="col-12 mt-3 px-3">
                         <div className="card shadow bg-white table-padding mb-2 px-1 py-2">
                             <div className="row">
 
