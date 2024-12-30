@@ -9,6 +9,7 @@ const discoveryServiceUrlSuffix = process.env.REACT_APP_DISCOVER_SERVICE_URLSUFF
 const storeServiceUrlSuffix = process.env.REACT_APP_STORE_SERVICE_URLSUFFIX!;
 const integration_key = process.env.REACT_APP_INTEGRATION_KEY!;
 const orderServiceUrlSuffix = process.env.REACT_APP_ORDER_SERVICE_URLSUFFIX!;
+const reconServiceUrlSuffix = process.env.REACT_APP_RECON_SERVICE_URLSUFFIX!;
 
 const createAxiosInstance = (urlSuffix: string) => {
   return axios.create({
@@ -22,6 +23,7 @@ const axiosInstance = createAxiosInstance(baseUrlSuffix);
 const productSearchAxiosInstance = createAxiosInstance(discoveryServiceUrlSuffix);
 const storeServiceAxiosInstance = createAxiosInstance(storeServiceUrlSuffix);
 const orderServiceAxiosInstance = createAxiosInstance(orderServiceUrlSuffix);
+const reconServiceAxiosInstance = createAxiosInstance(reconServiceUrlSuffix);
 
 // Request interceptor
 const requestInterceptor = (config: any) => {
@@ -58,6 +60,7 @@ axiosInstance.interceptors.request.use(requestInterceptor);
 productSearchAxiosInstance.interceptors.request.use(requestInterceptor);
 storeServiceAxiosInstance.interceptors.request.use(requestInterceptor)
 orderServiceAxiosInstance.interceptors.request.use(requestInterceptor);
+reconServiceAxiosInstance.interceptors.request.use(requestInterceptor);
 
 // Response interceptor
 const responseInterceptor = (response: any) => {
@@ -123,5 +126,6 @@ axiosInstance.interceptors.response.use(responseInterceptor, errorInterceptor);
 productSearchAxiosInstance.interceptors.response.use(responseInterceptor, errorInterceptor);
 storeServiceAxiosInstance.interceptors.response.use(responseInterceptor, errorInterceptor);
 orderServiceAxiosInstance.interceptors.response.use(responseInterceptor, errorInterceptor);
+reconServiceAxiosInstance.interceptors.response.use(responseInterceptor, errorInterceptor);
 
-export { axiosInstance, productSearchAxiosInstance, storeServiceAxiosInstance, orderServiceAxiosInstance };
+export { axiosInstance, productSearchAxiosInstance, storeServiceAxiosInstance, orderServiceAxiosInstance, reconServiceAxiosInstance };

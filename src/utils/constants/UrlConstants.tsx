@@ -48,4 +48,6 @@ export const OrderUrls = {
     cancelBySeller: '/cancel_by_seller',
     fetchUpdatedStatusesForOrder: '/get_order_details_status',
     trackDetailsBySeller: '/get_track_by_seller',
+    settleOrderBySeller: '/settle',
+    settleDetailsBySeller: '/get_settle_details',
 }

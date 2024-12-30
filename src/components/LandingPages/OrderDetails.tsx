@@ -2,14 +2,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { updateSelectedOrder } from "../../utils/reduxStore/orderSlice";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { fetchStatusBySeller, fetchTrackOrderBySeller, getOrderDetails, getUpdatedStatusesForOrder } from "../../services/OrdersService";
+import { fetchStatusBySeller, getOrderDetails, getUpdatedStatusesForOrder } from "../../services/OrdersService";
 import moment from 'moment';
 import ModalWindow from "./ModalWindow";
 import ReconciliationDetails from "./ReconciliationDetails";
 import ondc_product from '../../assets/images/ondc-icon.png';
 import { showSuccessMessage } from "../../shared/notificationProvider";
-import { RECONCILIATION_INITIATED_SUCCESSFULLY, STATUS_INITIATED_SUCCESSFULLY, TRACK_INITIATED_SUCCESSFULLY } from "../../utils/constants/NotificationConstants";
+import { RECONCILIATION_INITIATED_SUCCESSFULLY, STATUS_INITIATED_SUCCESSFULLY } from "../../utils/constants/NotificationConstants";
 import TrackingDetails from "./TrackingDetails";
+import SettleDetails from "./SettleDetails";
 
 const OrderDetails = () => {
 
@@ -24,6 +25,7 @@ const OrderDetails = () => {
     const [selectedSellerForMoreActions, setSelectedSellerForMoreActions] = useState<any>(null);
     const [open, setModalOpen] = useState(false);
     const [openTrackModal, setTrackModalOpen] = useState(false);
+    const [openSettleModal, setSettleModalOpen] = useState(false);
     const [selectedSeller, setSelectedSeller] = useState<any>(null);
     const refValues = useSelector((store: any) => store.refValues.referenceList);
     const [statusUpdating, setStatusUpdating] = useState(false)
@@ -392,6 +394,22 @@ const OrderDetails = () => {
         closeMoreActions();
     }
 
+    const openSettleBySellerWindow = () => {
+        setSettleModalOpen(true);
+    }
+
+    const closeSettleBySellerWindow = () => {
+        setSelectedSeller(null)
+        fetchUpdatedStatuses();
+        setSettleModalOpen(false);
+    }
+
+    const openSettleBySeller = (seller: any) => {
+        setSelectedSeller(seller)
+        openSettleBySellerWindow()
+        closeMoreActions();
+    }
+
     return (
         <>
             {
@@ -534,6 +552,10 @@ const OrderDetails = () => {
                                                                         <div onClick={()=>openTrackBySeller(seller)} className="more-actions-popup-elements px-3 py-2">
                                                                             <i className="fa fa-truck me-2"></i>
                                                                             <p className="mb-0">Track</p>
+                                                                        </div>
+                                                                        <div onClick={()=>openSettleBySeller(seller)} className="more-actions-popup-elements px-3 py-2">
+                                                                            <i className="fa fa-support me-2"></i>
+                                                                            <p className="mb-0">Settle</p>
                                                                         </div>
                                                                         <div onClick={()=>getIGMBySeller(seller)} className="more-actions-popup-elements px-3 py-2">
                                                                             <i className="fa fa-support me-2"></i>
@@ -894,6 +916,9 @@ const OrderDetails = () => {
                 </ModalWindow>
                 <ModalWindow show={openTrackModal} detailsOf={'reconciliation'} modalClosed={closeTrackBySellerWindow}>
                     <TrackingDetails seller={selectedSeller} selected_order={selected_order} closeModal={closeTrackBySellerWindow}/>
+                </ModalWindow>
+                <ModalWindow show={openSettleModal} detailsOf={'reconciliation'} modalClosed={closeSettleBySellerWindow}>
+                    <SettleDetails seller={selectedSeller} selected_order={selected_order} closeModal={closeSettleBySellerWindow}/>
                 </ModalWindow>
 
         </>
