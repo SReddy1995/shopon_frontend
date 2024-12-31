@@ -16,7 +16,8 @@ const OrderDetails = () => {
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const selected_order = useSelector((store: any) => store.order.selectedOrder);
+    const orderFromRedux = useSelector((store: any) => store.order.selectedOrder);
+    const selected_order = orderFromRedux ? orderFromRedux : localStorage.getItem('selected_order') ? JSON.parse(localStorage.getItem('selected_order')!) : null;
     const [loading,setLoading] = useState(true)
     const [data, setData] = useState<any>(null)
     // const [noData, setNoData] = useState(false)
@@ -262,7 +263,8 @@ const OrderDetails = () => {
         else{
             navigate("/landing-page/orders/orders-list")
         }
-    },[selected_order, fetchOrderDetails, navigate]);
+     // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[fetchOrderDetails, navigate]);
 
         // Close the popup if clicked outside
         useEffect(() => {
@@ -512,7 +514,7 @@ const OrderDetails = () => {
                             </div>
                         </div>
                         <div className="col-12 text-left order-desc">
-                            <p className="text-default-grey"><span>{selected_order.created_date ? moment(selected_order.created_date).format('MMMM DD, YYYY [at] h:mm A') : ''}<span>&nbsp;|</span> <span>Transaction Id: </span>{selected_order.transaction_id}</span> <span>|</span> <span>Shopify Order No: {selected_order.order_number}</span></p>
+                            <p className="text-default-grey"><span>{data.info.order_created_date ? moment(data.info.order_created_date).format('MMMM DD, YYYY [at] h:mm A') : ''}<span>&nbsp;|</span> <span>Transaction Id: </span>{data.info.transaction_id}</span> <span>|</span> <span>Shopify Order No: {data.info.order_number}</span></p>
                             <p className="text-default" style={{marginTop:"-10px"}}><span >Shipped through   {data.info.shipping_method}</span></p>
 
                         </div>

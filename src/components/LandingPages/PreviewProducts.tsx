@@ -5,6 +5,8 @@ import { updateSelectedProductsList, updateSourcePage } from '../../utils/reduxS
 import { syncProductsWithShopify } from '../../services/ProductsService';
 import { showSuccessMessage } from '../../shared/notificationProvider';
 import { SYNC_PRODUCTS_WITH_SUCCESS } from '../../utils/constants/NotificationConstants';
+import ModalWindow from './ModalWindow';
+import ProductThumbnail from './ProductThumbnail';
 
 const PreviewProducts = () => {
 
@@ -20,6 +22,8 @@ const PreviewProducts = () => {
     const user_details = localStorage.getItem('user_details') ? JSON.parse(localStorage.getItem('user_details') || '{}') : null;
     const refValues = useSelector((store: any) => store.refValues.referenceList);
     const [syncing, setSyncing] = useState(false);
+    const [isProductThumbnailOpen, setIsProductThumbnailOpen] = useState(false);
+    const [selectedProductToViewDetails, setSelectedProductToViewDetails] = useState<any>(null)
 
     const navigateToProductsList = (products: any) => {
         dispatch(updateSelectedProductsList(products));
@@ -84,6 +88,20 @@ const PreviewProducts = () => {
         }
     },[navigate,products.length])
 
+    const openProductDetails = (product: any, col: any) => {
+        if(col.column === "thumbnail"){
+            if (!isProductThumbnailOpen) {
+                setSelectedProductToViewDetails(product)
+                setIsProductThumbnailOpen(true)
+            }
+        }
+    }
+
+    
+    const closeShowThumbnailModal = () => {
+        setIsProductThumbnailOpen(false);
+      }
+
     return (
         <>
 
@@ -134,7 +152,7 @@ const PreviewProducts = () => {
                                                                     return col.isVisible &&
                                                                         (
                                                                             col.type === "image" ?
-                                                                                <td key={i} className="product-small-image px-0" style={{ paddingLeft: '0px !important' }}>
+                                                                                <td onClick={()=>openProductDetails(product, col)} key={i} className="product-small-image px-0" style={{ paddingLeft: '0px !important' }}>
                                                                                     <img src={product[col.column]} alt="" /></td>
                                                                                 :
 
@@ -160,7 +178,9 @@ const PreviewProducts = () => {
                     </div>
                 </div>
             </div>
-        
+            <ModalWindow show={isProductThumbnailOpen} modalClosed={closeShowThumbnailModal}>
+                <ProductThumbnail productDetails={selectedProductToViewDetails} closeModal={closeShowThumbnailModal}/>
+            </ModalWindow>
         </>
     ) 
 

@@ -18,6 +18,7 @@ const orderSlice = createSlice({
     },
     reducers: {
         updateSelectedOrder: (state, action) => {
+            localStorage.setItem('selected_order', JSON.stringify(action.payload))
             state.selectedOrder = action.payload
         },
         updateOrdersListFilters: (state, action) => {

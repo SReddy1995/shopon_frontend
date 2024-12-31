@@ -3234,3 +3234,14 @@ background: linear-gradient(to right, #3f4c6b, #606c88); /* W3C, IE 10+/ Edge, F
   background-color: #fff;
   padding-left: 6px;
  }
+
+ .thumnail-image-container{
+  display: flex;
+  justify-content: center;
+ }
+
+ .thumbnail-image{
+  height: 350px ;
+  width: 350px;
+  align-self: center;
+ }
