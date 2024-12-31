@@ -95,7 +95,10 @@ const errorInterceptor = async (error: any) => {
     showWarningMessage(TIMEOUT_ERROR);
   } else if (error.status === 500 && error.response && error.response.data && error.response.data.error && error.response.data.error.code && error.response.data.error.code === "2017004") {
     // don't show any warning message
-  } else {
+  } else if (error.status === 500 && (error.config.url === "/get_settle_details" || error.config.url === "/settle" || error.config.url === 
+    "/track_by_seller" || error.config.url === "/get_track_by_seller")) {
+    
+  }else {
     showWarningMessage(error.response.data.error.msg);
   }
       // if (error.response.status === 401 && error.response.message === "Token Expired") {

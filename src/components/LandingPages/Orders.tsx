@@ -224,10 +224,24 @@ const Orders = () => {
             }
           };
     
-        const fullfillment_status_list = refValues.fulfillment_status.map((status: any) => ({
-            value: status.eazehubfulfillmentstatusref,
-            label: status.description
-        })) || [];
+        const fullfillment_status_list = [
+            
+            {
+                value: 'PENDING', label: 'Pending'
+            },
+            {
+                value: 'INPROGRESS', label: 'In-Progress'
+            },
+            {
+                value: 'DELIVERED', label: 'Delivered'
+            },
+            {
+                value: 'COMPLETED', label: 'Completed'
+            },
+            {
+                value: 'CANCELLED', label: 'Cancelled'
+            }
+        ];
     
         const clearFullfillmentStatusList = () => {
             setSelectedFullfillmentStatus([])
@@ -545,8 +559,8 @@ const Orders = () => {
     }
 
     const getFulfillmentStatus = (item: any)=> {
-        if(item && fullfillment_status_list.filter((x:any)=>x.value === item).length>0){
-            return fullfillment_status_list.filter((x:any)=>x.value === item)[0].label
+        if(item && refValues.fulfillment_status.filter((x:any)=>x.value === item).length>0){
+            return refValues.fulfillment_status.filter((x:any)=>x.value === item)[0].label
         }
         return ''
     }
