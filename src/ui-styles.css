@@ -3129,7 +3129,8 @@ background: linear-gradient(to right, #3f4c6b, #606c88); /* W3C, IE 10+/ Edge, F
   margin-top: 7px;
 }
 .order-desc{
-  margin-top: -6px;
+  margin-left: 38px;
+  
 }
 .status-label{
   vertical-align: -webkit-baseline-middle;
@@ -3216,6 +3217,22 @@ background: linear-gradient(to right, #3f4c6b, #606c88); /* W3C, IE 10+/ Edge, F
  }
  .color-grey{
   color:rgba(97, 97, 97, 1) !important;
+ }
+ .back-btn{
+  vertical-align: middle;
+  text-align: center;
+  width: 32px;
+  height: 32px;
+  padding-left: 6px;
+ }
+ .back-btn:hover{
+  border-radius: 5px;
+  text-align: center;
+  width: 32px;
+  height: 33px;
+  vertical-align: middle;
+  background-color: #fff;
+  padding-left: 6px;
  }
 
  .thumnail-image-container{
