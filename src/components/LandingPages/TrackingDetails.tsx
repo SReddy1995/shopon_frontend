@@ -58,7 +58,7 @@ const TrackingDetails = (props: any) => {
         <div className="container-fluid">
             <div className="row">
                 <div className="col-12 d-flex justify-content-between px-0">
-                    <h4>Track status</h4>
+                    <h5>Track Status for #{props.selected_order.order_id}</h5>
                     <i className='fa fa-close fa-lg cursor-pointer mt-2' onClick={closeModal}></i>
                 </div>
                 <div className="col-12 px-0">
@@ -76,11 +76,17 @@ const TrackingDetails = (props: any) => {
                         </div>
                 }
                 {
-                    noData && <div className="col-12 px-0">
-                        <div className=" mt-4">
-                            <h5>{data}</h5>
-                        </div>
-                    </div>
+                    noData && 
+                    <>
+                            <div className="col-12 px-0 text-right mt-2">
+                               <h6><span className='color-grey'></span><b>{props.seller?.provider_info?.name}</b></h6>
+                            </div>
+                                    <div className="col-12 px-0">
+                                        <div className=" mt-4">
+                                            <h6>{data}</h6>
+                                        </div>
+                                    </div>
+                    </>
                 }
                 {
                     !loading && <>
