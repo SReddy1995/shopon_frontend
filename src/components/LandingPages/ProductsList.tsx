@@ -14,6 +14,7 @@ import { getOnlineStore } from '../../services/AccountService';
 import ProductDetails from './ProductDetails';
 import moment from 'moment';
 import ConfirmDelete from './ConfirmDelete';
+import ProductThumbnail from './ProductThumbnail';
 
 const haversineDistance = (lat1: any, lon1: any, lat2: any, lon2: any) => {
     const toRadians = (degree: any) => degree * (Math.PI / 180);
@@ -246,6 +247,7 @@ const ProductsList = () => {
     const [selectedSpecialities, setSelectedSpecialities] = useState([])
     const [isColumnVisibilityOpen, setIsColumnVisibilityOpen] = useState(false);
     const [isProductDetailsOpen, setIsProductDetailsOpen] = useState(false);
+    const [isProductThumbnailOpen, setIsProductThumbnailOpen] = useState(false);
     const [selectedLocation, setSelectedLocation] = useState<any>(null)
     const [showTable, setShowTable] = useState(false)
     const [searchString, setSearchString] = useState('')
@@ -1095,6 +1097,12 @@ const ProductsList = () => {
                 setIsProductDetailsOpen(true)
             }
         }
+        if(col.column === "thumbnail"){
+            if (!isProductThumbnailOpen) {
+                setSelectedProductToViewDetails(product)
+                setIsProductThumbnailOpen(true)
+            }
+        }
     }
 
     const closeProductDetails = () => {
@@ -1186,6 +1194,10 @@ const ProductsList = () => {
         initiateSearchForProducts(selectedCategories)
         closeConfirmRetrySearchModal();
     }
+
+    const closeShowThumbnailModal = () => {
+        setIsProductThumbnailOpen(false);
+      }
     
 
     return (
@@ -1587,6 +1599,9 @@ const ProductsList = () => {
         }
             <ModalWindow show={openRetrySearchConfirm} modalClosed={closeConfirmRetrySearchModal}>
                 <ConfirmDelete confirmModalClosed={closeConfirmRetrySearchModal}  deleteRecord={retrySearch} msg={retrySearchConfirmationMsg} deleteText={retrySearchConfirmationText}/>
+            </ModalWindow>
+            <ModalWindow show={isProductThumbnailOpen} modalClosed={closeShowThumbnailModal}>
+                <ProductThumbnail productDetails={selectedProductToViewDetails} closeModal={closeShowThumbnailModal}/>
             </ModalWindow>
 
         </>

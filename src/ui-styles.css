@@ -3217,3 +3217,14 @@ background: linear-gradient(to right, #3f4c6b, #606c88); /* W3C, IE 10+/ Edge, F
  .color-grey{
   color:rgba(97, 97, 97, 1) !important;
  }
+
+ .thumnail-image-container{
+  display: flex;
+  justify-content: center;
+ }
+
+ .thumbnail-image{
+  height: 350px ;
+  width: 350px;
+  align-self: center;
+ }
