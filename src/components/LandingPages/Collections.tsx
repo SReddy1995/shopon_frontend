@@ -9,6 +9,7 @@ import { showSuccessMessage } from '../../shared/notificationProvider';
 import { COLLECTION_PRODUCT_DELETED } from '../../utils/constants/NotificationConstants';
 import ModalWindow from './ModalWindow';
 import ConfirmDelete from './ConfirmDelete';
+import ProductThumbnail from './ProductThumbnail';
 
 const Collections = () => {
 
@@ -176,6 +177,8 @@ const Collections = () => {
       const [selectedProductToDelete, setSelectedProductToDelete] = useState<any>(null)
       const  [current_list_next_page_id, setCurrentListNextPageId] = useState<any>(null)
       const  [current_list_prev_page_id, setCurrentListPrevPageId] = useState<any>(null)
+      const [isProductThumbnailOpen, setIsProductThumbnailOpen] = useState(false);
+      const [selectedProductToViewDetails, setSelectedProductToViewDetails] = useState<any>(null)
     
       const handlePrevPage = () => {
         fetchShopifyProducts(startCursor, null)
@@ -350,6 +353,20 @@ const Collections = () => {
         setConfirmDeleteModalOpen(false);
       }
 
+      const openProductDetails = (product: any, col: any) => {
+        if(col.column === "thumbnail"){
+            if (!isProductThumbnailOpen) {
+                setSelectedProductToViewDetails(product)
+                setIsProductThumbnailOpen(true)
+            }
+        }
+    }
+
+    
+    const closeShowThumbnailModal = () => {
+        setIsProductThumbnailOpen(false);
+      }
+
     return (
         <>
         {
@@ -478,7 +495,7 @@ const Collections = () => {
                                                                                     return col.isVisible &&
                                                                                         (
                                                                                             col.type === "image" ?
-                                                                                                <td key={col.column + i} className="product-small-image px-0" style={{ paddingLeft: '0px !important' }}>
+                                                                                                <td onClick={()=>openProductDetails(item, col)} key={col.column + i} className="product-small-image px-0" style={{ paddingLeft: '0px !important' }}>
                                                                                                     <ImageWithFallback
                                                                                                         src={item[col.column]}
                                                                                                         alt=""/></td>
@@ -559,6 +576,9 @@ const Collections = () => {
         }
             <ModalWindow show={openDeleteConfirm} modalClosed={closeConfirmDeleteModal}>
                 <ConfirmDelete confirmModalClosed={closeConfirmDeleteModal}  deleteRecord={performDeleteProductFromCollection} msg={confirmDeleteMsg} deleteText={deleteText}/>
+            </ModalWindow>
+            <ModalWindow show={isProductThumbnailOpen} modalClosed={closeShowThumbnailModal}>
+                <ProductThumbnail productDetails={selectedProductToViewDetails} closeModal={closeShowThumbnailModal}/>
             </ModalWindow>
 
         </>
