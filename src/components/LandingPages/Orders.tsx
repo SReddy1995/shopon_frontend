@@ -559,8 +559,8 @@ const Orders = () => {
     }
 
     const getFulfillmentStatus = (item: any)=> {
-        if(item && refValues.fulfillment_status.filter((x:any)=>x.value === item).length>0){
-            return refValues.fulfillment_status.filter((x:any)=>x.value === item)[0].label
+        if(item && refValues.fulfillment_status.filter((x:any)=>x.eazehubfulfillmentstatusref === item).length>0){
+            return refValues.fulfillment_status.filter((x:any)=>x.eazehubfulfillmentstatusref === item)[0].description
         }
         return ''
     }
