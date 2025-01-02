@@ -37,12 +37,12 @@ const SettleDetails = (props: any) => {
             order: {
                 reference_no: order_details?.order_settlement_info?.reference_no,
                 amount: `${formatCurrency(order_details?.order_settlement_info?.settled_amount.value, order_details?.order_settlement_info?.settled_amount.currency)} of ${formatCurrency(order_details?.order_settlement_info?.amount.value, order_details?.order_settlement_info?.amount.currency)}`,
-                status: order_details?.order_settlement_info?.status ? getSettlementStatus(order_details?.order_settlement_info?.status) : '',
+                status: order_details?.order_settlement_info?.status ? order_details?.order_settlement_info?.status : '',
             },
             fee: {
                 reference_no: order_details?.self_settlement_info?.reference_no,
                 amount: formatCurrency(order_details?.self_settlement_info?.amount.value, order_details?.self_settlement_info?.amount.currency),
-                status: order_details?.self_settlement_info?.status ? getSettlementStatus(order_details?.self_settlement_info?.status) : '',
+                status: order_details?.self_settlement_info?.status ? order_details?.self_settlement_info?.status : '',
             }
         }
         setData(res)
@@ -179,10 +179,10 @@ const SettleDetails = (props: any) => {
                                     </div>
                                     <div className="col-4  py-1 ">
                                         <p className='mb-0'><i
-                                            className={data.order.status === 'SETTLED' ? 'fa fa-check-circle me-1' : 'fa fa-times-circle me-1'} style={data.order.status === 'SETTLED' ? {color: 'green'} : {color:'red'}}></i>{data.order.status}</p>
+                                            className={data.order.status === 'SETTLED' ? 'fa fa-check-circle me-1' : 'fa fa-times-circle me-1'} style={data.order.status === 'SETTLED' ? {color: 'green'} : {color:'red'}}></i>{getSettlementStatus(data.order.status)}</p>
                                     </div>
                                     <div className="col-4  py-1 ">
-                                        <p className='mb-0'><i className={data.fee.status === 'SETTLED' ? 'fa fa-check-circle me-1' : 'fa fa-times-circle me-1'} style={data.fee.status === 'SETTLED' ? {color: 'green'} : {color:'red'}}></i>{data.fee.status}</p>
+                                        <p className='mb-0'><i className={data.fee.status === 'SETTLED' ? 'fa fa-check-circle me-1' : 'fa fa-times-circle me-1'} style={data.fee.status === 'SETTLED' ? {color: 'green'} : {color:'red'}}></i>{getSettlementStatus(data.fee.status)}</p>
                                     </div>
                                 </div>
                             </div>
