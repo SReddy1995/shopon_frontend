@@ -831,12 +831,14 @@ const OrderDetails = () => {
 
                                             <span className="cust-name">{data.info.customer_info?.first_name} {data.info.customer_info?.last_name}</span><br />
                                             <span className="text-grey"><i className="fa fa-envelope"></i> {data.info.customer_info?.email ? data.info.customer_info?.email : 'No email provided'}</span><br />
+                                            <p className="mb-0">
                                             {
-                                                data.info.customer_info?.address1 && <p className="mb-0">{data.info.customer_info?.address1},</p>
+                                                data.info.customer_info?.address1 && <span>{data.info.customer_info?.address1},</span>
                                             }
                                             {
-                                                data.info.customer_info?.address2 && <p className="mb-0">{data.info.customer_info?.address2},</p>
+                                                data.info.customer_info?.address2 && <span> {data.info.customer_info?.address2},</span>
                                             }
+                                            </p>
                                             {
                                                 data.info.customer_info?.city && <p className="mb-0">{data.info.customer_info?.city}, {data.info.customer_info?.state}</p>
                                             }
@@ -857,12 +859,14 @@ const OrderDetails = () => {
                                             {
                                                 data.info.shipping_info?.name && <p className="mb-0">{data.info.shipping_info?.name},</p> 
                                             }
+                                            <p className="mb-0">
                                             {
-                                                data.info.shipping_info?.address1 && <p className="mb-0">{data.info.shipping_info?.address1},</p>
+                                                data.info.shipping_info?.address1 && <span>{data.info.shipping_info?.address1},</span>
                                             }
                                             {
-                                                data.info.shipping_info?.address2 && <p className="mb-0">{data.info.shipping_info?.address2},</p>
+                                                data.info.shipping_info?.address2 && <span> {data.info.shipping_info?.address2},</span>
                                             }
+                                            </p>
                                             {
                                                 data.info.shipping_info?.city && <p className="mb-0">{data.info.shipping_info?.city}, {data.info.shipping_info?.province}</p>
                                             }
@@ -889,12 +893,14 @@ const OrderDetails = () => {
                                             {
                                                 data.info.billing_info?.name && <p className="mb-0">{data.info.billing_info?.name},</p> 
                                             }
+                                            <p className="mb-0">
                                             {
-                                                data.info.billing_info?.address1 && <p className="mb-0">{data.info.billing_info?.address1},</p>
+                                                data.info.billing_info?.address1 && <span>{data.info.billing_info?.address1},</span>
                                             }
                                             {
-                                                data.info.billing_info?.address2 && <p className="mb-0">{data.info.billing_info?.address2},</p>
+                                                data.info.billing_info?.address2 && <span> {data.info.billing_info?.address2},</span>
                                             }
+                                            </p>
                                             {
                                                 data.info.billing_info?.city && <p className="mb-0">{data.info.billing_info?.city}, {data.info.billing_info?.province}</p>
                                             }
