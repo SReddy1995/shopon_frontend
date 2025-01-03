@@ -682,7 +682,7 @@ const OrderDetails = () => {
         
         
                                                                             <th colSpan={3} className="border-bottom-none"></th>
-                                                                            <th colSpan={3} className="text-center border-bottom-none">Charges in Rs</th>
+                                                                            <th colSpan={3} className="text-center border-bottom-none">Charges in ₹</th>
                                                                             <th colSpan={2} className="border-bottom-none"></th>
         
                                                                         </tr>
@@ -783,34 +783,31 @@ const OrderDetails = () => {
                                         {
                                             data?.order_summary && <div className="card-orders order-summary-card-container shadow bg-white mb-3 py-3 px-3">
                                             <div className="seller-wise-order-info">
-                                                <h4 className="mb-0">Order summary</h4>
+                                            <h4 className="seller-order-id mb-0">Order summary</h4>
                                             </div>
-                                            <div className="product-shipping-details-container">
+                                            <div className="product-shipping-details-container mt-0 mb-0">
                                                 <div className="product-details-container">
                                                     <div className="totals-container">
-                                                        <div className="order-summary-totals-info border-top-0 p-2">
+                                                        <div className="order-summary-totals-info border-top-0 pl-2 pr-2 pt-2 mb-0 pb-0">
                                                                 <span className="text-grey title-column">Subtotal </span>
                                                                 <span className="text-left description-column">{data.order_summary.itemsCount} items</span>
                                                                 <span className="text-default value-column">{data.order_summary.subTotal}</span>
                                                         </div>
-                                                        <div className="order-summary-totals-info border-top-0 p-2">
+                                                        <div className="order-summary-totals-info border-top-0 pl-2 pr-2 pt-2 mb-0 pb-0">
                                                                 <span className="text-grey title-column">Shipping </span>
                                                                 <span className="text-left description-column">Standard Shipping (0.0 kg: Items 0.0 kg, Package 0.0 kg)</span>
                                                                 <span className="text-default value-column">{data.order_summary.shipping_charges}</span>
                                                         </div>
-                                                        <div className="order-summary-totals-info border-top-0 p-2">
+                                                        <div className="order-summary-totals-info border-top-0 pl-2 pr-2 pt-2 mb-0 pb-0">
                                                                 <span className="text-grey title-column">Taxes </span>
                                                                 <span className="text-align-left description-column">Tax details</span>
                                                                 <span className="text-default value-column">{data.order_summary.taxes}</span>
                                                         </div>
-                                                        <div className="order-summary-totals-info border-top-0 p-2">
+                                                        <div className="order-summary-totals-info border-top-0 pl-2 pr-2 pt-2 mb-0 pb-2">
                                                                 <span className="text-grey title-column"><b>Total</b> </span>
                                                                 <span className="text-default value-column"><b>{data.order_summary.total}</b></span>
                                                         </div>
-                                                        <div className="order-summary-totals-info p-2">
-                                                                <span className="text-grey title-column">Paid </span>
-                                                                <span className="text-default value-column"><b>₹0.00</b></span>
-                                                        </div>
+                                                       
                                                     </div>
                                                 </div>
                                             </div>

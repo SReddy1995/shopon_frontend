@@ -1215,7 +1215,7 @@ const ProductsList = () => {
                         {
                     showBackButton ==='show' && (
                         
-                    <span onClick={navigateToCollectionsList} className='cursor-pointer'><i className='	fa fa-arrow-left me-2'></i></span>  )
+                    <span onClick={navigateToCollectionsList} className='cursor-pointer'> <span className='back-btn-products me-1'><i className='fa fa-arrow-left me-2 fa-left-icon'></i></span></span>  )
 }Products</h3>
                         {/* {
                             selectedLocation  &&
