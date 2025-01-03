@@ -28,6 +28,7 @@ const TrackingDetails = (props: any) => {
      const getTrackBySeller = useCallback(() => {
         setLoading(true);
             let payload = {
+                order_number: props.selected_order.order_number,
                 order_id: props.seller.order_seller_seq,
                 store_url: props.selected_order.store_url,
                 seller_id: props.seller.seller_id
