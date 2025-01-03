@@ -58,7 +58,7 @@ const TrackingDetails = (props: any) => {
         <div className="container-fluid">
             <div className="row">
                 <div className="col-12 d-flex justify-content-between px-0">
-                    <h5>Track Status for #{props.selected_order.order_id}</h5>
+                    <h5>Track Status for #{props.seller.order_seller_seq}</h5>
                     <i className='fa fa-close fa-lg cursor-pointer mt-2' onClick={closeModal}></i>
                 </div>
                 <div className="col-12 px-0">
