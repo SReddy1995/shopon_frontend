@@ -122,14 +122,21 @@ const SettleDetails = (props: any) => {
                
                     noData ? 
                     <>
-                            <div className="col-12 px-0 text-right mt-2">
-                               <h6><span className='color-grey'></span><b>{props.seller?.provider_info?.name}</b></h6>
+                            <div className="d-flex mt-2">
+                                   <div className="px-0 error-msg-block">
+                                        <div>
+                                            <h6 className='error-msg'><i className='fa fa-exclamation-circle me-1'></i>{data}</h6>
+                                        </div>
+                                    </div>
+                                <div>
+                               <h6><span className='color-grey'></span>{props.seller?.provider_info?.name}</h6>
+                               </div>
                             </div>
-                                    <div className="col-12 px-0">
+                                    {/* <div className="col-12 px-0">
                                         <div className=" mt-4">
                                             <h6>{data}</h6>
                                         </div>
-                                    </div>
+                                    </div> */}
                     </>
                     
                     :
