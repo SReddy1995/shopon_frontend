@@ -3279,5 +3279,13 @@ text-align: center;
   align-self: center;
  }
  .error-msg{
-  color:
- }
+  font-style:italic;
+  font-weight:500;
+  color:#f44336;
+  margin-left:-8px
+}
+ .error-msg-block{
+  width: 72%;
+  text-align: left;
+}
+ 

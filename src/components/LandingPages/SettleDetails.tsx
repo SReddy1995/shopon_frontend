@@ -123,9 +123,9 @@ const SettleDetails = (props: any) => {
                     noData ? 
                     <>
                             <div className="d-flex mt-2">
-                                   <div className="px-0">
+                                   <div className="px-0 error-msg-block">
                                         <div>
-                                            <h6 className='error-msg' style={{fontStyle:'italic',fontWeight:'500',color:'#f44336',marginLeft:'-8px'}}><i className='fa fa-exclamation-circle me-1'></i>{data}</h6>
+                                            <h6 className='error-msg'><i className='fa fa-exclamation-circle me-1'></i>{data}</h6>
                                         </div>
                                     </div>
                                 <div>
