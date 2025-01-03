@@ -95,8 +95,6 @@ const Account = () => {
       useEffect(() => {
         fetchStoreStatusDetails();
       }, [fetchStoreStatusDetails]);
-      
-    const subscriber_plan = "Gold";
 
     const [activeTab, setActiveTab] = useState(0);
 
@@ -147,7 +145,7 @@ const Account = () => {
                                 <p className="font-weight-bold"><strong>Subscriber ID : </strong><span>{user_details.subscriber_id}</span></p>
                             </div>
                             <div className="flex-grow">
-                                <p className="font-weight-bold"><strong>Subscription Plan : </strong><span>{subscriber_plan}</span></p>
+                                <p className="font-weight-bold"><strong>Subscription Plan : </strong><span>{user_details.sub_plan}</span></p>
                             </div>
                             <div className="flex-grow">
                                 <p className="font-weight-bold"><strong>Registration Date :</strong><span>{moment(user_details.createdAt).format("DD/MM/YYYY")}</span></p>

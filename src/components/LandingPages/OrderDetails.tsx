@@ -11,6 +11,7 @@ import { showSuccessMessage } from "../../shared/notificationProvider";
 import { RECONCILIATION_INITIATED_SUCCESSFULLY, STATUS_INITIATED_SUCCESSFULLY } from "../../utils/constants/NotificationConstants";
 import TrackingDetails from "./TrackingDetails";
 import SettleDetails from "./SettleDetails";
+import { renderFulfillmentButtons, renderOrderStatusButtons, renderSettlementStatusButtons } from "../../utils/functions/StatusButtonsMapping";
 
 const OrderDetails = () => {
 
@@ -436,9 +437,7 @@ const OrderDetails = () => {
                                         :
                                         data.info.order_status && <p
                                         className={
-                                            data.info.order_status === "CREATED" || data.info.order_status === "INPROGRESS" || data.info.order_status === "PARTIAL" ? "ml-1 product-draft custom-rounded-border" : 
-                                            data.info.order_status === "COMPLETED" ||  data.info.order_status === "ACCEPTED" ? "ml-1 product-active  custom-rounded-border" :
-                                            data.info.order_status === "CANCELLED" ? "ml-1 product-danger  custom-rounded-border" : ""
+                                            renderOrderStatusButtons(data.info.order_status) + " ml-1 custom-rounded-border"
                                         }>
                                              {getOrderStatus(data.info.order_status)}
                                         </p>
@@ -457,9 +456,7 @@ const OrderDetails = () => {
                                         :
                                         data.info.settlement_status && <p
                                         className={
-                                            data.info.settlement_status === "INITIATED" || data.info.settlement_status === "PARTIAL" || data.info.settlement_status === "PENDING" ? "ml-1 product-draft  custom-rounded-border" : 
-                                            data.info.settlement_status === "SETTLED" ? "ml-1 product-active  custom-rounded-border" :
-                                            data.info.settlement_status === "NOT_SETTLED" ? "ml-1 product-danger  custom-rounded-border" : ""
+                                            renderSettlementStatusButtons(data.info.settlement_status) + " ml-1 custom-rounded-border"
                                         }>
                                             {getSettlementStatus(data.info.settlement_status)}
                                         </p>
@@ -478,14 +475,7 @@ const OrderDetails = () => {
                                         :
                                         data.info.fulfillment_status &&  <p
                                         className={
-                                            data.info.fulfillment_status === "PENDING" || data.info.fulfillment_status === "PARTIAL" ||
-                                            data.info.fulfillment_status === "AGENT_ASSIGNED" || data.info.fulfillment_status === "AT_DESTINATION_HUB" ||
-                                            data.info.fulfillment_status === "IN_TRANSIT" || data.info.fulfillment_status === "RTO_INITIATED" ? "ml-1 product-draft  custom-rounded-border" : 
-                                            data.info.fulfillment_status === "PACKED" || data.info.fulfillment_status === "OUT_FOR_DELIVERY" ||
-                                            data.info.fulfillment_status === "ORDER_DELIVERED" || data.info.fulfillment_status === "ORDER_PICKED_UP" ||
-                                            data.info.fulfillment_status === "OUT_FOR_PICKUP" || data.info.fulfillment_status === "RTO_DELIVERED" ? "ml-1 product-active  custom-rounded-border" :
-                                            data.info.fulfillment_status === "CANCELLED" || data.info.fulfillment_status === "DELIVERY_FAILED" ||
-                                            data.info.fulfillment_status === "PICKUP_FAILED" || data.info.fulfillment_status === "RTO_DISPOSED" ? "ml-1 product-danger  custom-rounded-border" : ""
+                                            renderFulfillmentButtons(data.info.fulfillment_status) + " ml-1 custom-rounded-border"
                                         }>
                                             {getFulfillmentStatus(data.info.fulfillment_status)}
                                         </p>
@@ -589,9 +579,7 @@ const OrderDetails = () => {
                                                                         :
                                                                         seller.ondc_order_state && <p
                                                                             className={
-                                                                                seller.ondc_order_state === "CREATED" || seller.ondc_order_state === "INPROGRESS" || seller.ondc_order_state === "PARTIAL" ? "ml-1 mb-0 product-draft custom-rounded-border" :
-                                                                                    seller.ondc_order_state === "COMPLETED" || seller.ondc_order_state === "ACCEPTED" ? "ml-1 mb-0 product-active  custom-rounded-border" :
-                                                                                        seller.ondc_order_state === "CANCELLED" ? "ml-1 mb-0 product-danger  custom-rounded-border" : ""
+                                                                                renderOrderStatusButtons(seller.ondc_order_state) + " ml-1 mb-0 custom-rounded-border"
                                                                             }>
                                                                             {getOrderStatus(seller.ondc_order_state)}
                                                                         </p>
@@ -609,9 +597,7 @@ const OrderDetails = () => {
                                                                         :
                                                                         seller.settlement_status && <p
                                                                             className={
-                                                                                seller.settlement_status === "INITIATED" || seller.settlement_status === "PARTIAL" || seller.settlement_status === "PENDING" ? "ml-1 mb-0 product-draft  custom-rounded-border" :
-                                                                                    seller.settlement_status === "SETTLED" ? "ml-1 mb-0 product-active  custom-rounded-border" :
-                                                                                        seller.settlement_status === "NOT_SETTLED" ? "ml-1 mb-0 product-danger  custom-rounded-border" : ""
+                                                                                renderSettlementStatusButtons(seller.settlement_status) + " ml-1 mb-0 custom-rounded-border"
                                                                             }>
                                                                             {getSettlementStatus(seller.settlement_status)}
                                                                         </p>
@@ -629,14 +615,7 @@ const OrderDetails = () => {
                                                                         :
                                                                         seller.fulfillment_status && <p
                                                                             className={
-                                                                                seller.fulfillment_status === "PENDING" || seller.fulfillment_status === "PARTIAL" ||
-                                                                                    seller.fulfillment_status === "AGENT_ASSIGNED" || seller.fulfillment_status === "AT_DESTINATION_HUB" ||
-                                                                                    seller.fulfillment_status === "IN_TRANSIT" || seller.fulfillment_status === "RTO_INITIATED" ? "ml-1 mb-0 product-draft  custom-rounded-border" :
-                                                                                    seller.fulfillment_status === "PACKED" || seller.fulfillment_status === "OUT_FOR_DELIVERY" ||
-                                                                                        seller.fulfillment_status === "ORDER_DELIVERED" || seller.fulfillment_status === "ORDER_PICKED_UP" ||
-                                                                                        seller.fulfillment_status === "OUT_FOR_PICKUP" || seller.fulfillment_status === "RTO_DELIVERED" ? "ml-1 mb-0 product-active  custom-rounded-border" :
-                                                                                        seller.fulfillment_status === "CANCELLED" || seller.fulfillment_status === "DELIVERY_FAILED" ||
-                                                                                            seller.fulfillment_status === "PICKUP_FAILED" || seller.fulfillment_status === "RTO_DISPOSED" ? "ml-1 mb-0 product-danger  custom-rounded-border" : ""
+                                                                                renderFulfillmentButtons(seller.fulfillment_status) + " ml-1 mb-0 custom-rounded-border"
                                                                             }>
                                                                             {getFulfillmentStatus(seller.fulfillment_status)}
                                                                         </p>
@@ -717,14 +696,7 @@ const OrderDetails = () => {
                                                                                         {
                                                                                             seller.is_ondc_product && !statusUpdating && item.fulfillment_status && <span
                                                                                             className={
-                                                                                                item.fulfillment_status === "PENDING" || item.fulfillment_status === "PARTIAL" ||
-                                                                                                item.fulfillment_status === "AGENT_ASSIGNED" || item.fulfillment_status === "AT_DESTINATION_HUB" ||
-                                                                                                item.fulfillment_status === "IN_TRANSIT" || item.fulfillment_status === "RTO_INITIATED" ? "ml-1 mb-0 product-draft  custom-rounded-border" : 
-                                                                                                item.fulfillment_status === "PACKED" || item.fulfillment_status === "OUT_FOR_DELIVERY" ||
-                                                                                                item.fulfillment_status === "ORDER_DELIVERED" || item.fulfillment_status === "ORDER_PICKED_UP" ||
-                                                                                                item.fulfillment_status === "OUT_FOR_PICKUP" || item.fulfillment_status === "RTO_DELIVERED" ? "ml-1 mb-0 product-active  custom-rounded-border" :
-                                                                                                item.fulfillment_status === "CANCELLED" || item.fulfillment_status === "DELIVERY_FAILED" ||
-                                                                                                item.fulfillment_status === "PICKUP_FAILED" || item.fulfillment_status === "RTO_DISPOSED" ? "ml-1 mb-0 product-danger  custom-rounded-border" : ""
+                                                                                                renderFulfillmentButtons(item.fulfillment_status) + " ml-1 mb-0 custom-rounded-border"
                                                                                             }>
                                                                                             {getFulfillmentStatus(item.fulfillment_status)}
                                                                                             </span>
