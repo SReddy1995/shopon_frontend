@@ -44,7 +44,7 @@ const TrackingDetails = (props: any) => {
                     setData(err?.response?.data?.error?.msg)
                     setLoading(false);
                 });
-        },[fetchTrackDetails, props.seller.order_seller_seq, props.selected_order.store_url, props.seller.seller_id])
+        },[fetchTrackDetails,props.selected_order.order_number, props.seller.order_seller_seq, props.selected_order.store_url, props.seller.seller_id])
 
     useEffect(()=>{
         getTrackBySeller();
