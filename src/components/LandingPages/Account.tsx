@@ -47,7 +47,7 @@ const SubscriptionProgressContainer = styled.div`
 `;
 
 const CircularProgressbarContainer = styled.div`
-    width: 48%;
+    width: 5rem;
 `;
 
 const Account = () => {
