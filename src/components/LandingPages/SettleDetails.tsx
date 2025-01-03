@@ -26,11 +26,7 @@ const SettleDetails = (props: any) => {
     }
  
     const formatResponse = useCallback((data : any) => {
- 
-        // data = api_response
-        console.log(data)
         const order_details = data[0]?.orders?.find((order: any) => order.order_id === props.selected_order.order_id) || null;
-        // const order_details = data?.orders?.find((order: any) => order.order_id === 1000001) || null;
         let res = {
             settlement_id : data[0].settlement_id,
             order_id: props.selected_order.order_id,
@@ -51,7 +47,7 @@ const SettleDetails = (props: any) => {
 
     const fetchSettleDetails = useCallback(() => {   
         let payload = {
-            order_id: props.selected_order.order_id,
+            order_id: props.seller.order_seller_seq,
             store_url: props.selected_order.store_url,
             seller_id: props.seller.seller_id
         }
@@ -67,12 +63,12 @@ const SettleDetails = (props: any) => {
                     setLoading(false);
                 });
         
-    },[formatResponse, props.selected_order.order_id, props.selected_order.store_url, props.seller.seller_id])
+    },[formatResponse, props.seller.order_seller_seq, props.selected_order.store_url, props.seller.seller_id])
 
      const getSettleBySeller = useCallback(() => {
         setLoading(true);
             let payload = {
-                order_id: props.selected_order.order_id,
+                order_id: props.seller.order_seller_seq,
                 store_url: props.selected_order.store_url,
                 seller_id: props.seller.seller_id
             }
@@ -87,7 +83,7 @@ const SettleDetails = (props: any) => {
                     setData(err?.response?.data?.error?.msg)
                     setLoading(false);
                 });
-        },[fetchSettleDetails, props.selected_order.order_id, props.selected_order.store_url, props.seller.seller_id])
+        },[fetchSettleDetails, props.seller.order_seller_seq, props.selected_order.store_url, props.seller.seller_id])
 
     useEffect(()=>{
         getSettleBySeller();
@@ -102,7 +98,7 @@ const SettleDetails = (props: any) => {
         <div className="container-fluid" >
             <div className="row" >
                 <div className="col-12 d-flex justify-content-between px-0" >
-                    <h5>Settlement Status for #{props.selected_order.order_id}</h5>
+                    <h5>Settlement Status for #{props.seller.order_seller_seq}</h5>
                     <i className='fa fa-close fa-lg cursor-pointer mt-2' onClick={closeModal}></i>
                 </div>
                 <div className="col-12 px-0">

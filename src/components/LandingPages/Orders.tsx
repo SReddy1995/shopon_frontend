@@ -9,6 +9,7 @@ import Tooltip from './Tooltip';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateSelectedOrder } from '../../utils/reduxStore/orderSlice';
 import { useNavigate } from 'react-router-dom';
+import { renderFulfillmentButtons, renderOrderStatusButtons, renderSettlementStatusButtons } from '../../utils/functions/StatusButtonsMapping';
 
 const Orders = () => {
 
@@ -856,9 +857,7 @@ const Orders = () => {
                                                                                                 item[col.column] ? <td className='text-center' key={col.column}>
                                                                                                 <span
                                                                                                 className={
-                                                                                                    item[col.column] === "CREATED" || item[col.column] === "INPROGRESS" || item[col.column] === "PARTIAL" ? "product-draft" : 
-                                                                                                    item[col.column] === "COMPLETED" ||  item[col.column] === "ACCEPTED" ? " product-active" :
-                                                                                                    item[col.column] === "CANCELLED" ? "product-danger" : ""
+                                                                                                    renderOrderStatusButtons(item[col.column])
                                                                                                 }>
                                                                                                     {getOrderStatus(item[col.column])}
                                                                                                 </span>
@@ -872,14 +871,7 @@ const Orders = () => {
                                                                                                 item[col.column] ? <td className='text-center' key={col.column}>
                                                                                                     <span
                                                                                                 className={
-                                                                                                    item[col.column] === "PENDING" || item[col.column] === "PARTIAL" ||
-                                                                                                    item[col.column] === "AGENT_ASSIGNED" || item[col.column] === "AT_DESTINATION_HUB" ||
-                                                                                                    item[col.column] === "IN_TRANSIT" || item[col.column] === "RTO_INITIATED" ? "product-draft" : 
-                                                                                                    item[col.column] === "PACKED" || item[col.column] === "OUT_FOR_DELIVERY" ||
-                                                                                                    item[col.column] === "ORDER_DELIVERED" || item[col.column] === "ORDER_PICKED_UP" ||
-                                                                                                    item[col.column] === "OUT_FOR_PICKUP" || item[col.column] === "RTO_DELIVERED" ? " product-active" :
-                                                                                                    item[col.column] === "CANCELLED" || item[col.column] === "DELIVERY_FAILED" ||
-                                                                                                    item[col.column] === "PICKUP_FAILED" || item[col.column] === "RTO_DISPOSED" ? "product-danger" : ""
+                                                                                                    renderFulfillmentButtons(item[col.column])
                                                                                                 }>
                                                                                                     {getFulfillmentStatus(item[col.column])}
                                                                                                 </span>
@@ -893,9 +885,7 @@ const Orders = () => {
                                                                                                 item[col.column] ? <td className='text-center' key={col.column}>
                                                                                                     <span
                                                                                                 className={
-                                                                                                    item[col.column] === "INITIATED" || item[col.column] === "PARTIAL" || item[col.column] === "PENDING" ? "product-draft" : 
-                                                                                                    item[col.column] === "SETTLED" ? "product-active" :
-                                                                                                    item[col.column] === "NOT_SETTLED" ? "product-danger" : ""
+                                                                                                    renderSettlementStatusButtons(item[col.column])
                                                                                                 }>
                                                                                                     {getSettlementStatus(item[col.column])}
                                                                                                 </span>
