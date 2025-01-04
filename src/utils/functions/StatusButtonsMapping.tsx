@@ -20,7 +20,7 @@ export const renderFulfillmentButtons = (data: any) => {
     data === "AGENT_ASSIGNED" || data === "AT_DESTINATION_HUB" ||
     data === "IN_TRANSIT" || data === "RTO_INITIATED" ? "product-draft" : 
     data === "PACKED" || data === "OUT_FOR_DELIVERY" ||
-    data === "ORDER_DELIVERED" || data === "ORDER_PICKED_UP" ||
+    data === "ORDER_DELIVERED" || data === "ORDER_PICKED_UP" || data === "DELIVERED" ||
     data === "OUT_FOR_PICKUP" || data === "RTO_DELIVERED" ? "product-active" :
     data === "CANCELLED" || data === "DELIVERY_FAILED" ||
     data === "PICKUP_FAILED" || data === "RTO_DISPOSED" ? "product-danger" : ""
