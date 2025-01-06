@@ -50,4 +50,5 @@ export const OrderUrls = {
     trackDetailsBySeller: '/get_track_by_seller',
     settleOrderBySeller: '/settle',
     settleDetailsBySeller: '/get_settle_details',
+    downloadOrdersCsv: '/get_orders_csv'
 }

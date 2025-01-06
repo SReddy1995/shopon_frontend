@@ -93,5 +93,20 @@ import { orderServiceAxiosInstance, reconServiceAxiosInstance } from "../utils/i
       throw error;  // Throw the error so the calling component can handle it
     }
   };
+
+  export const getExportedOrdersInCSV = async (body: any) => {
+    try{
+  
+        const response = await orderServiceAxiosInstance.post(OrderUrls.downloadOrdersCsv, body,{
+            responseType: 'blob', // Important: Set response type to 'blob'
+          })
+        return response;
+  
+    } catch (error) {
+        console.error('Error fetching data: ', error);
+        // Handle errors here or throw them to be handled where the function is called
+        throw error;
+      }
+  }
   
 
