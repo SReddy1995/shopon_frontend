@@ -592,11 +592,11 @@ const Orders = () => {
                         <h3>Orders</h3>
                         <div>
                             <button type="button"
-                                className="btn-custom mr-2"
+                                className="btn-custom-grey mr-2"
                                 onClick={() => {
                                     openExportOrders();
                                 }}>
-                                Export
+                               <i className='fa fa-file-export '></i> Export 
                             </button>
                         <span><strong>
                         <i className="fa fa-cart-plus"></i>
@@ -961,7 +961,7 @@ const Orders = () => {
                 </div>
             </div>
             
-            <ModalWindow show={openExportOrdersModal} modalClosed={closeExportOrders}>
+            <ModalWindow show={openExportOrdersModal} modalClosed={closeExportOrders} detailsOf={'reconciliation'}>
                     <ExportOrders closeModal={closeExportOrders}/>
             </ModalWindow>
         </>
