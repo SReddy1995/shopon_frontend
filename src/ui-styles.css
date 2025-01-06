@@ -3290,24 +3290,40 @@ text-align: center;
 }
 
 .export-orders-container{
-  height: 450px;
+  height:auto;
 }
 
 .date-range-selector {
   display: flex;
   justify-content: space-between;
   gap: 20px;
-  margin: 20px 0;
+    margin: 10px 45px 0px -15px;
 }
 
 .date-picker-container {
-  width: 48%;
+  width: auto;
 }
 
 .export-to-csv-button-container{
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-  margin-top: 260px;
+  margin-top: 0%;
+  margin-right: 20px;
+text-align: end;
 }
- 
+ .bottom-divider{
+  margin-top: 44%;
+ }
+ .btn-custom-grey{
+  justify-content: center;
+  text-align: center;
+cursor: pointer;
+border-radius: .5rem !important;
+outline: none;
+  background:rgb(227, 227, 227) !important;
+  color:#303030 !important;
+  padding: 6px 15px;
+  font-size:0.813rem!important;
+  font-family: 'Inter';
+  min-width: 1.75rem;
+  /* box-shadow: rgba(0, 0, 0, 0.8) 0px -1px 0px 1px inset, rgb(48, 48, 48) 0px 0px 0px 1px inset, rgba(255, 255, 255, 0.25) 0px 0.5px 0px 1.5px inset
+  !important; */
+ }
