@@ -26,10 +26,10 @@ const SettleDetails = (props: any) => {
     }
  
     const formatResponse = useCallback((data : any) => {
-        const order_details = data[0]?.orders?.find((order: any) => order.order_id === props.selected_order.order_id) || null;
+        const order_details = data[0]?.orders?.find((order: any) => order.order_id === props.seller.order_seller_seq) || null;
         let res = {
             settlement_id : data[0].settlement_id,
-            order_id: props.selected_order.order_id,
+            order_id: props.seller.order_seller_seq,
             order: {
                 reference_no: order_details?.order_settlement_info?.reference_no,
                 amount: `${formatCurrency(order_details?.order_settlement_info?.settled_amount.value, order_details?.order_settlement_info?.settled_amount.currency)} of ${formatCurrency(order_details?.order_settlement_info?.amount.value, order_details?.order_settlement_info?.amount.currency)}`,
