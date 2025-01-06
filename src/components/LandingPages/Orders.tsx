@@ -10,6 +10,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateSelectedOrder } from '../../utils/reduxStore/orderSlice';
 import { useNavigate } from 'react-router-dom';
 import { renderFulfillmentButtons, renderOrderStatusButtons, renderSettlementStatusButtons } from '../../utils/functions/StatusButtonsMapping';
+import ModalWindow from './ModalWindow';
+import ExportOrders from './ExportOrders';
 
 const Orders = () => {
 
@@ -212,6 +214,7 @@ const Orders = () => {
         const [nodata, setNoData] = useState(false)
         const dispatch = useDispatch();
         const navigate = useNavigate();
+        const [openExportOrdersModal, setExportOrdersModalOpen] = useState(false);
 
         const handlePrevPage = () => {
             if (currentPage > 1) {
@@ -573,16 +576,32 @@ const Orders = () => {
         return ''
     }
 
+    const closeExportOrders = () => {
+        setExportOrdersModalOpen(false);
+    }
+
+    const openExportOrders = () => {
+        setExportOrdersModalOpen(true)
+    }
+
     return (
         <>
             <div className="container-fluid h-auto mt-3 px-3">
                 <div className="row mt-1">
                     <div className="col-12 d-flex align-items-center">
                         <h3>Orders</h3>
+                        <div>
+                            <button type="button"
+                                className="btn-custom mr-2"
+                                onClick={() => {
+                                    openExportOrders();
+                                }}>
+                                Export
+                            </button>
                         <span><strong>
                         <i className="fa fa-cart-plus"></i>
                         <span className="px-2 total-orders-text">{totalRecords} orders</span></strong></span>
-                      
+                        </div>
                     </div>
                 </div>
                 <div className="row mt-1">
@@ -941,6 +960,10 @@ const Orders = () => {
 
                 </div>
             </div>
+            
+            <ModalWindow show={openExportOrdersModal} modalClosed={closeExportOrders}>
+                    <ExportOrders closeModal={closeExportOrders}/>
+            </ModalWindow>
         </>
     ) 
 
