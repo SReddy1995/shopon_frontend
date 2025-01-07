@@ -3301,8 +3301,12 @@ text-align: center;
 }
 
 .date-picker-container {
-  width: auto;
+  width: 500px;
 }
+
+.export-orders-container.dropdown-divider{
+  margin-top: 10%;
+ }
 
 .export-to-csv-button-container{
   margin-top: 0%;
