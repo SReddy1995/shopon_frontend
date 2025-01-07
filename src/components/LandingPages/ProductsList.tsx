@@ -281,6 +281,13 @@ const ProductsList = () => {
     const [openRetrySearchConfirm, setConfirmRetrySearchModalOpen] = useState(false);
     const retrySearchConfirmationMsg = "Search results are removed from the Cache. Do you like to retry the search again?"
     const retrySearchConfirmationText = "Yes"
+    const user_details = localStorage.getItem('user_details') ? JSON.parse(localStorage.getItem('user_details') || '{}') : null;
+
+    const getStoreSubscriberId = useCallback(() => {
+        console.log(user_details.subscriber_id)
+        // return user_details.subscriber_id //use this line of code for dynamic subscriber_id
+        return 'ondc.opteamix.com' // this line is used inly when hard coded subscriber_id is used
+    },[user_details.subscriber_id])
 
     // Close the popup if clicked outside
     useEffect(() => {
@@ -619,7 +626,7 @@ const ProductsList = () => {
         setLoading(true)
         let payload : any = {
             message_id: msgId,
-            subscriber_id: "ondc.opteamix.com",
+            subscriber_id: getStoreSubscriberId(),
             range: 25
         }
         if(lastId){
@@ -692,7 +699,7 @@ const ProductsList = () => {
                 showWarningMessage(err.response.data.error.msg)
             }
         });
-    },[dispatch, formatSearchResults, lastId, sourcePage])
+    },[dispatch, formatSearchResults, lastId, sourcePage, getStoreSubscriberId])
 
       const initiateSearchForProducts = useCallback((cats: any) => {
 
@@ -931,7 +938,7 @@ const ProductsList = () => {
     const fetchSellersList = () => {
         let payload : any = {
             message_id: messageID,
-            subscriber_id: "ondc.opteamix.com",
+            subscriber_id: getStoreSubscriberId(),
         }
 
         getSellersList(payload)
@@ -1017,7 +1024,7 @@ const ProductsList = () => {
     const fetchSpecialityList = () => {
         let payload : any = {
             message_id: messageID,
-            subscriber_id: "ondc.opteamix.com",
+            subscriber_id: getStoreSubscriberId(),
         }
 
         getSpecialityList(payload)
