@@ -1,8 +1,9 @@
 import axios from 'axios';
 import { showWarningMessage } from '../../shared/notificationProvider';
 import { NOT_FOUND_ERROR, TIMEOUT_ERROR } from '../constants/NotificationConstants';
+import { baseUrl } from '../constants/UrlConstants';
 
-const baseURL = process.env.REACT_APP_BASEURL!;
+const baseURL = baseUrl;
 const baseEnv = process.env.REACT_APP_ENV!;
 const baseUrlSuffix = process.env.REACT_APP_BASEURLSUFFIX!;
 const discoveryServiceUrlSuffix = process.env.REACT_APP_DISCOVER_SERVICE_URLSUFFIX!;

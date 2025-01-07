@@ -1,3 +1,5 @@
+export const baseUrl = window.location.origin;
+
 export const AuthUrls = {
     register : '/register',
     requestGenerateOtp : '/generate_auth_otp',
