@@ -25,6 +25,11 @@ const PreviewProducts = () => {
     const [isProductThumbnailOpen, setIsProductThumbnailOpen] = useState(false);
     const [selectedProductToViewDetails, setSelectedProductToViewDetails] = useState<any>(null)
 
+    const getStoreSubscriberId = () => {
+        // return user_details.subscriber_id
+        return 'ondc.opteamix.com'
+    }
+
     const navigateToProductsList = (products: any) => {
         dispatch(updateSelectedProductsList(products));
         dispatch(updateSourcePage('preview'));
@@ -35,7 +40,7 @@ const PreviewProducts = () => {
         let result = 
         {
             message_id: messageID,
-            subscriber_id: "ondc.opteamix.com",
+            subscriber_id: getStoreSubscriberId(),
             buyer_id: user_details.buyer_id,
             domains: getDomains(),
             stream_details: selectedProductsList.map((product:any) => {
