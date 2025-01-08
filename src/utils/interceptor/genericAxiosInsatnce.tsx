@@ -40,19 +40,21 @@ const requestInterceptor = (config: any) => {
   if (config.url === "/document" && config.method === 'post') {
     config.headers['Content-Type'] = 'multipart/form-data';
   }
-  if (config.url === "/track_by_seller" && config.method === 'post') {
-    config.data = {
-      payload: config.data
-    };
-  }
   // Check if the method is POST or PUT
   else if ((config.method === 'post' || config.method === 'put') && config.data) {
     // Modify the request body as needed
-    let payload_formatted = [];
-    payload_formatted.push(config.data);
-    config.data = {
-      payload: payload_formatted
-    };
+    if (config.url === "/track_by_seller" && config.method === 'post') {
+      config.data = {
+        payload: config.data
+      };
+    }
+    else {
+      let payload_formatted = [];
+      payload_formatted.push(config.data);
+      config.data = {
+        payload: payload_formatted
+      };
+    }
   }
   return config;
 };
