@@ -1,31 +1,24 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { updateSelectedOrder } from "../../utils/reduxStore/orderSlice";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { fetchStatusBySeller, getOrderDetails, getUpdatedStatusesForOrder } from "../../services/OrdersService";
-import moment from 'moment';
+import { useCallback, useEffect, useState } from "react";
+import { getOrderDetails, getUpdatedStatusesForOrder } from "../../services/OrdersService";
 import ModalWindow from "./ModalWindow";
 import ReconciliationDetails from "./ReconciliationDetails";
 import ondc_product from '../../assets/images/ondc-icon.png';
-import { showSuccessMessage } from "../../shared/notificationProvider";
-import { RECONCILIATION_INITIATED_SUCCESSFULLY, STATUS_INITIATED_SUCCESSFULLY } from "../../utils/constants/NotificationConstants";
 import TrackingDetails from "./TrackingDetails";
 import SettleDetails from "./SettleDetails";
 import { renderFulfillmentButtons, renderOrderStatusButtons, renderSettlementStatusButtons } from "../../utils/functions/StatusButtonsMapping";
-import { updateSelectedSeller } from "../../utils/reduxStore/sellerSlice";
 
-const OrderDetails = () => {
+const RefundDetails = () => {
 
     const navigate = useNavigate();
-    const dispatch = useDispatch();
     const orderFromRedux = useSelector((store: any) => store.order.selectedOrder);
     const selected_order = orderFromRedux ? orderFromRedux : localStorage.getItem('selected_order') ? JSON.parse(localStorage.getItem('selected_order')!) : null;
+    const sellerFromRedux = useSelector((store: any) => store.seller.selectedSeller);
+    const selected_seller = sellerFromRedux ? sellerFromRedux : localStorage.getItem('selected_seller') ? JSON.parse(localStorage.getItem('selected_seller')!) : null;
     const [loading,setLoading] = useState(true)
     const [data, setData] = useState<any>(null)
     // const [noData, setNoData] = useState(false)
-    const moreActionsPopupRef = useRef<any>(null);
-    const [isPopupOpen, setIsPopupOpen] = useState(false);
-    const [selectedSellerForMoreActions, setSelectedSellerForMoreActions] = useState<any>(null);
     const [open, setModalOpen] = useState(false);
     const [openTrackModal, setTrackModalOpen] = useState(false);
     const [openSettleModal, setSettleModalOpen] = useState(false);
@@ -67,17 +60,12 @@ const OrderDetails = () => {
         return ''
     }
 
-    const openReconciliationWindow = () => {
-        setModalOpen(true);
-      }
-
     const closeReconciliationWindow = () => {
         setModalOpen(false);
       };
 
-    const navigateToOrderssList = () => {
-        dispatch(updateSelectedOrder(null));
-        navigate("/landing-page/orders/orders-list")
+    const navigateToOrderDetails = () => {
+        navigate("/landing-page/orders/order-details")
     }
 
     const getRowTotal = (ele: any) => {
@@ -260,51 +248,14 @@ const OrderDetails = () => {
     }, []);
 
     useEffect(() => {  
-        if(selected_order){
+        if(selected_order && selected_seller){
             fetchOrderDetails();
         } 
         else{
-            navigate("/landing-page/orders/orders-list")
+            navigate("/landing-page/orders/order-details")
         }
      // eslint-disable-next-line react-hooks/exhaustive-deps
     },[fetchOrderDetails, navigate]);
-
-        // Close the popup if clicked outside
-        useEffect(() => {
-        const handleClickOutside = (event: any) => {
-            
-            if (moreActionsPopupRef.current && !moreActionsPopupRef.current.contains(event.target)) {
-                setIsPopupOpen(false)
-                setSelectedSellerForMoreActions(null); // Close the popup if the click is outside
-            }
-        };
-    
-        // Attach the event listener to the document
-        document.addEventListener('mousedown', handleClickOutside);
-    
-        // Cleanup the event listener when the component unmounts
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-        }, []);
-
-    const openMoreActions = (seller_seq: any) => {
-        if(isPopupOpen && selectedSellerForMoreActions === seller_seq){
-            closeMoreActions();
-        }
-        else if(isPopupOpen && selectedSellerForMoreActions !== seller_seq){
-            setSelectedSellerForMoreActions(seller_seq);
-        }
-        else{
-            setIsPopupOpen(true)
-            setSelectedSellerForMoreActions(seller_seq);
-        }
-    }
-
-    const closeMoreActions = () => {
-        setIsPopupOpen(false)
-        setSelectedSellerForMoreActions(null);
-    }
 
     const toggleItemDetails = (item: any) => {
         if(itemDetailsOpen === item.store_item_id){
@@ -354,70 +305,15 @@ const OrderDetails = () => {
             .catch(() => setStatusUpdating(false));
     }
 
-    const getStatusBySeller = (seller: any) => {
-        let payload = {
-            order_number: selected_order.order_number,
-            store_url: selected_order.store_url,
-            seller_id: seller.seller_id
-        }
-        fetchStatusBySeller(payload)
-            .then((data: any) => {
-                console.log("status response = ", data)
-                showSuccessMessage(STATUS_INITIATED_SUCCESSFULLY)
-                setStatusUpdating(true)
-                setTimeout(()=>{
-                    fetchUpdatedStatuses()
-                },5000)
-            })
-            .catch(err => {
-                
-            });
-            closeMoreActions();
-    }
-
-    const getIGMBySeller = (seller: any) => {
-        
-    }
-
-    const getReconciliationBySeller = (seller: any) => {
-        openReconciliationWindow()
-        showSuccessMessage(RECONCILIATION_INITIATED_SUCCESSFULLY)
-    }
-
-    const openTrackBySellerWindow = () => {
-        setTrackModalOpen(true);
-    }
-
     const closeTrackBySellerWindow = () => {
         setSelectedSeller(null)
         setTrackModalOpen(false);
-    }
-
-    const openTrackBySeller = (seller: any) => {
-        setSelectedSeller(seller)
-        openTrackBySellerWindow()
-        closeMoreActions();
-    }
-
-    const openSettleBySellerWindow = () => {
-        setSettleModalOpen(true);
     }
 
     const closeSettleBySellerWindow = () => {
         setSelectedSeller(null)
         fetchUpdatedStatuses();
         setSettleModalOpen(false);
-    }
-
-    const openSettleBySeller = (seller: any) => {
-        setSelectedSeller(seller)
-        openSettleBySellerWindow()
-        closeMoreActions();
-    }
-
-    const openRefundDetails = (seller: any) => {
-        dispatch(updateSelectedSeller(seller));
-        navigate(`/landing-page/orders/refund-details`)
     }
 
     return (
@@ -430,90 +326,13 @@ const OrderDetails = () => {
                                 <div className="d-flex">
                                     <div>
                                         <h4><span className='cursor-pointer d-flex'>
-                                            <span className='back-btn me-1'><i className='fa fa-arrow-left me-2 fa-left-icon' onClick={navigateToOrderssList}></i></span>#{selected_order.order_id}</span></h4>
+                                            <span className='back-btn me-1'><i className='fa fa-arrow-left me-2 fa-left-icon' onClick={navigateToOrderDetails}></i></span>Refund details</span></h4>
                                     </div>
-                                    <div>
-                                    <span className="status-label">Order </span>
-                                    </div>
-                                    {
-                                        statusUpdating ?
-                                            <p
-                                                className="ml-1 product-active bg-default-grey  custom-rounded-border">
-                                                ...
-                                            </p>
-                                        :
-                                        data.info.order_status && <p
-                                        className={
-                                            renderOrderStatusButtons(data.info.order_status) + " ml-1 custom-rounded-border"
-                                        }>
-                                             {getOrderStatus(data.info.order_status)}
-                                        </p>
-                                    }
-                                     <span style={{marginLeft:"10px",marginTop:"5px",color:"grey"}}> | </span>
-                                     <div>
-                                    <span className="status-label">Settlement </span> 
-                                  
-                                    </div>
-                                    {
-                                        statusUpdating ?
-                                        <p
-                                            className="ml-1 product-active bg-default-grey  custom-rounded-border">
-                                            ...
-                                        </p>
-                                        :
-                                        data.info.settlement_status && <p
-                                        className={
-                                            renderSettlementStatusButtons(data.info.settlement_status) + " ml-1 custom-rounded-border"
-                                        }>
-                                            {getSettlementStatus(data.info.settlement_status)}
-                                        </p>
-                                      
-                                    }
-                                    <span style={{marginLeft:"10px",marginTop:"5px",color:"grey"}}> | </span>
-                                    <div>
-                                    <span className="status-label">Fulfillment </span> 
-                                    </div>
-                                    {
-                                        statusUpdating ?
-                                            <p
-                                                className="ml-1 product-active bg-default-grey  custom-rounded-border">
-                                                ...
-                                            </p>
-                                        :
-                                        data.info.fulfillment_status &&  <p
-                                        className={
-                                            renderFulfillmentButtons(data.info.fulfillment_status) + " ml-1 custom-rounded-border"
-                                        }>
-                                            {getFulfillmentStatus(data.info.fulfillment_status)}
-                                        </p>
-                                    }
-                                    
-                                      {/* <span style={{marginLeft:"10px",marginTop:"5px",color:"grey"}}> | </span>
-                                     <div>
-                                    <span className="status-label">Refund : </span>                                     
-                                    </div>
-                                    {
-                                        statusUpdating ?
-                                        <p
-                                            className="ml-2 product-active bg-default-grey  custom-rounded-border">
-                                            ...
-                                        </p>
-                                        :
-                                        data.info.payment_status && <p
-                                        className={
-                                            data.info.payment_status === "PAID" ? "ml-2 product-active  custom-rounded-border" : 
-                                            data.info.payment_status === "NOT_PAID" ? "ml-2 product-danger  custom-rounded-border" : ""
-                                        }>
-                                            {getPaymentStatus(data.info.payment_status)}
-                                        </p>
-                                    } */}
                                 </div>
                             </div>
                         </div>
                         <div className="col-12 text-left order-desc">
-                            <p className="text-default-grey"><span>{data.info.order_created_date ? moment(data.info.order_created_date).format('MMMM DD, YYYY [at] h:mm A') : ''}<span>&nbsp;|</span> <span>Transaction Id: </span>{data.info.transaction_id}</span> <span>|</span> <span>Shopify Order No: {data.info.order_number}</span></p>
-                            <p className="text-default" style={{marginTop:"-10px"}}><span >Shipped through   {data.info.shipping_method}</span></p>
-
+                            <p className="text-default-grey"><span>#{selected_seller.order_seller_seq}</span></p>
                         </div>
                         <div className="col-12">
                             <div className="row">
@@ -524,60 +343,12 @@ const OrderDetails = () => {
                                             data?.sellers?.length>0 && <>
                                             {
                                                 data.sellers.map((seller: any, index: number) => {
-                                                    return <div key={seller.order_seller_seq} className="card-orders seller-card-container shadow bg-white mb-0 py-3 px-3">
+                                                    return seller.order_seller_seq === selected_seller.order_seller_seq && <div key={seller.order_seller_seq} className="card-orders seller-card-container shadow bg-white mb-0 py-3 px-3">
                                                     <div className="seller-wise-order-info" >
                                                         <ul className="paid-grey d-flex pl-0 mb-0">
                                                             
                                                             <h4 className="seller-order-id">#{seller.order_seller_seq}</h4>
                                                         </ul>
-                                                        <div className="d-flex flex-row justify-content-between align-items-center gap-1">
-                                                        {
-                                                            seller.is_ondc_product && <button type="button" className="btn-custom button-parent" onClick={()=> openMoreActions(seller.order_seller_seq)} 
-                                                            ref={moreActionsPopupRef}>
-                                                            More Actions
-                                                            {
-                                                                isPopupOpen && selectedSellerForMoreActions === seller.order_seller_seq ?
-                                                                    <i className="fa fa-caret-up ms-2"></i>
-                                                                :
-                                                                    <i className="fa fa-caret-down ms-2"></i>
-                                                            }
-                                                            
-                                                            {(isPopupOpen && selectedSellerForMoreActions === seller.order_seller_seq) && (
-                                                                <div className="more-actions-popup" ref={moreActionsPopupRef}>
-                                                                    <div className='d-flex flex-column align-items-start'>
-                                                                        <div onClick={()=>getStatusBySeller(seller)} className="more-actions-popup-elements px-3 py-2">
-                                                                            <i className="fa fa-question-circle me-2"></i>
-                                                                            <p className="mb-0">Status</p>
-                                                                        </div>
-                                                                        <div onClick={()=>openTrackBySeller(seller)} className="more-actions-popup-elements px-3 py-2">
-                                                                            <i className="fa fa-truck me-1"></i>
-                                                                            <p className="mb-0">Track</p>
-                                                                        </div>
-                                                                        <div onClick={()=>openSettleBySeller(seller)} className="more-actions-popup-elements px-3 py-2">
-                                                                            <i className="fa fa-credit-card me-2"></i>
-                                                                            <p className="mb-0">Settle</p>
-                                                                        </div>
-                                                                        <div onClick={()=>getIGMBySeller(seller)} className="more-actions-popup-elements px-3 py-2">
-                                                                            <i className="fa fa-support me-2"></i>
-                                                                            <p className="mb-0">IGM</p>
-                                                                        </div>
-                                                                        <div onClick={()=>getReconciliationBySeller(seller)} className="more-actions-popup-elements px-3 py-2">
-                                                                            <i className="fa fa-barcode me-2"></i>
-                                                                            <p className="mb-0">Reconciliation</p>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            )}
-                                                        </button>
-                                                        }
-                                                        {
-                                                            seller.is_refund_initiated && <button type="button" className="btn-custom button-parent btn-secondary btn-danger" onClick={()=> openRefundDetails(seller)} >
-                                                                Refund details
-                                                            </button>
-                                                        }   
-                                                        </div>
-                                                        
-                         
                                                     </div>
                                                     {
                                                             seller.is_ondc_product && <div className="seller-wise-statuses-container">
@@ -764,41 +535,6 @@ const OrderDetails = () => {
                                             }
                                             </>
                                         }
-                                        
-                                         {/* seller cards ends here */}
-                                        {
-                                            data?.order_summary && <div className="card-orders order-summary-card-container shadow bg-white mb-3 py-3 px-3">
-                                            <div className="seller-wise-order-info">
-                                            <h4 className="seller-order-id mb-0">Order summary</h4>
-                                            </div>
-                                            <div className="product-shipping-details-container mt-0 mb-0">
-                                                <div className="product-details-container">
-                                                    <div className="totals-container">
-                                                        <div className="order-summary-totals-info border-top-0 pl-2 pr-2 pt-2 mb-0 pb-0">
-                                                                <span className="text-grey title-column">Subtotal </span>
-                                                                <span className="text-left description-column">{data.order_summary.itemsCount} items</span>
-                                                                <span className="text-default value-column">{data.order_summary.subTotal}</span>
-                                                        </div>
-                                                        <div className="order-summary-totals-info border-top-0 pl-2 pr-2 pt-2 mb-0 pb-0">
-                                                                <span className="text-grey title-column">Shipping </span>
-                                                                <span className="text-left description-column">Standard Shipping (0.0 kg: Items 0.0 kg, Package 0.0 kg)</span>
-                                                                <span className="text-default value-column">{data.order_summary.shipping_charges}</span>
-                                                        </div>
-                                                        <div className="order-summary-totals-info border-top-0 pl-2 pr-2 pt-2 mb-0 pb-0">
-                                                                <span className="text-grey title-column">Taxes </span>
-                                                                <span className="text-align-left description-column">Tax details</span>
-                                                                <span className="text-default value-column">{data.order_summary.taxes}</span>
-                                                        </div>
-                                                        <div className="order-summary-totals-info border-top-0 pl-2 pr-2 pt-2 mb-0 pb-2">
-                                                                <span className="text-grey title-column"><b>Total</b> </span>
-                                                                <span className="text-default value-column"><b>{data.order_summary.total}</b></span>
-                                                        </div>
-                                                       
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        }
                                     </div>
                                     {
                                         data?.info &&  <div className="order-details-right-column">
@@ -917,4 +653,4 @@ const OrderDetails = () => {
 
 }
 
-export default OrderDetails;
+export default RefundDetails;
