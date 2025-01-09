@@ -12,7 +12,7 @@ import { RECONCILIATION_INITIATED_SUCCESSFULLY, STATUS_INITIATED_SUCCESSFULLY } 
 import TrackingDetails from "./TrackingDetails";
 import SettleDetails from "./SettleDetails";
 import { renderFulfillmentButtons, renderOrderStatusButtons, renderSettlementStatusButtons } from "../../utils/functions/StatusButtonsMapping";
-import { updateSelectedSeller } from "../../utils/reduxStore/sellerSlice";
+// import { updateSelectedSeller } from "../../utils/reduxStore/sellerSlice";
 
 const OrderDetails = () => {
 
@@ -415,10 +415,10 @@ const OrderDetails = () => {
         closeMoreActions();
     }
 
-    const openRefundDetails = (seller: any) => {
-        dispatch(updateSelectedSeller(seller));
-        navigate(`/landing-page/orders/refund-details`)
-    }
+    // const openRefundDetails = (seller: any) => {
+    //     dispatch(updateSelectedSeller(seller));
+    //     navigate(`/landing-page/orders/refund-details`)
+    // }
 
     return (
         <>
@@ -570,11 +570,11 @@ const OrderDetails = () => {
                                                             )}
                                                         </button>
                                                         }
-                                                        {
+                                                        {/* {
                                                             seller.is_refund_initiated && <button type="button" className="btn-custom button-parent btn-secondary btn-danger" onClick={()=> openRefundDetails(seller)} >
                                                                 Refund details
                                                             </button>
-                                                        }   
+                                                        }    */}
                                                         </div>
                                                         
                          

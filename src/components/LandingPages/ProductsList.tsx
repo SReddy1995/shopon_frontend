@@ -15,10 +15,11 @@ import ProductDetails from './ProductDetails';
 import moment from 'moment';
 import ConfirmDelete from './ConfirmDelete';
 import ProductThumbnail from './ProductThumbnail';
+import { baseUrl } from '../../utils/constants/UrlConstants';
+
 
 const haversineDistance = (lat1: any, lon1: any, lat2: any, lon2: any) => {
     const toRadians = (degree: any) => degree * (Math.PI / 180);
-  
     const R = 6371; // Radius of Earth in kilometers
     const dLat = toRadians(lat2 - lat1);
     const dLon = toRadians(lon2 - lon1);
@@ -286,7 +287,8 @@ const ProductsList = () => {
     const getStoreSubscriberId = useCallback(() => {
         console.log(user_details.subscriber_id)
         // return user_details.subscriber_id //use this line of code for dynamic subscriber_id
-        return 'ondc.opteamix.com' // this line is used inly when hard coded subscriber_id is used
+        return baseUrl.split("//")[1] // this line should be used to take sub_id from url. remove later
+        // return 'ondc.opteamix.com' // this line is used inly when hard coded subscriber_id is used
     },[user_details.subscriber_id])
 
     // Close the popup if clicked outside
