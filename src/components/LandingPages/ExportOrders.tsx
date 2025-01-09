@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
-import { addDays } from 'date-fns'; // Optionally, for setting a default range
-import moment from 'moment';
-import { showSuccessMessage } from '../../shared/notificationProvider';
-import { ORDERS_CSV_DOWNLOADED } from '../../utils/constants/NotificationConstants';
-import { getExportedOrdersInCSV } from '../../services/OrdersService';
+// import moment from 'moment';
+// import { showSuccessMessage } from '../../shared/notificationProvider';
+// import { ORDERS_CSV_DOWNLOADED } from '../../utils/constants/NotificationConstants';
+// import { getExportedOrdersInCSV } from '../../services/OrdersService';
 
 const ExportOrders = (props: any) => {
 
-    const user_details = localStorage.getItem('user_details') ? JSON.parse(localStorage.getItem('user_details') || '{}') : null;
+    // const user_details = localStorage.getItem('user_details') ? JSON.parse(localStorage.getItem('user_details') || '{}') : null;
 
     const [startDate, setStartDate] = useState<any>(new Date());
     const [endDate, setEndDate] = useState<any>(new Date());
@@ -24,31 +23,31 @@ const ExportOrders = (props: any) => {
     }
 
     const exportToCSV = () => {
-        let payload = {
-            buyer_id: user_details.buyer_id,
-            start_date: startDate ? formatDate(startDate) : null,
-            end_date: endDate ? formatDate(endDate) : null
-        }
-        getExportedOrdersInCSV(payload)
-            .then((res: any) => {
+        // let payload = {
+        //     buyer_id: user_details.buyer_id,
+        //     start_date: startDate ? formatDate(startDate) : null,
+        //     end_date: endDate ? formatDate(endDate) : null
+        // }
+        // getExportedOrdersInCSV(payload)
+        //     .then((res: any) => {
                 
-                    const url = window.URL.createObjectURL(res); // Create a URL for the Blob
-                    const a = document.createElement('a'); // Create an anchor element
-                    a.href = url;
-                    a.download = 'orders.csv'; // Set the file name for download
-                    document.body.appendChild(a);
-                    a.click(); // Programmatically click the anchor to trigger the download
-                    a.remove(); // Clean up
-                    showSuccessMessage(ORDERS_CSV_DOWNLOADED)
-            })
-            .catch((err: any) => {
+        //             const url = window.URL.createObjectURL(res); // Create a URL for the Blob
+        //             const a = document.createElement('a'); // Create an anchor element
+        //             a.href = url;
+        //             a.download = 'orders.csv'; // Set the file name for download
+        //             document.body.appendChild(a);
+        //             a.click(); // Programmatically click the anchor to trigger the download
+        //             a.remove(); // Clean up
+        //             showSuccessMessage(ORDERS_CSV_DOWNLOADED)
+        //     })
+        //     .catch((err: any) => {
                 
-            });
+        //     });
     }
 
-    const formatDate = (date: any) =>{
-        return moment(date).format("DD-MM-YYYY")
-    }
+    // const formatDate = (date: any) =>{
+    //     return moment(date).format("DD-MM-YYYY")
+    // }
 
     return (
         <>
