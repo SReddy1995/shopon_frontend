@@ -13,6 +13,7 @@ import TrackingDetails from "./TrackingDetails";
 import SettleDetails from "./SettleDetails";
 import { renderFulfillmentButtons, renderOrderStatusButtons, renderSettlementStatusButtons } from "../../utils/functions/StatusButtonsMapping";
 import { updateSelectedSeller } from "../../utils/reduxStore/sellerSlice";
+import refund_icon from "../../assets/images/refund-icon.png"
 
 const OrderDetails = () => {
 
@@ -532,6 +533,11 @@ const OrderDetails = () => {
                                                         </ul>
                                                         <div className="d-flex flex-row justify-content-between align-items-center gap-1">
                                                         {
+                                                            seller.is_refund_initiated && <button type="button" className="btn-custom-grey" onClick={()=> openRefundDetails(seller)} >
+                                                              <span className="d-flex"> Refunds</span>
+                                                            </button>
+                                                        }   
+                                                        {
                                                             seller.is_ondc_product && <button type="button" className="btn-custom button-parent" onClick={()=> openMoreActions(seller.order_seller_seq)} 
                                                             ref={moreActionsPopupRef}>
                                                             More Actions
@@ -570,11 +576,7 @@ const OrderDetails = () => {
                                                             )}
                                                         </button>
                                                         }
-                                                        {
-                                                            seller.is_refund_initiated && <button type="button" className="btn-custom button-parent btn-secondary btn-danger" onClick={()=> openRefundDetails(seller)} >
-                                                                Refund details
-                                                            </button>
-                                                        }   
+                                                       
                                                         </div>
                                                         
                          
@@ -798,7 +800,51 @@ const OrderDetails = () => {
                                                 </div>
                                             </div>
                                         </div>
+
+
                                         }
+                                        <div className="card-orders order-summary-card-container shadow bg-white mb-3 py-3 px-3">
+                                                                <div className="seller-wise-order-info">
+                                                                <h4 className="seller-order-id mb-0">Refund summary</h4>
+
+                                                                
+                                                                </div>
+                                                                <div className="d-flex cust-divider"></div>
+                                                                <div className="text-left"> 
+                                                               <span className="product-active custom-rounded-border">completed </span></div>
+                                                                <div className="text-left">
+                                                               
+                                                                <div> <span className="d-flex-left justify-content-left"><span>Plain Atta</span><span className="ms-4">2</span><span className="ms-4">₹450.00</span></span>
+                                                                <span className="font-small text-grey">SKU:ddfe69fb-41f8-4a6b-be88-98e7fbafb951</span></div><br />
+                                                                <div className="d-flex cust-divider"></div>
+                                                                <div>
+
+                                                                    <p>Reasons for refund :</p>
+                                                                    <ul>
+                                                                        <li className="text-grey">
+                                                                            product was damaged
+                                                                        </li>
+                                                                        <li className="text-grey">
+                                                                            product was not delivered
+                                                                        </li>
+                                                                        <li className="text-grey">
+                                                                            color is different
+                                                                        </li>
+                                                                       
+
+                                                                    </ul>
+                                                                </div><br />
+                                                                <div className="d-flex cust-divider"></div>
+                                                                    <span className="text-grey">(For Testing) Bogus Gateway</span><br /><br />
+                                                                        <span className="text-grey">Account number ending with •• 1(•••• •• 1)</span><br /><br />
+                                                                        <span >Refund amount</span><br />
+                                                                        <p>
+                                                                            ₹450.00 available for refund
+                                                                         </p>
+
+                                                                
+                                                                </div>
+                                        </div>
                                     </div>
                                     {
                                         data?.info &&  <div className="order-details-right-column">

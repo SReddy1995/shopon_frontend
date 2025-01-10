@@ -331,7 +331,7 @@ const RefundDetails = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className="col-12 text-left order-desc">
+                        <div className="col-12 text-left refund-info">
                             <p className="text-default-grey"><span>#{selected_seller.order_seller_seq}</span></p>
                         </div>
                         <div className="col-12">
@@ -344,16 +344,16 @@ const RefundDetails = () => {
                                             {
                                                 data.sellers.map((seller: any, index: number) => {
                                                     return seller.order_seller_seq === selected_seller.order_seller_seq && <div key={seller.order_seller_seq} className="card-orders seller-card-container shadow bg-white mb-0 py-3 px-3">
-                                                    <div className="seller-wise-order-info" >
+                                                    {/* <div className="seller-wise-order-info" >
                                                         <ul className="paid-grey d-flex pl-0 mb-0">
                                                             
                                                             <h4 className="seller-order-id">#{seller.order_seller_seq}</h4>
                                                         </ul>
-                                                    </div>
+                                                    </div> */}
                                                     {
-                                                            seller.is_ondc_product && <div className="seller-wise-statuses-container">
+                                                            seller.is_ondc_product && <div className="seller-wise-statuses-container pt-3">
 
-                                                                <span className="status-label ml-0">Order</span>
+                                                                {/* <span className="status-label ml-0">Order</span>
 
                                                                 {
                                                                     statusUpdating ?
@@ -387,9 +387,9 @@ const RefundDetails = () => {
                                                                             {getSettlementStatus(seller.settlement_status)}
                                                                         </p>
                                                                 }
-                                                                <span style={{ marginLeft: "10px", color: "grey" }}> | </span>
+                                                                <span style={{ marginLeft: "10px", color: "grey" }}> | </span> */}
 
-                                                                <span className="status-label">Fulfillment </span>
+                                                               
 
                                                                 {
                                                                     statusUpdating ?
@@ -445,7 +445,7 @@ const RefundDetails = () => {
                                                                         <tr >
         
         
-                                                                            <th colSpan={3} className="border-bottom-none"></th>
+                                                                            <th colSpan={3} className="border-bottom-none">Original order</th>
                                                                             <th colSpan={3} className="text-center border-bottom-none">Charges in ₹</th>
                                                                             <th colSpan={2} className="border-bottom-none"></th>
         
@@ -535,6 +535,47 @@ const RefundDetails = () => {
                                             }
                                             </>
                                         }
+                                            <div className="card-orders shadow bg-white mb-3 pt-3 pb-1 px-3">
+                                      
+                                            <div className="seller-wise-order-info">
+                                            <h4 className="seller-order-id mb-0">Refund History</h4>
+                                            </div>
+                                            
+                                           
+                                        <div className="history-tl-container px-3">
+  <ul className="tl">
+    <li className="tl-item" ng-repeat="item in retailer_history">
+      <div className="timestamp">
+        3rd March 2015<br /> 7:00 PM
+      </div>
+      <div className="item-title"> <span className="d-flex"><span>Plain Atta</span><span>2</span><span>₹450.00</span> <span className="product-active custom-rounded-border">completed </span></span>
+      <span className="font-small text-grey">SKU:ddfe69fb-41f8-4a6b-be88-98e7fbafb951</span></div>
+     
+      <div className="item-detail">Refund completed</div>
+    </li>
+    <li className="tl-item" ng-repeat="item in retailer_history">
+      <div className="timestamp">
+        19th March 2015<br /> 3:00 PM
+      </div>
+      <div className="item-title"> <span className="d-flex"><span>Plain Atta</span><span>2</span><span>₹450.00</span></span>
+      <span className="font-small text-grey">SKU:ddfe69fb-41f8-4a6b-be88-98e7fbafb951</span></div>
+      <div className="item-detail">Refund processed !!</div>
+    </li>
+    <li className="tl-item" ng-repeat="item in retailer_history">
+      <div className="timestamp">
+        1st June 2015<br /> 7:00 PM
+      </div>
+      <div className="item-title">
+        <span className="d-flex"><span>Plain Atta</span><span>2</span><span>₹450.00</span></span>
+        <span className="font-small text-grey">SKU:ddfe69fb-41f8-4a6b-be88-98e7fbafb951</span>
+        </div>
+      <div className="item-detail">Refund was initiated !!</div>
+    </li>
+
+  </ul>
+
+</div>
+                                        </div>
                                     </div>
                                     {
                                         data?.info &&  <div className="order-details-right-column">
@@ -627,6 +668,8 @@ const RefundDetails = () => {
                                                 data.info.billing_info?.country && <p>{data.info.billing_info?.country} - {data.info.billing_info?.zip}</p>
                                             }
                                         </div>
+
+                                    
                                     </div>
                                     }
 
