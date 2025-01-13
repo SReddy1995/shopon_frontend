@@ -7,6 +7,7 @@ import { showSuccessMessage } from '../../shared/notificationProvider';
 import { SYNC_PRODUCTS_WITH_SUCCESS } from '../../utils/constants/NotificationConstants';
 import ModalWindow from './ModalWindow';
 import ProductThumbnail from './ProductThumbnail';
+import { baseUrl } from '../../utils/constants/UrlConstants';
 
 const PreviewProducts = () => {
 
@@ -27,7 +28,8 @@ const PreviewProducts = () => {
 
     const getStoreSubscriberId = () => {
         // return user_details.subscriber_id
-        return 'ondc.opteamix.com'
+        return baseUrl.split("//")[1] // this line should be used to take sub_id from url. remove later
+        // return 'ondc.opteamix.com'
     }
 
     const navigateToProductsList = (products: any) => {
