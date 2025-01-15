@@ -3400,3 +3400,10 @@ ul.tl li .timestamp{
   display: flex;
   justify-content: left;
 }
+.item-width{
+  width:64%;
+}
+.undo-icon{
+  padding-right: 4px;
+  padding-top: 4px;
+}

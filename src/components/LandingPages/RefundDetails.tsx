@@ -557,7 +557,7 @@ const RefundDetails = () => {
       <div className="timestamp">
         19th March 2015<br /> 3:00 PM
       </div>
-      <div className="item-title"> <span className="d-flex"><span>Plain Atta</span><span>2</span><span>₹450.00</span></span>
+      <div className="item-title"> <span className="d-flex item-width"><span>Plain Atta</span><span>2</span><span>₹450.00</span></span>
       <span className="font-small text-grey">SKU:ddfe69fb-41f8-4a6b-be88-98e7fbafb951</span></div>
       <div className="item-detail">Refund processed !!</div>
     </li>
@@ -566,7 +566,7 @@ const RefundDetails = () => {
         1st June 2015<br /> 7:00 PM
       </div>
       <div className="item-title">
-        <span className="d-flex"><span>Plain Atta</span><span>2</span><span>₹450.00</span></span>
+        <span className="d-flex item-width"><span>Plain Atta</span><span>2</span><span>₹450.00</span></span>
         <span className="font-small text-grey">SKU:ddfe69fb-41f8-4a6b-be88-98e7fbafb951</span>
         </div>
       <div className="item-detail">Refund was initiated !!</div>
