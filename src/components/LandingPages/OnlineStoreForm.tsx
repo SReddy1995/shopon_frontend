@@ -58,12 +58,12 @@ const initialValues = {
 
 const OnlineStoreForm = (props: any) => {
     const refValues = useSelector((store: any) => store.refValues.referenceList);
-    const cities = [...refValues.cities];
-    const cityIndex = cities.findIndex(city => city.city_id === 86);
-    if (cityIndex > -1) {
-        const [city] = cities.splice(cityIndex, 1);
-        cities.unshift(city);
-    }
+    const cities = [...refValues.cities]
+      .sort((a: any, b: any) => {
+        if (a.city_ref === "All" && b.city_ref !== "All") return -1;
+        if (b.city_ref === "All" && a.city_ref !== "All") return 1;
+        return a.description.localeCompare(b.description);
+      });
     const [loading, setLoading] = useState(true)
     const user_details = localStorage.getItem('user_details') ? JSON.parse(localStorage.getItem('user_details') || '{}') : null;
 
