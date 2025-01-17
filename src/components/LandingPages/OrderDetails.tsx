@@ -171,7 +171,7 @@ const OrderDetails = () => {
         convenience_fee: ele.convenience_fee ? ele.convenience_fee : 0,
         delivery_charge: ele.delivery_charge ? ele.delivery_charge : 0,
         tax: getTax(ele),
-        total: formatCurrency(getRowTotal(ele), 'INR'),
+        total: getRowTotal(ele),
     }));
 
     const getSubTotalSellerWise = (itemsList: any) => itemsList.reduce((sum: number, ele: any) => sum + getPriceOfItem(ele), 0);
