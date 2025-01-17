@@ -16,6 +16,7 @@ const TrackingDetails = (props: any) => {
                 .then((data: any) => {
                     console.log("tracking details = ", data);
                     setLoading(false);
+                    setData(data)
                 })
                 .catch(err => {
                     setNoData(true)
@@ -54,6 +55,10 @@ const TrackingDetails = (props: any) => {
         props.closeModal();
     }
 
+    const getCamelCaseText = (str: any) => {
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
     return (
         <>
         <div className="container-fluid">
@@ -77,7 +82,7 @@ const TrackingDetails = (props: any) => {
                         </div>
                 }
                 {
-                    noData && 
+                    !loading && noData && 
                     <>
                              <div className="d-flex mt-2">
                                    <div className="px-0 error-msg-block">
@@ -92,25 +97,25 @@ const TrackingDetails = (props: any) => {
                     </>
                 }
                 {
-                    !loading && <>
+                    !loading && !noData && <>
                             <div className="col-12 px-0">
-
-                            <div className="d-flex mt-2">
-
-                            <p className="product-draft custom-rounded-border"  style={{marginBottom:"8px",alignItems:"center"}}>Completed</p>
-                                <div style={{marginTop:"8px"}}>
-                               <h6><span className='color-grey'></span>{props.seller?.provider_info?.name}</h6>
-                               </div>
-
-                            </div>
+                                <div className="d-flex mt-2">
+                                    {
+                                        data?.status && <p>Status: <b>{getCamelCaseText(data?.status)}</b></p>
+                                    }
+                                    <div style={{ marginTop: "8px" }}>
+                                        <h6><span className='color-grey'></span>{props.seller?.provider_info?.name}</h6>
+                                    </div>
+                                </div>
                             
-                            <div className='text-left mt-1'>
-                            <a href="https://www.delhivery.com/track-v2/package/33309210000394"  className="btn btn-primary-outline" target='_blank'>Track your order</a>
-                          <a href="https://www.google.com/maps/dir/12.974002,77.613458/12.97411,77.62222" className="btn btn-green-outline ms-2"  target='_blank'>View live tracking</a>
-                                 </div>                            
-                                 </div>
-                            <div className="col-12 px-0">
-
+                                <div className='text-left mt-1'>
+                                    {
+                                        data?.tracking_url && <a href={data.tracking_url} className="btn btn-primary-outline" target='_blank' rel="noopener noreferrer">Track your order</a>
+                                    }
+                                    {
+                                        data?.googleMapsUrls && <a href={data.googleMapsUrls} className="btn btn-green-outline ms-2" target='_blank' rel="noopener noreferrer">View live tracking</a>
+                                    }
+                                </div>
                             </div>
                     </>
                 }
