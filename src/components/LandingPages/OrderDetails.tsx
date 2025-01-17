@@ -854,7 +854,7 @@ const OrderDetails = () => {
                                                     </>
                                                     :
                                                     <>
-                                                        <i className="fa fa-envelope"></i> {'No email provided'},&nbsp;
+                                                        <i className="fa fa-envelope"></i> {'NA'},&nbsp;
                                                     </>
                                                 }
                                                 {
@@ -863,7 +863,7 @@ const OrderDetails = () => {
                                                     </>
                                                     :
                                                     <>
-                                                        <i className="fa fa-phone"></i> {'No phone provided'}
+                                                        <i className="fa fa-phone"></i> {'NA'}
                                                     </>
                                                 }
                                             </span><br />
