@@ -94,43 +94,21 @@ const TrackingDetails = (props: any) => {
                 {
                     !loading && <>
                             <div className="col-12 px-0">
-                            <div className="d-flex mt-2">
-                                <a href="https://www.delhivery.com/track-v2/package/33309210000394" target='_blank'>View tracking details</a>
-                                <a href="https://www.google.com/maps/dir/12.974002,77.613458/12.97411,77.62222" style={{marginLeft:'10px'}} target='_blank'>View live tracking </a>
-                                <a  style={{marginLeft:'10px',color:"green"}}>Status : Completed</a>
-                        
-                                <div>
-                               <h6><span className='color-grey'></span>{props.seller?.provider_info?.name}</h6>
-                               </div>
-                            </div>
 
                             <div className="d-flex mt-2">
-                               
-                            <button type="submit" 
-                                            className="btn btn-primary-outline" 
-                                            
-                                        
-                                    >
-                                        View tracking details
-                                    </button>
-                                    <button type="submit" 
-                                            className="btn btn-custom-outline" 
-                                            style={{marginLeft:"0px"}}
-                                    >
-                                        View live tracking 
-                                    </button>
-                                    {/* <button type="submit" 
-                                            className="btn btn-green-outline" 
-                                            style={{marginLeft:"0px"}}
-                                    >
-                                        Completed
-                                    </button> */}
-                                    <p className="product-draft custom-rounded-border" style={{marginBottom:"8px",alignItems:"center"}}>Completed</p>
+
+                            <p className="product-draft custom-rounded-border"  style={{marginBottom:"8px",alignItems:"center"}}>Completed</p>
                                 <div style={{marginTop:"8px"}}>
                                <h6><span className='color-grey'></span>{props.seller?.provider_info?.name}</h6>
                                </div>
+
                             </div>
-                            </div>
+                            
+                            <div className='text-left mt-1'>
+                            <a href="https://www.delhivery.com/track-v2/package/33309210000394"  className="btn btn-primary-outline" target='_blank'>Track your order</a>
+                          <a href="https://www.google.com/maps/dir/12.974002,77.613458/12.97411,77.62222" className="btn btn-green-outline ms-2"  target='_blank'>View live tracking</a>
+                                 </div>                            
+                                 </div>
                             <div className="col-12 px-0">
 
                             </div>
