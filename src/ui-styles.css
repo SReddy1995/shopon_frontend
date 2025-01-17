@@ -1929,6 +1929,37 @@ font-size: 12px !important;
   max-width: 95%;
 }
 
+.products-source-filter-container{
+  position: relative;
+  width:auto;
+  max-width: 50%;
+}
+
+.source-selection-container{
+
+  border-radius: 1.5rem;
+  padding: 5px; /* Padding inside the container */
+  width: auto;
+  min-width: 180px;
+  border: 1px solid #dddd;
+  text-align: left;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.source-selection-dropdown{
+  display: block;
+  position: absolute;
+  background-color: white;
+  min-width: 250px;
+  max-width: 250px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 2;
+  border-radius: 8px;
+  text-align: left;
+}
+
 .column-visibility-sortby-container{
   display: flex;
   flex-direction: row;

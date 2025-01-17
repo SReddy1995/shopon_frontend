@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import SearchableMultiselectList from './SearchableMultiselectList';
 import ModalWindow from './ModalWindow';
 import MapComponent from './MapComponent';
-import { getSearchResults, getSellersList, getSpecialityList, initiateSearch } from '../../services/ProductsService';
+import { getSearchResults, getSellersList, getSourceList, getSpecialityList, initiateSearch } from '../../services/ProductsService';
 import { getOnlineStore } from '../../services/AccountService';
 import ProductDetails from './ProductDetails';
 import moment from 'moment';
@@ -233,6 +233,7 @@ const ProductsList = () => {
     const [vendors_list,setVendorsList] = useState<any>([]);
 
       const [speciality_list, setSpecialityList] = useState<any>([]);
+      const [source_list, setSourceList] = useState<any>([]);
 
     const [productsList, setProductList] = useState<any[]>([])
     const [showBackButton,setShowBackButton] = useState('hide')
@@ -246,6 +247,8 @@ const ProductsList = () => {
     const [selectedCategories, setSelectedCategories] = useState([])
     const [isSpecialityDropdownOpen, setIsSpecialityDropdownOpen] = useState(false);
     const [selectedSpecialities, setSelectedSpecialities] = useState([])
+    const [isSourceDropdownOpen, setIsSourceDropdownOpen] = useState(false);
+    const [selectedSources, setSelectedSources] = useState([])
     const [isColumnVisibilityOpen, setIsColumnVisibilityOpen] = useState(false);
     const [isProductDetailsOpen, setIsProductDetailsOpen] = useState(false);
     const [isProductThumbnailOpen, setIsProductThumbnailOpen] = useState(false);
@@ -268,6 +271,7 @@ const ProductsList = () => {
     const [messageID, setMessageID] = useState<any>(null);
     const [sellerFiltersForProducts, setSellerFiltersForProducts] = useState<any>([])
     const [specialityFiltersForProducts, setSpecialityFiltersForProducts] = useState<any>([])
+    const [sourceFiltersForProducts, setSourceFiltersForProducts] = useState<any>([])
 
     const sourcePage = useSelector((store: any) => store.products.sourcePage);
     const productsFromStore = useSelector((store: any) => store.products.selectedProductsList);
@@ -277,6 +281,7 @@ const ProductsList = () => {
 
     const vendorPopupRef = useRef<any>(null);
     const specialityPopupRef = useRef<any>(null);
+    const sourcePopupRef = useRef<any>(null);
     const categoriesPopupRef = useRef<any>(null);
     const columnVisibilityPopupRef = useRef<any>(null);
     const [openRetrySearchConfirm, setConfirmRetrySearchModalOpen] = useState(false);
@@ -300,6 +305,10 @@ const ProductsList = () => {
 
         if (specialityPopupRef.current && !specialityPopupRef.current.contains(event.target)) {
             setIsSpecialityDropdownOpen(false); // Close the popup if the click is outside
+        }
+
+        if (sourcePopupRef.current && !sourcePopupRef.current.contains(event.target)) {
+            setIsSourceDropdownOpen(false); // Close the popup if the click is outside
         }
 
         if (categoriesPopupRef.current && !categoriesPopupRef.current.contains(event.target)) {
@@ -425,10 +434,11 @@ const ProductsList = () => {
             {
             const categoryFilter = specialityFiltersForProducts.length > 0 ? specialityFiltersForProducts.includes(product.category) : true;
             const sellerFilter = sellerFiltersForProducts.length > 0 ? sellerFiltersForProducts.includes(product.seller) : true;
+            const sourceFilter = sourceFiltersForProducts.length > 0 ? sourceFiltersForProducts.includes(product.source) : true;
 
-            return categoryFilter && sellerFilter;
+            return categoryFilter && sellerFilter && sourceFilter;
             }));
-    },[productsList, specialityFiltersForProducts, sellerFiltersForProducts])
+    },[productsList, specialityFiltersForProducts, sellerFiltersForProducts, sourceFiltersForProducts])
 
       const resetData = useCallback(() =>{
         setTimeout(()=>{
@@ -1011,34 +1021,34 @@ const ProductsList = () => {
         setIsOpen(false)
     }
 
-    // speciality selection
+    // source selection
 
-    const handleSpecialitySelectionClick = (values: any) => {
-        if(isSpecialityDropdownOpen){
-            setIsSpecialityDropdownOpen(false)
+    const handleSourceSelectionClick = (values: any) => {
+        if(isSourceDropdownOpen){
+            setIsSourceDropdownOpen(false)
         }
         else{
-            fetchSpecialityList();
+            fetchSourceList();
         }
         
     }
 
-    const fetchSpecialityList = () => {
+    const fetchSourceList = () => {
         let payload : any = {
             message_id: messageID,
             subscriber_id: getStoreSubscriberId(),
         }
 
-        getSpecialityList(payload)
+        getSourceList(payload)
         .then((response: any) => {
            if (Array.isArray(response) && response.length> 0){
-                let result = getFormattedSpeciality(response);
-                setSpecialityList(result)
-            setIsSpecialityDropdownOpen(true)
+                let result = getFormattedSource(response);
+                setSourceList(result)
+            setIsSourceDropdownOpen(true)
             }
             else{
-                setSpecialityList([])
-                setIsSpecialityDropdownOpen(true)
+                setSourceList([])
+                setIsSourceDropdownOpen(true)
             }
         })
         .catch(err => {
@@ -1047,13 +1057,13 @@ const ProductsList = () => {
         });
     }
 
-    const getFormattedSpeciality = (specialities: any) => {
+    const getFormattedSource = (sources: any) => {
         let result: any = [];
 
-        specialities.forEach((speciality: any) => {
+        sources.forEach((source: any) => {
                     result.push({
-                        value: speciality,
-                        label: speciality
+                        value: source.descriptorName,
+                        label: source.descriptorName
                     });
 
         });
@@ -1062,32 +1072,111 @@ const ProductsList = () => {
     }
 
     useEffect(()=>{
-        setSpecialityFiltersForProducts(selectedSpecialities.map((item: any)=> item.label))
-    },[selectedSpecialities])
+        setSourceFiltersForProducts(selectedSources.map((item: any)=> item.label))
+    },[selectedSources])
 
-    const updateSelectedSpecialityList = (list: any) => {
-        setSelectedSpecialities(list)
+    const updateSelectedSourceList = (list: any) => {
+        setSelectedSources(list)
     }
 
 
 
-    const clearSpecialityList = () => {
-        setSelectedSpecialities([])
-        setIsSpecialityDropdownOpen(false)
+    const clearSourceList = () => {
+        setSelectedSources([])
+        setIsSourceDropdownOpen(false)
     }
 
-    const clearSelectedSpecialityList = () => {
-        setSelectedSpecialities([])
+    const clearSelectedSourceList = () => {
+        setSelectedSources([])
     }
 
-    const applyFilterOfSpecialityList = () => {
+    const applyFilterOfSourceList = () => {
         applySellersAndSpecialityFilters();
-        setIsSpecialityDropdownOpen(false)
+        setIsSourceDropdownOpen(false)
     }
+
+        // speciality selection
+
+        const handleSpecialitySelectionClick = (values: any) => {
+            if(isSpecialityDropdownOpen){
+                setIsSpecialityDropdownOpen(false)
+            }
+            else{
+                fetchSpecialityList();
+            }
+            
+        }
+    
+        const fetchSpecialityList = () => {
+            let payload : any = {
+                message_id: messageID,
+                subscriber_id: getStoreSubscriberId(),
+            }
+    
+            getSpecialityList(payload)
+            .then((response: any) => {
+               if (Array.isArray(response) && response.length> 0){
+                    let result = getFormattedSpeciality(response);
+                    setSpecialityList(result)
+                setIsSpecialityDropdownOpen(true)
+                }
+                else{
+                    setSpecialityList([])
+                    setIsSpecialityDropdownOpen(true)
+                }
+            })
+            .catch(err => {
+                console.log(err)
+                setLoading(false);
+            });
+        }
+    
+        const getFormattedSpeciality = (specialities: any) => {
+            let result: any = [];
+    
+            specialities.forEach((speciality: any) => {
+                        result.push({
+                            value: speciality,
+                            label: speciality
+                        });
+    
+            });
+            result.sort((a: any, b: any) => a.label.localeCompare(b.label));
+            return result;
+        }
+    
+        useEffect(()=>{
+            setSpecialityFiltersForProducts(selectedSpecialities.map((item: any)=> item.label))
+        },[selectedSpecialities])
+    
+        const updateSelectedSpecialityList = (list: any) => {
+            setSelectedSpecialities(list)
+        }
+    
+    
+    
+        const clearSpecialityList = () => {
+            setSelectedSpecialities([])
+            setIsSpecialityDropdownOpen(false)
+        }
+    
+        const clearSelectedSpecialityList = () => {
+            setSelectedSpecialities([])
+        }
+    
+        const applyFilterOfSpecialityList = () => {
+            applySellersAndSpecialityFilters();
+            setIsSpecialityDropdownOpen(false)
+        }
+    
 
     useEffect(()=>{
         applySellersAndSpecialityFilters();
     },[sellerFiltersForProducts, applySellersAndSpecialityFilters])
+
+    useEffect(()=>{
+        applySellersAndSpecialityFilters();
+    },[specialityFiltersForProducts, applySellersAndSpecialityFilters])
 
     useEffect(()=>{
         applySellersAndSpecialityFilters();
@@ -1394,7 +1483,7 @@ const ProductsList = () => {
                                         </div>
     
                                         <div className='products-speciality-filter-container' ref={specialityPopupRef}>
-                                        <div className='speciality-selection-container px-2 cursor-pointer' onClick={handleSpecialitySelectionClick}>
+                                        <div className='speciality-selection-container mr-2 px-2 cursor-pointer' onClick={handleSpecialitySelectionClick}>
                                             <p className='mb-0 pl-2 cursor-pointer speciality-text' >Speciality
                                                 {
                                                     selectedSpecialities.length > 0 &&
@@ -1435,6 +1524,55 @@ const ProductsList = () => {
                                                             selectedItemsChanged={updateSelectedSpecialityList}
                                                             clearSelectedItemsList={clearSelectedSpecialityList}
                                                             applySelectedList={applyFilterOfSpecialityList}
+                                                            showApply={true}>
+    
+                                                        </SearchableMultiselectList>
+                                                    </div>
+                                                )
+                                            }
+                                        </div>
+                                        <div className='products-source-filter-container' ref={sourcePopupRef}>
+                                        <div className='source-selection-container px-2 cursor-pointer' onClick={handleSourceSelectionClick}>
+                                            <p className='mb-0 pl-2 cursor-pointer speciality-text' >Source
+                                                {
+                                                    selectedSources.length > 0 &&
+                                                        <>
+                                                            <span>&nbsp; is </span>
+                                                            {
+    
+                                                                selectedSources
+                                                                    .map((source: any, index: any) => {
+                                                                        return index > 0 ?
+                                                                            <span key={source.value}>,&nbsp;{source.label}
+                                                                            </span>
+                                                                            :
+                                                                            <span key={source.value}>&nbsp;{source.label}
+                                                                            </span>
+                                                                    })
+                                                            }
+                                                        </>
+                                                }
+                                            </p>
+                                            {
+                                                selectedSources.length > 0 &&
+                                                <p className='mb-0'>&nbsp; <i className='fa fa-close cursor-pointer' onClick={clearSourceList}></i> </p>
+                                            }
+                                            {
+                                                !isSourceDropdownOpen && selectedSources.length === 0 &&
+                                                <p className='mb-0 d-flex'>&nbsp; <i className='fa fa-caret-down pr-2 cursor-pointer float-right align-self-center' onClick={handleSourceSelectionClick}></i> </p>
+                                                
+                                            }
+                                            </div>
+                                            {
+                                                isSourceDropdownOpen && (
+    
+                                                    <div className="source-selection-dropdown">
+                                                        <SearchableMultiselectList
+                                                            list={source_list}
+                                                            selectedItems={selectedSources}
+                                                            selectedItemsChanged={updateSelectedSourceList}
+                                                            clearSelectedItemsList={clearSelectedSourceList}
+                                                            applySelectedList={applyFilterOfSourceList}
                                                             showApply={true}>
     
                                                         </SearchableMultiselectList>
