@@ -752,6 +752,69 @@ outline: none;
   box-shadow: rgba(0, 0, 0, 0.8) 0px -1px 0px 1px inset, rgb(48, 48, 48) 0px 0px 0px 1px inset, rgba(255, 255, 255, 0.25) 0px 0.5px 0px 1.5px inset
   !important;
 }
+.btn-custom-outline{
+  justify-content: center;
+  text-align: center;
+cursor: pointer;
+border-radius: .5rem !important;
+outline: none;
+  background: #fff !important;
+  color:#000 !important;
+  padding: 6px 15px;
+  font-size: 13px !important;
+  font-family: 'Inter';
+  min-height: 1.75rem;
+  min-width: 1.75rem;
+ border:1px solid #000;
+}
+.btn-custom-outline:hover{
+  
+  background: #000 !important;
+  color:#fff !important;
+ border:1px solid #000;
+}
+.btn-primary-outline{
+  justify-content: center;
+  text-align: center;
+cursor: pointer;
+border-radius: .5rem !important;
+outline: none;
+  background: #fff !important;
+  color:#0f59a8 !important;
+  padding: 6px 15px;
+  font-size: 13px !important;
+  font-family: 'Inter';
+  min-height: 1.75rem;
+  min-width: 1.75rem;
+border:1px solid #0f59a8;
+}
+.btn-primary-outline:hover{
+  
+  background: #0f59a8 !important;
+  color:#fff !important;
+border:1px solid #0f59a8;
+}
+.btn-green-outline{
+  justify-content: center;
+  text-align: center;
+cursor: pointer;
+border-radius: .5rem !important;
+outline: none;
+  background: #fff !important;
+  color:#006C50;
+  padding: 6px 15px;
+  font-size: 13px !important;
+  font-family: 'Inter';
+  min-height: 1.75rem;
+  min-width: 1.75rem;
+border:1px solid #006C50;
+}
+.btn-green-outline:hover{
+ 
+  background: #006C50 !important;
+  color:#fff !important;
+border:1px solid #006C50;
+}
 .btn-link:hover{
   text-decoration: none !important;
   color: #fff !important;
@@ -1248,9 +1311,9 @@ a.active {
 .border-white{
   border:1px solid #fff !important;
 }
-.btn:hover{
+/* .btn:hover{
   color: inherit !important;
-}
+} */
 
 table{
   font-size: 13px !important;
@@ -2497,6 +2560,11 @@ box-shadow: none !important;
 .btn-custom-green{
   background-color:#12715B !important;
   color: white;
+  border-color:#12715B !important;
+}
+.btn-custom-green-outline{
+  background-color:#fff !important;
+  color: #12715B;
   border-color:#12715B !important;
 }
 .btn:focus{
