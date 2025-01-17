@@ -7,6 +7,7 @@ import moment from 'moment';
 import ModalWindow from "./ModalWindow";
 import ReconciliationDetails from "./ReconciliationDetails";
 import ondc_product from '../../assets/images/ondc-icon.png';
+import shopify_product from '../../assets/images/shopify-logo.png';
 import { showSuccessMessage } from "../../shared/notificationProvider";
 import { RECONCILIATION_INITIATED_SUCCESSFULLY, STATUS_INITIATED_SUCCESSFULLY } from "../../utils/constants/NotificationConstants";
 import TrackingDetails from "./TrackingDetails";
@@ -695,6 +696,21 @@ const OrderDetails = () => {
                                                                 <img src={ondc_product} style={{width:"38px"}} alt="ondc_product"/>
                                                             </div>
                                                             }
+                                                        </div>
+                                                    </div>
+
+                                                   }
+
+                                                    {
+                                                        seller.seller_id === "shopify" && <div className="provider-seller-info-container px-2 py-2">
+                                                            <div className="d-flex align-items-center">
+                                                            <div><div className="d-flex justify-content-between">
+                                                                    <span >Shopify </span>
+                                                            </div>
+                                                            </div>
+                                                            <div>
+                                                                <img src={shopify_product} style={{width:"38px"}} alt="shopify_product"/>
+                                                            </div>
                                                         </div>
                                                     </div>
 
