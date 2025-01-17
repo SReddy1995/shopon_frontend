@@ -45,6 +45,16 @@ export const initiateSearch = async (body: any) => {
     }
   };
 
+  export const getSourceList = async (body: any) => {
+    try {
+      const response = await productSearchAxiosInstance.post(ProductSearchUrls.getSourceList, body);  // Adjust the endpoint accordingly
+      return response;
+    } catch (error) {
+        console.error('Error fetching data: ', error);
+      throw error;  // Throw the error so the calling component can handle it
+    }
+  };
+
   export const syncProductsWithShopify = async (body: any) => {
     try {
       const response = await productSearchAxiosInstance.post(ProductSearchUrls.syncWithShopify, body);  // Adjust the endpoint accordingly

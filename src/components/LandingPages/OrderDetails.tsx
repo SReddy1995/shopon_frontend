@@ -33,7 +33,7 @@ const OrderDetails = () => {
     const refValues = useSelector((store: any) => store.refValues.referenceList);
     const [statusUpdating, setStatusUpdating] = useState(false)
     const [itemDetailsOpen, setItemDetailsOpen] = useState<any>(null)
-    const status_list = refValues.order_staus.map((status: any) => ({
+    const status_list = refValues.order_status.map((status: any) => ({
         value: status.eazehuborderstatusref,
         label: status.description
     })) || [];
@@ -43,6 +43,19 @@ const OrderDetails = () => {
     })) || [];
     const settlement_status_list = refValues.settlement_status.map((status: any) => ({
         value: status.eazehubsettlementstatusref,
+        label: status.description
+    })) || [];
+
+    const ondc_status_list = refValues.ondc_order_status.map((status: any) => ({
+        value: status.ondcorderstateref,
+        label: status.description
+    })) || [];
+    const ondc_fullfillment_status_list = refValues.ondc_fulfillment_status.map((status: any) => ({
+        value: status.ondcfulfillmentstateref,
+        label: status.description
+    })) || [];
+    const ondc_settlement_status_list = refValues.ondc_settlement_status.map((status: any) => ({
+        value: status.settlementstatusref,
         label: status.description
     })) || [];
 
@@ -63,6 +76,27 @@ const OrderDetails = () => {
     const getSettlementStatus = (item: any) => {
         if(item){
             return settlement_status_list.filter((x:any)=>x.value === item)[0].label
+        }
+        return ''
+    }
+
+    const getOndcOrderStatus = (item: any)=> {
+        if(item){
+            return ondc_status_list.filter((x:any)=>x.value === item)[0].label
+        }
+        return ''
+    }
+
+    const getOndcFulfillmentStatus = (item: any)=> {
+        if(item && ondc_fullfillment_status_list.filter((x:any)=>x.value === item).length>0){
+            return ondc_fullfillment_status_list.filter((x:any)=>x.value === item)[0].label
+        }
+        return ''
+    }
+
+    const getOndcSettlementStatus = (item: any) => {
+        if(item){
+            return ondc_settlement_status_list.filter((x:any)=>x.value === item)[0].label
         }
         return ''
     }
@@ -595,7 +629,7 @@ const OrderDetails = () => {
                                                                             className={
                                                                                 renderOrderStatusButtons(seller.ondc_order_state) + " ml-1 mb-0 custom-rounded-border"
                                                                             }>
-                                                                            {getOrderStatus(seller.ondc_order_state)}
+                                                                            {getOndcOrderStatus(seller.ondc_order_state)}
                                                                         </p>
                                                                 }
                                                                 <span style={{ marginLeft: "10px", color: "grey" }}> | </span>
@@ -613,7 +647,7 @@ const OrderDetails = () => {
                                                                             className={
                                                                                 renderSettlementStatusButtons(seller.settlement_status) + " ml-1 mb-0 custom-rounded-border"
                                                                             }>
-                                                                            {getSettlementStatus(seller.settlement_status)}
+                                                                            {getOndcSettlementStatus(seller.settlement_status)}
                                                                         </p>
                                                                 }
                                                                 <span style={{ marginLeft: "10px", color: "grey" }}> | </span>
@@ -712,7 +746,7 @@ const OrderDetails = () => {
                                                                                             className={
                                                                                                 renderFulfillmentButtons(item.fulfillment_status) + " ml-1 mb-0 custom-rounded-border"
                                                                                             }>
-                                                                                            {getFulfillmentStatus(item.fulfillment_status)}
+                                                                                            {getOndcFulfillmentStatus(item.fulfillment_status)}
                                                                                             </span>
                                                                                         }
                                                                                     </span><br />
@@ -813,7 +847,26 @@ const OrderDetails = () => {
                                             </div>
 
                                             <span className="cust-name">{data.info.customer_info?.first_name} {data.info.customer_info?.last_name}</span><br />
-                                            <span className="text-grey"><i className="fa fa-envelope"></i> {data.info.customer_info?.email ? data.info.customer_info?.email : 'No email provided'}</span><br />
+                                            <span className="text-grey">
+                                                {
+                                                    data.info.customer_info?.email ? <>
+                                                        <i className="fa fa-envelope"></i> {data.info.customer_info?.email},&nbsp;
+                                                    </>
+                                                    :
+                                                    <>
+                                                        <i className="fa fa-envelope"></i> {'No email provided'},&nbsp;
+                                                    </>
+                                                }
+                                                {
+                                                    data.info.customer_info?.phone ? <>
+                                                        <i className="fa fa-phone"></i> {data.info.customer_info?.phone}
+                                                    </>
+                                                    :
+                                                    <>
+                                                        <i className="fa fa-phone"></i> {'No phone provided'}
+                                                    </>
+                                                }
+                                            </span><br />
                                             <p className="mb-0">
                                             {
                                                 data.info.customer_info?.address1 && <span>{data.info.customer_info?.address1},</span>
