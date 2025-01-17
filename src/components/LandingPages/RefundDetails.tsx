@@ -326,7 +326,7 @@ const RefundDetails = () => {
                                 <div className="d-flex">
                                     <div>
                                         <h4><span className='cursor-pointer d-flex'>
-                                            <span className='back-btn me-1'><i className='fa fa-arrow-left me-2 fa-left-icon' onClick={navigateToOrderDetails}></i></span>Refund details</span></h4>
+                                            <span className='back-btn me-1' onClick={navigateToOrderDetails}><i className='fa fa-arrow-left me-2 fa-left-icon'></i></span>Refund details</span></h4>
                                     </div>
                                 </div>
                             </div>
