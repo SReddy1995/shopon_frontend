@@ -1057,13 +1057,13 @@ const ProductsList = () => {
         });
     }
 
-    const getFormattedSource = (specialities: any) => {
+    const getFormattedSource = (sources: any) => {
         let result: any = [];
 
-        specialities.forEach((speciality: any) => {
+        sources.forEach((source: any) => {
                     result.push({
-                        value: speciality,
-                        label: speciality
+                        value: source.descriptorName,
+                        label: source.descriptorName
                     });
 
         });
