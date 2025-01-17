@@ -464,7 +464,7 @@ const OrderDetails = () => {
                                 <div className="d-flex">
                                     <div>
                                         <h4><span className='cursor-pointer d-flex'>
-                                            <span className='back-btn me-1'><i className='fa fa-arrow-left me-2 fa-left-icon' onClick={navigateToOrderssList}></i></span>#{selected_order.order_id}</span></h4>
+                                            <span className='back-btn me-1' onClick={navigateToOrderssList}><i className='fa fa-arrow-left me-2 fa-left-icon'></i></span>#{selected_order.order_id}</span></h4>
                                     </div>
                                     <div>
                                     <span className="status-label">Order </span>
