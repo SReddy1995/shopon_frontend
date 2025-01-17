@@ -34,6 +34,7 @@ export const ProductSearchUrls = {
     getSearchResults: '/get_search_results',
     getSellersList: '/get_seller_data',
     getSpecialityList: '/get_speciality_data',
+    getSourceList: '/get_source_data',
     syncWithShopify: '/add_products_from_stream'
 }
 
