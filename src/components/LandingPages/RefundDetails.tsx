@@ -26,7 +26,7 @@ const RefundDetails = () => {
     const refValues = useSelector((store: any) => store.refValues.referenceList);
     const [statusUpdating, setStatusUpdating] = useState(false)
     const [itemDetailsOpen, setItemDetailsOpen] = useState<any>(null)
-    const status_list = refValues.order_staus.map((status: any) => ({
+    const status_list = refValues.order_status.map((status: any) => ({
         value: status.eazehuborderstatusref,
         label: status.description
     })) || [];
