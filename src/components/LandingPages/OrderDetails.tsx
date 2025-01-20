@@ -702,7 +702,7 @@ const OrderDetails = () => {
                                                    }
 
                                                     {
-                                                        seller.seller_id === "shopify" && <div className="provider-seller-info-container px-2 py-2">
+                                                        seller.seller_id === "shopify" && <div className="provider-seller-info-container px-2 py-1 shopify-seller-card">
                                                             <div className="d-flex align-items-center">
                                                             <div><div className="d-flex justify-content-between">
                                                                     <span >Shopify </span>
@@ -819,7 +819,7 @@ const OrderDetails = () => {
                                         {
                                             data?.order_summary && <div className="card-orders order-summary-card-container shadow bg-white mb-3 py-3 px-3">
                                             <div className="seller-wise-order-info">
-                                            <h4 className="seller-order-id mb-0">Order summary</h4>
+                                            <h4 className="seller-order-id mb-0">Order Summary</h4>
                                             </div>
                                             <div className="product-shipping-details-container mt-0 mb-0">
                                                 <div className="product-details-container">
