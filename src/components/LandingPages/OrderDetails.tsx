@@ -20,6 +20,7 @@ const OrderDetails = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const orderFromRedux = useSelector((store: any) => store.order.selectedOrder);
+    const user_details = localStorage.getItem('user_details') ? JSON.parse(localStorage.getItem('user_details') || '{}') : null;
     const selected_order = orderFromRedux ? orderFromRedux : localStorage.getItem('selected_order') ? JSON.parse(localStorage.getItem('selected_order')!) : null;
     const [loading,setLoading] = useState(true)
     const [data, setData] = useState<any>(null)
@@ -705,7 +706,7 @@ const OrderDetails = () => {
                                                         seller.seller_id === "shopify" && <div className="provider-seller-info-container px-2 py-1 shopify-seller-card">
                                                             <div className="d-flex align-items-center">
                                                             <div><div className="d-flex justify-content-between">
-                                                                    <span >Shopify </span>
+                                                                    <span >Shopify: {user_details.store_url} </span>
                                                             </div>
                                                             </div>
                                                             <div>
