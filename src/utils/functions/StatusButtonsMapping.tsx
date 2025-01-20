@@ -8,7 +8,7 @@ export const renderSettlementStatusButtons = (data: any) => {
 
 export const renderOrderStatusButtons = (data: any) => {
     let btn = '';
-    btn = data === "CREATED" || data === "INPROGRESS" || data === "PARTIAL" ? "product-draft" : 
+    btn = data === "CREATED" || data === "INPROGRESS" || data === "PARTIAL" || data === "PENDING" ? "product-draft" : 
     data === "COMPLETED" ||  data === "ACCEPTED" ? " product-active" :
     data === "CANCELLED" ? "product-danger" : ""
     return btn
