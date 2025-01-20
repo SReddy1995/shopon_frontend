@@ -742,15 +742,14 @@ padding-left: 6px;
 cursor: pointer;
 border-radius: .5rem !important;
 outline: none;
-  background: #000 !important;
-  color:#fff !important;
-  padding: 6px 15px;
-  font-size: 13px !important;
-  font-family: 'Inter';
-  min-height: 1.75rem;
-  min-width: 1.75rem;
-  box-shadow: rgba(0, 0, 0, 0.8) 0px -1px 0px 1px inset, rgb(48, 48, 48) 0px 0px 0px 1px inset, rgba(255, 255, 255, 0.25) 0px 0.5px 0px 1.5px inset
-  !important;
+background: #040404ad !important;
+color: #fff !important;
+padding: 6px 15px;
+font-size: 13px !important;
+font-family: 'Inter';
+min-height: 1.75rem;
+min-width: 1.75rem;
+box-shadow: rgb(0 0 0 / 0%) 0px -1px 0px 1px inset, rgb(48 48 48) 0px 0px 0px 1px inset, rgba(255, 255, 255, 0.25) 0px 0.5px 0px 1.5px inset !important;
 }
 .btn-custom-outline{
   justify-content: center;
@@ -3325,6 +3324,7 @@ background: linear-gradient(to right, #3f4c6b, #606c88); /* W3C, IE 10+/ Edge, F
   width: 32px;
   height: 32px;
   padding-left: 6px;
+  margin-top: -2px !important;
  }
  .back-btn:hover{
   border-radius: 5px;
@@ -3429,4 +3429,7 @@ outline: none;
   min-width: 1.75rem;
   /* box-shadow: rgba(0, 0, 0, 0.8) 0px -1px 0px 1px inset, rgb(48, 48, 48) 0px 0px 0px 1px inset, rgba(255, 255, 255, 0.25) 0px 0.5px 0px 1.5px inset
   !important; */
+ }
+ .shopify-seller-card{
+  margin-top: -14px;
  }
