@@ -103,7 +103,7 @@ const TrackingDetails = (props: any) => {
                                     {
                                         data?.status && <p>Status: <b>{getCamelCaseText(data?.status)}</b></p>
                                     }
-                                    <div style={{ marginTop: "8px" }}>
+                                    <div >
                                         <h6><span className='color-grey'></span>{props.seller?.provider_info?.name}</h6>
                                     </div>
                                 </div>
