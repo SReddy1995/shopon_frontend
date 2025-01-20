@@ -4,10 +4,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@emotion/react": "11.13.3",
-    "@emotion/styled": "11.13.0",
-    "@mui/icons-material": "6.1.2",
-    "@mui/material": "6.1.2",
     "@react-google-maps/api": "2.20.3",
     "@reduxjs/toolkit": "2.2.8",
     "@splidejs/react-splide": "0.7.12",
