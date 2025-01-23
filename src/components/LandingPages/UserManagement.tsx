@@ -104,7 +104,7 @@ const UserManagement = () => {
                                                     users_list
                                                         .map((user: any, index: any) => {
                                                             return  <tr key={index}>
-                                                                        <td><p className='mb-0' data-bs-toggle="modal" data-bs-target="#myModal">{user.users.firstname} &nbsp;{user.users.lastname}</p></td>
+                                                                        <td><p className='mb-0' data-bs-toggle="modal" data-bs-target="#myModal">{user.users.firstname} {user.users.lastname}</p></td>
                                                                         <td>{user.users.email_address}</td>
                                                                         <td>{user.users.contact_number}</td>
                                                                         <td>
