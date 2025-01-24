@@ -3509,3 +3509,7 @@ ul.tl li .timestamp{
  .shopify-seller-card{
   margin-top: -14px;
  }
+.custom-timeline{
+  padding-bottom: 0;
+  margin-bottom: -12px !important;
+}
