@@ -8,7 +8,7 @@ export const renderSettlementStatusButtons = (data: any) => {
 
 export const renderOrderStatusButtons = (data: any) => {
     let btn = '';
-    btn = data === "CREATED" || data === "INPROGRESS" || data === "PARTIAL" ? "product-draft" : 
+    btn = data === "CREATED" || data === "INPROGRESS" || data === "PARTIAL" || data === "PENDING" ? "product-draft" : 
     data === "COMPLETED" ||  data === "ACCEPTED" ? " product-active" :
     data === "CANCELLED" ? "product-danger" : ""
     return btn
@@ -18,7 +18,7 @@ export const renderFulfillmentButtons = (data: any) => {
     let btn = '';
     btn = data === "PENDING" || data === "PARTIAL" || data === "INPROGRESS" ||
     data === "AGENT_ASSIGNED" || data === "AT_DESTINATION_HUB" ||
-    data === "IN_TRANSIT" || data === "RTO_INITIATED" ? "product-draft" : 
+    data === "IN_TRANSIT" || data === "RTO_INITIATED" || data === "SERVICEABLE" ? "product-draft" : 
     data === "PACKED" || data === "OUT_FOR_DELIVERY" ||
     data === "ORDER_DELIVERED" || data === "ORDER_PICKED_UP" || data === "DELIVERED" ||
     data === "OUT_FOR_PICKUP" || data === "RTO_DELIVERED" ? "product-active" :

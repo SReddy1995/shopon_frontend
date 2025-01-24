@@ -26,7 +26,7 @@ const RefundDetails = () => {
     const refValues = useSelector((store: any) => store.refValues.referenceList);
     const [statusUpdating, setStatusUpdating] = useState(false)
     const [itemDetailsOpen, setItemDetailsOpen] = useState<any>(null)
-    const status_list = refValues.order_staus.map((status: any) => ({
+    const status_list = refValues.order_status.map((status: any) => ({
         value: status.eazehuborderstatusref,
         label: status.description
     })) || [];
@@ -124,7 +124,7 @@ const RefundDetails = () => {
         convenience_fee: ele.convenience_fee ? ele.convenience_fee : 0,
         delivery_charge: ele.delivery_charge ? ele.delivery_charge : 0,
         tax: getTax(ele),
-        total: formatCurrency(getRowTotal(ele), 'INR'),
+        total:getRowTotal(ele)
     }));
 
     const getSubTotalSellerWise = (itemsList: any) => itemsList.reduce((sum: number, ele: any) => sum + getPriceOfItem(ele), 0);
@@ -326,7 +326,7 @@ const RefundDetails = () => {
                                 <div className="d-flex">
                                     <div>
                                         <h4><span className='cursor-pointer d-flex'>
-                                            <span className='back-btn me-1'><i className='fa fa-arrow-left me-2 fa-left-icon' onClick={navigateToOrderDetails}></i></span>Refund details</span></h4>
+                                            <span className='back-btn me-1' onClick={navigateToOrderDetails}><i className='fa fa-arrow-left me-2 fa-left-icon'></i></span>Refund details</span></h4>
                                     </div>
                                 </div>
                             </div>

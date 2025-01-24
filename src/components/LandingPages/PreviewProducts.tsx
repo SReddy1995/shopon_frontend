@@ -7,6 +7,7 @@ import { showSuccessMessage } from '../../shared/notificationProvider';
 import { SYNC_PRODUCTS_WITH_SUCCESS } from '../../utils/constants/NotificationConstants';
 import ModalWindow from './ModalWindow';
 import ProductThumbnail from './ProductThumbnail';
+import { baseUrl } from '../../utils/constants/UrlConstants';
 
 const PreviewProducts = () => {
 
@@ -27,7 +28,8 @@ const PreviewProducts = () => {
 
     const getStoreSubscriberId = () => {
         // return user_details.subscriber_id
-        return 'ondc.opteamix.com'
+        return baseUrl.split("//")[1] // this line should be used to take sub_id from url. remove later
+        // return 'ondc.opteamix.com'
     }
 
     const navigateToProductsList = (products: any) => {
@@ -118,7 +120,7 @@ const PreviewProducts = () => {
 
                         <h3>
                         <span className='cursor-pointer'>
-                            <span className='back-btn-products-preview me-1'><i className='fa fa-arrow-left me-2 fa-left-icon' onClick={()=>navigateToProductsList(selectedProductsList)}></i> </span>Shortlisted Products</span></h3>
+                            <span className='back-btn-products-preview me-1' onClick={()=>navigateToProductsList(selectedProductsList)}><i className='fa fa-arrow-left me-2 fa-left-icon'></i> </span>Shortlisted Products</span></h3>
                     </div>
 
                     <div className="col text-right">

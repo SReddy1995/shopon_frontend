@@ -116,7 +116,7 @@ const Orders = () => {
             minWidth:'100px'
         },
         {
-            coltitle: "Fullfill Status",
+            coltitle: "Fulfill Status",
             visibilityDisplayName: "Fullfillment status",
             column: "fulfillment_status",
             type: "active-draft-button",
@@ -175,7 +175,7 @@ const Orders = () => {
     const [isStatusDropdownOpen, setIsStatusDropdownOpen] = useState(false);
     const [selectedStatus, setSelectedStatus] = useState([])
 
-    const status_list = refValues.order_staus.map((status: any) => ({
+    const status_list = refValues.order_status.map((status: any) => ({
         value: status.eazehuborderstatusref,
         label: status.description
     })) || [];
