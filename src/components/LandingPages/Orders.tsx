@@ -175,10 +175,10 @@ const Orders = () => {
     const [isStatusDropdownOpen, setIsStatusDropdownOpen] = useState(false);
     const [selectedStatus, setSelectedStatus] = useState([])
 
-    const status_list = refValues.order_status.map((status: any) => ({
+    const status_list = refValues.order_status && refValues.order_status.length> 0 ? refValues.order_status.map((status: any) => ({
         value: status.eazehuborderstatusref,
         label: status.description
-    })) || [];
+    })) : [];
 
     const clearStatusList = () => {
         setSelectedStatus([])
@@ -272,10 +272,10 @@ const Orders = () => {
         const [isSettlementStatusDropdownOpen, setIsSettlementStatusDropdownOpen] = useState(false);
         const [selectedSettlementStatus, setSelectedSettlementStatus] = useState([])
     
-        const settlement_status_list = refValues.settlement_status.map((status: any) => ({
+        const settlement_status_list = refValues.settlement_status && refValues.settlement_status.length>0 ? refValues.settlement_status.map((status: any) => ({
             value: status.eazehubsettlementstatusref,
             label: status.description
-        })) || [];
+        })) : [];
     
         const clearSettlementStatusList = () => {
             setSelectedSettlementStatus([])
@@ -563,7 +563,7 @@ const Orders = () => {
     }
 
     const getFulfillmentStatus = (item: any)=> {
-        if(item && refValues.fulfillment_status.filter((x:any)=>x.eazehubfulfillmentstatusref === item).length>0){
+        if(item && refValues.fulfillment_status && refValues.fulfillment_status.filter((x:any)=>x.eazehubfulfillmentstatusref === item).length>0){
             return refValues.fulfillment_status.filter((x:any)=>x.eazehubfulfillmentstatusref === item)[0].description
         }
         return ''
