@@ -24,3 +24,4 @@ export const STATUS_INITIATED_SUCCESSFULLY = "Status initiated successfully"
 export const TRACK_INITIATED_SUCCESSFULLY = "Tracking initiated successfully"
 export const RECONCILIATION_INITIATED_SUCCESSFULLY = "Reconciliation initiated successfully"
 export const ORDERS_CSV_DOWNLOADED = "Orders CSV downloaded"
+export const MAXIMUM_PRODUCTS_SELECTED = `You can select a maximum of ${process.env.REACT_APP_MAX_PRODUCT_SELECTION} products to sync with Shopify. Please adjust your selection accordingly. `

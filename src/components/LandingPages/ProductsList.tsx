@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateProductsColumnsList, updateProductsListFilters, updateSelectedCategoryForProductsList, updateSelectedProductsList, updateSourcePage } from '../../utils/reduxStore/productsSlice';
 import { showWarningMessage } from '../../shared/notificationProvider';
-import { CATEGORY_NOT_REGISTERED, NO_CATEGORIES_REGISTERED, NO_PRODUCTS_SELECTED } from '../../utils/constants/NotificationConstants';
+import { CATEGORY_NOT_REGISTERED, MAXIMUM_PRODUCTS_SELECTED, NO_CATEGORIES_REGISTERED, NO_PRODUCTS_SELECTED } from '../../utils/constants/NotificationConstants';
 import { useNavigate } from 'react-router-dom';
 import SearchableMultiselectList from './SearchableMultiselectList';
 import ModalWindow from './ModalWindow';
@@ -1227,6 +1227,8 @@ const ProductsList = () => {
 
       const toggleProductSelection = (product: any) => {
         if(!isProductDetailsOpen){
+            const maxProductSelection = Number(process.env.REACT_APP_MAX_PRODUCT_SELECTION || '20');
+            if(selectedProducts.length < maxProductSelection){
             setSelectedProducts((prevSelected: any) => {
                 if (prevSelected.some((obj: any) => obj.selector_reference_id === product.selector_reference_id)) {
                   return prevSelected.filter((item: any) => item.selector_reference_id !== product.selector_reference_id);
@@ -1234,6 +1236,10 @@ const ProductsList = () => {
                   return [...prevSelected, product];
                 }
               });
+            }
+            else{
+                showWarningMessage(MAXIMUM_PRODUCTS_SELECTED)
+            }
         }
       }
 
