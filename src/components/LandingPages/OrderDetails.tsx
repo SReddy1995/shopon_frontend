@@ -13,7 +13,8 @@ import { RECONCILIATION_INITIATED_SUCCESSFULLY, STATUS_INITIATED_SUCCESSFULLY } 
 import TrackingDetails from "./TrackingDetails";
 import SettleDetails from "./SettleDetails";
 import { renderFulfillmentButtons, renderOrderStatusButtons, renderSettlementStatusButtons } from "../../utils/functions/StatusButtonsMapping";
-// import { updateSelectedSeller } from "../../utils/reduxStore/sellerSlice";
+import { updateSelectedSeller } from "../../utils/reduxStore/sellerSlice";
+import refund_icon from "../../assets/images/refund-icon.png"
 
 const OrderDetails = () => {
 
@@ -451,10 +452,10 @@ const OrderDetails = () => {
         closeMoreActions();
     }
 
-    // const openRefundDetails = (seller: any) => {
-    //     dispatch(updateSelectedSeller(seller));
-    //     navigate(`/landing-page/orders/refund-details`)
-    // }
+    const openRefundDetails = (seller: any) => {
+        dispatch(updateSelectedSeller(seller));
+        navigate(`/landing-page/orders/refund-details`)
+    }
 
     return (
         <>
@@ -567,6 +568,11 @@ const OrderDetails = () => {
                                                             <h4 className="seller-order-id">#{seller.order_seller_seq}</h4>
                                                         </ul>
                                                         <div className="d-flex flex-row justify-content-between align-items-center gap-1">
+                                                        {
+                                                            seller.is_refund_initiated && <button type="button" className="btn-custom-grey" onClick={()=> openRefundDetails(seller)} >
+                                                              <span className="d-flex"><i className="fa fa-undo undo-icon"></i>Refunds</span>
+                                                            </button>
+                                                        }   
                                                         {
                                                             seller.is_ondc_product && <button type="button" className="btn-custom button-parent" onClick={()=> openMoreActions(seller.order_seller_seq)} 
                                                             ref={moreActionsPopupRef}>
@@ -849,7 +855,51 @@ const OrderDetails = () => {
                                                 </div>
                                             </div>
                                         </div>
+
+
                                         }
+                                        <div className="card-orders order-summary-card-container shadow bg-white mb-3 py-3 px-3">
+                                                                <div className="seller-wise-order-info">
+                                                                <h4 className="seller-order-id mb-0">Refund summary</h4>
+
+                                                                
+                                                                </div>
+                                                                <div className="d-flex cust-divider"></div>
+                                                                <div className="text-left"> 
+                                                               <span className="product-active custom-rounded-border">completed </span></div>
+                                                                <div className="text-left">
+                                                               
+                                                                <div> <span className="d-flex-left justify-content-left"><span>Refund amount</span><span className="ms-4"></span><span className="ms-4">₹450.00</span></span>
+                                                                <span className="font-small text-grey">Refund initiated on : 12th jan 2024</span></div><br />
+                                                                <div className="d-flex cust-divider"></div>
+                                                                <div>
+
+                                                                    <p>Reasons for refund :</p>
+                                                                    <ul>
+                                                                        <li className="text-grey">
+                                                                            product was damaged
+                                                                        </li>
+                                                                        <li className="text-grey">
+                                                                            product was not delivered
+                                                                        </li>
+                                                                        <li className="text-grey">
+                                                                            color is different
+                                                                        </li>
+                                                                       
+
+                                                                    </ul>
+                                                                </div><br />
+                                                                <div className="d-flex cust-divider"></div>
+                                                                    <span className="text-grey">(For Testing) Bogus Gateway</span><br /><br />
+                                                                        <span className="text-grey">Account number ending with •• 1(•••• •• 1)</span><br /><br />
+                                                                        <span >Total refund amount</span><br />
+                                                                        <p>
+                                                                            ₹450.00 available for refund
+                                                                         </p>
+
+                                                                
+                                                                </div>
+                                        </div>
                                     </div>
                                     {
                                         data?.info &&  <div className="order-details-right-column">
