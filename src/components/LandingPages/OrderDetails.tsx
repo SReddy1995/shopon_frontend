@@ -454,7 +454,7 @@ const OrderDetails = () => {
 
     const openRefundDetails = (seller: any) => {
         dispatch(updateSelectedSeller(seller));
-        navigate(`/landing-page/orders/refund-details`)
+        navigate(`/landing-page/orders/return-details`)
     }
 
     return (
@@ -570,7 +570,7 @@ const OrderDetails = () => {
                                                         <div className="d-flex flex-row justify-content-between align-items-center gap-1">
                                                         {
                                                             seller.is_refund_initiated && <button type="button" className="btn-custom-grey" onClick={()=> openRefundDetails(seller)} >
-                                                              <span className="d-flex"><i className="fa fa-undo undo-icon"></i>Refunds</span>
+                                                              <span className="d-flex"><i className="fa fa-undo undo-icon"></i>Returns</span>
                                                             </button>
                                                         }   
                                                         {

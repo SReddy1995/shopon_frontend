@@ -42,21 +42,31 @@ const RefundDetails = () => {
   const refValues = useSelector((store: any) => store.refValues.referenceList);
   const [statusUpdating, setStatusUpdating] = useState(false);
   const [itemDetailsOpen, setItemDetailsOpen] = useState<any>(null);
-  const status_list =
-    refValues.order_status.map((status: any) => ({
-      value: status.eazehuborderstatusref,
-      label: status.description,
-    })) || [];
-  const fullfillment_status_list =
-    refValues.fulfillment_status.map((status: any) => ({
-      value: status.eazehubfulfillmentstatusref,
-      label: status.description,
-    })) || [];
-  const settlement_status_list =
-    refValues.settlement_status.map((status: any) => ({
-      value: status.eazehubsettlementstatusref,
-      label: status.description,
-    })) || [];
+  const status_list = refValues.order_status && refValues.order_status.length>0 ? refValues.order_status.map((status: any) => ({
+    value: status.eazehuborderstatusref,
+    label: status.description
+})) : [];
+const fullfillment_status_list = refValues.fulfillment_status && refValues.fulfillment_status.length>0? refValues.fulfillment_status.map((status: any) => ({
+    value: status.eazehubfulfillmentstatusref,
+    label: status.description
+})) : [];
+const settlement_status_list = refValues.settlement_status && refValues.settlement_status.length>0 ? refValues.settlement_status.map((status: any) => ({
+    value: status.eazehubsettlementstatusref,
+    label: status.description
+})) : [];
+
+const ondc_status_list = refValues.ondc_order_status && refValues.ondc_order_status.length>0 ? refValues.ondc_order_status.map((status: any) => ({
+    value: status.ondcorderstateref,
+    label: status.description
+})) : [];
+const ondc_fullfillment_status_list = refValues.ondc_fulfillment_status && refValues.ondc_fulfillment_status.length>0 ? refValues.ondc_fulfillment_status.map((status: any) => ({
+    value: status.ondcfulfillmentstateref,
+    label: status.description
+})) : [];
+const ondc_settlement_status_list = refValues.ondc_settlement_status && refValues.ondc_settlement_status.length>0 ? refValues.ondc_settlement_status.map((status: any) => ({
+    value: status.settlementstatusref,
+    label: status.description
+})) : [];
 
   const getOrderStatus = (item: any) => {
     if (item) {
@@ -83,6 +93,27 @@ const RefundDetails = () => {
     }
     return "";
   };
+
+  const getOndcOrderStatus = (item: any)=> {
+    if(item){
+        return ondc_status_list.filter((x:any)=>x.value === item)[0].label
+    }
+    return ''
+}
+
+const getOndcFulfillmentStatus = (item: any)=> {
+    if(item && ondc_fullfillment_status_list.filter((x:any)=>x.value === item).length>0){
+        return ondc_fullfillment_status_list.filter((x:any)=>x.value === item)[0].label
+    }
+    return ''
+}
+
+const getOndcSettlementStatus = (item: any) => {
+    if(item){
+        return ondc_settlement_status_list.filter((x:any)=>x.value === item)[0].label
+    }
+    return ''
+}
 
   const closeReconciliationWindow = () => {
     setModalOpen(false);
@@ -406,7 +437,7 @@ const RefundDetails = () => {
                         >
                           <i className="fa fa-arrow-left me-2 fa-left-icon"></i>
                         </span>
-                        Refund details
+                        Return details
                       </span>
                     </h4>
                   </div>
@@ -612,7 +643,7 @@ const RefundDetails = () => {
                                                             " ml-1 mb-0 custom-rounded-border"
                                                           }
                                                         >
-                                                          {getFulfillmentStatus(
+                                                          {getOndcFulfillmentStatus(
                                                             item.fulfillment_status
                                                           )}
                                                         </span>
