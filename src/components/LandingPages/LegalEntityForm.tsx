@@ -163,8 +163,8 @@ const LegalEntityForm = (props:any) => {
         initialValues.building_street_area = data.addressDetails.building_street_area
         initialValues.locality_town = data.addressDetails.locality_town
         initialValues.city_id = data.addressDetails.city_id
-        initialValues.state = refValues.cities.filter((x: any) => x.city_id === data.addressDetails.city_id)[0].state.description
-        initialValues.country = refValues.cities.filter((x: any) => x.city_id === data.addressDetails.city_id)[0].state.country.description
+        initialValues.state = refValues.cities && refValues.cities.length>0 ? refValues.cities.filter((x: any) => x.city_id === data.addressDetails.city_id)[0].state.description : null
+        initialValues.country = refValues.cities && refValues.cities.length>0 ? refValues.cities.filter((x: any) => x.city_id === data.addressDetails.city_id)[0].state.country.description : null
         initialValues.pincode = data.addressDetails.pincode
       },[refValues.cities])
 

@@ -23,7 +23,7 @@ const Collections = () => {
 
     const loadSimilarProducts = (item: any) => {
         const category = item.ondc_category || null;
-        const categoryData = refValues.categoriesType.find((x: any) => x.description === category);
+        const categoryData = refValues.categoriesType && refValues.categoriesType.length>0 ? refValues.categoriesType.find((x: any) => x.description === category) : null;
         
         const cat = categoryData ? [{
             value: categoryData.ondc_categories_id,
