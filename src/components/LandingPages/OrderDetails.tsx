@@ -36,31 +36,31 @@ const OrderDetails = () => {
     const refValues = useSelector((store: any) => store.refValues.referenceList);
     const [statusUpdating, setStatusUpdating] = useState(false)
     const [itemDetailsOpen, setItemDetailsOpen] = useState<any>(null)
-    const status_list = refValues.order_status.map((status: any) => ({
+    const status_list = refValues.order_status && refValues.order_status.length>0 ? refValues.order_status.map((status: any) => ({
         value: status.eazehuborderstatusref,
         label: status.description
-    })) || [];
-    const fullfillment_status_list = refValues.fulfillment_status.map((status: any) => ({
+    })) : [];
+    const fullfillment_status_list = refValues.fulfillment_status && refValues.fulfillment_status.length>0? refValues.fulfillment_status.map((status: any) => ({
         value: status.eazehubfulfillmentstatusref,
         label: status.description
-    })) || [];
-    const settlement_status_list = refValues.settlement_status.map((status: any) => ({
+    })) : [];
+    const settlement_status_list = refValues.settlement_status && refValues.settlement_status.length>0 ? refValues.settlement_status.map((status: any) => ({
         value: status.eazehubsettlementstatusref,
         label: status.description
-    })) || [];
+    })) : [];
 
-    const ondc_status_list = refValues.ondc_order_status.map((status: any) => ({
+    const ondc_status_list = refValues.ondc_order_status && refValues.ondc_order_status.length>0 ? refValues.ondc_order_status.map((status: any) => ({
         value: status.ondcorderstateref,
         label: status.description
-    })) || [];
-    const ondc_fullfillment_status_list = refValues.ondc_fulfillment_status.map((status: any) => ({
+    })) : [];
+    const ondc_fullfillment_status_list = refValues.ondc_fulfillment_status && refValues.ondc_fulfillment_status.length>0 ? refValues.ondc_fulfillment_status.map((status: any) => ({
         value: status.ondcfulfillmentstateref,
         label: status.description
-    })) || [];
-    const ondc_settlement_status_list = refValues.ondc_settlement_status.map((status: any) => ({
+    })) : [];
+    const ondc_settlement_status_list = refValues.ondc_settlement_status && refValues.ondc_settlement_status.length>0 ? refValues.ondc_settlement_status.map((status: any) => ({
         value: status.settlementstatusref,
         label: status.description
-    })) || [];
+    })) : [];
 
     const getOrderStatus = (item: any)=> {
         if(item){
