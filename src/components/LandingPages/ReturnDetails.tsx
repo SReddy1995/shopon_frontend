@@ -6,16 +6,18 @@ import {
 } from "../../services/OrdersService";
 import ondc_product from "../../assets/images/ondc-icon.png";
 import {
+  ondcReturnStatus,
   renderFulfillmentButtons
 } from "../../utils/functions/StatusButtonsMapping";
+import moment from 'moment';
 
 const RefundDetails = () => {
   const navigate = useNavigate();
   const orderInfoFromRedux = useSelector((store: any) => store.seller.selectedOrderInfo);
   const selected_order_info = orderInfoFromRedux
     ? orderInfoFromRedux
-    : localStorage.getItem("selected_order-info")
-    ? JSON.parse(localStorage.getItem("selected_order")!)
+    : localStorage.getItem("selected_order_info")
+    ? JSON.parse(localStorage.getItem("selected_order_info")!)
     : null;
   const sellerFromRedux = useSelector(
     (store: any) => store.seller.selectedSeller
@@ -61,24 +63,24 @@ const getOndcFulfillmentStatus = (item: any)=> {
     navigate("/landing-page/orders/order-details");
   };
 
+  const formatCurrency = (price: any, curr: any = 'INR') => {
+    const formattedPrice = new Intl.NumberFormat('en-IN', { style: 'currency', currency: curr }).format(price);
+    return formattedPrice.includes('.00') ? formattedPrice.split('.')[0] : formattedPrice;
+};
+
   const formatResponse = (data: any) => {
     if(data.length>0){
         data = data.map((item: any) => {
             return {
                 ...item,
-                status: item.status,
-                createdAt: new Date(item.createdAt).toLocaleDateString("en-IN"),
+                status: ondcReturnStatus.filter((x: any)=> x.key === item.status)[0].short_desc,
+                price: item.quote && item.quote.length>0 ? formatCurrency(Math.abs(item.quote.filter((x: any) => x.code === "value")[0].value), 'INR') : '-',
+                createdAt: moment(item.createdAt).format("DD/MM/YYYY"),
                 statusHistory: item.statusHistory
-                .map((status: any, index: any) => ({
+                .map((status: any) => ({
                     ...status,
-                    createdAt: new Date(status.createdAt).toLocaleString("en-IN", {
-                    day: "numeric",
-                    month: "long",
-                    year: "numeric",
-                    hour: "numeric",
-                    minute: "numeric",
-                    hour12: true,
-                  }),
+                    createdAt: moment(status.createdAt).format("DD MMMM YYYY h:mm A"),
+                    status: ondcReturnStatus.filter((x: any)=> x.key === status.status)[0].long_desc
             }))
             }
         })
@@ -416,7 +418,16 @@ useEffect(() => {
                                     }}
                                     className="text-centre"
                                   >
-                                    Quantity
+                                    Qty
+                                  </th>
+                                  <th
+                                    style={{
+                                      padding: "0.375rem",
+                                      minWidth: "150px",
+                                    }}
+                                    className="text-centre"
+                                  >
+                                    Price
                                   </th>
                                   <th
                                     style={{
@@ -445,22 +456,21 @@ useEffect(() => {
                                     data.map((item: any, index: number) => {
                                       return (
                                         <>
-                                        <tr key={item.return_id + index}>
+                                        <tr key={item.return_id + index} onClick={() =>
+                                                toggleReturnDetails(item)
+                                              } className="cursor-pointer">
                                           <td>
                                             <span>
-                                              <b 
-                                              onClick={() =>
-                                                toggleReturnDetails(item)
-                                              }
-                                              className="cursor-pointer">
                                                 {item.return_id}
-                                              </b>{" "}
                                             </span>
                                             <br />
                                           </td>
-                                          <td>{item.item_id}</td>
+                                          <td>{item.item_name}</td>
                                           <td className="text-centre">
                                             {item.quantity}
+                                          </td>
+                                          <td className="text-centre">
+                                            {item.price}
                                           </td>
                                           <td className="text-centre">
                                             {item.createdAt}
@@ -471,7 +481,7 @@ useEffect(() => {
                                         </tr>
                                         {
                                           item.statusHistory && item.statusHistory.length>0 && returnHistoryDetailsOpen === item.return_id && <tr>
-                                          <td colSpan={5}>
+                                          <td colSpan={6} style={{borderTop:"none"}}>
                                             <div className="history-tl-container px-3">
                                               <ul className="tl ms-2 custom-timeline">
                                                 {
@@ -479,7 +489,7 @@ useEffect(() => {
                                                     return (
                                                       <li
                                                         key={status.createdAt + index}
-                                                        className="tl-item"
+                                                        className={index === 0 ? "tl-item active" : "tl-item"}
                                                       >
                                                         <div className="timestamp">
                                                           {status.createdAt}

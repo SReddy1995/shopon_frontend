@@ -3471,8 +3471,10 @@ position:relative;
   transition: all 500ms ease-in-out;
 
 }
-.history-tl-container ul.tl li:hover::before{
+.history-tl-container ul.tl li.active::before{
   border-color:  #258CC7;
+  border-radius: 500%;
+  background: #86D6FF;
   transition: all 1000ms ease-in-out;
 }
 ul.tl li .item-title{
