@@ -3516,3 +3516,16 @@ ul.tl li .timestamp{
   padding-bottom: 0;
   margin-bottom: -12px !important;
 }
+
+.return-details-fulfillment{
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.history-tl-container ul.tl li.failed::before{
+  border-color:  #F8686C;
+  border-radius: 500%;
+  background: white;
+  transition: all 1000ms ease-in-out;
+}

@@ -31,56 +31,67 @@ export const ondcReturnStatus = [
     {
         key: 'Liquidated',
         short_desc: 'Liquidated',
-        long_desc: 'Order has been cancelled and processed for liquidation of the item. Refund process will be initiated.'
+        long_desc: 'Order has been cancelled and processed for liquidation of the item. Refund process will be initiated.',
+        class: null
     },
     {
         key: 'Return_Picked',
         short_desc: 'Picked',
-        long_desc: 'The items that were requested for return have been collected from the customer or location for processing.'
+        long_desc: 'The items that were requested for return have been collected from the customer or location for processing.',
+        class: null
     },
     {
         key: 'Cancelled',
         short_desc: 'Cancelled',
-        long_desc: 'The return is cancelled either by the customer or system, due to reasons such as out-of-stock items, user request, or order errors.'
+        long_desc: 'The return is cancelled either by the customer or system, due to reasons such as out-of-stock items, user request, or order errors.',
+        class: 'failed'
     },
     {
         key: 'Return_Initiated',
         short_desc: 'Initiated',
-        long_desc: 'Return rquest is initiated.'
+        long_desc: 'Return rquest is initiated.',
+        class: null
     },
     {
         key: 'Return_Approved',
         short_desc: 'Approved',
-        long_desc: 'Request for return is approved.'
+        long_desc: 'Request for return is approved.',
+        class: null
     },
     {
         key: 'Return_Pick_Failed',
         short_desc: 'Failed',
-        long_desc: 'Pickup failed due to address discrepancy or customer availability and a follow-up for reschedule will be attempted.'
+        long_desc: 'Pickup failed due to address discrepancy or customer availability and a follow-up for reschedule will be attempted.',
+        class: 'failed'
     },
     {
         key: 'Return_Delivered',
         short_desc: 'Delivered',
-        long_desc: 'Item successfully received at the returns center and will be processed for refund or replacement.'
+        long_desc: 'Item successfully received at the returns center and will be processed for refund or replacement.',
+        class: null
     },
     {
         key: 'Return_Rejected',
         short_desc: 'Rejected',
-        long_desc: 'The return request was rejected due to non-compliance of the return policy.'
+        long_desc: 'The return request was rejected due to non-compliance of the return policy.',
+        class: 'failed'
     },
     {
         key: 'Return_Failed',
         short_desc: 'Failed',
-        long_desc: 'The return process was unsuccessful, either due to logistic issues, failed inspections, or customer failure to meet return conditions.'
+        long_desc: 'The return process was unsuccessful, either due to logistic issues, failed inspections, or customer failure to meet return conditions.',
+        class: 'failed'
     },
     {
         key: 'Return_Pick_Successful',
         short_desc: 'Successful',
-        long_desc: 'Item successfully collected from customer location.'
+        long_desc: 'Item successfully collected from customer location.',
+        class: null
     },
     {
         key: 'Pending',
         short_desc: 'Pending',
-        long_desc: 'The return process is currently pending for a decision or verification requirement.'
+        long_desc: 'The return process is currently pending for a decision or verification requirement.',
+        class: null
     }
 ]
