@@ -21,7 +21,7 @@ import RouteSwitch from "./components/LandingPages/RouteSwitch";
 import StoreInactive from "./components/LandingPages/StoreInactive";
 import Orders from './components/LandingPages/Orders';  
 import OrderDetails from "./components/LandingPages/OrderDetails";
-import RefundDetails from "./components/LandingPages/RefundDetails";
+import ReturnDetails from "./components/LandingPages/ReturnDetails";
 
 export const AppRoutes = () => {
   const childRoutes = [
@@ -50,9 +50,9 @@ export const AppRoutes = () => {
               </RoleGuard>
     },
     {
-      path: "/landing-page/orders/refund-details",
+      path: "/landing-page/orders/return-details",
       element:<RoleGuard requiredRole={['Admin','Operator']}>
-                  <RefundDetails />
+                  <ReturnDetails />
               </RoleGuard>
     },
     {

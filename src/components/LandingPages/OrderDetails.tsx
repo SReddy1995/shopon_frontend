@@ -13,8 +13,7 @@ import { RECONCILIATION_INITIATED_SUCCESSFULLY, STATUS_INITIATED_SUCCESSFULLY } 
 import TrackingDetails from "./TrackingDetails";
 import SettleDetails from "./SettleDetails";
 import { renderFulfillmentButtons, renderOrderStatusButtons, renderSettlementStatusButtons } from "../../utils/functions/StatusButtonsMapping";
-import { updateSelectedSeller } from "../../utils/reduxStore/sellerSlice";
-import refund_icon from "../../assets/images/refund-icon.png"
+import { updateSelectedOrderInfo, updateSelectedSeller } from "../../utils/reduxStore/sellerSlice";
 
 const OrderDetails = () => {
 
@@ -454,7 +453,8 @@ const OrderDetails = () => {
 
     const openRefundDetails = (seller: any) => {
         dispatch(updateSelectedSeller(seller));
-        navigate(`/landing-page/orders/refund-details`)
+        dispatch(updateSelectedOrderInfo(data.info));
+        navigate(`/landing-page/orders/return-details`)
     }
 
     return (
@@ -570,7 +570,7 @@ const OrderDetails = () => {
                                                         <div className="d-flex flex-row justify-content-between align-items-center gap-1">
                                                         {
                                                             seller.is_refund_initiated && <button type="button" className="btn-custom-grey" onClick={()=> openRefundDetails(seller)} >
-                                                              <span className="d-flex"><i className="fa fa-undo undo-icon"></i>Refunds</span>
+                                                              <span className="d-flex"><i className="fa fa-undo undo-icon"></i>Returns</span>
                                                             </button>
                                                         }   
                                                         {

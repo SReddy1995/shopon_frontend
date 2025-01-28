@@ -3471,8 +3471,10 @@ position:relative;
   transition: all 500ms ease-in-out;
 
 }
-.history-tl-container ul.tl li:hover::before{
+.history-tl-container ul.tl li.active::before{
   border-color:  #258CC7;
+  border-radius: 500%;
+  background: #86D6FF;
   transition: all 1000ms ease-in-out;
 }
 ul.tl li .item-title{
@@ -3494,6 +3496,7 @@ ul.tl li .timestamp{
   left: -30%;
   text-align: right;
   font-size: 12px;
+  top: -5px;
 }
 .d-flex-left{
   display: flex;
@@ -3509,3 +3512,7 @@ ul.tl li .timestamp{
  .shopify-seller-card{
   margin-top: -14px;
  }
+.custom-timeline{
+  padding-bottom: 0;
+  margin-bottom: -12px !important;
+}

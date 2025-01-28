@@ -26,3 +26,61 @@ export const renderFulfillmentButtons = (data: any) => {
     data === "PICKUP_FAILED" || data === "RTO_DISPOSED" ? "product-danger" : ""
     return btn
 }
+
+export const ondcReturnStatus = [
+    {
+        key: 'Liquidated',
+        short_desc: 'Liquidated',
+        long_desc: 'Return has been liquidated.'
+    },
+    {
+        key: 'Return_Picked',
+        short_desc: 'Return Picked',
+        long_desc: 'Return has been picked up.'
+    },
+    {
+        key: 'Cancelled',
+        short_desc: 'Cancelled',
+        long_desc: 'Return has been cancelled.'
+    },
+    {
+        key: 'Return_Initiated',
+        short_desc: 'Return Initiated',
+        long_desc: 'Return process has been initiated.'
+    },
+    {
+        key: 'Return_Approved',
+        short_desc: 'Return Approved',
+        long_desc: 'Return has been approved.'
+    },
+    {
+        key: 'Return_Pick_Failed',
+        short_desc: 'Return Pick Failed',
+        long_desc: 'Return pick-up has failed.'
+    },
+    {
+        key: 'Return_Delivered',
+        short_desc: 'Return Delivered',
+        long_desc: 'Return has been delivered.'
+    },
+    {
+        key: 'Return_Rejected',
+        short_desc: 'Return Rejected',
+        long_desc: 'Return has been rejected.'
+    },
+    {
+        key: 'Return_Failed',
+        short_desc: 'Return Failed',
+        long_desc: 'Return process has failed.'
+    },
+    {
+        key: 'Return_Pick_Successful',
+        short_desc: 'Return Pick Successful',
+        long_desc: 'Return pick-up was successful.'
+    },
+    {
+        key: 'Pending',
+        short_desc: 'Pending',
+        long_desc: 'Return is pending.'
+    }
+]
