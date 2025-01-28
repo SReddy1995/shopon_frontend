@@ -31,7 +31,7 @@ export const ondcReturnStatus = [
     {
         key: 'Liquidated',
         short_desc: 'Liquidated',
-        long_desc: 'Order has been canceled and processed for liquidation of the item. Refund process will be initiated.'
+        long_desc: 'Order has been cancelled and processed for liquidation of the item. Refund process will be initiated.'
     },
     {
         key: 'Return_Picked',
@@ -66,12 +66,12 @@ export const ondcReturnStatus = [
     {
         key: 'Return_Rejected',
         short_desc: 'Rejected',
-        long_desc: 'The return request was rejected due to non-comliance the return policy.'
+        long_desc: 'The return request was rejected due to non-compliance of the return policy.'
     },
     {
         key: 'Return_Failed',
         short_desc: 'Failed',
-        long_desc: 'The return process was unsuccessful, either due to logistical issues, failed inspections, or customer failure to meet return conditions.'
+        long_desc: 'The return process was unsuccessful, either due to logistic issues, failed inspections, or customer failure to meet return conditions.'
     },
     {
         key: 'Return_Pick_Successful',
@@ -81,6 +81,6 @@ export const ondcReturnStatus = [
     {
         key: 'Pending',
         short_desc: 'Pending',
-        long_desc: 'The return process is currently pending for a decision or verfication requirment.'
+        long_desc: 'The return process is currently pending for a decision or verification requirement.'
     }
 ]

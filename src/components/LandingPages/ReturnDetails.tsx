@@ -142,7 +142,7 @@ useEffect(() => {
                         >
                           <i className="fa fa-arrow-left me-2 fa-left-icon"></i>
                         </span>
-                        Return details
+                        Return Details
                       </span>
                     </h4>
                   </div>
@@ -170,6 +170,8 @@ useEffect(() => {
                                   <div className="seller-wise-statuses-container pt-3">
                                     {
                                       selected_seller.fulfillment_status && (
+                                        <>
+                                        <span className="status-label ml-0">Fulfillment </span>
                                         <p
                                           className={
                                             renderFulfillmentButtons(
@@ -182,6 +184,7 @@ useEffect(() => {
                                             selected_seller.fulfillment_status
                                           )}
                                         </p>
+                                        </>
                                       )
                                     }
                                   </div>
