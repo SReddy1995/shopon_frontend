@@ -414,7 +414,7 @@ useEffect(() => {
                                   <th
                                     style={{
                                       padding: "0.375rem",
-                                      minWidth: "150px",
+                                      maxWidth: "100px",
                                     }}
                                     className="text-centre"
                                   >
@@ -423,7 +423,7 @@ useEffect(() => {
                                   <th
                                     style={{
                                       padding: "0.375rem",
-                                      minWidth: "150px",
+                                      maxWidth: "150px",
                                     }}
                                     className="text-centre"
                                   >
@@ -432,7 +432,7 @@ useEffect(() => {
                                   <th
                                     style={{
                                       padding: "0.375rem",
-                                      minWidth: "150px",
+                                      maxWidth: "120px",
                                     }}
                                     className="text-centre"
                                   >
@@ -441,7 +441,7 @@ useEffect(() => {
                                   <th
                                     style={{
                                       padding: "0.375rem",
-                                      minWidth: "150px",
+                                      maxWidth: "120px",
                                     }}
                                     className="text-centre"
                                   >
