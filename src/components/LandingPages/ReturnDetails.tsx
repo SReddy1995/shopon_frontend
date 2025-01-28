@@ -80,7 +80,8 @@ const getOndcFulfillmentStatus = (item: any)=> {
                 .map((status: any) => ({
                     ...status,
                     createdAt: moment(status.createdAt).format("DD MMMM YYYY h:mm A"),
-                    status: ondcReturnStatus.filter((x: any)=> x.key === status.status)[0].long_desc
+                    long_desc: ondcReturnStatus.filter((x: any)=> x.key === status.status)[0].long_desc,
+                    class : ondcReturnStatus.filter((x: any)=> x.key === status.status)[0].class
             }))
             }
         })
@@ -166,29 +167,6 @@ useEffect(() => {
                                 className="card-orders seller-card-container shadow bg-white mb-0 py-3 px-3"
                               >
                                
-                                {selected_seller.is_ondc_product && (
-                                  <div className="seller-wise-statuses-container pt-3">
-                                    {
-                                      selected_seller.fulfillment_status && (
-                                        <>
-                                        <span className="status-label ml-0">Fulfillment </span>
-                                        <p
-                                          className={
-                                            renderFulfillmentButtons(
-                                              selected_seller.fulfillment_status
-                                            ) +
-                                            " ml-1 mb-0 custom-rounded-border"
-                                          }
-                                        >
-                                          {getFulfillmentStatus(
-                                            selected_seller.fulfillment_status
-                                          )}
-                                        </p>
-                                        </>
-                                      )
-                                    }
-                                  </div>
-                                )}
                                 {selected_seller.seller_id !== "shopify" && (
                                   <div className="provider-seller-info-container px-2 py-2">
                                     <div className="d-flex align-items-center">
@@ -243,7 +221,31 @@ useEffect(() => {
                                             colSpan={3}
                                             className="border-bottom-none"
                                           >
-                                            Original order
+                                            <div className="return-details-fulfillment ">
+
+                                              <p className="mb-0">Original order</p>
+                                              {selected_seller.is_ondc_product && (
+                                      selected_seller.fulfillment_status && (
+                                        <>
+                                        
+                                        <p
+                                          className={
+                                            renderFulfillmentButtons(
+                                              selected_seller.fulfillment_status
+                                            ) +
+                                            " ml-1 mb-0 custom-rounded-border"
+                                          }
+                                        >
+                                          {getFulfillmentStatus(
+                                            selected_seller.fulfillment_status
+                                          )}
+                                        </p>
+                                        </>
+                                      )
+                                    
+                                )}
+                                            </div>
+                                            
                                           </th>
                                           <th
                                             colSpan={3}
@@ -492,13 +494,13 @@ useEffect(() => {
                                                     return (
                                                       <li
                                                         key={status.createdAt + index}
-                                                        className={index === 0 ? "tl-item active" : "tl-item"}
+                                                        className={status.class === "failed" ? "tl-item failed" :  index === 0 ? "tl-item active" : "tl-item"}
                                                       >
                                                         <div className="timestamp">
                                                           {status.createdAt}
                                                         </div>
                                                         <div className="item-detail">
-                                                          {status.status}
+                                                          {status.long_desc}
                                                         </div>
                                                       </li>
                                                     );

@@ -243,7 +243,7 @@ const OrderDetails = () => {
 
                     sellers.push({
                         is_ondc_product: element.is_ondc_product || false,
-                        is_refund_initiated: true,
+                        return_initiated: element.return_initiated || false,
                         ondc_order_state: element.ondc_order_state || null,
                         fulfillment_status: element.eazehub_fulfillment_status || null,
                         settlement_status: element.settlement_status || null,
@@ -569,7 +569,7 @@ const OrderDetails = () => {
                                                         </ul>
                                                         <div className="d-flex flex-row justify-content-between align-items-center gap-1">
                                                         {
-                                                            seller.is_refund_initiated && <button type="button" className="btn-custom-grey" onClick={()=> openRefundDetails(seller)} >
+                                                            seller.return_initiated && <button type="button" className="btn-custom-grey" onClick={()=> openRefundDetails(seller)} >
                                                               <span className="d-flex"><i className="fa fa-undo undo-icon"></i>Returns</span>
                                                             </button>
                                                         }   
@@ -595,18 +595,18 @@ const OrderDetails = () => {
                                                                             <i className="fa fa-truck me-1"></i>
                                                                             <p className="mb-0">Track</p>
                                                                         </div>
-                                                                        <div onClick={()=>openSettleBySeller(seller)} className="more-actions-popup-elements px-3 py-2">
+                                                                        {/* <div onClick={()=>openSettleBySeller(seller)} className="more-actions-popup-elements px-3 py-2">
                                                                             <i className="fa fa-credit-card me-2"></i>
                                                                             <p className="mb-0">Settle</p>
-                                                                        </div>
+                                                                        </div> */}
                                                                         <div onClick={()=>getIGMBySeller(seller)} className="more-actions-popup-elements px-3 py-2">
                                                                             <i className="fa fa-support me-2"></i>
                                                                             <p className="mb-0">IGM</p>
                                                                         </div>
-                                                                        <div onClick={()=>getReconciliationBySeller(seller)} className="more-actions-popup-elements px-3 py-2">
+                                                                        {/* <div onClick={()=>getReconciliationBySeller(seller)} className="more-actions-popup-elements px-3 py-2">
                                                                             <i className="fa fa-barcode me-2"></i>
                                                                             <p className="mb-0">Reconciliation</p>
-                                                                        </div>
+                                                                        </div> */}
                                                                     </div>
                                                                 </div>
                                                             )}
@@ -858,7 +858,7 @@ const OrderDetails = () => {
 
 
                                         }
-                                        <div className="card-orders order-summary-card-container shadow bg-white mb-3 py-3 px-3">
+                                        {/* <div className="card-orders order-summary-card-container shadow bg-white mb-3 py-3 px-3">
                                                                 <div className="seller-wise-order-info">
                                                                 <h4 className="seller-order-id mb-0">Refund summary</h4>
 
@@ -899,7 +899,7 @@ const OrderDetails = () => {
 
                                                                 
                                                                 </div>
-                                        </div>
+                                        </div> */}
                                     </div>
                                     {
                                         data?.info &&  <div className="order-details-right-column">
