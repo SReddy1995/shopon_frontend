@@ -13,8 +13,7 @@ import { RECONCILIATION_INITIATED_SUCCESSFULLY, STATUS_INITIATED_SUCCESSFULLY } 
 import TrackingDetails from "./TrackingDetails";
 import SettleDetails from "./SettleDetails";
 import { renderFulfillmentButtons, renderOrderStatusButtons, renderSettlementStatusButtons } from "../../utils/functions/StatusButtonsMapping";
-import { updateSelectedSeller } from "../../utils/reduxStore/sellerSlice";
-import refund_icon from "../../assets/images/refund-icon.png"
+import { updateSelectedOrderInfo, updateSelectedSeller } from "../../utils/reduxStore/sellerSlice";
 
 const OrderDetails = () => {
 
@@ -454,6 +453,7 @@ const OrderDetails = () => {
 
     const openRefundDetails = (seller: any) => {
         dispatch(updateSelectedSeller(seller));
+        dispatch(updateSelectedOrderInfo(data.info));
         navigate(`/landing-page/orders/return-details`)
     }
 

@@ -108,5 +108,15 @@ import { orderServiceAxiosInstance, reconServiceAxiosInstance } from "../utils/i
         throw error;
       }
   }
+
+  export const getReturnDetails = async (body: any) => {
+    try {
+      const response = await orderServiceAxiosInstance.post(OrderUrls.getReturnDetails, body);  // Adjust the endpoint accordingly
+      return response;
+    } catch (error) {
+        console.error('Error fetching data: ', error);
+      throw error;  // Throw the error so the calling component can handle it
+    }
+  };
   
 

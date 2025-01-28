@@ -3494,6 +3494,7 @@ ul.tl li .timestamp{
   left: -30%;
   text-align: right;
   font-size: 12px;
+  top: -5px;
 }
 .d-flex-left{
   display: flex;
