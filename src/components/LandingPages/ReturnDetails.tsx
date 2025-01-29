@@ -151,9 +151,8 @@ useEffect(() => {
               </div>
             </div>
             <div className="col-12 text-left refund-info">
-              <p className="text-default-grey">
-                <span>#{selected_seller.order_seller_seq}</span>
-              </p>
+              <p className="text-default-grey mb-1"><span>{selected_order_info.order_created_date ? moment(selected_order_info.order_created_date).format('MMMM DD, YYYY [at] h:mm A') : ''}<span>&nbsp;|</span> <span>Transaction Id: </span>{selected_order_info.transaction_id}</span> <span>|</span> <span>Shopify Order No: {selected_order_info.order_number}</span></p>
+              <p className="text-default"><span>#{selected_seller.order_seller_seq}</span>&nbsp;|<span > Shipped through   {selected_order_info.shipping_method}</span></p>
             </div>
             <div className="col-12">
               <div className="row">
