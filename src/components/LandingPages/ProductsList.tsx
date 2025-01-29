@@ -1228,18 +1228,19 @@ const ProductsList = () => {
       const toggleProductSelection = (product: any) => {
         if(!isProductDetailsOpen){
             const maxProductSelection = Number(process.env.REACT_APP_MAX_PRODUCT_SELECTION || '20');
-            if(selectedProducts.length < maxProductSelection){
             setSelectedProducts((prevSelected: any) => {
-                if (prevSelected.some((obj: any) => obj.selector_reference_id === product.selector_reference_id)) {
+                if (prevSelected.some((obj: any) => obj.selector_reference_id === product.selector_reference_id && selectedProducts.length <= maxProductSelection)) {
                   return prevSelected.filter((item: any) => item.selector_reference_id !== product.selector_reference_id);
                 } else {
-                  return [...prevSelected, product];
+                    if(selectedProducts.length < maxProductSelection){
+                        return [...prevSelected, product];
+                    }
+                    else{
+                        showWarningMessage(MAXIMUM_PRODUCTS_SELECTED)
+                        return prevSelected;
+                    }
                 }
               });
-            }
-            else{
-                showWarningMessage(MAXIMUM_PRODUCTS_SELECTED)
-            }
         }
       }
 
