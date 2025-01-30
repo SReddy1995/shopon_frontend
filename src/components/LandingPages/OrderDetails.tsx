@@ -14,6 +14,7 @@ import TrackingDetails from "./TrackingDetails";
 import SettleDetails from "./SettleDetails";
 import { renderFulfillmentButtons, renderOrderStatusButtons, renderSettlementStatusButtons } from "../../utils/functions/StatusButtonsMapping";
 import { updateSelectedOrderInfo, updateSelectedSeller } from "../../utils/reduxStore/sellerSlice";
+import { getFormattedPriceValue } from "../../utils/functions/helper";
 
 const OrderDetails = () => {
 
@@ -126,7 +127,7 @@ const OrderDetails = () => {
             const tax = quote_info.breakup.find((item: any) => item.title === 'Tax');
             if (tax) sum += Number(tax.price.value);
         }
-        return sum.toFixed(2);
+        return getFormattedPriceValue(sum);
     };
 
     const getPriceOfItem = (ele: any) => ele.store_item_price && ele.store_item_quantity ? Number(ele.store_item_price) * Number(ele.store_item_quantity) : 0;
@@ -154,7 +155,7 @@ const OrderDetails = () => {
     const getTax = (ele: any) => {
         if (ele.quote_info?.breakup?.length) {
             const tax = ele.quote_info.breakup.find((item: any) => item.title === 'Tax');
-            return tax?.price.value || 0;
+            return tax ? getFormattedPriceValue(tax.price.value) : 0;
         }
         return 0;
     };
@@ -166,11 +167,11 @@ const OrderDetails = () => {
         sku: ele.store_item_sku || 'NA',
         alt_id: ele.alternate_id || null,
         tracking_id: ele.tracking_number || 'NA',
-        price: ele.store_item_price ? ele.store_item_price : 0,
+        price: ele.store_item_price ? getFormattedPriceValue(ele.store_item_price) : 0,
         qty: ele.store_item_quantity || 0,
-        pkg_charge: ele.packing_charge ? ele.packing_charge : 0,
-        convenience_fee: ele.convenience_fee ? ele.convenience_fee : 0,
-        delivery_charge: ele.delivery_charge ? ele.delivery_charge : 0,
+        pkg_charge: ele.packing_charge ? getFormattedPriceValue(ele.packing_charge) : 0,
+        convenience_fee: ele.convenience_fee ? getFormattedPriceValue(ele.convenience_fee) : 0,
+        delivery_charge: ele.delivery_charge ? getFormattedPriceValue(ele.delivery_charge) : 0,
         tax: getTax(ele),
         total: getRowTotal(ele),
     }));
