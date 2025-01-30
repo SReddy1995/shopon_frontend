@@ -126,7 +126,7 @@ const OrderDetails = () => {
             const tax = quote_info.breakup.find((item: any) => item.title === 'Tax');
             if (tax) sum += Number(tax.price.value);
         }
-        return sum;
+        return sum.toFixed(2);
     };
 
     const getPriceOfItem = (ele: any) => ele.store_item_price && ele.store_item_quantity ? Number(ele.store_item_price) * Number(ele.store_item_quantity) : 0;
