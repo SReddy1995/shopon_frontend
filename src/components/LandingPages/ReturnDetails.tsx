@@ -75,11 +75,11 @@ const getOndcFulfillmentStatus = (item: any)=> {
                 ...item,
                 status: ondcReturnStatus.filter((x: any)=> x.key === item.status)[0].short_desc,
                 price: item.quote && item.quote.length>0 ? formatCurrency(Math.abs(item.quote.filter((x: any) => x.code === "value")[0].value), 'INR') : '-',
-                createdAt: moment(item.createdAt).format("DD/MM/YYYY"),
+                created_at: moment(item.created_at).format("DD/MM/YYYY"),
                 statusHistory: item.statusHistory
                 .map((status: any) => ({
                     ...status,
-                    createdAt: moment(status.createdAt).format("DD MMMM YYYY h:mm A"),
+                    created_at: moment(status.created_at).format("DD MMMM YYYY h:mm A"),
                     long_desc: ondcReturnStatus.filter((x: any)=> x.key === status.status)[0].long_desc,
                     class : ondcReturnStatus.filter((x: any)=> x.key === status.status)[0].class
             }))
@@ -477,7 +477,7 @@ useEffect(() => {
                                             {item.price}
                                           </td>
                                           <td className="text-centre">
-                                            {item.createdAt}
+                                            {item.created_at}
                                           </td>
                                           <td className="text-centre">
                                             {item.status}
@@ -492,11 +492,11 @@ useEffect(() => {
                                                   item.statusHistory.map((status: any, index: number) => {
                                                     return (
                                                       <li
-                                                        key={status.createdAt + index}
+                                                        key={status.created_at + index}
                                                         className={status.class === "failed" ? "tl-item failed" :  index === 0 ? "tl-item active" : "tl-item"}
                                                       >
                                                         <div className="timestamp">
-                                                          {status.createdAt}
+                                                          {status.created_at}
                                                         </div>
                                                         <div className="item-detail">
                                                           {status.long_desc}
