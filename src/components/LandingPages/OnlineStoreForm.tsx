@@ -6,6 +6,9 @@ import Multiselect from 'multiselect-react-dropdown';
 import { useSelector } from 'react-redux';
 import { getOnlineStore, saveOnlineStore } from '../../services/AccountService';
 import { ONLINE_UPDATE_SUCCESS } from '../../utils/constants/NotificationConstants';
+import BuyerInfo from './BuyerInfo';
+import { AnyAaaaRecord } from 'dns';
+import ModalWindow from './ModalWindow';
 
 // Custom Multiselect component for Formik
 const CustomMultiselect = ({ field, form, options } : any) => {
@@ -16,6 +19,8 @@ const CustomMultiselect = ({ field, form, options } : any) => {
     const handleRemove = (selectedList :any) => {
       form.setFieldValue(field.name, selectedList);
     };
+
+   
   
     return (
       <div>
@@ -66,6 +71,25 @@ const OnlineStoreForm = (props: any) => {
       });
     const [loading, setLoading] = useState(true)
     const user_details = localStorage.getItem('user_details') ? JSON.parse(localStorage.getItem('user_details') || '{}') : null;
+
+    const [openBuyerInfoModal, setBuyerInfoModalOpen] = useState(false);
+    const [selectedBuyerInfo, setSelectedBuyerInfo] = useState<any>(null);
+
+    const openBuyerInfoWindow = () => {
+        setBuyerInfoModalOpen(true);
+    }
+
+    const closeBuyerInfoWindow = () => {
+        setSelectedBuyerInfo(null)
+        setBuyerInfoModalOpen(false);
+    }
+
+    const openBuyerInfo = (category: any) => {
+        const buyerCategory = refValues.categoriesType.filter((x:any)=> x.ondc_categories_id === category.category_id)[0]
+        setSelectedBuyerInfo(buyerCategory)
+        console.log(category);
+        openBuyerInfoWindow();
+    }
 
     // const filteredOptions = cities.filter(option =>
     //     option.toLowerCase().includes(searchTerm.toLowerCase())
@@ -230,10 +254,12 @@ const OnlineStoreForm = (props: any) => {
 
                                                         <th className="text-center store-action-column" >
                                                         </th>
+
+                                                        <th className="text-center store-action-column" >
+                                                        </th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-
 
                                                     {values.categories.length > 0 &&
                                                         values.categories.map((category, index) => (
@@ -263,6 +289,13 @@ const OnlineStoreForm = (props: any) => {
                                                                         />
                                                                         <ErrorMessage className='error' name={`categories.${index}.city`} component="div" />
                                                                         </div>
+                                                                    </td>
+
+                                                                    <td data-name="info" className="text-center input-table-column">
+                                                                        <button onClick={()=>openBuyerInfo(category)} type="button"
+                                                                             ><i className="fa fa-info-circle" style={{verticalAlign:'bottom',
+                                                                                fontSize: '15px',color:'#040404ad'
+                                                                            }}></i></button>
                                                                     </td>
 
                                                                     <td data-name="del" className="text-center input-table-column">
@@ -304,6 +337,10 @@ const OnlineStoreForm = (props: any) => {
 
             <></>
         }
+
+<ModalWindow show={openBuyerInfoModal} detailsOf={'buyerinfo'} modalClosed={closeBuyerInfoWindow}>
+                    <BuyerInfo category={selectedBuyerInfo} closeModal={closeBuyerInfoWindow}/>
+                </ModalWindow>
 
         </>
     ) 

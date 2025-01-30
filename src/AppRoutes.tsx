@@ -22,6 +22,7 @@ import StoreInactive from "./components/LandingPages/StoreInactive";
 import Orders from './components/LandingPages/Orders';  
 import OrderDetails from "./components/LandingPages/OrderDetails";
 import ReturnDetails from "./components/LandingPages/ReturnDetails";
+import Igm from "./components/LandingPages/Igm";
 
 export const AppRoutes = () => {
   const childRoutes = [
@@ -41,6 +42,12 @@ export const AppRoutes = () => {
       path: "/landing-page/orders/orders-list",
       element:<RoleGuard requiredRole={['Admin','Operator']}>
                   <Orders />
+              </RoleGuard>
+    },
+    {
+      path: "/landing-page/orders/igm-list",
+      element:<RoleGuard requiredRole={['Admin','Operator']}>
+                  <Igm />
               </RoleGuard>
     },
     {

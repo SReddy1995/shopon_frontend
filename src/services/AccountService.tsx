@@ -4,6 +4,7 @@ import { jwtDecode } from "jwt-decode";
 import { axiosInstance } from "../utils/interceptor/genericAxiosInsatnce";
 
 
+
 export const getReferenceValues = async () => {
     try{
   
@@ -199,3 +200,23 @@ export const getLegalEntityDetails = async () => {
         throw error;
       }
   }
+
+  export const fetchBuyerInfo = async (body: any) => {
+    try {
+      const response = await axiosInstance.post(AccountUrls.initiateBuyerInfo, body);  // Adjust the endpoint accordingly
+      return response;
+    } catch (error) {
+        console.error('Error fetching data: ', error);
+      throw error;  // Throw the error so the calling component can handle it
+    }
+  };
+
+  export const fetchBuyerInfoDetails = async (body: any) => {
+    try {
+      const response = await axiosInstance.post(AccountUrls.getBuyerInfo, body);  // Adjust the endpoint accordingly
+      return response;
+    } catch (error) {
+        console.error('Error fetching data: ', error);
+      throw error;  // Throw the error so the calling component can handle it
+    }
+  };

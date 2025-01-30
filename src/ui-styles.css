@@ -1449,6 +1449,24 @@ table{
   transform: translateX(-50%);
   /* overflow-y: auto; */
 }
+.ModalCustomBuyerInfo {
+  position: fixed;
+  z-index: 500;
+  background-color: white;
+  height:600px;
+  max-height: calc(100vh - 150px);
+  border: 1px solid #ccc;
+  box-shadow: 1px 1px 1px black;
+  padding: 16px;
+  top: 15%;
+  box-sizing: border-box;
+  transition: all 0.3s ease-out;
+  border-radius: 8px;
+  width: auto;
+  left: 50%;
+  transform: translateX(-50%);
+  overflow-y: auto;
+}
 
 @media (max-width: 768px) {
   .ModalCustom {
