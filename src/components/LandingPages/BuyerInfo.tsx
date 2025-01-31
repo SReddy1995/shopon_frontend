@@ -152,7 +152,7 @@ const BuyerInfo = (props:any) => {
                     </>
                 }
                 {
-                    !loading && !noData && <>
+                    !loading && !noData && data && <>
                             <div className="col-12 px-0">
                                 <div>
                                   <DisplayEntityDetails data={data} />
