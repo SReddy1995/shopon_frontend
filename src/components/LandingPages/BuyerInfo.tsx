@@ -62,57 +62,7 @@ const BuyerInfo = (props:any) => {
     const [noData, setNoData] = useState(false);
     const [data, setData] = useState<any>(null);
     const user_details = localStorage.getItem('user_details') ? JSON.parse(localStorage.getItem('user_details') || '{}') : null;
-    
-const buyerInfoApiResponse = {
-    "context": {
-      "domain": "ONDC:RET10",
-      "country": "IND",
-      "city": "std:080",
-      "action": "string",
-      "core_version": "1.2.0",
-      "bap_id": "example-test-bap.com",
-      "bap_uri": "https://example-test-bap.com",
-      "bpp_id": "example-test-bpp.com",
-      "bpp_uri": "https://example-test-bap.com",
-      "transaction_id": "T1",
-      "message_id": "M1",
-      "timestamp": "2023-09-26T23:04:05.254Z",
-      "key": "string",
-      "ttl": "PT30S"
-    },
-    "message": {
-      "info": {
-        "type": "BAP",
-        "entity": {
-          "gst": {
-            "legal_entity_name": "ABC Incorporates",
-            "business_address": "Trade World, Mansarpur, Coorg, Karnataka 333333",
-            "city_code": [
-              "std:080"
-            ],
-            "gst_no": "07AAACN2082N4Z7"
-          },
-          "pan": {
-            "name_as_per_pan": "ABC Incorporates",
-            "pan_no": "ASDFP7657Q",
-            "date_of_incorporation": "23/06/1982"
-          },
-          "name_of_authorised_signatory": "Anand Sharma",
-          "address_of_authorised_signatory": "405, Pinnacle House, Kandiwali, Mumbai 400001",
-          "email_id": "anand.sharma@abc.com",
-          "mobile_no": 9912332199,
-          "country": "IND",
-          "bank_details": {
-            "account_no": "XXXXXXXXX",
-            "ifsc_code": "XXXXXXXXX",
-            "beneficiary_name": "XXXXXXXXX",
-            "bank_name": "XXXXXXXXX",
-            "branch_name": "XXXXXXXXX"
-          }
-        }
-      }
-    }
-  }
+
 
     const getBuyerInfoDetails = useCallback(() => {   
         let payload = {
@@ -123,7 +73,7 @@ const buyerInfoApiResponse = {
                 .then((data: any) => {
                     console.log("buyer info details = ", data);
                     setLoading(false);
-                    setData(data)
+                    setData(data.buyerInfoResponse)
                 })
                 .catch(err => {
                     setNoData(true)
@@ -190,14 +140,10 @@ const buyerInfoApiResponse = {
                     !loading && noData && 
                     <>
                              <div className="d-flex mt-2">
-                                   {/* <div className="px-0 error-msg-block">
+                                   <div className="px-0 error-msg-block">
                                         <div>
                                             <h6 className='error-msg'><i className='fa fa-exclamation-circle me-1'></i>{data}</h6>
                                         </div>
-                                    </div> */}
-                                    <div>
-                                     <DisplayEntityDetails data={buyerInfoApiResponse} />
-                                       
                                     </div>
                                 <div>
                               
@@ -208,7 +154,9 @@ const buyerInfoApiResponse = {
                 {
                     !loading && !noData && <>
                             <div className="col-12 px-0">
-                               <h2>Buyer Info Details</h2>
+                                <div>
+                                  <DisplayEntityDetails data={data} />
+                                </div>
                             </div>
                     </>
                 }
