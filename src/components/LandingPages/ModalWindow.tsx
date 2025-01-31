@@ -12,7 +12,7 @@ const ModalWindow =(props: any) => {
                     <>
                         <Backdrop show={props.show} onClick={props.modalClosed}>
                         </Backdrop>
-                        <div className={props.detailsOf && props.detailsOf === 'reconciliation' ? "ModalCustom" : "Modal"}>
+                        <div className={props.detailsOf && props.detailsOf === 'reconciliation' ? "ModalCustom" : props.detailsOf && props.detailsOf==='buyerinfo' ? "ModalCustomBuyerInfo" :"Modal"}>
                             {props.children}
                         </div>
                     </>

@@ -47,6 +47,13 @@ export const SidebarData = [
     icon: <span className="fa-stack fa-md"><i className="fa fa fa-exchange fa-stack-1x "></i></span>
   },
   {
+    title: 'IGM',
+    id: 'igm',
+    path: '/landing-page/orders/igm-list',
+    scopes: ['Admin','Operator'],
+    icon: <span className="fa-stack fa-md"><i className="fa fa fa-exchange fa-stack-1x "></i></span>
+  },
+  {
     title: 'Finance',
     id: 'finance',
     path: '/landing-page/finance',
