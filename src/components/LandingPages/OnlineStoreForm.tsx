@@ -7,7 +7,6 @@ import { useSelector } from 'react-redux';
 import { getOnlineStore, saveOnlineStore } from '../../services/AccountService';
 import { ONLINE_UPDATE_SUCCESS } from '../../utils/constants/NotificationConstants';
 import BuyerInfo from './BuyerInfo';
-import { AnyAaaaRecord } from 'dns';
 import ModalWindow from './ModalWindow';
 
 // Custom Multiselect component for Formik

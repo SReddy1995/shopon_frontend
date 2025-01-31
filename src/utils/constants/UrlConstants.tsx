@@ -20,7 +20,9 @@ export const AccountUrls = {
     uploadDocument: '/document',
     deleteDocument: '/document',
     downloadDocumentsZip: 'documents/download',
-    storeStatusDetails: '/buyer/status'
+    storeStatusDetails: '/buyer/status',
+    initiateBuyerInfo:'/initiate_buyer_info',
+    getBuyerInfo:'/buyer_info_details'
 }
 
 export const UserUrls = {
