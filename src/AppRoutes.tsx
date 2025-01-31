@@ -23,6 +23,7 @@ import Orders from './components/LandingPages/Orders';
 import OrderDetails from "./components/LandingPages/OrderDetails";
 import ReturnDetails from "./components/LandingPages/ReturnDetails";
 import Igm from "./components/LandingPages/Igm";
+import IgmCreate from "./components/LandingPages/IgmCreate";
 
 export const AppRoutes = () => {
   const childRoutes = [
@@ -48,6 +49,12 @@ export const AppRoutes = () => {
       path: "/landing-page/orders/igm-list",
       element:<RoleGuard requiredRole={['Admin','Operator']}>
                   <Igm />
+              </RoleGuard>
+    },
+    {
+      path: "/landing-page/orders/igm-create",
+      element:<RoleGuard requiredRole={['Admin','Operator']}>
+                  <IgmCreate />
               </RoleGuard>
     },
     {

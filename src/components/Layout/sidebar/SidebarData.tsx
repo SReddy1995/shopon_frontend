@@ -51,7 +51,7 @@ export const SidebarData = [
     id: 'igm',
     path: '/landing-page/orders/igm-list',
     scopes: ['Admin','Operator'],
-    icon: <span className="fa-stack fa-md"><i className="fa fa fa-exchange fa-stack-1x "></i></span>
+    icon: <span className="fa-stack fa-md"><i className="fa fa-support fa-stack-1x "></i></span>
   },
   {
     title: 'Finance',
