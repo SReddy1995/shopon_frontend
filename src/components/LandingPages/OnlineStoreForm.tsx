@@ -192,7 +192,7 @@ const OnlineStoreForm = (props: any) => {
                     <div id="collapseOne" className="accordion-collapse collapse show" aria-labelledby="headingOne"
                         data-bs-parent="#accordionExample">
                         <div className="accordion-body">
-                            <p>This section collects the details relating to your online shopify store</p>
+                            <p>This section collects the details relating to your online Shopify store</p>
                         </div>
                     </div>
                 </div>
