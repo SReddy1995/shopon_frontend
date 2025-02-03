@@ -1695,15 +1695,17 @@ const ProductsList = () => {
     
                                             </div>
                                         }
-                                        {
-                                        !hasMore && 
-                                        <>
-                                        <p className='mt-2 mb-0' style={{ textAlign: 'center',color: 'darkgray' }}>No more data.  &nbsp;&nbsp;
-                                            <span className='mt-2 cursor-pointer check-more-text' onClick={loadMore}>Check for more data</span>
+                                        <p className='mt-2 mb-0' style={{ textAlign: 'center',color: 'darkgray' }}>
+                                            {
+                                                !hasMore && 
+                                                <>
+                                                No more data.  &nbsp;&nbsp;
+                                                </>
+                                            }
+                                            {
+                                                !loading && <span className='mt-2 cursor-pointer check-more-text' onClick={loadMore}>Check for more data</span>
+                                            }
                                         </p>
-
-                                        </>
-                                        }
                             </div>
                         </div>
                         )

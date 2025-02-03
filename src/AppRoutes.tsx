@@ -116,7 +116,7 @@ export const AppRoutes = () => {
   const router = createBrowserRouter([
     {
       path: "/",
-      element:<Navigate to="/home" replace />
+      element:<Navigate to="/landing-page/switch-store" replace />
     },
     {
       path: "/home",

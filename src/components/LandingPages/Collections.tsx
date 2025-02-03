@@ -10,6 +10,7 @@ import { COLLECTION_PRODUCT_DELETED } from '../../utils/constants/NotificationCo
 import ModalWindow from './ModalWindow';
 import ConfirmDelete from './ConfirmDelete';
 import ProductThumbnail from './ProductThumbnail';
+import BuyerInfo from './BuyerInfo';
 
 const Collections = () => {
 
@@ -179,6 +180,25 @@ const Collections = () => {
       const  [current_list_prev_page_id, setCurrentListPrevPageId] = useState<any>(null)
       const [isProductThumbnailOpen, setIsProductThumbnailOpen] = useState(false);
       const [selectedProductToViewDetails, setSelectedProductToViewDetails] = useState<any>(null)
+
+       const [openBuyerInfoModal, setBuyerInfoModalOpen] = useState(false);
+          const [selectedBuyerInfo, setSelectedBuyerInfo] = useState<any>(null);
+      
+          const openBuyerInfoWindow = () => {
+              setBuyerInfoModalOpen(true);
+          }
+      
+          const closeBuyerInfoWindow = () => {
+              setSelectedBuyerInfo(null)
+              setBuyerInfoModalOpen(false);
+          }
+      
+          const openBuyerInfo = (item: any) => {
+            //   const buyerCategory = refValues.categoriesType.filter((x:any)=> x.ondc_categories_id === category.category_id)[0]
+              setSelectedBuyerInfo(item.alternate_id)
+            //   console.log(item);
+              openBuyerInfoWindow();
+          }
     
       const handlePrevPage = () => {
         fetchShopifyProducts(startCursor, null)
@@ -465,7 +485,7 @@ const Collections = () => {
                                                     <table id="example" className="table table-hover  product-table collection-example text-left" data-paging='false' >
                                                         <thead className="table-light">
                                                             <tr>
-                                                            <th style={{ padding: '0.375rem',minWidth:"80px"}}></th>
+                                                            <th style={{ padding: '0.375rem',minWidth:"112px"}}></th>
                                                                 {
                                                                     columns.map((col: any, index: any) => {
                                                                         return col.isVisible && <th key={index} className='cursor-pointer' 
@@ -485,9 +505,16 @@ const Collections = () => {
                                                                     <tr key={item.shopify_product_id}>
                                                                            <td><button type="button"
                                                                             className="btn-danger-icon" onClick={() => openConfirmDeleteModal(item.shopify_product_id)}><i className="fa fa-trash text-danger" style={{ fontSize: '14px' }}></i></button>
+                                                                            <button onClick={()=>openBuyerInfo(item)} type="button"
+                                                                            className='ms-1'><i className="fa fa-info-circle" style={{
+                                                                                fontSize: '15px',color:'#040404ad'
+                                                                            }}></i></button>
                                                                             <button type="button" onClick={() => loadSimilarProducts(item)}
                                                                                 className="btn"  style={{marginLeft:'-8px'}}><img src={SimilarProductsImage} style={{ width: '26px', height: '24px !important', padding: '0px 0px', display: 'inline' }} alt="store_image"/>
                                                                             </button>
+                                                                            
+                                                                      
+                                                                    
                                                                         </td>
                                                                         {
                                                                             columns
@@ -580,7 +607,9 @@ const Collections = () => {
             <ModalWindow show={isProductThumbnailOpen} modalClosed={closeShowThumbnailModal}>
                 <ProductThumbnail productDetails={selectedProductToViewDetails} closeModal={closeShowThumbnailModal}/>
             </ModalWindow>
-
+            <ModalWindow show={openBuyerInfoModal} detailsOf={'buyerinfo'} modalClosed={closeBuyerInfoWindow}>
+                    <BuyerInfo alternate_id={selectedBuyerInfo} closeModal={closeBuyerInfoWindow}/>
+                </ModalWindow>
         </>
     ) 
 

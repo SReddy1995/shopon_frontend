@@ -66,7 +66,7 @@ const BuyerInfo = (props:any) => {
 
     const getBuyerInfoDetails = useCallback(() => {   
         let payload = {
-            category_id: props.category.ondc_categories_code,
+           alternate_id: props.alternate_id,
                 buyer_id: user_details.buyer_id
         }
         fetchBuyerInfoDetails(payload)
@@ -81,12 +81,12 @@ const BuyerInfo = (props:any) => {
                     setLoading(false);
                 });
         
-    },[props.category.ondc_categories_code, user_details.buyer_id])
+    },[props.alternate_id, user_details.buyer_id])
 
      const getBuyerInfo = useCallback(() => {
         setLoading(true);
             let payload = {
-                category_id: props.category.ondc_categories_code,
+                alternate_id: props.alternate_id,
                 buyer_id: user_details.buyer_id
             }
             fetchBuyerInfo(payload)
@@ -100,7 +100,7 @@ const BuyerInfo = (props:any) => {
                     setData(err?.response?.data?.error?.msg)
                     setLoading(false);
                 });
-        },[fetchBuyerInfoDetails,props.category.ondc_categories_code, user_details.buyer_id])
+        },[fetchBuyerInfoDetails,props.alternate_id, user_details.buyer_id])
 
     useEffect(()=>{
         getBuyerInfo();
@@ -119,7 +119,7 @@ const BuyerInfo = (props:any) => {
         <div className="container-fluid">
             <div className="row">
                 <div className="col-12 d-flex justify-content-between px-0">
-                    <h5>Buyer Info details for {props.category.description}</h5>
+                    <h5>Seller info details</h5>
                     <i className='fa fa-close fa-lg cursor-pointer mt-2' onClick={closeModal}></i>
                 </div>
                 <div className="col-12 px-0">
@@ -131,7 +131,7 @@ const BuyerInfo = (props:any) => {
 
                             </div>
                             <div>
-                                <p className='mt-2 ml-2'>Please wait! Getting buyer info details</p>
+                                <p className='mt-2 ml-2'>Please wait! Getting seller info details</p>
                             </div>
 
                         </div>
