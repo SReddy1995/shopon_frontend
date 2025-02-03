@@ -5,41 +5,46 @@ import { useNavigate } from "react-router-dom";
 import { Formik, Field, ErrorMessage, FormikValues } from 'formik';
 
 
-const registerValidationSchema = Yup.object().shape({
-    firstname: Yup.string()
-    .required('Required'),
-    lastname: Yup.string()
+const igmCreateValidationSchema = Yup.object().shape({
+    customer_name: Yup.string()
     .required('Required'),
     contact_number: Yup.string()
      .min(10, 'Contact number must be 10 characters')
      .max(10, 'Contact number must be 10 characters')
      .required('Contact number is required'),
     email_address: Yup.string().email('Invalid email format').required('Email is required'),
-    legal_entity_name: Yup.string()
+  np_name: Yup.string()
     .required('Required'),
-    has_existing_store: Yup.string().required("Required"),
-    store_url: Yup.string()
+    np_contact_number: Yup.string()
+     .min(10, 'Contact number must be 10 characters')
+     .max(10, 'Contact number must be 10 characters')
+     .required('Contact number is required'),
+    np_email_address: Yup.string().email('Invalid email format').required('Email is required'),
+    title:Yup.string()
     .required('Required'),
-    additional_info: Yup.string(),
+    description: Yup.string(),
 });
 const initialValues = {
-    firstname: '',
-    lastname: '',
+    customer_name: '',
     contact_number: '',
     email_address: '',
-    legal_entity_name: '',
-    has_existing_store: '',
-    store_url: '',
-    additional_info: '',
+    np_name: 'test',
+    np_contact_number: '8765434567',
+    np_email_address: 'test@opteamix.com',
+    title: '',
+    description:''
    };
 
+   
 const IgmCreate = ()=>{
     const navigate = useNavigate();
         const navigateToOrderDetails = () => {
             // dispatch(updateSelectedOrder(null));
             navigate("/landing-page/orders/order-details")
         }
-    const [allowUserToEditStoreContactDetails, setAllowUserToEditStoreContactDetails] = useState(true)
+        const [allowUserToEditStoreContactDetails, setAllowUserToEditStoreContactDetails] = useState(true)
+
+    // const [allowUserToEditStoreContactDetails, setAllowUserToEditStoreContactDetails] = useState(true)
 
     //  const fetchData = useCallback(() => {
     //         getAccountDetails(user_details.buyer_id)
@@ -74,10 +79,23 @@ const IgmCreate = ()=>{
     //         });
     //       },[dispatch, user_details.buyer_id, user_details.email_address]);
     
-    function updateBuyerRegistrationDetails(values: { firstname: string; lastname: string; contact_number: string; email_address: string; legal_entity_name: string; has_existing_store: string; store_url: string; additional_info: string; }) {
-        throw new Error("Function not implemented.");
-    }
+    // const updateBuyerRegistrationDetails(values: { firstname: string; lastname: string; contact_number: string; email_address: string; legal_entity_name: string; has_existing_store: string; store_url: string; additional_info: string; }) {
+    //     throw new Error("Function not implemented.");
+    // }
 
+
+       const updateIgmProductDetails = (values: FormikValues) => {
+            console.log("reg form details = ", values)
+            // saveRegistrationDetails(values)
+            //  .then(response => {
+            //     showSuccessMessage(REGISTRATION_UPDATE_SUCCESS)
+            //     props.reloadStatus();
+            //  })
+            //  .catch(error=>{
+            //     console.log(error)
+            //  })
+          }
+    
     return(
         <div className="container-fluid h-auto mt-3 px-3">
          <div className="row mt-1">
@@ -116,12 +134,12 @@ const IgmCreate = ()=>{
                                                                                             </div>
                       <Formik
                                                 initialValues={initialValues}
-                                                validationSchema={registerValidationSchema}
+                                                validationSchema={igmCreateValidationSchema}
                                                 onSubmit={(values, actions) => {
                                                     actions.setSubmitting(false);
                                                     actions.validateForm().then((errors) => {
                                                         if (Object.keys(errors).length === 0) {
-                                                          updateBuyerRegistrationDetails(values);
+                                                            updateIgmProductDetails(values);
                                                         } else {
                                                           console.log('Form has validation errors');
                                                         }
@@ -135,10 +153,10 @@ const IgmCreate = ()=>{
                                                             <div className="mb-3 form-field-container-full-width">
                                                                 <label htmlFor="exampleFormControlInput1" className="form-label required">Name</label>
                                                                 <Field
-                                                                    name="firstname" type="text"
-                                                                    className={'form-control dashboard-namefield ' + (errors.firstname && touched.firstname ? 'input-field-error' : '')}
+                                                                    name="customer_name" type="text"
+                                                                    className={'form-control dashboard-namefield ' + (errors.customer_name && touched.customer_name ? 'input-field-error' : '')}
                                                                     id="exampleFormControlInput1"
-                                                                    placeholder="First Name"
+                                                                    placeholder="Customer Name"
                                                                     disabled={!allowUserToEditStoreContactDetails}
                                                                 />
                                                                 <ErrorMessage className='error' name="firstname" component="div" />
@@ -192,12 +210,12 @@ const IgmCreate = ()=>{
                                                             <div className="mb-3 form-field-container-full-width">
                                                                 <label htmlFor="exampleFormControlInput1" className="form-label required">Name</label>
                                                                 <Field
-                                                                    name="firstname"
+                                                                    name="np_name"
                                                                     disabled
                                                                     type="text"
-                                                                    className={'form-control dashboard-namefield ' + (errors.firstname && touched.firstname ? 'input-field-error' : '')}
+                                                                    className={'form-control dashboard-namefield ' + (errors.np_name && touched.np_name ? 'input-field-error' : '')}
                                                                     id="exampleFormControlInput1"
-                                                                    placeholder="First Name"
+                                                                    placeholder="Name"
                                                                     // disabled={!allowUserToEditStoreContactDetails}
                                                                 />
                                                                 <ErrorMessage className='error' name="firstname" component="div" />
@@ -208,10 +226,10 @@ const IgmCreate = ()=>{
                                                                                                     <Field
                                                                                                     disabled
                                                                                                         placeholder="Phone Number"
-                                                                                                        name="contact_number"
+                                                                                                        name="np_contact_number"
                                                                                                         type="text"
                                                                                                         id="exampleFormControlInput1"
-                                                                                                        className={'form-control dashboard-namefield ' + (errors.contact_number && touched.contact_number ? 'input-field-error' : '')}
+                                                                                                        className={'form-control dashboard-namefield ' + (errors.np_contact_number && touched.np_contact_number ? 'input-field-error' : '')}
                                                                                                         onKeyPress={(e: any) => {
                                                                                                             if (!/[0-9]/.test(e.key)) {
                                                                                                                 e.preventDefault();
@@ -228,12 +246,12 @@ const IgmCreate = ()=>{
                                                         
                                                                                                 <div className="mb-3 form-field-container-full-width">
                                                                                                     <label htmlFor="exampleFormControlInput1" className="form-label required">Email Addess</label>
-                                                                                                    <Field name="email_address"
+                                                                                                    <Field name="np_email_address"
                                                                                                         disabled
                                                                                                         type="email"
                                                                                                         id="exampleFormControlInput1"
                                                                                                         placeholder="Email Address"
-                                                                                                        className={'form-control dashboard-namefield ' + (errors.email_address && touched.email_address ? 'input-field-error' : '')}
+                                                                                                        className={'form-control dashboard-namefield ' + (errors.np_email_address && touched.np_email_address ? 'input-field-error' : '')}
                                                                                                     />
                                                                                                     <ErrorMessage className='error' name="email_address" component="div" />
                                                                                                 </div>
@@ -248,14 +266,14 @@ const IgmCreate = ()=>{
                                                                                             <div className="name-field">
                                                                                             <div className="mb-3 form-field-container-full-width">
                                                                                                     <label htmlFor="exampleFormControlInput1" className="form-label required">Title</label>
-                                                                                                    <Field name="email_address"
+                                                                                                    <Field name="title"
                                                                                                         
                                                                                                         type="text"
                                                                                                         id="exampleFormControlInput1"
                                                                                                         placeholder="Item Name"
-                                                                                                        className={'form-control dashboard-namefield ' + (errors.email_address && touched.email_address ? 'input-field-error' : '')}
+                                                                                                        className={'form-control dashboard-namefield ' + (errors.title && touched.title ? 'input-field-error' : '')}
                                                                                                     />
-                                                                                                    <ErrorMessage className='error' name="email_address" component="div" />
+                                                                                                    <ErrorMessage className='error' name="title" component="div" />
                                                                                                 </div>
 
 
@@ -263,15 +281,15 @@ const IgmCreate = ()=>{
                                                                                                     <label htmlFor="exampleFormControlInput1" className="form-label required">Description</label>
                                                                                                      
                                                                                                                           <Field 
-                                                                                                                                name="additional_info" 
+                                                                                                                                name="description" 
                                                                                                                                 component="textarea" 
                                                                                                                                 id="exampleFormControlTextarea1"
                                                                                                                                 rows={3}
                                                                                                                                 cols={8}
                                                                                                                                 placeholder="Item Description"
-                                                                                                                                className={errors.additional_info && touched.additional_info ? 'form-control input-field-error' : 'form-control'} 
+                                                                                                                                className={errors.description && touched.description ? 'form-control input-field-error' : 'form-control'} 
                                                                                                                           />
-                                                                                                                          <ErrorMessage className='error' name="additional_info" component="div" />
+                                                                                                                          <ErrorMessage className='error' name="description" component="div" />
                                                                                                                       
                                                                                                 </div>
                                                                                             </div>
