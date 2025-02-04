@@ -10,12 +10,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateSelectedOrder } from '../../utils/reduxStore/orderSlice';
 import { useNavigate } from 'react-router-dom';
 import { renderFulfillmentButtons, renderOrderStatusButtons, renderSettlementStatusButtons } from '../../utils/functions/StatusButtonsMapping';
+import { updateSelectedIssueInfo } from '../../utils/reduxStore/issueSlice';
 
 const Igm = ()=>{
       const columns_from_api = useMemo(() => [
             {
                 coltitle: "Issue Id",
-                column: "issue_id",
+                column: "id",
                 visibilityDisplayName: "Issue Id",
                 type: "text",
                 serialNo: 1,
@@ -25,7 +26,7 @@ const Igm = ()=>{
             {
                 coltitle: "Date & Time",
                 visibilityDisplayName: "Date & time",
-                column: "issue_created_date",
+                column: "created_at",
                 type: "date",
                 serialNo: 2,
                 isVisible: true,
@@ -61,7 +62,7 @@ const Igm = ()=>{
             {
                 coltitle: "Customer Contact",
                 visibilityDisplayName: "Customer contact",
-                column: "customer_contact",
+                column: "customer_email",
                 type: "text",
                 serialNo: 2,
                 isVisible: true,
@@ -87,7 +88,7 @@ const Igm = ()=>{
             },
             {
                 coltitle: "Shipping Contact",
-                column: "store_order_confirmation_number",
+                column: "shipping_contact",
                 visibilityDisplayName: "Shipping Contact",
                 type: "text",
                 serialNo: 1,
@@ -97,7 +98,7 @@ const Igm = ()=>{
             
             {
                 coltitle: "Seller Name",
-                column: "store_order_confirmation_number",
+                column: "seller_name",
                 visibilityDisplayName: "Seller Name",
                 type: "text",
                 serialNo: 1,
@@ -106,7 +107,7 @@ const Igm = ()=>{
             },
             {
                 coltitle: "Seller Address",
-                column: "store_order_confirmation_number",
+                column: "seller_address",
                 visibilityDisplayName: "Seller Address",
                 type: "text",
                 serialNo: 1,
@@ -115,7 +116,7 @@ const Igm = ()=>{
             },
             {
                 coltitle: "Product",
-                column: "store_order_confirmation_number",
+                column: "product",
                 visibilityDisplayName: "Product",
                 type: "text",
                 serialNo: 1,
@@ -124,7 +125,7 @@ const Igm = ()=>{
             },
             {
                 coltitle: "Qty",
-                column: "store_order_confirmation_number",
+                column: "qty",
                 visibilityDisplayName: "Qty",
                 type: "text",
                 serialNo: 1,
@@ -144,7 +145,7 @@ const Igm = ()=>{
             {
                 coltitle: "Issue Status",
                 visibilityDisplayName: "Issue Status",
-                column: "order_status",
+                column: "issue_status",
                 type: "active-draft-button",
                 serialNo: 3,
                 isVisible: true,
@@ -153,6 +154,46 @@ const Igm = ()=>{
           
            
         ], []);
+        const api_response = [
+            {
+                id: "12345",
+                created_at: "29/01/2025 11:43 AM",
+                order_id: "1000038",
+                order_number: "1337",
+                customer_name: "J M Rashmi",
+                customer_email: "jm.rashmi6@gmail.com",
+                customer_phone: "9999999999",
+                shipped_to: "J M Rashmi",
+                shipment_place: "Bengaluru, Karnataka, 560070",
+                shipping_contact: "J M Rashmi",
+                seller_name: "Pramaan store",
+                seller_address: "Bengaluru, Karnataka, 560070",
+                product: "Bangles",
+                qty: "1",
+                order_value: "₹2200",
+                issue_status: "Pending"
+            
+            },
+            {
+                id: "12346",
+                created_at: "29/01/2025 11:43 AM",
+                order_id: "1000038",
+                order_number: "1337",
+                customer_name: "J M Rashmi",
+                customer_email: "jm.rashmi6@gmail.com",
+                customer_phone: "9999999999",
+                shipped_to: "J M Rashmi",
+                shipment_place: "Bengaluru, Karnataka, 560070",
+                shipping_contact: "J M Rashmi",
+                seller_name: "Pramaan store",
+                seller_address: "Bengaluru, Karnataka, 560070",
+                product: "Bangles",
+                qty: "1",
+                order_value: "₹2200",
+                issue_status: "Pending"
+            
+            }
+            ]
     const refValues = useSelector((store: any) => store.refValues.referenceList);
         const [from_date, setFromDate] = useState<any>(null);
         const [to_date, setToDate] = useState<any>(null);
@@ -609,6 +650,11 @@ const Igm = ()=>{
         const openExportOrders = () => {
             setExportOrdersModalOpen(true)
         }
+
+        const openIssueDetails = (issue: any) => {
+            dispatch(updateSelectedIssueInfo(issue));
+            navigate("/landing-page/orders/igm-create")
+        }
     
     return(
         <div className="container-fluid h-auto mt-3 px-3">
@@ -775,42 +821,65 @@ const Igm = ()=>{
                                                        
                                                     </thead>
                                                  <tbody>
-                                                    <tr>
-                                                        <td>#12345</td>
-                                                        <td>29/01/2025 11:43 AM</td>
-                                                        <td>#1000038</td>
-                                                        <td>1337</td>
-                                                        <td>J M Rashmi</td>
-                                                        <td>jm.rashmi6@gmail.com</td>
-                                                        <td>J M Rashmi</td>
-                                                        <td>Bengaluru, Karnataka, 560070</td>
-                                                        <td>J M Rashmi</td>
-                                                        <td>Pramaan store</td>
-                                                        <td>Bengaluru, Karnataka, 560070</td>
-                                                        <td>Bangles</td>
-                                                        <td>1</td>
-                                                        <td>₹2200</td>
-                                                        <td className='text-centre'><span className="product-draft">Pending</span></td>
-                                                        
+                                        {
+                                            api_response
+                                                .map((item: any) => {
+                                                    return <tr key={item.id}>
+                                                        {
+                                                            columns
+                                                                .map((col: any) => {
+                                                                    return col.column === "id" ?
+                                                                        <td key={col.column} className='order-id-text' onClick={() => openIssueDetails(item)} style={{ paddingLeft: '0.575rem !important' }}>#{item[col.column]}</td>
+                                                                        :
+                                                                        col.column === "order_status" ?
+                                                                            (
+                                                                                item[col.column] ? <td className='text-center' key={col.column}>
+                                                                                    <span
+                                                                                        className={
+                                                                                            renderOrderStatusButtons(item[col.column])
+                                                                                        }>
+                                                                                        {getOrderStatus(item[col.column])}
+                                                                                    </span>
+                                                                                </td>
+                                                                                    :
+                                                                                    <td key={col.column}></td>
+                                                                            )
+                                                                            :
+                                                                            col.column === "fulfillment_status" ?
+                                                                                (
+                                                                                    item[col.column] ? <td className='text-center' key={col.column}>
+                                                                                        <span
+                                                                                            className={
+                                                                                                renderFulfillmentButtons(item[col.column])
+                                                                                            }>
+                                                                                            {getFulfillmentStatus(item[col.column])}
+                                                                                        </span>
+                                                                                    </td>
+                                                                                        :
+                                                                                        <td key={col.column}></td>
+                                                                                )
+                                                                                :
+                                                                                col.column === "settlement_status" ?
+                                                                                    (
+                                                                                        item[col.column] ? <td className='text-center' key={col.column}>
+                                                                                            <span
+                                                                                                className={
+                                                                                                    renderSettlementStatusButtons(item[col.column])
+                                                                                                }>
+                                                                                                {getSettlementStatus(item[col.column])}
+                                                                                            </span>
+                                                                                        </td>
+                                                                                            :
+                                                                                            <td key={col.column}></td>
+                                                                                    )
+                                                                                    :
+                                                                                    <td key={col.column}>{item[col.column]}</td>
+
+                                                                })
+                                                        }
                                                     </tr>
-                                                    <tr>
-                                                        <td>#12389</td>
-                                                        <td>29/01/2025 11:43 AM</td>
-                                                        <td>#1007838</td>
-                                                        <td>1337</td>
-                                                        <td>J M Rashmi</td>
-                                                        <td>jm.rashmi6@gmail.com</td>
-                                                        <td>J M Rashmi</td>
-                                                        <td>Bengaluru, Karnataka, 560070</td>
-                                                        <td>J M Rashmi</td>
-                                                        <td>Pramaan store</td>
-                                                        <td>Bengaluru, Karnataka, 560070</td>
-                                                        <td>Bangles</td>
-                                                        <td>1</td>
-                                                        <td>₹6700</td>
-                                                        <td className='text-centre'><span className="product-active">Completed</span></td>
-                                                        
-                                                    </tr>
+                                                })
+                                        }
                                                  </tbody>
                                                 </table>
                                             </div>

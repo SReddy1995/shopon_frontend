@@ -552,7 +552,13 @@ useEffect(() => {
                           <i className="fa fa-envelope"></i>{" "}
                           {selected_order_info.customer_info?.email
                             ? selected_order_info.customer_info?.email
-                            : "No email provided"}
+                            : "NA"}
+                        </span>
+                        <span className="text-grey">
+                          <i className="fa fa-phone"></i>{" "}
+                          {selected_order_info.customer_info?.phone
+                            ? selected_order_info.customer_info?.phone
+                            : "NA"}
                         </span>
                         <br />
                         <p className="mb-0">
