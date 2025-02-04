@@ -8,24 +8,33 @@ import { updateSelectedIssueInfo, updateSelectedItemInfo } from "../../utils/red
 
 
 const igmCreateValidationSchema = Yup.object().shape({
-    customer_name: Yup.string()
-    .required('Required'),
+    customer_name: Yup.string(),
     customer_phone: Yup.string()
      .min(10, 'Contact number must be 10 characters')
-     .max(10, 'Contact number must be 10 characters')
-     .required('Contact number is required'),
+     .max(10, 'Contact number must be 10 characters'),
     customer_email: Yup.string().email('Invalid email format').required('Email is required'),
-  seller_name: Yup.string()
+  seller_name: Yup.string(),
+    provider_name: Yup.string()
     .required('Required'),
     seller_phone: Yup.string()
      .min(10, 'Contact number must be 10 characters')
-     .max(10, 'Contact number must be 10 characters')
-     .required('Contact number is required'),
-    seller_email: Yup.string().email('Invalid email format').required('Email is required'),
-    title:Yup.string()
-    .required('Required'),
+     .max(10, 'Contact number must be 10 characters'),
+    seller_email: Yup.string().email('Invalid email format'),
+    title:Yup.string(),
     description: Yup.string(),
 });
+
+const initialValues = {
+    customer_name: '',
+    customer_phone: '',
+    customer_email: '',
+    seller_name: '',
+    seller_phone: '',
+    seller_email: '',
+    provider_name:'',
+    title: '',
+    description: '',
+   };
 
    
 const IgmCreate = ()=>{
@@ -61,7 +70,6 @@ const IgmCreate = ()=>{
         : localStorage.getItem("selected_issue")
             ? JSON.parse(localStorage.getItem("selected_issue")!)
             : null;
-    const [initialValues, setInitialValues] = useState<any>(null)
     const navigate = useNavigate();
         const navigateToOrderDetails = () => {
             navigate("/landing-page/orders/order-details")
@@ -127,30 +135,26 @@ const IgmCreate = ()=>{
     useEffect(() => {
         if(selected_issue){
             console.log(selected_issue)
-            setInitialValues({
-                customer_name: selected_issue.customer_name ? selected_issue.customer_name : '',
-                customer_phone: selected_issue.customer_phone ? selected_issue.customer_phone : '',
-                customer_email: selected_issue.customer_email ? selected_issue.customer_email : '',
-                seller_name: selected_issue.seller_name ? selected_issue.seller_name : '',
-                seller_phone: selected_issue.seller_phone ? selected_issue.seller_phone : '',
-                seller_email: selected_issue.seller_email ? selected_issue.seller_email : '',
-                provider_name: selected_issue.provider_name ? selected_issue.provider_name : '',
-                title: '',
-                description: ''
-            })
+                initialValues.customer_name = selected_issue.customer_name ? selected_issue.customer_name : '';
+                initialValues.customer_phone = selected_issue.customer_phone ? selected_issue.customer_phone : '';
+                initialValues.customer_email= selected_issue.customer_email ? selected_issue.customer_email : '';
+                initialValues.seller_name= selected_issue.seller_name ? selected_issue.seller_name : '';
+                initialValues.seller_phone= selected_issue.seller_phone ? selected_issue.seller_phone : '';
+                initialValues.seller_email= selected_issue.seller_email ? selected_issue.seller_email : '';
+                initialValues.provider_name= selected_issue.provider_name ? selected_issue.provider_name : '';
+                initialValues.title= '';
+                initialValues.description= '';
         }
         else{
-            setInitialValues({
-                customer_name: selected_order_info.customer_info?.first_name + ' ' + selected_order_info.customer_info?.last_name,
-                customer_phone: selected_order_info.customer_info?.phone ? selected_order_info.customer_info?.phone : '',
-                customer_email: selected_order_info.customer_info?.email ? selected_order_info.customer_info?.email : '',
-                seller_name: selected_seller.seller_name ? selected_seller.seller_name : '',
-                seller_phone: selected_seller.seller_phone ? selected_seller.seller_phone : '',
-                seller_email: selected_seller.seller_email ? selected_seller.seller_email : '',
-                provider_name: selected_seller.provider_info.name,
-                title: '',
-                description: ''
-            })
+            initialValues.customer_name= selected_order_info.customer_info?.first_name + ' ' + selected_order_info.customer_info?.last_name;
+            initialValues.customer_phone= selected_order_info.customer_info?.phone ? selected_order_info.customer_info?.phone : '';
+            initialValues.customer_email= selected_order_info.customer_info?.email ? selected_order_info.customer_info?.email : '';
+            initialValues.seller_name= selected_seller.seller_name ? selected_seller.seller_name : '';
+            initialValues.seller_phone= selected_seller.seller_phone ? selected_seller.seller_phone : '';
+            initialValues.seller_email= selected_seller.seller_email ? selected_seller.seller_email : '';
+            initialValues.provider_name= selected_seller.provider_info.name;
+            initialValues.title= '';
+            initialValues.description= '';
         }
         return () => {
             dispatch(updateSelectedSeller(null));
@@ -169,7 +173,7 @@ const IgmCreate = ()=>{
                             <div>
                                 
                                     {
-                                        selected_issue ?
+                                        selected_issue && selected_issue.product ?
                                         <h4><span className='cursor-pointer d-flex'><span className='back-btn me-1' onClick={navigateToIGMList}><i className='fa fa-arrow-left me-2 fa-left-icon'></i></span>Issue details</span></h4> :
                                         <h4><span className='cursor-pointer d-flex'><span className='back-btn me-1' onClick={navigateToOrderDetails}><i className='fa fa-arrow-left me-2 fa-left-icon'></i></span>Create IGM</span></h4>
                                     }
