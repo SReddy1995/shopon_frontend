@@ -40,6 +40,7 @@ const initialValues = {
 const IgmCreate = ()=>{
     
     const dispatch = useDispatch();
+    const [loading, setLoading] = useState(true)
     const orderInfoFromRedux = useSelector((store: any) => store.seller.selectedOrderInfo);
     const selected_order_info = orderInfoFromRedux
         ? orderInfoFromRedux
@@ -63,7 +64,7 @@ const IgmCreate = ()=>{
             ? JSON.parse(localStorage.getItem("selected_item")!)
             : null;
     const issueFromRedux = useSelector(
-        (store: any) => store.issue.selectedItem
+        (store: any) => store.issue.selectedIssue
     );
     const selected_issue = issueFromRedux
         ? issueFromRedux
@@ -156,6 +157,7 @@ const IgmCreate = ()=>{
             initialValues.title= '';
             initialValues.description= '';
         }
+        setLoading(false)
         return () => {
             dispatch(updateSelectedSeller(null));
             dispatch(updateSelectedOrderInfo(null));
@@ -165,7 +167,10 @@ const IgmCreate = ()=>{
     }, []);
     
     return (
-        <div className="container-fluid h-auto mt-3 px-3">
+        <>
+        {
+            !loading && <>
+                <div className="container-fluid h-auto mt-3 px-3">
             <div className="row mt-1">
                 <div className="col-12 text-left d-flex">
                     <div>
@@ -409,6 +414,10 @@ const IgmCreate = ()=>{
                 </div>
             </div>
         </div>
+            </>
+        }
+        </>
+        
     )
 
 }
