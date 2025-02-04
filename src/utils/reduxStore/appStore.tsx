@@ -7,6 +7,7 @@ import productsReducer from './productsSlice';
 import storeSwitchReducer from './storeSwitchSlice';
 import orderReducer from './orderSlice';
 import sellerReducer from './sellerSlice';
+import issueSlice from './issueSlice'
 
 const appStore = configureStore({
     reducer: {
@@ -17,7 +18,8 @@ const appStore = configureStore({
         products: productsReducer,
         storeSwitch: storeSwitchReducer,
         order: orderReducer,
-        seller: sellerReducer
+        seller: sellerReducer,
+        issue: issueSlice
     }
 });
 

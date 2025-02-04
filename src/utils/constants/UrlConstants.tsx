@@ -21,8 +21,8 @@ export const AccountUrls = {
     deleteDocument: '/document',
     downloadDocumentsZip: 'documents/download',
     storeStatusDetails: '/buyer/status',
-    initiateBuyerInfo:'/initiate_buyer_info',
-    getBuyerInfo:'/buyer_info_details'
+    initiateBuyerInfo:'/initiate_seller_info',
+    getBuyerInfo:'/seller_info_details'
 }
 
 export const UserUrls = {

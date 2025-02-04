@@ -15,6 +15,7 @@ import SettleDetails from "./SettleDetails";
 import { renderFulfillmentButtons, renderOrderStatusButtons, renderSettlementStatusButtons } from "../../utils/functions/StatusButtonsMapping";
 import { updateSelectedOrderInfo, updateSelectedSeller } from "../../utils/reduxStore/sellerSlice";
 import { getFormattedPriceValue } from "../../utils/functions/helper";
+import { updateSelectedItemInfo } from "../../utils/reduxStore/issueSlice";
 
 const OrderDetails = () => {
 
@@ -252,6 +253,8 @@ const OrderDetails = () => {
                         order_seller_seq: element.order_seller_seq,
                         provider_info: getProviderInfo(element),
                         seller_name: element.bpp_descriptor_info?.name || null,
+                        seller_phone: element.seller_phone || null,
+                        seller_email: element.seller_email || null,
                         shipping_profile: element.shipping_profile || 'NA',
                         items: getItemsFormatted(element.orderItemDetails),
                         subTotal: formatCurrency(subTotal, 'INR'),
@@ -458,9 +461,12 @@ const OrderDetails = () => {
         navigate(`/landing-page/orders/return-details`)
     }
 
-    const gotoIgmCreate = (item: any) => {
-        // dispatch(updateSelectedSeller(seller));
-        // dispatch(updateSelectedOrderInfo(data.info));
+    const gotoIgmCreate = (item: any, seller: any) => {
+        console.log("item-->", item)   
+        console.log("seller-->", seller)   
+        dispatch(updateSelectedSeller(seller));
+        dispatch(updateSelectedOrderInfo(data.info));
+        dispatch(updateSelectedItemInfo(item));
         navigate(`/landing-page/orders/igm-create`)
     }
 
@@ -785,7 +791,7 @@ const OrderDetails = () => {
                                                                                             {
                                                                                                 item.alt_id && <span className="font-small text-grey">Alt Id: {item.alt_id}</span>
                                                                                             }
-                                                                                             <div onClick={()=>gotoIgmCreate(item)} className="cursor-pointer">
+                                                                                             <div onClick={()=>gotoIgmCreate(item, seller)} className="cursor-pointer">
                                                                                            <span><i className="fa fa-plus-circle me-1"></i>Create Issue</span>
                                                                            
                                                                                             </div>
