@@ -458,6 +458,14 @@ const OrderDetails = () => {
         navigate(`/landing-page/orders/return-details`)
     }
 
+    const gotoIgmCreate = (item: any) => {
+        // dispatch(updateSelectedSeller(seller));
+        // dispatch(updateSelectedOrderInfo(data.info));
+        navigate(`/landing-page/orders/igm-create`)
+    }
+
+    
+
     return (
         <>
             {
@@ -600,10 +608,7 @@ const OrderDetails = () => {
                                                                             <i className="fa fa-credit-card me-2"></i>
                                                                             <p className="mb-0">Settle</p>
                                                                         </div> */}
-                                                                        <div onClick={()=>getIGMBySeller(seller)} className="more-actions-popup-elements px-3 py-2">
-                                                                            <i className="fa fa-support me-2"></i>
-                                                                            <p className="mb-0">IGM</p>
-                                                                        </div>
+                                                                       
                                                                         {/* <div onClick={()=>getReconciliationBySeller(seller)} className="more-actions-popup-elements px-3 py-2">
                                                                             <i className="fa fa-barcode me-2"></i>
                                                                             <p className="mb-0">Reconciliation</p>
@@ -780,6 +785,10 @@ const OrderDetails = () => {
                                                                                             {
                                                                                                 item.alt_id && <span className="font-small text-grey">Alt Id: {item.alt_id}</span>
                                                                                             }
+                                                                                             <div onClick={()=>gotoIgmCreate(item)} className="cursor-pointer">
+                                                                                           <span><i className="fa fa-plus-circle me-1"></i>Create Issue</span>
+                                                                           
+                                                                                            </div>
                                                                                         </>
                                                                                     }
                                                                                     
