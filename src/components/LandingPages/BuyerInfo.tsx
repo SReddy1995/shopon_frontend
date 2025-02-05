@@ -64,9 +64,10 @@ const BuyerInfo = (props:any) => {
     const user_details = localStorage.getItem('user_details') ? JSON.parse(localStorage.getItem('user_details') || '{}') : null;
 
 
-    const getBuyerInfoDetails = useCallback(() => {   
+    const getBuyerInfoDetails = useCallback((txn_id: any) => { 
+      console.log("recieved txn id = ", txn_id)  
         let payload = {
-           alternate_id: props.alternate_id,
+                transaction_id: txn_id,
                 buyer_id: user_details.buyer_id
         }
         fetchBuyerInfoDetails(payload)
@@ -91,8 +92,10 @@ const BuyerInfo = (props:any) => {
             }
             fetchBuyerInfo(payload)
                 .then((data: any) => {
+                  console.log("response = ", data)
+                    console.log("txn_id = ", data.transaction_id)
                     setTimeout(() => {
-                        getBuyerInfoDetails()
+                        getBuyerInfoDetails(data.transaction_id)
                     }, 5000);
                 })
                 .catch(err => {
