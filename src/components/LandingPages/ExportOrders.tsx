@@ -4,7 +4,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import ModalWindow from './ModalWindow';
 
 import ConfirmDelete from './ConfirmDelete';
-// import moment from 'moment';
+import moment from 'moment';
 // import { showSuccessMessage } from '../../shared/notificationProvider';
 // import { ORDERS_CSV_DOWNLOADED } from '../../utils/constants/NotificationConstants';
 // import { getExportedOrdersInCSV } from '../../services/OrdersService';
@@ -17,8 +17,8 @@ const ExportOrders = (props: any) => {
     const [endDate, setEndDate] = useState<any>(new Date());
 
         const [openDeleteConfirm, setConfirmDeleteModalOpen] = useState(false);
-            const confirmDeleteMsg = "Are you sure you want to download this file , csv."
-            const deleteText = "Yes"
+        const [confirmDeleteMsg, setConfirmMsg] = useState("Are you sure you want to export orders?");
+        const deleteText = "Yes"
 
     const onChange = (dates: any) => {
       const [start, end] = dates;
@@ -32,6 +32,7 @@ const ExportOrders = (props: any) => {
     const openConfirmDeleteModal = (key: any) => {
         // let data = documentsList.filter((x: any)=> x.document_type === key)[0];
         // setUploadFileDetails(data)
+        setConfirmMsg(`Are you sure you want to export orders from ${formatDate(startDate)} to ${formatDate(endDate)}?`);
         setConfirmDeleteModalOpen(true);
     }
 
@@ -41,6 +42,12 @@ const ExportOrders = (props: any) => {
 
     const exportToCSV = () => {
         openConfirmDeleteModal(true);
+
+    }
+
+    const getExportedCSV = () => {
+        closeConfirmDeleteModal();
+        closeModal();
         // let payload = {
         //     buyer_id: user_details.buyer_id,
         //     start_date: startDate ? formatDate(startDate) : null,
@@ -65,9 +72,9 @@ const ExportOrders = (props: any) => {
 
 
 
-    // const formatDate = (date: any) =>{
-    //     return moment(date).format("DD-MM-YYYY")
-    // }
+    const formatDate = (date: any) =>{
+        return moment(date).format("DD-MM-YYYY")
+    }
 
     return (
         <>
@@ -127,7 +134,7 @@ const ExportOrders = (props: any) => {
                    
             </div>
             <ModalWindow show={openDeleteConfirm} modalClosed={closeConfirmDeleteModal}>
-                <ConfirmDelete confirmModalClosed={closeConfirmDeleteModal} msg={confirmDeleteMsg} deleteText={deleteText}/>
+                <ConfirmDelete deleteRecord={getExportedCSV} confirmModalClosed={closeConfirmDeleteModal} msg={confirmDeleteMsg} deleteText={deleteText}/>
             </ModalWindow>
         </>
     ) 
