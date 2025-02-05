@@ -99,13 +99,25 @@ const ExportOrders = (props: any) => {
                                 startDate={startDate}
                                 endDate={endDate}
                                 selectsRange
-                                
+                                placeholderText="Select start date"
+                                dateFormat="MM/dd/yyyy"
+                                isClearable
+                               />
+                               <div className='mt-2 d-flex justify-content-center'>
+                               <DatePicker
+                                selected={startDate}
+                                onChange={onChange}
+                                startDate={startDate}
+                                endDate={endDate}
+                                selectsRange
+                                inline
                                 placeholderText="Select start date"
                                 dateFormat="MM/dd/yyyy"
                                 isClearable
                                 open={true}
                                 monthsShown={2}
                                />
+                               </div>
                            </div>
 
                     </div>

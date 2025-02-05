@@ -3414,11 +3414,10 @@ text-align: center;
   display: flex;
   justify-content: space-between;
   gap: 20px;
-    margin: 10px 45px 0px -15px;
 }
 
 .date-picker-container {
-  width: 500px;
+  width: 100%;
 }
 
 .export-orders-container.dropdown-divider{
@@ -3427,11 +3426,10 @@ text-align: center;
 
 .export-to-csv-button-container{
   margin-top: 0%;
-  margin-right: 20px;
 text-align: end;
 }
  .bottom-divider{
-  margin-top: 52%;
+  margin-top: 2%;
  }
  .btn-custom-grey{
   justify-content: center;
