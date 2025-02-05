@@ -92,7 +92,7 @@ const TrackingDetails = (props: any) => {
                                         </div>
                                     </div>
                                 <div>
-                               <h6><span className='color-grey'></span>{props.seller?.provider_info?.name}</h6>
+                               <h6><span className='color-grey'></span>{props.seller?.seller_info?.name}</h6>
                                </div>
                             </div>
                     </>
@@ -105,7 +105,7 @@ const TrackingDetails = (props: any) => {
                                         data?.status && <p>Status: <b>{getCamelCaseText(data?.status)}</b></p>
                                     }
                                     <div >
-                                        <h6><span className='color-grey'></span>{props.seller?.provider_info?.name}</h6>
+                                        <h6><span className='color-grey'></span>{props.seller?.seller_info?.name}</h6>
                                     </div>
                                 </div>
                             

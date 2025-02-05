@@ -173,24 +173,24 @@ useEffect(() => {
                                   <div className="provider-seller-info-container px-2 py-2">
                                     <div className="d-flex align-items-center">
                                       <div>
-                                        {selected_seller?.seller_name !==
-                                          selected_seller?.provider_info?.name && (
+                                        {selected_seller?.provider_name !==
+                                          selected_seller?.seller_info?.name && (
                                           <div className="d-flex justify-content-between">
-                                            <span>{selected_seller?.seller_name} </span>
+                                            <span>{selected_seller?.provider_name} </span>
                                           </div>
                                         )}
 
                                         <div className="d-flex justify-content-between">
                                           <span className=" mb-0">
-                                            {selected_seller?.provider_info?.name}:{" "}
+                                            {selected_seller?.seller_info?.name}:{" "}
                                             <span className="text-grey">
-                                              {selected_seller?.provider_info?.id}
+                                              {selected_seller?.seller_info?.id}
                                             </span>
                                           </span>
                                         </div>
                                         <div className="d-flex justify-content-between">
                                           <span>
-                                            {selected_seller?.provider_info?.address}
+                                            {selected_seller?.seller_info?.address}
                                           </span>
                                         </div>
                                       </div>

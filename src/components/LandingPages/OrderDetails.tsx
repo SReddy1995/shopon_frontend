@@ -215,7 +215,7 @@ const OrderDetails = () => {
         return formattedAddress;
     }
 
-    const getProviderInfo = (seller: any) => {
+    const getSellerInfo = (seller: any) => {
         let obj: any ={}
         if(seller?.bpp_provider_info){
             obj['id'] = seller.bpp_provider_info.id
@@ -255,8 +255,8 @@ const OrderDetails = () => {
                         settlement_status: element.settlement_status || null,
                         seller_id: element.seller_id || null,
                         order_seller_seq: element.order_seller_seq,
-                        provider_info: getProviderInfo(element),
-                        seller_name: element.bpp_descriptor_info?.name || null,
+                        provider_name: element.bpp_descriptor_info?.name || null,
+                        seller_info: getSellerInfo(element),
                         seller_phone: element.seller_phone || null,
                         seller_email: element.seller_email || null,
                         shipping_profile: element.shipping_profile || 'NA',
@@ -702,8 +702,8 @@ const OrderDetails = () => {
                                                             <div className="d-flex align-items-center">
                                                             <div>
                                                         {
-                                                            seller?.seller_name !== seller?.provider_info?.name && <div className="d-flex justify-content-between">
-                                                                    <span >{seller?.seller_name} </span>
+                                                            seller?.seller_info?.name !== seller?.provider_name && <div className="d-flex justify-content-between">
+                                                                    <span >{seller?.provider_name} </span>
                                                             </div>
                                                         }
                                                     
@@ -711,10 +711,10 @@ const OrderDetails = () => {
                                                         
                                                             
                                                             <div className="d-flex justify-content-between">
-                                                                    <span className=" mb-0">{seller?.provider_info?.name}: <span className="text-grey">{seller?.provider_info?.id}</span></span>
+                                                                    <span className=" mb-0">{seller?.seller_info?.name}: <span className="text-grey">{seller?.seller_info?.id}</span></span>
                                                             </div>
                                                             <div className="d-flex justify-content-between">
-                                                                <span>{seller?.provider_info?.address}</span>
+                                                                <span>{seller?.seller_info?.address}</span>
                                                             </div>
                                                             </div>
                                                             {
