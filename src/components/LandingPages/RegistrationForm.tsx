@@ -37,6 +37,9 @@ const initialValues = {
    };
 
 const RegistrationForm = (props:any) => {
+    
+    const store_status = localStorage.getItem('user_details') ? (JSON.parse(localStorage.getItem('user_details') || '{}').is_active) : null
+    const store_active = store_status === "ACTIVE" ? true : false;
     const [loading, setLoading] = useState(true);
     const [user_details, setUserDetails] = useState(localStorage.getItem('user_details') ? JSON.parse(localStorage.getItem('user_details') || '{}') : null);
     const dispatch = useDispatch();
@@ -141,7 +144,7 @@ const RegistrationForm = (props:any) => {
                                                 className={'form-control dashboard-namefield ' + (errors.firstname && touched.firstname ? 'input-field-error' : '')}
                                                 id="exampleFormControlInput1"
                                                 placeholder="First Name"
-                                                disabled={!allowUserToEditStoreContactDetails}
+                                                disabled={!allowUserToEditStoreContactDetails || store_active}
                                             />
                                             <ErrorMessage className='error' name="firstname" component="div" />
                                         </div>
@@ -153,7 +156,7 @@ const RegistrationForm = (props:any) => {
                                                 className={'form-control dashboard-namefield ' + (errors.lastname && touched.lastname ? 'input-field-error' : '')}
                                                 id="exampleFormControlInput1"
                                                 placeholder="Last Name"
-                                                disabled={!allowUserToEditStoreContactDetails}
+                                                disabled={!allowUserToEditStoreContactDetails || store_active}
                                             />
                                             <ErrorMessage className='error' name="lastname" component="div" />
                                         </div>
@@ -173,7 +176,7 @@ const RegistrationForm = (props:any) => {
                                                         e.preventDefault();
                                                     }
                                                 }}
-                                                disabled={!allowUserToEditStoreContactDetails}
+                                                disabled={!allowUserToEditStoreContactDetails || store_active}
                                             />
                                             <ErrorMessage className='error' name="contact_number" component="div" />
                                         </div>
@@ -204,6 +207,7 @@ const RegistrationForm = (props:any) => {
                                                 id="exampleFormControlInput1"
                                                 placeholder="Legal Entity Name"
                                                 className={'form-control dashboard-namefield ' + (errors.legal_entity_name && touched.legal_entity_name ? 'input-field-error' : '')}
+                                                disabled={store_active}
                                             />
                                             <ErrorMessage className='error' name="legal_entity_name" component="div" />
                                         </div>
@@ -271,11 +275,13 @@ const RegistrationForm = (props:any) => {
                                                 rows={1}
                                                 placeholder="Other Information"
                                                 className={'form-control dashboard-namefield ' + (errors.additional_info && touched.additional_info ? 'input-field-error' : '')}
+                                                disabled={store_active}
                                             />
                                             <ErrorMessage className='error' name="additional_info" component="div" />
                                         </div>
                                     </div>
-                                    <div className="text-center">
+                                    {
+                                        !store_active && <div className="text-center">
                                             <button type="button"
                                                 className="btn-custom mt-2 btn-right"
                                                 onClick={() => {
@@ -283,7 +289,9 @@ const RegistrationForm = (props:any) => {
                                                 }}>
                                                 Save
                                             </button>
-                                    </div>
+                                        </div>
+                                    }
+                                    
                                 </form>
                             )}
                         </Formik>

@@ -8,6 +8,8 @@ import { DOC_DELETE_SUCCESS, DOCUMENTS_DOWNLOADED, NO_DOCS_UPLOADED } from '../.
 
 
 const DocumentsUpload = (props: any) => {
+    const store_status = localStorage.getItem('user_details') ? (JSON.parse(localStorage.getItem('user_details') || '{}').is_active) : null
+    const store_active = store_status === "ACTIVE" ? true : false;
     const [loading, setLoading] = useState(true)
     const user_details = localStorage.getItem('user_details') ? JSON.parse(localStorage.getItem('user_details') || '{}') : null;
     const [open, setModalOpen] = useState(false);
@@ -250,11 +252,14 @@ const DocumentsUpload = (props: any) => {
 
                                                             :
                                                             <div className='add-document-button-Container'>
-                                                            <button type="button"
-                                                                className="btn btn-sm btn-success m-2"
-                                                                onClick={() => openUploadFileModal(doc.document_type)}>
-                                                                <i className="fa fa-plus"></i>
-                                                            </button>
+                                                                {
+                                                                    !store_active && <button type="button"
+                                                                        className="btn btn-sm btn-success m-2"
+                                                                        onClick={() => openUploadFileModal(doc.document_type)}>
+                                                                        <i className="fa fa-plus"></i>
+                                                                    </button>
+                                                                }
+                                                            
                                                             </div>
 
 
@@ -269,9 +274,11 @@ const DocumentsUpload = (props: any) => {
                                                 ?
 
                                                             <p className='uploaded-file-info mt-2'>Uploaded file: <b>{doc.uploadedFile.document_name}</b>&nbsp;&nbsp;
-                                                                <span>
+                                                            {
+                                                                !store_active && <span>
                                                                     <i className='fa fa-close fa-md text-danger ml-4 mt-2 cursor-pointer' onClick={() => openConfirmDeleteModal(doc.document_type)}></i>
                                                                 </span>
+                                                            }
                                                             </p>
                                                 :
                                                 <></>
