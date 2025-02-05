@@ -9,7 +9,7 @@ import { ONLINE_UPDATE_SUCCESS } from '../../utils/constants/NotificationConstan
 
 
 // Custom Multiselect component for Formik
-const CustomMultiselect = ({ field, form, options } : any) => {
+const CustomMultiselect = ({ field, form, options, store_active } : any) => {
     const handleSelect = (selectedList: any) => {
       form.setFieldValue(field.name, selectedList);
     };
@@ -30,7 +30,7 @@ const CustomMultiselect = ({ field, form, options } : any) => {
           displayValue="description"
           showCheckbox
           selectedValues={field.value}
-
+          disable={store_active}
         />
       </div>
     );
@@ -60,6 +60,8 @@ const initialValues = {
 
 
 const OnlineStoreForm = (props: any) => {
+    const store_status = localStorage.getItem('user_details') ? (JSON.parse(localStorage.getItem('user_details') || '{}').is_active) : null
+    const store_active = store_status === "ACTIVE" ? true : false;
     const refValues = useSelector((store: any) => store.refValues.referenceList);
     const cities = [...refValues.cities]
       .sort((a: any, b: any) => {
@@ -232,10 +234,10 @@ const OnlineStoreForm = (props: any) => {
                                                         <th className="form-field ">
                                                             Select city
                                                         </th>
-
-                                                        <th className="text-center store-action-column" >
-                                                        </th>
-
+                                                        {
+                                                            !store_active && <th className="text-center store-action-column" >
+                                                            </th>
+                                                        }
                                                       
                                                     </tr>
                                                 </thead>
@@ -247,6 +249,7 @@ const OnlineStoreForm = (props: any) => {
                                                                     <td data-name="name" className="input-table-column">
                                                                         <Field as="select"
                                                                             name={`categories.${index}.category_id`}
+                                                                            disabled={store_active}
                                                                             className="form-select custom-select dashboard-three-namefield">
                                                                             <option value={""}>--select--</option>
                                                                             {
@@ -266,17 +269,18 @@ const OnlineStoreForm = (props: any) => {
                                                                             name={`categories.${index}.city`}
                                                                             component={CustomMultiselect}
                                                                             options={cities}
+                                                                            store_active={store_active}
                                                                         />
                                                                         <ErrorMessage className='error' name={`categories.${index}.city`} component="div" />
                                                                         </div>
                                                                     </td>
 
-                                                                
-
-                                                                    <td data-name="del" className="text-center input-table-column">
-                                                                        <button onClick={() => remove(index)} type="button"
-                                                                            className="btn-danger-icon" ><i className="fa fa-trash"></i></button>
-                                                                    </td>
+                                                                {
+                                                                    !store_active && <td data-name="del" className="text-center input-table-column">
+                                                                    <button onClick={() => remove(index)} type="button"
+                                                                        className="btn-danger-icon" ><i className="fa fa-trash"></i></button>
+                                                                </td>
+                                                                }
                                                                 </tr>
                                                         ))}
 
@@ -285,25 +289,29 @@ const OnlineStoreForm = (props: any) => {
                                             </table>
                                         </div>
                                     </div>
-                                    <div className="mb-5">
+                                    {
+                                        !store_active && <div className="mb-5">
                                         <button type="button"
                                             onClick={() => push({ name: '', id: '', city: '' })}
                                             className="btn-custom btn-success float-right" ><i className="fa fa-plus"></i></button>
                                     </div>
+                                    }
+                                    
                                 </>
                             )}
 
                         </FieldArray>
 
-
-                        <div className="text-center mt-4">
-                            <button type="button"
-                            disabled={!(isValid) || isSubmitting}
-                            onClick={() => {
-                                handleSubmit();
-                            }}
-                            className="btn-custom mt-2 btn-right" >Save</button>
-                        </div>
+                            {
+                                !store_active && <div className="text-center mt-4">
+                                    <button type="button"
+                                    disabled={!(isValid) || isSubmitting}
+                                    onClick={() => {
+                                        handleSubmit();
+                                    }}
+                                    className="btn-custom mt-2 btn-right" >Save</button>
+                                </div>
+                            }
                     </form>
                     )}
             </Formik>

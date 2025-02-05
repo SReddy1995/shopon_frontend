@@ -52,6 +52,8 @@ const bankEscrowValidationSchema = Yup.object().shape({
 
 const BankEscrowForm = (props: any) => {
 
+    const store_status = localStorage.getItem('user_details') ? (JSON.parse(localStorage.getItem('user_details') || '{}').is_active) : null
+    const store_active = store_status === "ACTIVE" ? true : false;
     const [loading, setLoading] = useState(true);
     const [showBankAccountDetails, setShowBankAccountDetails] = useState(false)
     const [initialValues, setInitialValues] = useState({
@@ -184,6 +186,7 @@ const BankEscrowForm = (props: any) => {
                                                                 setShowBankAccountDetails(true)   
                                                             }
                                                           }}
+                                                          disabled={store_active}
                                                         className={errors.has_escrow_account && touched.has_escrow_account ? 'radio-button__input input-field-error' : 'radio-button__input'}
                                                     />
                                                     <label htmlFor="radio2" className="radio-button__label">
@@ -216,6 +219,7 @@ const BankEscrowForm = (props: any) => {
                                                                 setShowBankAccountDetails(true)   
                                                             }
                                                           }}
+                                                          disabled={store_active}
                                                         className={errors.has_escrow_account && touched.has_escrow_account ? 'radio-button__input input-field-error' : 'radio-button__input'}
                                                     />
                                                     <label htmlFor="radio1" className="radio-button__label">
@@ -235,7 +239,7 @@ const BankEscrowForm = (props: any) => {
                                             name="bank_name" type="text" 
                                             className={'form-control dashboard-namefield ' + (errors.bank_name && touched.bank_name ? 'input-field-error' : '')}
                                             placeholder="Bank Name" 
-                                            disabled={!showBankAccountDetails}
+                                            disabled={!showBankAccountDetails || store_active}
                                         />
                                         <ErrorMessage className='error' name="bank_name" component="div" />
                                     </div>
@@ -256,7 +260,7 @@ const BankEscrowForm = (props: any) => {
                                                         e.preventDefault();
                                                     }
                                                 }}
-                                                disabled={!showBankAccountDetails}
+                                                disabled={!showBankAccountDetails || store_active}
                                             />
                                         <ErrorMessage className='error' name="escrow_account_number" component="div" />
                                     </div>
@@ -272,7 +276,7 @@ const BankEscrowForm = (props: any) => {
                                                         e.preventDefault();
                                                     }
                                                 }}
-                                                disabled={!showBankAccountDetails}
+                                                disabled={!showBankAccountDetails || store_active}
                                             />
                                         <ErrorMessage className='error' name="confirm_escrow_account_number" component="div" />
                                     </div>
@@ -290,7 +294,7 @@ const BankEscrowForm = (props: any) => {
                                                 }
                                             }}
                                             placeholder="IFSC code" 
-                                            disabled={!showBankAccountDetails}
+                                            disabled={!showBankAccountDetails || store_active}
                                         />
                                         <ErrorMessage className='error' name="ifsc" component="div" />
 
@@ -300,14 +304,15 @@ const BankEscrowForm = (props: any) => {
 
 
                                 </div>
-
-                                <div className="text-center">
-                                    <button type="button"   
-                                        onClick={() => {
-                                        handleSubmit();
-                                        }}
-                                        className="btn-custom  mt-2 btn-right" >Save</button>
-                                </div>
+                                {
+                                    !store_active && <div className="text-center">
+                                        <button type="button"   
+                                            onClick={() => {
+                                            handleSubmit();
+                                            }}
+                                            className="btn-custom  mt-2 btn-right" >Save</button>
+                                    </div>
+                                }
                             </form>
                         )}
                     </Formik>

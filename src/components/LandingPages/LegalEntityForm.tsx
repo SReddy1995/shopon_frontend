@@ -110,6 +110,8 @@ const initialValues = {
    };
 const LegalEntityForm = (props:any) => {
 
+    const store_status = localStorage.getItem('user_details') ? (JSON.parse(localStorage.getItem('user_details') || '{}').is_active) : null
+    const store_active = store_status === "ACTIVE" ? true : false;
     const [loading, setLoading] = useState(true);
     const refValues = useSelector((store: any) => store.refValues.referenceList);
 
@@ -282,6 +284,7 @@ const LegalEntityForm = (props:any) => {
                                     className={'form-control dashboard-namefield ' + (errors.authorised_signatory_name && touched.authorised_signatory_name ? 'input-field-error' : '')}
                                     id="exampleFormControlInput1" 
                                     placeholder="Authorized Signatory Name" 
+                                    disabled={store_active}
                                 />
                                 <ErrorMessage className='error' name="authorised_signatory_name" component="div" />
                             </div>
@@ -293,6 +296,7 @@ const LegalEntityForm = (props:any) => {
                                     className={'form-control dashboard-namefield ' + (errors.authorised_signatory_designation && touched.authorised_signatory_designation ? 'input-field-error' : '')}
                                     id="exampleFormControlInput1" 
                                     placeholder="Authorized Signatory Designation" 
+                                    disabled={store_active}
                                 />
                                 <ErrorMessage className='error' name="authorised_signatory_designation" component="div" />
                             </div>
@@ -313,6 +317,7 @@ const LegalEntityForm = (props:any) => {
                                         }
                                     }}
                                     placeholder="Authorized Signatory Phone No." 
+                                    disabled={store_active}
                                 />
                                 <ErrorMessage className='error' name="authorised_signatory_phone_number" component="div" />
                             </div>
@@ -323,6 +328,7 @@ const LegalEntityForm = (props:any) => {
                                     className={'form-control dashboard-namefield ' + (errors.authorised_signatory_email_address && touched.authorised_signatory_email_address ? 'input-field-error' : '')}
                                     id="exampleFormControlInput1" 
                                     placeholder="Authorized Signatory Email Address" 
+                                    disabled={store_active}
                                 />
                                 <ErrorMessage className='error' name="authorised_signatory_email_address" component="div" />
                             </div>
@@ -344,7 +350,7 @@ const LegalEntityForm = (props:any) => {
                                                     id="radio2"
                                                     placeholder="Legal Entity Name"
                                                     value="aadhar"
-                                                    
+                                                    disabled={store_active}
                                                     className={errors.pan_or_aadhar && touched.pan_or_aadhar ? 'radio-button__input input-field-error' : 'radio-button__input'}
                                                 />
                                                 <label htmlFor="radio2" className="radio-button__label">
@@ -360,6 +366,7 @@ const LegalEntityForm = (props:any) => {
                                                     id="radio1"
                                                     placeholder="Legal Entity Name"
                                                     value="pan"
+                                                    disabled={store_active}
                                                     className={errors.pan_or_aadhar && touched.pan_or_aadhar ? 'radio-button__input input-field-error' : 'radio-button__input'}
                                                 />
                                                 <label htmlFor="radio1" className="radio-button__label">
@@ -388,6 +395,7 @@ const LegalEntityForm = (props:any) => {
                                                         }
                                                     }}
                                                     placeholder="Authorized Signatory Aadhaar"
+                                                    disabled={store_active}
                                                 />
                                                 <ErrorMessage className='error' name="authorised_signatory_aadhaar" component="div" />
                                             </div>
@@ -405,6 +413,7 @@ const LegalEntityForm = (props:any) => {
                                                         }
                                                     }}
                                                     placeholder="Authorized Signatory PAN"
+                                                    disabled={store_active}
                                                 />
                                                 <ErrorMessage className='error' name="authorised_signatory_pan" component="div" />
                                             </div>
@@ -420,6 +429,7 @@ const LegalEntityForm = (props:any) => {
                                     className={'form-control dashboard-namefield ' + (errors.company_name && touched.company_name ? 'input-field-error' : '')}
                                     id="exampleFormControlInput1" 
                                     placeholder="Company Name" 
+                                    disabled={store_active}
                                 />
                                 <ErrorMessage className='error' name="company_name" component="div" />
                             </div>
@@ -431,6 +441,7 @@ const LegalEntityForm = (props:any) => {
                                     className={'form-control custom-select dashboard-namefield ' + (errors.sector_of_organization_type && touched.sector_of_organization_type ? 'input-field-error' : '')}
                                     id="exampleFormControlInput1" 
                                     placeholder="Sector of Organization Type" 
+                                    disabled={store_active}
                                 >
                                 <option value={""}>--select--</option>
                                 {
@@ -455,6 +466,7 @@ const LegalEntityForm = (props:any) => {
                                     className={'form-control dashboard-namefield ' + (errors.date_of_incorporation && touched.date_of_incorporation ? 'input-field-error' : '')}
                                     id="exampleFormControlInput1" 
                                     placeholder="Date of Incorporation" 
+                                    disabled={store_active}
                                 />
                                 <ErrorMessage className='error' name="date_of_incorporation" component="div" />
                             </div>
@@ -470,6 +482,7 @@ const LegalEntityForm = (props:any) => {
                                         }
                                     }}
                                     placeholder="Company Phone No." 
+                                    disabled={store_active}
                                 />
                                 <ErrorMessage className='error' name="company_phone_number" component="div" />
                             </div>
@@ -485,6 +498,7 @@ const LegalEntityForm = (props:any) => {
                                     className={'form-control dashboard-namefield ' + (errors.company_email_address && touched.company_email_address ? 'input-field-error' : '')}
                                     id="exampleFormControlInput1" 
                                     placeholder="Company Email Address" 
+                                    disabled={store_active}
                                 />
                                 <ErrorMessage className='error' name="company_email_address" component="div" />
                             </div>
@@ -495,6 +509,7 @@ const LegalEntityForm = (props:any) => {
                                     className={'form-control custom-select dashboard-namefield ' + (errors.annual_turnover_type && touched.annual_turnover_type ? 'input-field-error' : '')}
                                     id="exampleFormControlInput1" 
                                     placeholder="Annual Turnover" 
+                                    disabled={store_active}
                                 >
                                     <option value={""}>--select--</option>
                                     {
@@ -522,6 +537,7 @@ const LegalEntityForm = (props:any) => {
                                         }
                                       }} 
                                     placeholder="Company PAN" 
+                                    disabled={store_active}
                                 />
                                 <ErrorMessage className='error' name="company_pan" component="div" />
                             </div>
@@ -538,6 +554,7 @@ const LegalEntityForm = (props:any) => {
                                         }
                                       }}
                                     placeholder="Company GSTN" 
+                                    disabled={store_active}
                                 />
                                 <ErrorMessage className='error' name="company_gstn" component="div" />
                             </div>
@@ -553,6 +570,7 @@ const LegalEntityForm = (props:any) => {
                                     className={'form-control custom-select dashboard-namefield ' + (errors.nature_of_organization_type && touched.nature_of_organization_type ? 'input-field-error' : '')}
                                     id="exampleFormControlInput1" 
                                     placeholder="Nature of Organization" 
+                                    disabled={store_active}
                                 >
                                     <option value={""}>--select--</option>
                                     {
@@ -580,6 +598,7 @@ const LegalEntityForm = (props:any) => {
                                                         }
                                                     }}
                                                     placeholder="Company LLPIN"
+                                                    disabled={store_active}
                                                 />
                                                 <ErrorMessage className='error' name="company_llpin" component="div" />
                                             </div>
@@ -606,6 +625,7 @@ const LegalEntityForm = (props:any) => {
                                                         }
                                                     }}
                                                     placeholder="Company CIN"
+                                                    disabled={store_active}
                                                 />
                                                 <ErrorMessage className='error' name="company_cin" component="div" />
                                             </div>
@@ -629,6 +649,7 @@ const LegalEntityForm = (props:any) => {
                                             className={'form-control dashboard-namefield ' + (errors.building_street_area && touched.building_street_area ? 'input-field-error' : '')}
                                             id="exampleFormControlInput1" 
                                             placeholder="Building Street/Area" 
+                                            disabled={store_active}
                                         />
                                         <ErrorMessage className='error' name="building_street_area" component="div" />
                                     </div>
@@ -639,6 +660,7 @@ const LegalEntityForm = (props:any) => {
                                             className={'form-control dashboard-namefield ' + (errors.locality_town && touched.locality_town ? 'input-field-error' : '')}
                                             id="exampleFormControlInput1" 
                                             placeholder="Locality/Town" 
+                                            disabled={store_active}
                                         />
                                         <ErrorMessage className='error' name="locality_town" component="div" />
                                     </div>
@@ -653,6 +675,7 @@ const LegalEntityForm = (props:any) => {
                                             className={'form-control custom-select dashboard-namefield ' + (errors.city_id && touched.city_id ? 'input-field-error' : '')}
                                             id="exampleFormControlInput1" 
                                             placeholder="City/District"
+                                            disabled={store_active}
                                             onChange={(e: any) => {
                                                 const { value } = e.target;
                                                 setFieldValue("city_id", value);
@@ -705,6 +728,7 @@ const LegalEntityForm = (props:any) => {
                                             className={'form-control dashboard-namefield ' + (errors.pincode && touched.pincode ? 'input-field-error' : '')}
                                             id="exampleFormControlInput1" 
                                             placeholder="Pincode" 
+                                            disabled={store_active}
                                             onKeyPress={(e: any) => {
                                                 if (!/[a-zA-Z0-9]/.test(e.key)) {
                                                   e.preventDefault();
@@ -714,16 +738,17 @@ const LegalEntityForm = (props:any) => {
                                         <ErrorMessage className='error' name="pincode" component="div" />
                                     </div>
                                 </div>
-                        
-                        <div className="text-center">
-                            <button type="button"
-                                className="btn-custom  mt-2 btn-right"
-                                onClick={() => {
-                                  handleSubmit();
-                                }}>
-                                    Save
-                                </button>
-                        </div>
+                                {
+                                    !store_active && <div className="text-center">
+                                    <button type="button"
+                                        className="btn-custom  mt-2 btn-right"
+                                        onClick={() => {
+                                          handleSubmit();
+                                        }}>
+                                            Save
+                                        </button>
+                                </div>
+                                }
                     </form>
                     )}
                     </Formik>
