@@ -92,6 +92,7 @@ const BuyerInfo = (props:any) => {
             }
             fetchBuyerInfo(payload)
                 .then((data: any) => {
+                  console.log("response = ", data)
                     setTxnId(data?.transaction_id)
                     setTimeout(() => {
                         getBuyerInfoDetails()
