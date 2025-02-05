@@ -150,10 +150,10 @@ const IgmCreate = ()=>{
             initialValues.customer_name= selected_order_info.customer_info?.first_name + ' ' + selected_order_info.customer_info?.last_name;
             initialValues.customer_phone= selected_order_info.customer_info?.phone ? selected_order_info.customer_info?.phone : '';
             initialValues.customer_email= selected_order_info.customer_info?.email ? selected_order_info.customer_info?.email : '';
-            initialValues.seller_name= selected_seller.seller_name ? selected_seller.seller_name : '';
+            initialValues.seller_name= selected_seller.seller_info.name ? selected_seller.seller_info.name : '';
             initialValues.seller_phone= selected_seller.seller_phone ? selected_seller.seller_phone : '';
             initialValues.seller_email= selected_seller.seller_email ? selected_seller.seller_email : '';
-            initialValues.provider_name= selected_seller.provider_info.name;
+            initialValues.provider_name= selected_seller.provider_name;
             initialValues.title= '';
             initialValues.description= '';
         }

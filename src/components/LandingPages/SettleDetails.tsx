@@ -125,7 +125,7 @@ const SettleDetails = (props: any) => {
                                         </div>
                                     </div>
                                 <div>
-                               <h6><span className='color-grey'></span>{props.seller?.provider_info?.name}</h6>
+                               <h6><span className='color-grey'></span>{props.seller?.seller_info?.name}</h6>
                                </div>
                             </div>
                                     {/* <div className="col-12 px-0">
@@ -140,7 +140,7 @@ const SettleDetails = (props: any) => {
                     <>
                             <div className="col-12 px-0 d-flex justify-content-between mt-2">
                                <h6> <span className='color-grey'>Settlement ID :</span><b>{data.settlement_id}</b></h6>
-                               <h6><span className='color-grey'></span><b>{props.seller?.provider_info?.name}</b></h6>
+                               <h6><span className='color-grey'></span><b>{props.seller?.seller_info?.name}</b></h6>
                             </div>
                             <div className="col-12 px-3 mt-2 text-left card">
                                 <div className="row" style={{backgroundColor:'aliceblue',borderRadius:'0.475rem',marginTop:'1px'}}>
