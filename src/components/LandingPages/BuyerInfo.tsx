@@ -73,7 +73,7 @@ const BuyerInfo = (props:any) => {
                 .then((data: any) => {
                     console.log("buyer info details = ", data);
                     setLoading(false);
-                    setData(data.buyerInfoResponse)
+                    setData(data)
                 })
                 .catch(err => {
                     setNoData(true)
@@ -86,7 +86,7 @@ const BuyerInfo = (props:any) => {
      const getBuyerInfo = useCallback(() => {
         setLoading(true);
             let payload = {
-                alternate_id: props.alternate_id,
+                transaction_id: data.transaction_id,
                 buyer_id: user_details.buyer_id
             }
             fetchBuyerInfo(payload)
