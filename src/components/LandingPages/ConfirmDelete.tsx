@@ -34,8 +34,8 @@ const ConfirmDelete = (props : any) => {
                                 <h6>{props.msg}</h6>
                             </div>
                             <div className="col-12 mt-0 text-right">
-                                <button className="btn btn-success btn-sm mt-2" type="button" onClick={closeModal}>Cancel</button>
-                                <button className="btn btn-danger btn-sm mt-2 ml-2" type="button" onClick={deleteRecord}>{props.deleteText}</button>
+                            <button className={props.deleteText === "Yes" ? "btn btn-danger btn-sm mt-2" : "btn btn-success btn-sm mt-2"} type="button" onClick={closeModal}>Cancel</button>
+                            <button className={props.deleteText === "Yes" ? "btn btn-success btn-sm mt-2 ml-2" : "btn btn-danger btn-sm mt-2 ml-2"} type="button" onClick={deleteRecord}>{props.deleteText}</button>
                             </div>
                         </div>
 

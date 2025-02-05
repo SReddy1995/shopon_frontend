@@ -10,6 +10,9 @@ import {
   renderFulfillmentButtons
 } from "../../utils/functions/StatusButtonsMapping";
 import moment from 'moment';
+import CustomerInfo from "./CustomerInfo";
+import ShippingInfo from "./ShippingInfo";
+import PaymentInfo from "./PaymentInfo";
 
 const RefundDetails = () => {
   const navigate = useNavigate();
@@ -526,147 +529,9 @@ useEffect(() => {
                   </div>
                   {selected_order_info && (
                     <div className="order-details-right-column">
-                      <div
-                        className="card-orders bg-white text-left shadow  mb-1 pt-3 pb-1 px-3"
-                        style={{ backgroundColor: "#5CBCE652 !important" }}
-                      >
-                        <div className="d-flex cust-divider">
-                          <div>
-                            <h6>
-                              <b>Customer Information</b>
-                            </h6>
-                          </div>
-                          <div>
-                            <span>
-                              <i className="fa fa-user"></i>
-                            </span>
-                          </div>
-                        </div>
-
-                        <span className="cust-name">
-                          {selected_order_info.customer_info?.first_name}{" "}
-                          {selected_order_info.customer_info?.last_name}
-                        </span>
-                        <br />
-                        <span className="text-grey">
-                          <i className="fa fa-envelope"></i>{" "}
-                          {selected_order_info.customer_info?.email
-                            ? selected_order_info.customer_info?.email
-                            : "NA"}
-                        </span>
-                        <span className="text-grey">
-                          <i className="fa fa-phone"></i>{" "}
-                          {selected_order_info.customer_info?.phone
-                            ? selected_order_info.customer_info?.phone
-                            : "NA"}
-                        </span>
-                        <br />
-                        <p className="mb-0">
-                          {selected_order_info.customer_info?.address1 && (
-                            <span>{selected_order_info.customer_info?.address1},</span>
-                          )}
-                          {selected_order_info.customer_info?.address2 && (
-                            <span> {selected_order_info.customer_info?.address2},</span>
-                          )}
-                        </p>
-                        {selected_order_info.customer_info?.city && (
-                          <p className="mb-0">
-                            {selected_order_info.customer_info?.city},{" "}
-                            {selected_order_info.customer_info?.state}
-                          </p>
-                        )}
-                        {selected_order_info.customer_info?.areacode && (
-                          <p>{selected_order_info.customer_info?.areacode}</p>
-                        )}
-                      </div>
-                      <div className="card-orders  text-left shadow bg-white mb-1 pt-3 pb-1 px-3">
-                        <div className="d-flex cust-divider">
-                          <div>
-                            <h6>
-                              <b>Shipping Address</b>
-                            </h6>
-                          </div>
-                          <div>
-                            <span>
-                              <i className="fa fa-map-marker"></i>
-                            </span>
-                          </div>
-                        </div>
-                        {selected_order_info.shipping_info?.name && (
-                          <p className="mb-0">
-                            {selected_order_info.shipping_info?.name},
-                          </p>
-                        )}
-                        <p className="mb-0">
-                          {selected_order_info.shipping_info?.address1 && (
-                            <span>{selected_order_info.shipping_info?.address1},</span>
-                          )}
-                          {selected_order_info.shipping_info?.address2 && (
-                            <span> {selected_order_info.shipping_info?.address2},</span>
-                          )}
-                        </p>
-                        {selected_order_info.shipping_info?.city && (
-                          <p className="mb-0">
-                            {selected_order_info.shipping_info?.city},{" "}
-                            {selected_order_info.shipping_info?.province}
-                          </p>
-                        )}
-                        {selected_order_info.shipping_info?.country && (
-                          <p>
-                            {selected_order_info.shipping_info?.country} -{" "}
-                            {selected_order_info.shipping_info?.zip}
-                          </p>
-                        )}
-                      </div>
-                      <div className="card-orders text-left shadow bg-white mb-3  pt-3 pb-1 px-3">
-                        <div className="d-flex cust-divider">
-                          <div>
-                            <h6>
-                              <b>Payment Details</b>
-                            </h6>
-                          </div>
-                          <div>
-                            <span>
-                              <i className="fa fa-credit-card"></i>
-                            </span>
-                          </div>
-                        </div>
-                        <div>
-                          <span className="text-default-black">
-                            {selected_order_info.payment_gateway.join(", ")}
-                          </span>
-                        </div>
-
-                        <br />
-                        <h6>
-                          <b>Billing Address</b>
-                        </h6>
-                        {selected_order_info.billing_info?.name && (
-                          <p className="mb-0">
-                            {selected_order_info.billing_info?.name},
-                          </p>
-                        )}
-                        <p className="mb-0">
-                          {selected_order_info.billing_info?.address1 && (
-                            <span>{selected_order_info.billing_info?.address1},</span>
-                          )}
-                          {selected_order_info.billing_info?.address2 && (
-                            <span> {selected_order_info.billing_info?.address2},</span>
-                          )}
-                        </p>
-                        {selected_order_info.billing_info?.city && (
-                          <p className="mb-0">
-                            {selected_order_info.billing_info?.city},{" "}
-                            {selected_order_info.billing_info?.province}
-                          </p>
-                        )}
-                        {selected_order_info.billing_info?.country && (
-                          <p>
-                            {selected_order_info.billing_info?.country} -{" "}
-                            {selected_order_info.billing_info?.zip}
-                          </p>
-                        )}
-                      </div>
+                      <CustomerInfo order_info={selected_order_info} />
+                      <ShippingInfo order_info={selected_order_info} />
+                      <PaymentInfo order_info={selected_order_info} />
                     </div>
                   )}
                 </div>

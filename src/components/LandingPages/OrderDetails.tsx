@@ -16,6 +16,10 @@ import { renderFulfillmentButtons, renderOrderStatusButtons, renderSettlementSta
 import { updateSelectedOrderInfo, updateSelectedSeller } from "../../utils/reduxStore/sellerSlice";
 import { getFormattedPriceValue } from "../../utils/functions/helper";
 import { updateSelectedItemInfo } from "../../utils/reduxStore/issueSlice";
+import CustomerInfo from "./CustomerInfo";
+import ShippingInfo from "./ShippingInfo";
+import PaymentInfo from "./PaymentInfo";
+import OrderSummary from "./OrderSummary";
 
 const OrderDetails = () => {
 
@@ -263,10 +267,13 @@ const OrderDetails = () => {
                         total: formatCurrency(total, 'INR')
                     });
     
-                    itemsCount += element.orderItemDetails.length;
-                    order_summary_subTotal += subTotal;
-                    order_summary_shipping_charges += shippingCharges;
-                    taxes += tax;
+                    if(element.seller_id !== "shopify")
+                    {
+                        itemsCount += element.orderItemDetails.length;
+                        order_summary_subTotal += subTotal;
+                        order_summary_shipping_charges += shippingCharges;
+                        taxes += tax;
+                    }
                 }
             })
         }
@@ -740,14 +747,13 @@ const OrderDetails = () => {
                                                             <div className="table-responsive " style={{borderRadius:"0.75rem"}}>
                                                                 <table id="example" className="table text-left orders-table-custom" data-paging='false' >
                                                                     <thead className="table-light">
-                                                                        <tr >
-        
-        
-                                                                            <th colSpan={3} className="border-bottom-none"></th>
-                                                                            <th colSpan={3} className="text-center border-bottom-none">Charges in ₹</th>
-                                                                            <th colSpan={2} className="border-bottom-none"></th>
-        
-                                                                        </tr>
+                                                                        {
+                                                                            seller.seller_id !== "shopify" && <tr >
+                                                                                <th colSpan={3} className="border-bottom-none"></th>
+                                                                                <th colSpan={3} className="text-center border-bottom-none">Charges in ₹</th>
+                                                                                <th colSpan={2} className="border-bottom-none"></th>
+                                                                            </tr>
+                                                                        }
         
         
                                                                         <tr>
@@ -755,10 +761,14 @@ const OrderDetails = () => {
                                                                             <th style={{ width: "85%" }} >Product</th>
                                                                             <th >Price</th>
                                                                             <th >Qty</th>
-                                                                            <th >Pkg</th>
-                                                                            <th >Conv</th>
-                                                                            <th >Delivery</th>
-                                                                            <th >Tax</th>
+                                                                            {
+                                                                                seller.seller_id !== "shopify" && <>
+                                                                                        <th >Pkg</th>
+                                                                                        <th >Conv</th>
+                                                                                        <th >Delivery</th>
+                                                                                        <th >Tax</th>
+                                                                                    </>
+                                                                            }
                                                                             <th >Total</th>
                                                                         </tr>
                                                                     </thead>
@@ -801,10 +811,14 @@ const OrderDetails = () => {
                                                                                     </td>
                                                                                 <td>{item.price}</td>
                                                                                 <td className="text-centre">{item.qty}</td>
-                                                                                <td  className="text-centre">{item.pkg_charge}</td>
-                                                                                <td  className="text-centre">{item.convenience_fee}</td>
-                                                                                <td  className="text-centre">{item.delivery_charge}</td>
-                                                                                <td  className="text-centre">{item.tax}</td>
+                                                                                {
+                                                                                    seller.seller_id !== "shopify" && <>
+                                                                                        <td  className="text-centre">{item.pkg_charge}</td>
+                                                                                        <td  className="text-centre">{item.convenience_fee}</td>
+                                                                                        <td  className="text-centre">{item.delivery_charge}</td>
+                                                                                        <td  className="text-centre">{item.tax}</td>
+                                                                                        </>
+                                                                                }
                                                                                 <td className="text-right">{item.total}</td>
             
                                                                             </tr>
@@ -816,17 +830,25 @@ const OrderDetails = () => {
                                                             </div>
                                                             <div className="seller-wise-totals-container">
                                                                     <div className="totals-labels">
-                                                                        <span className="text-grey">Sub Total: </span>
-                                                                        <span className="text-grey">Shipping charges: </span>
-                                                                        <span className="text-grey">Taxes: </span>
-                                                                        <div className="dropdown-divider total-label-divider w-100 my-0" ></div>
+                                                                    {
+                                                                            seller.seller_id !== "shopify" && <>
+                                                                                <span className="text-grey">Sub Total: </span>
+                                                                                <span className="text-grey">Shipping charges: </span>
+                                                                                <span className="text-grey">Taxes: </span>
+                                                                                <div className="dropdown-divider total-label-divider w-100 my-0" ></div>
+                                                                                </>
+                                                                        }
                                                                         <span className="text-grey total-span" >Total: </span>
                                                                     </div>
                                                                     <div className="totals-values">
-                                                                        <span className="text-default">{seller.subTotal}</span>
-                                                                        <span className="text-default">{seller.shipping_charges}</span>
-                                                                        <span className="text-default">{seller.taxes}</span>
-                                                                        <div className="dropdown-divider total-divider w-100 my-0 "></div>
+                                                                    {
+                                                                            seller.seller_id !== "shopify" && <>
+                                                                                <span className="text-default">{seller.subTotal}</span>
+                                                                                <span className="text-default">{seller.shipping_charges}</span>
+                                                                                <span className="text-default">{seller.taxes}</span>
+                                                                                <div className="dropdown-divider total-divider w-100 my-0 "></div>
+                                                                                </>
+                                                                    }
                                                                         <span className="text-default total-span">{seller.total}</span>
                                                                     </div>
                                                             </div>
@@ -844,189 +866,17 @@ const OrderDetails = () => {
                                             <div className="seller-wise-order-info">
                                             <h4 className="seller-order-id mb-0">Order Summary</h4>
                                             </div>
-                                            <div className="product-shipping-details-container mt-0 mb-0">
-                                                <div className="product-details-container">
-                                                    <div className="totals-container">
-                                                        <div className="order-summary-totals-info border-top-0 pl-2 pr-2 pt-2 mb-0 pb-0">
-                                                                <span className="text-grey title-column">Subtotal </span>
-                                                                <span className="text-left description-column">{data.order_summary.itemsCount} items</span>
-                                                                <span className="text-default value-column">{data.order_summary.subTotal}</span>
-                                                        </div>
-                                                        <div className="order-summary-totals-info border-top-0 pl-2 pr-2 pt-2 mb-0 pb-0">
-                                                                <span className="text-grey title-column">Shipping </span>
-                                                                <span className="text-left description-column">Standard Shipping (0.0 kg: Items 0.0 kg, Package 0.0 kg)</span>
-                                                                <span className="text-default value-column">{data.order_summary.shipping_charges}</span>
-                                                        </div>
-                                                        <div className="order-summary-totals-info border-top-0 pl-2 pr-2 pt-2 mb-0 pb-0">
-                                                                <span className="text-grey title-column">Taxes </span>
-                                                                <span className="text-align-left description-column">Tax details</span>
-                                                                <span className="text-default value-column">{data.order_summary.taxes}</span>
-                                                        </div>
-                                                        <div className="order-summary-totals-info border-top-0 pl-2 pr-2 pt-2 mb-0 pb-2">
-                                                                <span className="text-grey title-column"><b>Total</b> </span>
-                                                                <span className="text-default value-column"><b>{data.order_summary.total}</b></span>
-                                                        </div>
-                                                       
-                                                    </div>
-                                                </div>
-                                            </div>
+                                            <OrderSummary order_summary={data.order_summary} />
                                         </div>
 
 
                                         }
-                                        {/* <div className="card-orders order-summary-card-container shadow bg-white mb-3 py-3 px-3">
-                                                                <div className="seller-wise-order-info">
-                                                                <h4 className="seller-order-id mb-0">Refund summary</h4>
-
-                                                                
-                                                                </div>
-                                                                <div className="d-flex cust-divider"></div>
-                                                                <div className="text-left"> 
-                                                               <span className="product-active custom-rounded-border">completed </span></div>
-                                                                <div className="text-left">
-                                                               
-                                                                <div> <span className="d-flex-left justify-content-left"><span>Refund amount</span><span className="ms-4"></span><span className="ms-4">₹450.00</span></span>
-                                                                <span className="font-small text-grey">Refund initiated on : 12th jan 2024</span></div><br />
-                                                                <div className="d-flex cust-divider"></div>
-                                                                <div>
-
-                                                                    <p>Reasons for refund :</p>
-                                                                    <ul>
-                                                                        <li className="text-grey">
-                                                                            product was damaged
-                                                                        </li>
-                                                                        <li className="text-grey">
-                                                                            product was not delivered
-                                                                        </li>
-                                                                        <li className="text-grey">
-                                                                            color is different
-                                                                        </li>
-                                                                       
-
-                                                                    </ul>
-                                                                </div><br />
-                                                                <div className="d-flex cust-divider"></div>
-                                                                    <span className="text-grey">(For Testing) Bogus Gateway</span><br /><br />
-                                                                        <span className="text-grey">Account number ending with •• 1(•••• •• 1)</span><br /><br />
-                                                                        <span >Total refund amount</span><br />
-                                                                        <p>
-                                                                            ₹450.00 available for refund
-                                                                         </p>
-
-                                                                
-                                                                </div>
-                                        </div> */}
                                     </div>
                                     {
                                         data?.info &&  <div className="order-details-right-column">
-                                        <div className="card-orders bg-white text-left shadow  mb-1 pt-3 pb-1 px-3" style={{backgroundColor: "#5CBCE652 !important"}}>
-                                            <div className="d-flex cust-divider">
-                                                <div>
-                                                <h6><b>Customer Information</b></h6>
-                                                </div>
-                                                <div>
-                                                <span><i className="fa fa-user"></i></span>
-                                                </div>
-                                            </div>
-
-                                            <span className="cust-name">{data.info.customer_info?.first_name} {data.info.customer_info?.last_name}</span><br />
-                                            <span className="text-grey">
-                                                {
-                                                    data.info.customer_info?.email ? <>
-                                                        <i className="fa fa-envelope"></i> {data.info.customer_info?.email},&nbsp;
-                                                    </>
-                                                    :
-                                                    <>
-                                                        <i className="fa fa-envelope"></i> {'NA'},&nbsp;
-                                                    </>
-                                                }
-                                                {
-                                                    data.info.customer_info?.phone ? <>
-                                                        <i className="fa fa-phone"></i> {data.info.customer_info?.phone}
-                                                    </>
-                                                    :
-                                                    <>
-                                                        <i className="fa fa-phone"></i> {'NA'}
-                                                    </>
-                                                }
-                                            </span><br />
-                                            <p className="mb-0">
-                                            {
-                                                data.info.customer_info?.address1 && <span>{data.info.customer_info?.address1},</span>
-                                            }
-                                            {
-                                                data.info.customer_info?.address2 && <span> {data.info.customer_info?.address2},</span>
-                                            }
-                                            </p>
-                                            {
-                                                data.info.customer_info?.city && <p className="mb-0">{data.info.customer_info?.city}, {data.info.customer_info?.state}</p>
-                                            }
-                                            {
-                                                data.info.customer_info?.areacode && <p>{data.info.customer_info?.areacode}</p> 
-                                            }
-                                        </div>
-                                        <div className="card-orders  text-left shadow bg-white mb-1 pt-3 pb-1 px-3">
-
-                                        <div className="d-flex cust-divider">
-                                                <div>
-                                                <h6><b>Shipping Address</b></h6>
-                                                </div>
-                                                <div>
-                                                <span><i className="fa fa-map-marker"></i></span>
-                                                </div>
-                                            </div>
-                                            {
-                                                data.info.shipping_info?.name && <p className="mb-0">{data.info.shipping_info?.name},</p> 
-                                            }
-                                            <p className="mb-0">
-                                            {
-                                                data.info.shipping_info?.address1 && <span>{data.info.shipping_info?.address1},</span>
-                                            }
-                                            {
-                                                data.info.shipping_info?.address2 && <span> {data.info.shipping_info?.address2},</span>
-                                            }
-                                            </p>
-                                            {
-                                                data.info.shipping_info?.city && <p className="mb-0">{data.info.shipping_info?.city}, {data.info.shipping_info?.province}</p>
-                                            }
-                                            {
-                                                data.info.shipping_info?.country && <p>{data.info.shipping_info?.country} - {data.info.shipping_info?.zip}</p>
-                                            }
-                                        
-                                        </div>
-                                        <div className="card-orders text-left shadow bg-white mb-3  pt-3 pb-1 px-3">
-                                        <div className="d-flex cust-divider">
-                                                <div>
-                                                <h6><b>Payment Details</b></h6>
-                                                </div>
-                                                <div>
-                                                <span><i className="fa fa-credit-card"></i></span>
-                                                </div>
-                                            </div>
-                                                <div>
-                                                    <span className="text-default-black">{data.info.payment_gateway.join(', ')}</span>
-                                                </div>
-
-                                                <br/>
-                                            <h6><b>Billing Address</b></h6>
-                                            {
-                                                data.info.billing_info?.name && <p className="mb-0">{data.info.billing_info?.name},</p> 
-                                            }
-                                            <p className="mb-0">
-                                            {
-                                                data.info.billing_info?.address1 && <span>{data.info.billing_info?.address1},</span>
-                                            }
-                                            {
-                                                data.info.billing_info?.address2 && <span> {data.info.billing_info?.address2},</span>
-                                            }
-                                            </p>
-                                            {
-                                                data.info.billing_info?.city && <p className="mb-0">{data.info.billing_info?.city}, {data.info.billing_info?.province}</p>
-                                            }
-                                            {
-                                                data.info.billing_info?.country && <p>{data.info.billing_info?.country} - {data.info.billing_info?.zip}</p>
-                                            }
-                                        </div>
+                                        <CustomerInfo order_info={data.info} />
+                                        <ShippingInfo order_info={data.info} />
+                                        <PaymentInfo order_info={data.info} />
                                     </div>
                                     }
 
