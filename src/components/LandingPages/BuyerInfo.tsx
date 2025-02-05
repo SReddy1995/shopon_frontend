@@ -67,7 +67,7 @@ const BuyerInfo = (props:any) => {
 
     const getBuyerInfoDetails = useCallback(() => {   
         let payload = {
-          transaction_id: txn_id,
+                transaction_id: txn_id,
                 buyer_id: user_details.buyer_id
         }
         fetchBuyerInfoDetails(payload)
@@ -93,7 +93,7 @@ const BuyerInfo = (props:any) => {
             fetchBuyerInfo(payload)
                 .then((data: any) => {
                   console.log("response = ", data)
-                    setTxnId(data?.transaction_id)
+                    setTxnId(data.transaction_id)
                     setTimeout(() => {
                         getBuyerInfoDetails()
                     }, 5000);
