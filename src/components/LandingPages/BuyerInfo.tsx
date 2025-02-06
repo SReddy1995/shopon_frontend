@@ -74,7 +74,7 @@ const BuyerInfo = (props:any) => {
                 .then((data: any) => {
                     console.log("buyer info details = ", data);
                     setLoading(false);
-                    setData(data.buyerInfoResponse)
+                    setData(data?.buyerInfoResponse?.info_payload)
                 })
                 .catch(err => {
                     setNoData(true)
